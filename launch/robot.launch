@@ -1,0 +1,21 @@
+<launch>
+    <arg name="model_name" default="msj_platform"/>
+    <param name="robot_description" textfile="$(find robots)/$(arg model_name)/model.urdf" />
+    <param name="Kp" type="double" value="100"  />
+    <param name="Kd" type="double" value="10"  />
+    <rosparam param="q_target">[0.0, 0.0, 0.0]</rosparam>
+
+    <node name="robot_controller"
+          pkg="kindyn"
+          type="test_robot"
+          respawn="false"
+          output="screen"
+          args="$(find robots)/$(arg model_name)/model.urdf $(find robots)/$(arg model_name)/cardsflow.xml"
+    />
+
+</launch>
+        <!--launch-prefix="gdb -ex run"-->
+        <!--launch-prefix="gdb -ex run"-->
+        <!-- FOR DEBUGGING USE THIS launch-prefix="xterm -e gdb -se devel/lib/myo_master/multiJoint" FOR VALGRIND USE THIS launch-prefix="valgrind -log-file=/home/roboy/workspace/ros_hierarchy/valgrind.log -leak-check=full"-->
+
+        <!-- args="-c /home/roboy/workspace/roboy-ros-control/src/roboy_powerlink/powerlink/output/mnobd.cdc"-->
