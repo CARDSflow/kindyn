@@ -4,6 +4,8 @@
     <param name="Kp" type="double" value="100"  />
     <param name="Kd" type="double" value="10"  />
     <rosparam param="q_target">[0.0, 0.0, 0.0]</rosparam>
+    <param name="min_force" type="double" value="0"  />
+    <param name="max_force" type="double" value="500"  />
 
     <node name="robot_controller"
           pkg="kindyn"

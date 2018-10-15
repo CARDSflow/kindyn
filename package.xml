@@ -15,6 +15,7 @@
     <depend>message_runtime</depend>
     <depend>common_utilities</depend>
     <depend>roboy_communication_middleware</depend>
+    <depend>eus_qpoases</depend>
 
     <export>
     </export>

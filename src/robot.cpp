@@ -85,6 +85,16 @@ Robot::Robot(string urdf_file_path, string viapoints_file_path) {
     init();
 }
 
+Robot::~Robot(){
+    delete [] H;
+    delete [] g;
+    delete [] A;
+    delete [] lb;
+    delete [] ub;
+    delete [] b;
+    delete [] FOpt;
+}
+
 void Robot::init() {
     q.resize(number_of_dofs);
     q.setZero();
@@ -154,8 +164,6 @@ void Robot::init() {
         muscle_index++;
     }
 
-    cable_forces.resize(number_of_cables);
-
     update_S();
     update_V();
     update_P();
@@ -163,6 +171,107 @@ void Robot::init() {
     W = P * S;
     L = V * W;
     L_t = -L.transpose();
+
+    qp_solver = SQProblem(number_of_cables, number_of_dofs);
+
+    H = new real_t[number_of_cables * number_of_cables];
+    g = new real_t[number_of_cables];
+    A = new real_t[number_of_cables * number_of_cables];
+    lb = new real_t[number_of_cables];
+    ub = new real_t[number_of_cables];
+    b = new real_t[number_of_dofs];
+    FOpt = new real_t[number_of_cables];
+    cable_forces.resize(number_of_cables);
+    cable_forces.setZero();
+    l.resize(number_of_cables);
+    ld.resize(number_of_cables);
+    l.setZero();
+    ld.setZero();
+}
+
+VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max) {
+    // Initialisation
+    int qp_print_level = PL_NONE;
+    nh->getParam("qp_print_level", qp_print_level);
+    qp_solver.setPrintLevel(static_cast<PrintLevel>(qp_print_level));
+    // Set the optimisation parameters
+    int nWSR = 1000;
+    nh->getParam("qp_working_sets", nWSR);
+
+    // Convert the parameters to be in the correct form
+    for (int i = 0; i < number_of_cables * number_of_cables; i++)
+        A[i] = 0;
+    for (int i = 0; i < number_of_cables; i++) {
+        lb[i] = f_min(i);
+        ub[i] = f_max(i);
+        for (int j = 0; j < number_of_dofs; j++) {
+            if (abs(A_eq(j, i)) > 1e-6) {
+                A[j * number_of_cables + i] = A_eq(j, i);
+            } else {
+                A[j * number_of_cables + i] = 0;
+            }
+        }
+    }
+    for (int j = 0; j < number_of_dofs; j++) {
+        if (abs(b_eq[j]) > 1e-6) {
+            b[j] = b_eq[j];
+        } else {
+            b[j] = 0;
+        }
+    }
+    VectorXd f_opt;
+    f_opt.resize(number_of_cables);
+    f_opt.setZero();
+
+    // Run the optimisation
+    if (first_time_solving) {
+        for (int i = 0; i < number_of_cables * number_of_cables; i++)
+            H[i] = 0;
+        for (int i = 0; i < number_of_cables; i++) {
+            // H is the identity matrix
+            H[i * number_of_cables + i] = 1;
+            g[i] = 0;
+        }
+        returnValue status = qp_solver.init(H, g, A, lb, ub, b, b, nWSR, nullptr);
+        first_time_solving = false;
+    } else {
+        returnValue status = qp_solver.hotstart(H, g, A, lb, ub, b, b, nWSR, nullptr);
+        switch (status) {
+            case SUCCESSFUL_RETURN: { // all good
+                qp_solver.getPrimalSolution(FOpt);
+                for (int i = 0; i < number_of_cables; i++) {
+                    f_opt(i) = FOpt[i];
+                }
+                ROS_INFO_STREAM_THROTTLE(1, "target cable forces:\n" << f_opt.transpose());
+                break;
+            }
+            default: {
+                ROS_ERROR_STREAM_THROTTLE(1, MessageHandling::getErrorCodeMessage(status));
+                if (qp_solver.isInfeasible()) {
+                    qp_solver.getPrimalSolution(FOpt);
+                    for (int i = 0; i < number_of_cables; i++) {
+                        f_opt(i) = FOpt[i];
+                    }
+                    ROS_WARN_STREAM_THROTTLE(1, "infeasible, primal solution " << f_opt.transpose());
+//                    f_opt.setZero();
+                } else {
+                    if (status = (returnValue) 54)
+                        first_time_solving = true;
+                }
+            }
+        }
+    }
+
+    bool log;
+    nh->getParam("log", log);
+    if (log) {
+        Eigen::IOFormat fmt(4, 0, " ", ";\n", "", "", "[", "]");
+        log_file << "---------------------" << endl;
+        log_file << "A_eq = " << A_eq.format(fmt) << endl;
+        log_file << "b_eq = " << b_eq.transpose().format(fmt) << endl;
+    }
+
+    return f_opt;
 }
 
 void Robot::update(double period) {
@@ -252,22 +361,22 @@ void Robot::updateController() {
     switch (controller) {
         case 0: {
             ROS_WARN_THROTTLE(5, "caspr controller active");
-//            VectorXd f_min, f_max;
-//            f_min.resize(number_of_dofs);
-//            f_max.resize(number_of_dofs);
-//
-//            double min_force, max_force;
-//            nh->getParam("min_force", min_force);
-//            nh->getParam("max_force", max_force);
-//
-//            f_min = VectorXd::Ones(number_of_cables);
-//            f_max = VectorXd::Ones(number_of_cables);
-//
-//            f_min = min_force * f_min;
-//            f_max = max_force * f_max;
-//
-//            cable_forces = resolve_function(L_t, torques, f_min, f_max);
-////            torques.setZero();
+            VectorXd f_min, f_max;
+            f_min.resize(number_of_dofs);
+            f_max.resize(number_of_dofs);
+
+            double min_force, max_force;
+            nh->getParam("min_force", min_force);
+            nh->getParam("max_force", max_force);
+
+            f_min = VectorXd::Ones(number_of_cables);
+            f_max = VectorXd::Ones(number_of_cables);
+
+            f_min = min_force * f_min;
+            f_max = max_force * f_max;
+
+            cable_forces = resolve_function(L_t, torques, f_min, f_max);
+//            torques.setZero();
             break;
         }
         case 1: {
@@ -290,7 +399,7 @@ void Robot::updateController() {
         }
         case 2: { // position control
             ROS_WARN_THROTTLE(5, "position controller active");
-            l_dot = L * (Kd * (qd_target - qd) + Kp * (q_target - q));
+            ld = L * (Kd * (qd_target - qd) + Kp * (q_target - q));
 //            torques.setZero();
             break;
         }
@@ -300,7 +409,12 @@ void Robot::updateController() {
             break;
         }
     }
-
+    ROS_INFO_STREAM_THROTTLE(1, "torques " << torques.transpose());
+    ROS_INFO_STREAM_THROTTLE(1, "M " << M.format(fmt));
+    ROS_INFO_STREAM_THROTTLE(1, "C+G " << CG.transpose());
+    ROS_INFO_STREAM_THROTTLE(1, "qdd " << qdd.transpose());
+    ROS_INFO_STREAM_THROTTLE(1, "qd " << qd.transpose());
+    ROS_INFO_STREAM_THROTTLE(1, "q " << q.transpose());
 }
 
 void Robot::forwardKinematics(double dt) {
@@ -318,17 +432,12 @@ void Robot::forwardKinematics(double dt) {
             q += qd * dt;
             break;
         case 2:
-            qd = EigenExtension::Pinv(L) * l_dot;
+            qd = EigenExtension::Pinv(L) * ld;
             q += qd * dt;
+            l += ld * dt;
             break;
     }
 
-    ROS_INFO_STREAM_THROTTLE(1, "torques " << torques.transpose());
-    ROS_INFO_STREAM_THROTTLE(1, "M " << M.format(fmt));
-    ROS_INFO_STREAM_THROTTLE(1, "C+G " << CG.transpose());
-    ROS_INFO_STREAM_THROTTLE(1, "qdd " << qdd.transpose());
-    ROS_INFO_STREAM_THROTTLE(1, "qd " << qd.transpose());
-    ROS_INFO_STREAM_THROTTLE(1, "q " << q.transpose());
     moveit_msgs::DisplayRobotState msg;
     sensor_msgs::JointState msg2;
     static int id = 0;
@@ -572,13 +681,13 @@ void Robot::publishTendons() {
             p.y = cables[muscle].viaPoints[i]->global_coordinates[1];
             p.z = cables[muscle].viaPoints[i]->global_coordinates[2];
             line_strip.points.push_back(p);
-//            if (controller == 2) { // position control
-//                Vector3d pos = (cables[muscle].viaPoints[i]->global_coordinates +
-//                        cables[muscle].viaPoints[i - 1]->global_coordinates) / 2.0;
-//                char str[100];
-//                sprintf(str, "%.3lf", motor_pos[muscle]);
-//                publishText(pos, str, "world", "tendon_length", message_counter++, COLOR(1, 1, 1, 1), 1, 0.01);
-//            }
+            if (controller == 2) { // position control
+                Vector3d pos = (cables[muscle].viaPoints[i]->global_coordinates +
+                        cables[muscle].viaPoints[i - 1]->global_coordinates) / 2.0;
+                char str[100];
+                sprintf(str, "%.3lf", l[muscle]);
+                publishText(pos, str, "world", "tendon_length", message_counter++, COLOR(1, 1, 1, 1), 1, 0.01);
+            }
         }
         visualization_pub.publish(line_strip);
 //        for (uint i = 0; i < muscles[muscle].viaPoints.size(); i++) {

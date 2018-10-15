@@ -32,7 +32,9 @@
 #include <grid_map_ros/GridMapMsgHelpers.hpp>
 #include <common_utilities/rviz_visualization.hpp>
 
+#include <qpOASES.hpp>
 
+using namespace qpOASES;
 using namespace std;
 using namespace Eigen;
 using iDynTree::toEigen;
@@ -49,6 +51,7 @@ namespace cardsflow {
              * @param viapoints_file_path path to viapoints xml
              */
             Robot(string urdf_file_path, string viapoints_file_path);
+            ~Robot();
 
             bool parseViapoints(const string &viapoints_file_path, vector<Cable> &cables);
 
@@ -69,6 +72,8 @@ namespace cardsflow {
             void init();
 
         private:
+            VectorXd resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max);
+
             void update_V();
 
             void update_S();
@@ -93,7 +98,7 @@ namespace cardsflow {
             size_t number_of_cables = 0; /// number of cables, ie muscles, for kinematic chain
             size_t number_of_links = 0; /// number of links for kinematic chain
             Matrix4d world_H_base;
-            Matrix<double,6,1> baseVel;
+            Eigen::Matrix<double,6,1> baseVel;
             VectorXd q, qd, qdd;
             VectorXd q_target, qd_target, qdd_target;
             Vector3d gravity;
@@ -102,17 +107,19 @@ namespace cardsflow {
             iDynTree::MatrixDynSize Mass;
             VectorXd CG;
             MatrixXd S, P, V, W, L, L_t;
-            VectorXd cable_forces, torques, l_dot;
+            VectorXd cable_forces, torques, l, ld;
             VectorXd x, x_dot, x_dot_relative;
             VectorXd e, de, dde;
-
 
             vector<Cable> cables;
             vector <VectorXd> joint_axis;
             vector <string> link_names, joint_names;
-//            vector<rl::mdl::Body *> links;
-//            vector<rl::mdl::Joint *> joints;
             map<string, int> link_index, joint_index;
+
+            bool first_time_solving = true;
+            SQProblem qp_solver; /// qpoases quadratic problem solver
+            real_t *H, *g, *A, *lb, *ub, *b, *FOpt; /// quadratic problem variables
+
             double Kp = 100, Kd = 10;
         private:
             vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments;

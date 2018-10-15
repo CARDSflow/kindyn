@@ -22,6 +22,7 @@ find_package(catkin REQUIRED COMPONENTS
 		tf_conversions
         robot_state_publisher
 		grid_map_ros
+		eus_qpoases
 )
 
 catkin_package( CATKIN_DEPENDS roboy_communication_middleware common_utilities
@@ -40,6 +41,10 @@ include_directories(${LibXML++_INCLUDE_DIRS})
 find_package(iDynTree 0.11.1 REQUIRED)
 include_directories(${iDynTree_INCLUDE_DIRS})
 
+# qpOASES
+find_package(qpOASES REQUIRED)
+include_directories(${qpOASES_INCLUDE_DIRS})
+
 include_directories(
 		include/
         ${catkin_INCLUDE_DIRS}
@@ -55,7 +60,7 @@ add_library(kindyn SHARED
 		include/kindyn/robot.hpp
 		src/test_robot.cpp include/kindyn/cable.hpp)
 add_dependencies( kindyn roboy_communication_middleware_gencpp )
-target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES})
+target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES})
 
 add_executable( test_idyntree src/test_idyntree.cpp)
 target_link_libraries(test_idyntree ${iDynTree_LIBRARIES} ${catkin_LIBRARIES})
