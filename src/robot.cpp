@@ -20,8 +20,7 @@ Robot::Robot(string urdf_file_path, string viapoints_file_path) {
 
     bool ok = mdlLoader.loadModelFromFile(urdf_file_path);
 
-    if( !ok )
-    {
+    if (!ok) {
         ROS_FATAL_STREAM("KinDynComputationsWithEigen: impossible to load model from " << urdf_file_path);
         return;
     }
@@ -29,34 +28,36 @@ Robot::Robot(string urdf_file_path, string viapoints_file_path) {
     // Create a KinDynComputations class from the model
     ok = kinDynComp.loadRobotModel(mdlLoader.model());
 
-    if( !ok )
-    {
-        ROS_FATAL_STREAM("KinDynComputationsWithEigen: impossible to load the following model in a KinDynComputations class:" << std::endl
-                  << mdlLoader.model().toString());
+    if (!ok) {
+        ROS_FATAL_STREAM(
+                "KinDynComputationsWithEigen: impossible to load the following model in a KinDynComputations class:"
+                        << std::endl
+                        << mdlLoader.model().toString());
         return;
     }
 
     ROS_INFO_STREAM(kinDynComp.getDescriptionOfDegreesOfFreedom());
 
 //    kinDynComp.setFloatingBase("base");
-    const iDynTree::Model & model = kinDynComp.model();
+    const iDynTree::Model &model = kinDynComp.model();
     number_of_dofs = model.getNrOfDOFs();
     number_of_joints = model.getNrOfJoints();
     number_of_links = model.getNrOfLinks();
 
-    if(!parseViapoints(viapoints_file_path, cables)){
+    if (!parseViapoints(viapoints_file_path, cables)) {
         ROS_FATAL("something went wrong parsing the viapoints");
         return;
     }
     number_of_cables = cables.size();
 
-    ROS_INFO_STREAM("robot:\ndofs: " << number_of_dofs <<  "\njoints: " << number_of_joints << "\nlinks: " << number_of_links << "\nnumber_of_cables: " << number_of_cables);
+    ROS_INFO_STREAM(
+            "robot:\ndofs: " << number_of_dofs << "\njoints: " << number_of_joints << "\nlinks: " << number_of_links
+                             << "\nnumber_of_cables: " << number_of_cables);
 
     baseVel.setZero();
     world_H_base.setIdentity();
-    gravity << 0,0,-9.81;
+    gravity << 0, 0, -9.81;
 
-    number_of_cables = 0;
     // get the link names of the kinematic chain
     int j = 0;
     for (int link = 0; link < number_of_links; link++) {
@@ -66,7 +67,8 @@ Robot::Robot(string urdf_file_path, string viapoints_file_path) {
         link_index[link_name] = link;
     }
     for (int joint = 0; joint < number_of_dofs; joint++) {
-        iDynTree::Vector6 s = model.getJoint(joint)->getMotionSubspaceVector(0,model.getJoint(joint)->getSecondAttachedLink(),model.getJoint(joint)->getFirstAttachedLink()).asVector();
+        iDynTree::Vector6 s = model.getJoint(joint)->getMotionSubspaceVector(0, model.getJoint(
+                joint)->getSecondAttachedLink(), model.getJoint(joint)->getFirstAttachedLink()).asVector();
         string joint_name = model.getJointName(joint);
         joint_names.push_back(joint_name);
         VectorXd axis = iDynTree::toEigen(s);
@@ -83,7 +85,7 @@ Robot::Robot(string urdf_file_path, string viapoints_file_path) {
     init();
 }
 
-void Robot::init(){
+void Robot::init() {
     q.resize(number_of_dofs);
     q.setZero();
     qd.resize(number_of_dofs);
@@ -109,12 +111,30 @@ void Robot::init(){
     torques.resize(number_of_dofs);
     torques.setZero();
 
-    M.resize(number_of_dofs+6,number_of_dofs+6);
+    M.resize(number_of_dofs + 6, number_of_dofs + 6);
     CG.resize(number_of_dofs);
     CG.setZero();
 
     bias = iDynTree::FreeFloatingGeneralizedTorques(kinDynComp.model());
-    Mass = iDynTree::MatrixDynSize(number_of_dofs+6,number_of_dofs+6);
+    Mass = iDynTree::MatrixDynSize(number_of_dofs + 6, number_of_dofs + 6);
+
+    iDynTree::Transform world_H_base_;
+    iDynTree::VectorDynSize jointPos, jointVel;
+    jointPos.resize(number_of_dofs);
+    jointVel.resize(number_of_dofs);
+    iDynTree::Twist baseVel_;
+    iDynTree::Vector3 gravity_;
+    iDynTree::fromEigen(world_H_base_, world_H_base);
+    iDynTree::toEigen(jointPos) = q;
+    iDynTree::fromEigen(baseVel_, baseVel);
+    toEigen(jointVel) = qd;
+    toEigen(gravity_) = gravity;
+
+    kinDynComp.setRobotState(world_H_base_, jointPos, baseVel_, jointVel, gravity_);
+    kinDynComp.generalizedBiasForces(bias);
+    kinDynComp.getFreeFloatingMassMatrix(Mass);
+    CG = toEigen(bias.jointTorques());
+    M = toEigen(Mass);
 
     V.resize(number_of_cables, 6 * number_of_links);
     V.setZero(number_of_cables, 6 * number_of_links);
@@ -134,6 +154,8 @@ void Robot::init(){
         muscle_index++;
     }
 
+    cable_forces.resize(number_of_cables);
+
     update_S();
     update_V();
     update_P();
@@ -146,11 +168,28 @@ void Robot::init(){
 void Robot::update(double period) {
     forwardKinematics(period);
 
-    const iDynTree::Model & model = kinDynComp.model();
+    iDynTree::Transform world_H_base_;
+    iDynTree::VectorDynSize jointPos, jointVel;
+    jointPos.resize(number_of_dofs);
+    jointVel.resize(number_of_dofs);
+    iDynTree::Twist baseVel_;
+    iDynTree::Vector3 gravity_;
+    iDynTree::fromEigen(world_H_base_, world_H_base);
+    iDynTree::toEigen(jointPos) = q;
+    iDynTree::fromEigen(baseVel_, baseVel);
+    toEigen(jointVel) = qd;
+    toEigen(gravity_) = gravity;
 
+    kinDynComp.setRobotState(world_H_base_, jointPos, baseVel_, jointVel, gravity_);
+    kinDynComp.generalizedBiasForces(bias);
+    kinDynComp.getFreeFloatingMassMatrix(Mass);
+    CG = toEigen(bias.jointTorques());
+    M = toEigen(Mass);
+
+    const iDynTree::Model &model = kinDynComp.model();
     int i = 0;
     for (auto &link_name:link_names) {
-        Matrix4d pose = iDynTree::toEigen(model.getFrameTransform(i).asHomogeneousTransform());
+        Matrix4d pose = iDynTree::toEigen(kinDynComp.getRelativeTransform(0, i).asHomogeneousTransform());
         Vector3d com = iDynTree::toEigen(model.getLink(i)->getInertia().getCenterOfMass());
         pose.block(0, 3, 3, 1) += pose.block(0, 0, 3, 3) * com;
         world_to_link_transform[link_name] = pose.inverse();
@@ -195,7 +234,7 @@ void Robot::updateController() {
 
     vector<double> q_target_;
     nh->getParam("q_target", q_target_);
-    for(int i=0;i<q_target.rows();i++)
+    for (int i = 0; i < q_target.rows(); i++)
         q_target[i] = q_target_[i];
 
     nh->getParam("Kp", Kp);
@@ -205,26 +244,76 @@ void Robot::updateController() {
     de = qd_target - qd;
 
     VectorXd q_dd_cmd = qdd_target + Kp * e + Kd * de;
-    if (!isfinite(q_dd_cmd.norm()))
-        q_dd_cmd.setZero();
 
-//    VectorXd w_ext = L.transpose() * force;
+    torques = M.block(6, 6, number_of_dofs, number_of_dofs) * q_dd_cmd + CG;// + w_ext
 
-    torques = M.block(6,6,number_of_dofs,number_of_dofs) * q_dd_cmd + CG;// + w_ext
+    nh->getParam("controller", controller);
+
+    switch (controller) {
+        case 0: {
+            ROS_WARN_THROTTLE(5, "caspr controller active");
+//            VectorXd f_min, f_max;
+//            f_min.resize(number_of_dofs);
+//            f_max.resize(number_of_dofs);
+//
+//            double min_force, max_force;
+//            nh->getParam("min_force", min_force);
+//            nh->getParam("max_force", max_force);
+//
+//            f_min = VectorXd::Ones(number_of_cables);
+//            f_max = VectorXd::Ones(number_of_cables);
+//
+//            f_min = min_force * f_min;
+//            f_max = max_force * f_max;
+//
+//            cable_forces = resolve_function(L_t, torques, f_min, f_max);
+////            torques.setZero();
+            break;
+        }
+        case 1: {
+            ROS_WARN_THROTTLE(5, "torque controller active");
+//            if (simulate) {
+//                int i = 0;
+//                roboy_communication_middleware::TorqueControl msg;
+//                msg.request.joint_names = joint_names;
+//                for (auto &joint_name:joint_names) {
+//                    if (abs(torques[i]) < 10000000 && isfinite(torques[i]))
+//                        msg.request.torque.push_back(torques[i]);
+//                    else
+//                        msg.request.torque.push_back(0);
+//                    i++;
+//                }
+//                if (!torque_control_srv.call(msg))
+//                    ROS_WARN_ONCE("could not set torque, service unavailable");
+//            }
+            break;
+        }
+        case 2: { // position control
+            ROS_WARN_THROTTLE(5, "position controller active");
+            l_dot = L * (Kd * (qd_target - qd) + Kp * (q_target - q));
+//            torques.setZero();
+            break;
+        }
+        default: { // deactivate
+            torques.setZero();
+            ROS_WARN_THROTTLE(5, "controller not active");
+            break;
+        }
+    }
 
 }
 
 void Robot::forwardKinematics(double dt) {
-    const iDynTree::Model & model = kinDynComp.model();
+    const iDynTree::Model &model = kinDynComp.model();
     switch (controller) {
         case 0:
-            qdd = M.block(6,6,number_of_dofs,number_of_dofs).inverse() * (-L.transpose() * cable_forces + CG);
+            qdd = M.block(6, 6, number_of_dofs, number_of_dofs).inverse() * (-L.transpose() * cable_forces + CG);
             qd += qdd * dt;
             q += qd * dt;
             ROS_INFO_STREAM_THROTTLE(1, "torques from tendons:" << endl << (L.transpose() * cable_forces).transpose());
             break;
         case 1:
-            qdd = M.block(6,6,number_of_dofs,number_of_dofs).inverse() * (torques + CG);
+            qdd = M.block(6, 6, number_of_dofs, number_of_dofs).inverse() * (torques + CG);
             qd += qdd * dt;
             q += qd * dt;
             break;
@@ -234,30 +323,12 @@ void Robot::forwardKinematics(double dt) {
             break;
     }
 
-    iDynTree::Transform world_H_base_;
-    iDynTree::VectorDynSize jointPos, jointVel;
-    jointPos.resize(number_of_dofs);
-    jointVel.resize(number_of_dofs);
-    iDynTree::Twist baseVel_;
-    iDynTree::Vector3 gravity_;
-    iDynTree::fromEigen(world_H_base_,world_H_base);
-    iDynTree::toEigen(jointPos) = q;
-    iDynTree::fromEigen(baseVel_,baseVel);
-    toEigen(jointVel) = qd;
-    toEigen(gravity_)  = gravity;
-
-    kinDynComp.setRobotState(world_H_base_,jointPos,baseVel_,jointVel,gravity_);
-    kinDynComp.generalizedBiasForces(bias);
-    kinDynComp.getFreeFloatingMassMatrix(Mass);
-    CG = toEigen(bias.jointTorques());
-    M = toEigen(Mass);
-
-    ROS_INFO_STREAM_THROTTLE(1,"torques " << torques.transpose());
-    ROS_INFO_STREAM_THROTTLE(1,"M " << M.format(fmt));
-    ROS_INFO_STREAM_THROTTLE(1,"C+G " << CG.transpose());
-    ROS_INFO_STREAM_THROTTLE(1,"qdd " << qdd.transpose());
-    ROS_INFO_STREAM_THROTTLE(1,"qd " << qd.transpose());
-    ROS_INFO_STREAM_THROTTLE(1,"q " << q.transpose());
+    ROS_INFO_STREAM_THROTTLE(1, "torques " << torques.transpose());
+    ROS_INFO_STREAM_THROTTLE(1, "M " << M.format(fmt));
+    ROS_INFO_STREAM_THROTTLE(1, "C+G " << CG.transpose());
+    ROS_INFO_STREAM_THROTTLE(1, "qdd " << qdd.transpose());
+    ROS_INFO_STREAM_THROTTLE(1, "qd " << qd.transpose());
+    ROS_INFO_STREAM_THROTTLE(1, "q " << q.transpose());
     moveit_msgs::DisplayRobotState msg;
     sensor_msgs::JointState msg2;
     static int id = 0;
@@ -411,7 +482,7 @@ void Robot::update_P() {
     Matrix3d R_ka;
     Eigen::Matrix<double, 6, 6> Pak;
 
-    const iDynTree::Model & model = kinDynComp.model();
+    const iDynTree::Model &model = kinDynComp.model();
 
     static int counter = 0;
     for (int k = 1; k < number_of_links; k++) {
@@ -431,7 +502,7 @@ void Robot::update_P() {
 
             // Calculate forward position kinematics
             Eigen::MatrixXd pose = iDynTree::toEigen(model.getFrameTransform(a).asHomogeneousTransform());
-            r_OP = R_0a.transpose() * pose.block(0,3,3,1);
+            r_OP = R_0a.transpose() * pose.block(0, 3, 3, 1);
 
             r_OG = R_k0 * transformMatrix_k.inverse().block(0, 3, 3, 1);
 
@@ -478,7 +549,7 @@ void Robot::publishTendons() {
     visualization_msgs::Marker line_strip;
     line_strip.header.frame_id = "world";
     line_strip.header.stamp = ros::Time::now();
-    line_strip.ns = "tendons_" ;
+    line_strip.ns = "tendons_";
     line_strip.action = visualization_msgs::Marker::ADD;
     line_strip.type = visualization_msgs::Marker::LINE_STRIP;
     line_strip.scale.x = 0.003;
@@ -490,7 +561,7 @@ void Robot::publishTendons() {
     line_strip.lifetime = ros::Duration(0);
     for (uint muscle = 0; muscle < cables.size(); muscle++) {
         line_strip.points.clear();
-        line_strip.id = muscle+9999999;
+        line_strip.id = muscle + 9999999;
         for (uint i = 1; i < cables[muscle].viaPoints.size(); i++) {
             geometry_msgs::Point p;
             p.x = cables[muscle].viaPoints[i - 1]->global_coordinates[0];
@@ -557,12 +628,13 @@ void Robot::publishForces() {
             p.x = cables[muscle].viaPoints[i - 1]->global_coordinates[0];
             p.y = cables[muscle].viaPoints[i - 1]->global_coordinates[1];
             p.z = cables[muscle].viaPoints[i - 1]->global_coordinates[2];
-            Vector3d dir = cables[muscle].viaPoints[i - 1]->global_coordinates-cables[muscle].viaPoints[i]->global_coordinates;
+            Vector3d dir = cables[muscle].viaPoints[i - 1]->global_coordinates -
+                           cables[muscle].viaPoints[i]->global_coordinates;
             dir.normalize();
             arrow.points.push_back(p);
-            p.x -= dir[0]*cable_forces[muscle] * 0.001; // show fraction of force
-            p.y -= dir[1]*cable_forces[muscle] * 0.001;
-            p.z -= dir[2]* cable_forces[muscle] * 0.001;
+            p.x -= dir[0] * cable_forces[muscle] * 0.001; // show fraction of force
+            p.y -= dir[1] * cable_forces[muscle] * 0.001;
+            p.z -= dir[2] * cable_forces[muscle] * 0.001;
             arrow.points.push_back(p);
             visualization_pub.publish(arrow);
             // reactio
@@ -576,9 +648,9 @@ void Robot::publishForces() {
             p.y = cables[muscle].viaPoints[i]->global_coordinates[1];
             p.z = cables[muscle].viaPoints[i]->global_coordinates[2];
             arrow.points.push_back(p);
-            p.x += dir[0]*cable_forces[muscle] * 0.001; // show fraction of force
-            p.y += dir[1]* cable_forces[muscle] * 0.001;
-            p.z += dir[2]*cable_forces[muscle] * 0.001;
+            p.x += dir[0] * cable_forces[muscle] * 0.001; // show fraction of force
+            p.y += dir[1] * cable_forces[muscle] * 0.001;
+            p.z += dir[2] * cable_forces[muscle] * 0.001;
             arrow.points.push_back(p);
             visualization_pub.publish(arrow);
         }
@@ -668,7 +740,7 @@ bool Robot::parseViapoints(const string &viapoints_file_path, vector<Cable> &cab
                             return false;
                         }
                         Vector3d local_coordinates(x, y, z);
-                        cable.viaPoints.push_back(ViaPointPtr (new ViaPoint(link_name, local_coordinates)));
+                        cable.viaPoints.push_back(ViaPointPtr(new ViaPoint(link_name, local_coordinates)));
                     }
                     if (cable.viaPoints.empty()) {
                         ROS_ERROR_STREAM_NAMED("parser", "No viaPoint element found in myoMuscle '"
