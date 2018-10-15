@@ -14,9 +14,11 @@
     <depend>message_generation</depend>
     <depend>message_runtime</depend>
     <depend>common_utilities</depend>
+    <depend>controller_interface</depend>
     <depend>roboy_communication_middleware</depend>
     <depend>eus_qpoases</depend>
 
     <export>
+        <controller_interface plugin="${prefix}/CableLengthController_plugin.xml"/>
     </export>
 </package>

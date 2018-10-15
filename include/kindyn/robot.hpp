@@ -8,12 +8,13 @@
 #include <iDynTree/KinDynComputations.h>
 #include <iDynTree/ModelIO/ModelLoader.h>
 #include <iDynTree/Core/EigenHelpers.h>
-#include <iDynTree/ModelIO/impl/urdf_import.hpp>
 
 #include "tinyxml.h"
 
 #include "kindyn/cable.hpp"
 #include "kindyn/EigenExtension.hpp"
+#include "kindyn/controller/cardsflow_state_interface.hpp"
+#include "kindyn/controller/cardsflow_command_interface.hpp"
 
 #include <roboy_communication_middleware/ForwardKinematics.h>
 #include <roboy_communication_middleware/InverseKinematics.h>
@@ -34,6 +35,12 @@
 
 #include <qpOASES.hpp>
 
+#include <controller_manager/controller_manager.h>
+#include <controller_manager_msgs/LoadController.h>
+#include <hardware_interface/joint_command_interface.h>
+#include <hardware_interface/joint_state_interface.h>
+#include <hardware_interface/robot_hw.h>
+
 using namespace qpOASES;
 using namespace std;
 using namespace Eigen;
@@ -43,7 +50,7 @@ using iDynTree::fromEigen;
 namespace cardsflow {
     namespace kindyn {
 
-        class Robot:public rviz_visualization {
+        class Robot:public rviz_visualization, public hardware_interface::RobotHW{
         public:
             /**
              * Constructor
@@ -71,7 +78,7 @@ namespace cardsflow {
 
             void init();
 
-        private:
+        protected:
             VectorXd resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max);
 
             void update_V();
@@ -107,7 +114,8 @@ namespace cardsflow {
             iDynTree::MatrixDynSize Mass;
             VectorXd CG;
             MatrixXd S, P, V, W, L, L_t;
-            VectorXd cable_forces, torques, l, ld;
+            VectorXd l;
+            vector<VectorXd> ld;
             VectorXd x, x_dot, x_dot_relative;
             VectorXd e, de, dde;
 
@@ -133,6 +141,10 @@ namespace cardsflow {
             tf::TransformListener tf_listener;
             tf::TransformBroadcaster tf_broadcaster;
             ros::Publisher robot_state_pub, joint_state_pub;
+        private:
+            hardware_interface::CardsflowStateInterface cardsflow_state_interface;
+            hardware_interface::CardsflowCommandInterface cardsflow_command_interface;
+            VectorXd cmd;
         };
     }
 }

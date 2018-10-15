@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project( kindyn )
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/devel/lib)
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g ")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -g ")
 
 SET(CMAKE_BUILD_TYPE Debug)
 
@@ -23,6 +23,9 @@ find_package(catkin REQUIRED COMPONENTS
         robot_state_publisher
 		grid_map_ros
 		eus_qpoases
+		controller_interface
+		hardware_interface
+		controller_manager
 )
 
 catkin_package( CATKIN_DEPENDS roboy_communication_middleware common_utilities
@@ -60,7 +63,15 @@ add_library(kindyn SHARED
 		include/kindyn/robot.hpp
 		src/test_robot.cpp include/kindyn/cable.hpp)
 add_dependencies( kindyn roboy_communication_middleware_gencpp )
-target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES})
+target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CableLengthController)
+
+add_library(CableLengthController
+		src/controller/cableLengthController.cpp
+		src/controller/cardsflow_state_interface.cpp
+		src/controller/cardsflow_command_interface.cpp
+		)
+add_dependencies(CableLengthController roboy_communication_middleware_generate_messages_cpp )
+target_link_libraries(CableLengthController ${catkin_LIBRARIES})
 
 add_executable( test_idyntree src/test_idyntree.cpp)
 target_link_libraries(test_idyntree ${iDynTree_LIBRARIES} ${catkin_LIBRARIES})
