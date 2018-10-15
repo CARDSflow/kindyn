@@ -15,6 +15,7 @@ namespace cardsflow {
                     link_name(link_name), local_coordinates(local_coordinates),
                     global_coordinates(local_coordinates) {};
             string link_name;
+            int link_index;
             Vector3d local_coordinates;
             Vector3d global_coordinates;
         };

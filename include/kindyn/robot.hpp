@@ -67,7 +67,7 @@ namespace cardsflow {
             bool InverseKinematicsService(roboy_communication_middleware::InverseKinematics::Request &req,
                                           roboy_communication_middleware::InverseKinematics::Response &res);
 
-            map <string, Matrix4d> world_to_link_transform;
+            vector<Matrix4d> world_to_link_transform;
 
             void init();
 

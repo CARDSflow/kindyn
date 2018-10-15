@@ -15,8 +15,8 @@ int main(int argc, char *argv[]){
 
     int i = 0;
     while(ros::ok()){
-        robot.updateController();
         robot.update(0.0001);
+        robot.updateController();
         i++;
     }
 

@@ -125,7 +125,8 @@ void Robot::init() {
     CG.resize(number_of_dofs);
     CG.setZero();
 
-    bias = iDynTree::FreeFloatingGeneralizedTorques(kinDynComp.model());
+    const iDynTree::Model &model = kinDynComp.model();
+    bias = iDynTree::FreeFloatingGeneralizedTorques(model);
     Mass = iDynTree::MatrixDynSize(number_of_dofs + 6, number_of_dofs + 6);
 
     iDynTree::Transform world_H_base_;
@@ -146,6 +147,8 @@ void Robot::init() {
     CG = toEigen(bias.jointTorques());
     M = toEigen(Mass);
 
+    world_to_link_transform.resize(number_of_links);
+
     V.resize(number_of_cables, 6 * number_of_links);
     V.setZero(number_of_cables, 6 * number_of_links);
     P.resize(6 * number_of_links, 6 * number_of_links);
@@ -157,7 +160,9 @@ void Robot::init() {
 
     int muscle_index = 0;
     for (auto muscle:cables) {
+        muscle.viaPoints[0]->link_index = model.getLinkIndex(muscle.viaPoints[0]->link_name);
         for (int i = 1; i < muscle.viaPoints.size(); i++) {
+            muscle.viaPoints[i]->link_index = model.getLinkIndex(muscle.viaPoints[i]->link_name);
             pair<ViaPointPtr, ViaPointPtr> segment(muscle.viaPoints[i - 1], muscle.viaPoints[i]);
             segments[muscle_index].push_back(segment);
         }
@@ -296,18 +301,16 @@ void Robot::update(double period) {
     M = toEigen(Mass);
 
     const iDynTree::Model &model = kinDynComp.model();
-    int i = 0;
-    for (auto &link_name:link_names) {
+    for (int i=0; i<number_of_links;i++) {
         Matrix4d pose = iDynTree::toEigen(kinDynComp.getRelativeTransform(0, i).asHomogeneousTransform());
         Vector3d com = iDynTree::toEigen(model.getLink(i)->getInertia().getCenterOfMass());
         pose.block(0, 3, 3, 1) += pose.block(0, 0, 3, 3) * com;
-        world_to_link_transform[link_name] = pose.inverse();
-        i++;
+        world_to_link_transform[i] = pose.inverse();
     }
 
     for (auto muscle:cables) {
         for (auto vp:muscle.viaPoints) {
-            Matrix4d transform = world_to_link_transform[vp->link_name].inverse();
+            Matrix4d transform = world_to_link_transform[vp->link_index].inverse();
             vp->global_coordinates = transform.block(0, 3, 3, 1) + transform.block(0, 0, 3, 3) * vp->local_coordinates;
         }
     }
@@ -318,24 +321,6 @@ void Robot::update(double period) {
     W = P * S;
     L = V * W;
     L_t = -L.transpose();
-
-//    std_msgs::Float64MultiArray msg[7];
-//
-//    grid_map::matrixEigenCopyToMultiArrayMessage(M, msg[0]);
-//    grid_map::matrixEigenCopyToMultiArrayMessage(G, msg[1]);
-//    grid_map::matrixEigenCopyToMultiArrayMessage(C, msg[2]);
-//    grid_map::matrixEigenCopyToMultiArrayMessage(L, msg[3]);
-//    grid_map::matrixEigenCopyToMultiArrayMessage(V, msg[4]);
-//    grid_map::matrixEigenCopyToMultiArrayMessage(S, msg[5]);
-//    grid_map::matrixEigenCopyToMultiArrayMessage(P, msg[6]);
-//
-//    M_pub.publish(msg[0]);
-//    C_pub.publish(msg[2]);
-//    G_pub.publish(msg[1]);
-//    L_pub.publish(msg[3]);
-//    V_pub.publish(msg[4]);
-//    S_pub.publish(msg[5]);
-//    P_pub.publish(msg[6]);
 }
 
 void Robot::updateController() {
@@ -464,12 +449,12 @@ void Robot::forwardKinematics(double dt) {
     robot_state_pub.publish(msg);
     joint_state_pub.publish(msg2);
 
-    for (auto link:link_names) {
+    for (int i=0;i<number_of_links;i++) {
         tf::Transform trans;
         Affine3d aff;
-        aff.matrix() = world_to_link_transform[link].inverse();
+        aff.matrix() = world_to_link_transform[i].inverse();
         tf::transformEigenToTF(aff, trans);
-        tf_broadcaster.sendTransform(tf::StampedTransform(trans, ros::Time::now(), "world", link.c_str()));
+        tf_broadcaster.sendTransform(tf::StampedTransform(trans, ros::Time::now(), "world", link_names[i].c_str()));
     }
 
     message_counter = 6666;
@@ -488,10 +473,10 @@ void Robot::update_V() {
                 segmentVector = segment.second->global_coordinates - segment.first->global_coordinates;
                 segmentVector.normalize();
 
-                int k = link_index[segment.first->link_name];
+                int k = segment.first->link_index;
                 if (k > 0) {
                     // convert to link coordinate frame
-                    Matrix4d transformMatrix = world_to_link_transform[link_names[k]];
+                    Matrix4d transformMatrix = world_to_link_transform[k];
                     Matrix3d rotate_to_link_frame = transformMatrix.block(0, 0, 3, 3);
 
                     Vector3d segmentVector_k = rotate_to_link_frame * segmentVector;
@@ -507,10 +492,10 @@ void Robot::update_V() {
                     V.block(muscle_index, 6 * k + 3, 1, 3) = V_itk_T.transpose();
                 }
 
-                k = link_index[segment.second->link_name];
+                k = segment.second->link_index;
                 if (k > 0) {
                     // convert to link coordinate frame
-                    Matrix4d transformMatrix = world_to_link_transform[link_names[k]];
+                    Matrix4d transformMatrix = world_to_link_transform[k];
                     Matrix3d rotate_to_link_frame = transformMatrix.block(0, 0, 3, 3);
 
                     Vector3d segmentVector_k = rotate_to_link_frame * segmentVector;
@@ -554,11 +539,11 @@ void Robot::update_P() {
 
     static int counter = 0;
     for (int k = 1; k < number_of_links; k++) {
-        Matrix4d transformMatrix_k = world_to_link_transform[link_names[k]];
+        Matrix4d transformMatrix_k = world_to_link_transform[k];
         Matrix3d R_k0 = transformMatrix_k.block(0, 0, 3, 3);
 
         for (int a = 1; a <= k; a++) {
-            Matrix4d transformMatrix_a = world_to_link_transform[link_names[a]];
+            Matrix4d transformMatrix_a = world_to_link_transform[a];
             Matrix3d R_0a = transformMatrix_a.block(0, 0, 3, 3).transpose();
             R_ka = R_k0 * R_0a;
 
@@ -579,18 +564,6 @@ void Robot::update_P() {
             Pak.block(3, 0, 3, 3) = Matrix3d::Zero(3, 3);
             Pak.block(3, 3, 3, 3) = R_ka;
             P.block(6 * k, 6 * a, 6, 6) = Pak;
-
-            if (log && (counter % 100 == 0)) {
-                Eigen::IOFormat fmt(4, 0, " ", ";\n", "", "", "[", "]");
-                log_file << "---------------------" << link_names[k] << "---" << link_names[a] << endl;
-                log_file << "R_0k = " << R_k0.format(fmt) << endl;
-                log_file << "R_0a = " << R_0a.format(fmt) << endl;
-                log_file << "R_ka = " << R_ka.format(fmt) << endl;
-                log_file << "R_pe = " << R_pe.format(fmt) << endl;
-                log_file << "r_OP = " << r_OP.format(fmt) << endl;
-                log_file << "r_OG = " << r_OG.format(fmt) << endl;
-                log_file << "Pak = " << Pak.format(fmt) << endl;
-            }
         }
     }
 
