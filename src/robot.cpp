@@ -333,85 +333,6 @@ void Robot::update(double period) {
     L_t = -L.transpose();
 }
 
-void Robot::updateController() {
-//    static int counter = 0;
-//
-//    vector<double> q_target_;
-//    nh->getParam("q_target", q_target_);
-//    for (int i = 0; i < number_of_dofs; i++)
-//        q_target[i] = q_target_[i];
-//
-//    nh->getParam("Kp", Kp);
-//    nh->getParam("Kd", Kd);
-//
-//    e = q_target - q;
-//    de = qd_target - qd;
-//
-//    VectorXd q_dd_cmd = qdd_target + Kp * e + Kd * de;
-//
-//    torques = M.block(6, 6, number_of_dofs, number_of_dofs) * q_dd_cmd + CG;// + w_ext
-//
-//    nh->getParam("controller", controller);
-//
-//    switch (controller) {
-//        case 0: {
-//            ROS_WARN_THROTTLE(5, "caspr controller active");
-//            VectorXd f_min, f_max;
-//            f_min.resize(number_of_dofs);
-//            f_max.resize(number_of_dofs);
-//
-//            double min_force, max_force;
-//            nh->getParam("min_force", min_force);
-//            nh->getParam("max_force", max_force);
-//
-//            f_min = VectorXd::Ones(number_of_cables);
-//            f_max = VectorXd::Ones(number_of_cables);
-//
-//            f_min = min_force * f_min;
-//            f_max = max_force * f_max;
-//
-//            cable_forces = resolve_function(L_t, torques, f_min, f_max);
-////            torques.setZero();
-//            break;
-//        }
-//        case 1: {
-//            ROS_WARN_THROTTLE(5, "torque controller active");
-////            if (simulate) {
-////                int i = 0;
-////                roboy_communication_middleware::TorqueControl msg;
-////                msg.request.joint_names = joint_names;
-////                for (auto &joint_name:joint_names) {
-////                    if (abs(torques[i]) < 10000000 && isfinite(torques[i]))
-////                        msg.request.torque.push_back(torques[i]);
-////                    else
-////                        msg.request.torque.push_back(0);
-////                    i++;
-////                }
-////                if (!torque_control_srv.call(msg))
-////                    ROS_WARN_ONCE("could not set torque, service unavailable");
-////            }
-//            break;
-//        }
-//        case 2: { // position control
-//            ROS_WARN_THROTTLE(5, "position controller active");
-//            ld = L * (Kd * (qd_target - qd) + Kp * (q_target - q));
-////            torques.setZero();
-//            break;
-//        }
-//        default: { // deactivate
-//            torques.setZero();
-//            ROS_WARN_THROTTLE(5, "controller not active");
-//            break;
-//        }
-//    }
-//    ROS_INFO_STREAM_THROTTLE(1, "torques " << torques.transpose());
-    ROS_INFO_STREAM_THROTTLE(1, "M " << M.format(fmt));
-    ROS_INFO_STREAM_THROTTLE(1, "C+G " << CG.transpose());
-    ROS_INFO_STREAM_THROTTLE(1, "qdd " << qdd.transpose());
-    ROS_INFO_STREAM_THROTTLE(1, "qd " << qd.transpose());
-    ROS_INFO_STREAM_THROTTLE(1, "q " << q.transpose());
-}
-
 void Robot::forwardKinematics(double dt) {
     const iDynTree::Model &model = kinDynComp.model();
     vector<double> q_target_;
@@ -444,6 +365,12 @@ void Robot::forwardKinematics(double dt) {
             l += Ld * dt;
             break;
     }
+
+    ROS_INFO_STREAM_THROTTLE(1, "M " << M.format(fmt));
+    ROS_INFO_STREAM_THROTTLE(1, "C+G " << CG.transpose());
+    ROS_INFO_STREAM_THROTTLE(1, "qdd " << qdd.transpose());
+    ROS_INFO_STREAM_THROTTLE(1, "qd " << qd.transpose());
+    ROS_INFO_STREAM_THROTTLE(1, "q " << q.transpose());
 
     moveit_msgs::DisplayRobotState msg;
     sensor_msgs::JointState msg2;
@@ -478,10 +405,6 @@ void Robot::forwardKinematics(double dt) {
         tf::transformEigenToTF(aff, trans);
         tf_broadcaster.sendTransform(tf::StampedTransform(trans, ros::Time::now(), "world", link_names[i].c_str()));
     }
-
-    message_counter = 6666;
-    publishTendons();
-    publishForces();
 }
 
 void Robot::update_V() {
@@ -606,118 +529,6 @@ bool Robot::getTransform(const char *to, const char *from, Matrix4d &transform) 
     tf::transformTFToEigen(trans, trans_);
     transform = trans_.matrix();
     return true;
-}
-
-void Robot::publishTendons() {
-    visualization_msgs::Marker line_strip;
-    line_strip.header.frame_id = "world";
-    line_strip.header.stamp = ros::Time::now();
-    line_strip.ns = "tendons_";
-    line_strip.action = visualization_msgs::Marker::ADD;
-    line_strip.type = visualization_msgs::Marker::LINE_STRIP;
-    line_strip.scale.x = 0.003;
-    line_strip.color.r = 0;
-    line_strip.color.g = 0;
-    line_strip.color.b = 1.0;
-    line_strip.color.a = 1.0;
-    line_strip.pose.orientation.w = 1.0;
-    line_strip.lifetime = ros::Duration(0);
-    for (uint muscle = 0; muscle < cables.size(); muscle++) {
-        line_strip.points.clear();
-        line_strip.id = muscle + 9999999;
-        for (uint i = 1; i < cables[muscle].viaPoints.size(); i++) {
-            geometry_msgs::Point p;
-            p.x = cables[muscle].viaPoints[i - 1]->global_coordinates[0];
-            p.y = cables[muscle].viaPoints[i - 1]->global_coordinates[1];
-            p.z = cables[muscle].viaPoints[i - 1]->global_coordinates[2];
-            line_strip.points.push_back(p);
-            p.x = cables[muscle].viaPoints[i]->global_coordinates[0];
-            p.y = cables[muscle].viaPoints[i]->global_coordinates[1];
-            p.z = cables[muscle].viaPoints[i]->global_coordinates[2];
-            line_strip.points.push_back(p);
-            if (controller == 2) { // position control
-                Vector3d pos = (cables[muscle].viaPoints[i]->global_coordinates +
-                                cables[muscle].viaPoints[i - 1]->global_coordinates) / 2.0;
-                char str[100];
-                sprintf(str, "%.3lf", l[muscle]);
-                publishText(pos, str, "world", "tendon_length", message_counter++, COLOR(1, 1, 1, 1), 1, 0.01);
-            }
-        }
-        visualization_pub.publish(line_strip);
-//        for (uint i = 0; i < muscles[muscle].viaPoints.size(); i++) {
-//            publishSphere(muscles[muscle].viaPoints[i]->global_coordinates,"world","viaPoints",message_counter++,COLOR(0,1,1,1),0.01,1);
-//        }
-    }
-//    int i = 0;
-//    for (auto muscle:cables) {
-//        Matrix4d transform = world_to_link_transform[muscle.viaPoints.front()->link_name].inverse();
-//        muscle.viaPoints.front()->global_coordinates = transform.block(0, 3, 3, 1) + transform.block(0, 0, 3, 3) * muscle.viaPoints.front()->local_coordinates;
-//        char str[20];
-//        if(active_motors.end() == active_motors.find(id))
-//            sprintf(str,"motor%d",i);
-//        else
-//            sprintf(str,"motor%d",active_motors[id][i]);
-//        publishText(muscle.viaPoints.front()->global_coordinates, str, "world", (end_effektor_name+"_motor_ids").c_str(), message_counter++, COLOR(0, 1, 1, 1), 5,0.01);
-//        i++;
-//    }
-}
-
-void Robot::publishForces() {
-//    visualization_msgs::Marker arrow;
-//    arrow.header.frame_id = "world";
-//    arrow.ns = "force_";
-//    arrow.type = visualization_msgs::Marker::ARROW;
-//    arrow.color.a = 1.0;
-//    arrow.lifetime = ros::Duration(0);
-//    arrow.scale.x = 0.005;
-//    arrow.scale.y = 0.01;
-//    arrow.scale.z = 0.01;
-//    arrow.pose.orientation.w = 1;
-//    arrow.pose.orientation.x = 0;
-//    arrow.pose.orientation.y = 0;
-//    arrow.pose.orientation.z = 0;
-//    arrow.action = visualization_msgs::Marker::ADD;
-//
-//    for (uint muscle = 0; muscle < cables.size(); muscle++) {
-//        for (uint i = 1; i < cables[muscle].viaPoints.size(); i++) {
-//            // actio
-//            arrow.id = message_counter++;
-//            arrow.color.r = 0.0f;
-//            arrow.color.g = 1.0f;
-//            arrow.color.b = 0.0f;
-//            arrow.header.stamp = ros::Time::now();
-//            arrow.points.clear();
-//            geometry_msgs::Point p;
-//            p.x = cables[muscle].viaPoints[i - 1]->global_coordinates[0];
-//            p.y = cables[muscle].viaPoints[i - 1]->global_coordinates[1];
-//            p.z = cables[muscle].viaPoints[i - 1]->global_coordinates[2];
-//            Vector3d dir = cables[muscle].viaPoints[i - 1]->global_coordinates -
-//                           cables[muscle].viaPoints[i]->global_coordinates;
-//            dir.normalize();
-//            arrow.points.push_back(p);
-//            p.x -= dir[0] * cable_forces[muscle] * 0.001; // show fraction of force
-//            p.y -= dir[1] * cable_forces[muscle] * 0.001;
-//            p.z -= dir[2] * cable_forces[muscle] * 0.001;
-//            arrow.points.push_back(p);
-//            visualization_pub.publish(arrow);
-//            // reactio
-//            arrow.id = message_counter++;
-//            arrow.color.r = 1.0f;
-//            arrow.color.g = 1.0f;
-//            arrow.color.b = 0.0f;
-//            arrow.header.stamp = ros::Time::now();
-//            arrow.points.clear();
-//            p.x = cables[muscle].viaPoints[i]->global_coordinates[0];
-//            p.y = cables[muscle].viaPoints[i]->global_coordinates[1];
-//            p.z = cables[muscle].viaPoints[i]->global_coordinates[2];
-//            arrow.points.push_back(p);
-//            p.x += dir[0] * cable_forces[muscle] * 0.001; // show fraction of force
-//            p.y += dir[1] * cable_forces[muscle] * 0.001;
-//            p.z += dir[2] * cable_forces[muscle] * 0.001;
-//            arrow.points.push_back(p);
-//            visualization_pub.publish(arrow);
-//        }
-//    }
 }
 
 //bool Robot::ForwardKinematicsService(roboy_communication_middleware::ForwardKinematics::Request &req,

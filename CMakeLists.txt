@@ -58,9 +58,9 @@ include_directories(
 
 add_library(kindyn SHARED
         src/EigenExtension.cpp
-		src/robot.cpp
+        src/robot.cpp
 		include/kindyn/EigenExtension.hpp
-		include/kindyn/robot.hpp
+        include/kindyn/robot.hpp
 		src/test_robot.cpp include/kindyn/cable.hpp)
 add_dependencies( kindyn roboy_communication_middleware_gencpp )
 target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CableLengthController)

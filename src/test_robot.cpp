@@ -37,7 +37,6 @@ int main(int argc, char *argv[]) {
 
     while(ros::ok()){
         robot.update(0.0001);
-        robot.updateController();
         ros::spinOnce();
     }
 

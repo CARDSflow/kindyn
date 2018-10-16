@@ -50,7 +50,7 @@ using iDynTree::fromEigen;
 namespace cardsflow {
     namespace kindyn {
 
-        class Robot:public rviz_visualization, public hardware_interface::RobotHW{
+        class Robot:public hardware_interface::RobotHW{
         public:
             /**
              * Constructor
@@ -65,8 +65,6 @@ namespace cardsflow {
             void update(double period);
 
             void forwardKinematics(double dt);
-
-            void updateController();
 
             bool ForwardKinematicsService(roboy_communication_middleware::ForwardKinematics::Request &req,
                                           roboy_communication_middleware::ForwardKinematics::Response &res);
@@ -88,12 +86,6 @@ namespace cardsflow {
             void update_P();
 
             bool getTransform(const char *to, const char *from, Matrix4d &transform);
-
-            int message_counter = 6666;
-
-            void publishTendons();
-
-            void publishForces();
 
             ros::NodeHandlePtr nh;
             boost::shared_ptr <ros::AsyncSpinner> spinner;
