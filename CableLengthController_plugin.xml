@@ -1,6 +1,6 @@
 <library path="lib/libCableLengthController">
     <class name="cardsflow/kindyn/CableLengthController" type="CableLengthController"
            base_class_type="controller_interface::ControllerBase">
-        <description>This is a cardsflow cable length controller plugin.</description>
+        <description>This is a cardsflow cable length controller</description>
     </class>
 </library>

@@ -3,9 +3,24 @@
 
 using namespace std;
 
+class Robot: public cardsflow::kindyn::Robot{
+public:
+    Robot(string urdf, string cardsflow_xml){
+        init(urdf,cardsflow_xml);
+    };
+    void read(){
+        update();
+        forwardKinematics(0.00001);
+    };
+
+    void write(){
+
+    };
+};
+
 void update(controller_manager::ControllerManager *cm) {
     ros::Time prev_time = ros::Time::now();
-    ros::Rate rate(10);
+    ros::Rate rate(100);
     while (ros::ok()) {
         const ros::Time time = ros::Time::now();
         const ros::Duration period = time - prev_time;
@@ -18,14 +33,20 @@ int main(int argc, char *argv[]) {
     if (!ros::isInitialized()) {
         int argc = 0;
         char **argv = NULL;
-        ros::init(argc, argv, "test_robot", ros::init_options::NoSigintHandler);
+        ros::init(argc, argv, "test_robot");
     }
-    if(argc!=3){
-        ROS_ERROR("USAGE: rosrun kindyn test_robot path_to_urdf path_to_viapoints_xml");
+    ros::NodeHandle nh;
+    string urdf, cardsflow_xml;
+    if(nh.hasParam("urdf_file_path") && nh.hasParam("cardsflow_xml")) {
+        nh.getParam("urdf_file_path", urdf);
+        nh.getParam("cardsflow_xml", cardsflow_xml);
+    }else {
+        ROS_FATAL("USAGE: rosrun kindyn test_robot path_to_urdf path_to_viapoints_xml");
+        return 1;
     }
-    ROS_INFO("%s %s", argv[1], argv[2]);
+    ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
-    cardsflow::kindyn::Robot robot(argv[1], argv[2]);
+    Robot robot(urdf, cardsflow_xml);
 
     controller_manager::ControllerManager cm(&robot);
 
@@ -36,7 +57,8 @@ int main(int argc, char *argv[]) {
     ROS_INFO("STARTING ROBOT MAIN LOOP...");
 
     while(ros::ok()){
-        robot.update(0.0001);
+        robot.read();
+        robot.write();
         ros::spinOnce();
     }
 

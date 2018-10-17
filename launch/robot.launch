@@ -2,13 +2,15 @@
     <arg name="model_name" default="msj_platform"/>
     <param name="robot_name" type="string" value="$(arg model_name)"  />
     <param name="robot_description" textfile="$(find robots)/$(arg model_name)/model.urdf" />
+    <param name="urdf_file_path" type="string" value="$(find robots)/$(arg model_name)/model.urdf" />
+    <param name="cardsflow_xml" type="string" value="$(find robots)/$(arg model_name)/cardsflow.xml" />
     <rosparam file="$(find robots)/$(arg model_name)/config/controller.yaml" command="load"/>
     <param name="Kp" type="double" value="100"  />
     <param name="Kd" type="double" value="10"  />
     <rosparam param="q_target">[0.0, 0.0, 0.0]</rosparam>
     <param name="min_force" type="double" value="0"  />
     <param name="max_force" type="double" value="500"  />
-    <param name="controller" type="int" value="1"  />
+    <param name="controller" type="int" value="2"  />
     <node name="controller_manager"
           pkg="controller_manager"
           type="spawner"
@@ -19,7 +21,6 @@
           type="test_robot"
           respawn="false"
           output="screen"
-          args="$(find robots)/$(arg model_name)/model.urdf $(find robots)/$(arg model_name)/cardsflow.xml"
     />
 
 </launch>

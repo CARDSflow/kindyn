@@ -21,5 +21,6 @@
 
     <export>
         <controller_interface plugin="${prefix}/CableLengthController_plugin.xml"/>
+        <controller_interface plugin="${prefix}/TorquePositionController_plugin.xml"/>
     </export>
 </package>

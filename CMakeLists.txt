@@ -28,6 +28,7 @@ find_package(catkin REQUIRED COMPONENTS
 		hardware_interface
 		controller_manager
 		eigen_conversions
+		effort_controllers
 )
 
 catkin_package( CATKIN_DEPENDS roboy_communication_middleware common_utilities
@@ -65,7 +66,7 @@ add_library(kindyn SHARED
         include/kindyn/robot.hpp
 		src/test_robot.cpp include/kindyn/cable.hpp)
 add_dependencies( kindyn roboy_communication_middleware_gencpp )
-target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CableLengthController)
+target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CableLengthController TorquePositionController)
 
 add_library(CableLengthController
 		src/controller/cableLengthController.cpp
@@ -74,6 +75,14 @@ add_library(CableLengthController
 		)
 add_dependencies(CableLengthController roboy_communication_middleware_generate_messages_cpp )
 target_link_libraries(CableLengthController ${catkin_LIBRARIES})
+
+add_library(TorquePositionController
+		src/controller/torquePositionController.cpp
+		src/controller/cardsflow_state_interface.cpp
+		src/controller/cardsflow_command_interface.cpp
+		)
+add_dependencies(TorquePositionController roboy_communication_middleware_generate_messages_cpp )
+target_link_libraries(TorquePositionController ${catkin_LIBRARIES})
 
 add_executable( test_idyntree src/test_idyntree.cpp)
 target_link_libraries(test_idyntree ${iDynTree_LIBRARIES} ${catkin_LIBRARIES})

@@ -1,0 +1,6 @@
+<library path="lib/libTorquePositionController">
+    <class name="cardsflow/kindyn/TorquePositionController" type="TorquePositionController"
+           base_class_type="controller_interface::ControllerBase">
+        <description>This is a cardsflow torque position controller</description>
+    </class>
+</library>
