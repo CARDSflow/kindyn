@@ -1,5 +1,6 @@
 <launch>
     <arg name="model_name" default="msj_platform"/>
+    <param name="robot_name" type="string" value="$(arg model_name)"  />
     <param name="robot_description" textfile="$(find robots)/$(arg model_name)/model.urdf" />
     <rosparam file="$(find robots)/$(arg model_name)/config/controller.yaml" command="load"/>
     <param name="Kp" type="double" value="100"  />
@@ -7,6 +8,7 @@
     <rosparam param="q_target">[0.0, 0.0, 0.0]</rosparam>
     <param name="min_force" type="double" value="0"  />
     <param name="max_force" type="double" value="500"  />
+    <param name="controller" type="int" value="1"  />
     <node name="controller_manager"
           pkg="controller_manager"
           type="spawner"

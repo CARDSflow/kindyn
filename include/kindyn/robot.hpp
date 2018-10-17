@@ -20,18 +20,13 @@
 #include <roboy_communication_middleware/InverseKinematics.h>
 #include <roboy_communication_middleware/MotorCommand.h>
 #include <roboy_communication_middleware/MotorStatus.h>
-#include <std_msgs/Float64MultiArray.h>
-#include <moveit_msgs/DisplayRobotState.h>
-#include <sensor_msgs/JointState.h>
 
-#include <common_utilities/measureExecutionTime.hpp>
 #include <tf/tf.h>
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_listener.h>
 #include <tf_conversions/tf_eigen.h>
 #include <eigen_conversions/eigen_msg.h>
 #include <grid_map_ros/GridMapMsgHelpers.hpp>
-#include <common_utilities/rviz_visualization.hpp>
 
 #include <qpOASES.hpp>
 
@@ -40,6 +35,10 @@
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/joint_state_interface.h>
 #include <hardware_interface/robot_hw.h>
+
+#include <roboy_communication_simulation/Tendon.h>
+#include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/Vector3.h>
 
 using namespace qpOASES;
 using namespace std;
@@ -85,10 +84,9 @@ namespace cardsflow {
 
             void update_P();
 
-            bool getTransform(const char *to, const char *from, Matrix4d &transform);
-
             ros::NodeHandlePtr nh;
             boost::shared_ptr <ros::AsyncSpinner> spinner;
+            ros::Publisher robot_state, tendon_state;
 
             // robot model
             iDynTree::KinDynComputations kinDynComp;
@@ -106,7 +104,7 @@ namespace cardsflow {
             iDynTree::MatrixDynSize Mass;
             VectorXd CG;
             MatrixXd S, P, V, W, L, L_t;
-            VectorXd l;
+            VectorXd l, Ld;
             vector<VectorXd> ld;
             VectorXd x, x_dot, x_dot_relative;
             VectorXd e, de, dde;
@@ -126,13 +124,9 @@ namespace cardsflow {
             int joint_angle_mask;
             int controller = 1;
         private:
-            ofstream log_file;
             Eigen::IOFormat fmt;
             static int instance;
             bool verbose, log;
-            tf::TransformListener tf_listener;
-            tf::TransformBroadcaster tf_broadcaster;
-            ros::Publisher robot_state_pub, joint_state_pub;
         private:
             hardware_interface::CardsflowStateInterface cardsflow_state_interface;
             hardware_interface::CardsflowCommandInterface cardsflow_command_interface;

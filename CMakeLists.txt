@@ -18,6 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
 		message_generation
 		common_utilities
 		roboy_communication_middleware
+		roboy_communication_simulation
 		tf
 		tf_conversions
         robot_state_publisher
@@ -26,6 +27,7 @@ find_package(catkin REQUIRED COMPONENTS
 		controller_interface
 		hardware_interface
 		controller_manager
+		eigen_conversions
 )
 
 catkin_package( CATKIN_DEPENDS roboy_communication_middleware common_utilities

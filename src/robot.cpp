@@ -10,8 +10,8 @@ Robot::Robot(string urdf_file_path, string viapoints_file_path) {
     }
     nh = ros::NodeHandlePtr(new ros::NodeHandle);
 
-    robot_state_pub = nh->advertise<moveit_msgs::DisplayRobotState>("/display_robot_state", 1);
-    joint_state_pub = nh->advertise<sensor_msgs::JointState>("/joint_states", 1);
+    robot_state = nh->advertise<geometry_msgs::PoseStamped>("/robot_state",1);
+    tendon_state = nh->advertise<roboy_communication_simulation::Tendon>("/tendon_state",1);
 
     fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
 
@@ -195,6 +195,8 @@ void Robot::init() {
     b = new real_t[number_of_dofs];
     FOpt = new real_t[number_of_cables];
     l.resize(number_of_cables);
+    Ld.resize(number_of_cables);
+    Ld.setZero();
     ld.resize(number_of_dofs);
     l.setZero();
     for(int i=0;i<number_of_dofs;i++){
@@ -276,16 +278,6 @@ VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min
             }
         }
     }
-
-    bool log;
-    nh->getParam("log", log);
-    if (log) {
-        Eigen::IOFormat fmt(4, 0, " ", ";\n", "", "", "[", "]");
-        log_file << "---------------------" << endl;
-        log_file << "A_eq = " << A_eq.format(fmt) << endl;
-        log_file << "b_eq = " << b_eq.transpose().format(fmt) << endl;
-    }
-
     return f_opt;
 }
 
@@ -353,8 +345,6 @@ void Robot::forwardKinematics(double dt) {
             q += qd * dt;
             break;
         case 2:
-            VectorXd Ld;
-            Ld.resize(number_of_cables);
             Ld.setZero();
             for(int i=0; i<number_of_dofs; i++) {
 //                ROS_INFO_STREAM_THROTTLE(1,i << " " << ld[i].transpose().format(fmt));
@@ -367,43 +357,35 @@ void Robot::forwardKinematics(double dt) {
     }
 
     ROS_INFO_STREAM_THROTTLE(1, "M " << M.format(fmt));
-    ROS_INFO_STREAM_THROTTLE(1, "C+G " << CG.transpose());
-    ROS_INFO_STREAM_THROTTLE(1, "qdd " << qdd.transpose());
-    ROS_INFO_STREAM_THROTTLE(1, "qd " << qd.transpose());
-    ROS_INFO_STREAM_THROTTLE(1, "q " << q.transpose());
+    ROS_INFO_STREAM_THROTTLE(1, "C+G " << CG.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(1, "qdd " << qdd.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(1, "qd " << qd.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(1, "q " << q.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(1, "l " << l.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(1, "ld " << Ld.transpose().format(fmt));
 
-    moveit_msgs::DisplayRobotState msg;
-    sensor_msgs::JointState msg2;
-    static int id = 0;
-    msg.state.joint_state.header.frame_id = "world";
-    msg.state.joint_state.header.seq = id++;
-    msg.state.joint_state.header.stamp = ros::Time::now();
-    int j = 0;
-
-    for (auto joint:joint_names) {
-        moveit_msgs::ObjectColor color;
-        color.color.a = 1;
-        color.color.r = 1;
-        color.color.g = 1;
-        color.color.b = 1;
-        msg.highlight_links.push_back(color);
-
-        msg.state.joint_state.name.push_back(joint);
-        msg.state.joint_state.position.push_back(q[j]);
-        msg.state.joint_state.velocity.push_back(qd[j]);
-        msg.state.joint_state.effort.push_back(qdd[j]);
-        j++;
+    for(int i=0;i<number_of_cables;i++){
+        roboy_communication_simulation::Tendon msg;
+        msg.name = cables[i].name;
+        msg.force = 0;
+        msg.l = l[i];
+        msg.ld = Ld[i];
+        for(auto vp:cables[i].viaPoints){
+            geometry_msgs::Vector3 VP;
+            tf::vectorEigenToMsg(vp->global_coordinates,VP);
+            msg.viaPoints.push_back(VP);
+        }
+        tendon_state.publish(msg);
     }
-    msg2 = msg.state.joint_state;
-    robot_state_pub.publish(msg);
-    joint_state_pub.publish(msg2);
-
-    for (int i = 0; i < number_of_links; i++) {
-        tf::Transform trans;
-        Affine3d aff;
-        aff.matrix() = world_to_link_transform[i].inverse();
-        tf::transformEigenToTF(aff, trans);
-        tf_broadcaster.sendTransform(tf::StampedTransform(trans, ros::Time::now(), "world", link_names[i].c_str()));
+    static int seq = 0;
+    for(int i =0; i<number_of_links; i++){
+        geometry_msgs::PoseStamped msg;
+        msg.header.seq = seq;
+        msg.header.stamp = ros::Time::now();
+        msg.header.frame_id = link_names[i];
+        Isometry3d iso(world_to_link_transform[i].inverse());
+        tf::poseEigenToMsg(iso,msg.pose);
+        robot_state.publish(msg);
     }
 }
 
@@ -513,22 +495,6 @@ void Robot::update_P() {
     }
 
     counter++;
-}
-
-bool Robot::getTransform(const char *to, const char *from, Matrix4d &transform) {
-    tf::StampedTransform trans;
-    try {
-        tf_listener.lookupTransform(to, from, ros::Time(0), trans);
-    }
-    catch (tf::TransformException ex) {
-        ROS_WARN_THROTTLE(1, "%s", ex.what());
-        return false;
-    }
-
-    Eigen::Affine3d trans_;
-    tf::transformTFToEigen(trans, trans_);
-    transform = trans_.matrix();
-    return true;
 }
 
 //bool Robot::ForwardKinematicsService(roboy_communication_middleware::ForwardKinematics::Request &req,

@@ -16,6 +16,7 @@
     <depend>common_utilities</depend>
     <depend>controller_interface</depend>
     <depend>roboy_communication_middleware</depend>
+    <depend>roboy_communication_simulation</depend>
     <depend>eus_qpoases</depend>
 
     <export>
