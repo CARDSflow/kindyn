@@ -41,6 +41,8 @@
 #include <geometry_msgs/Vector3.h>
 #include <roboy_communication_simulation/ControllerState.h>
 
+#include <boost/numeric/odeint.hpp>
+
 using namespace qpOASES;
 using namespace std;
 using namespace Eigen;
@@ -134,7 +136,9 @@ namespace cardsflow {
             vector <string> link_names, joint_names;
             map<string, int> link_index, joint_index;
             vector<int> controller_type;
-
+            double integration_time =0;
+            typedef boost::array< double , 2 > state_type; // second order
+            vector<state_type> joint_state, motor_state;
             bool first_time_solving = true;
             SQProblem qp_solver; /// qpoases quadratic problem solver
             real_t *H, *g, *A, *lb, *ub, *b, *FOpt; /// quadratic problem variables

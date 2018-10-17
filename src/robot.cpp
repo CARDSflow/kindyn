@@ -120,7 +120,8 @@ void Robot::init(string urdf_file_path, string viapoints_file_path) {
     torques.setZero();
 
     controller_type.resize(number_of_cables,0);
-
+    joint_state.resize(number_of_dofs);
+    motor_state.resize(number_of_cables);
     // ros control
     for (int joint = 0; joint < number_of_dofs; joint++) {
         // connect and register the cardsflow state interface
@@ -140,7 +141,8 @@ void Robot::init(string urdf_file_path, string viapoints_file_path) {
         // connect and register the cardsflow command interface
         hardware_interface::JointHandle torque_handle(joint_state_interface.getHandle(joint_names[joint]), &torques[joint]);
         joint_command_interface.registerHandle(torque_handle);
-
+        joint_state[joint][0] = 0;
+        joint_state[joint][1] = 0;
     }
     registerInterface(&cardsflow_command_interface);
     registerInterface(&joint_command_interface);
@@ -189,6 +191,8 @@ void Robot::init(string urdf_file_path, string viapoints_file_path) {
             pair<ViaPointPtr, ViaPointPtr> segment(muscle.viaPoints[i - 1], muscle.viaPoints[i]);
             segments[muscle_index].push_back(segment);
         }
+        motor_state[muscle_index][0] = 0;
+        motor_state[muscle_index][1] = 0;
         muscle_index++;
     }
 
@@ -375,16 +379,37 @@ void Robot::forwardKinematics(double dt) {
 
     for(int j=0;j<joint_names.size();j++){
         if(controller_type[j]==0){
-            qd[j] += qdd[j] * dt;
-            q[j] += qd[j] * dt;
+            boost::numeric::odeint::integrate(
+                    [this,j](const state_type &x, state_type &dxdt, double t) {
+                        dxdt[1] = qdd[j];
+                        dxdt[0] = x[1];
+                    }, joint_state[j], integration_time, integration_time + dt, dt);
+//            qd[j] += qdd[j] * dt;
+//            q[j] += qd[j] * dt;
         }
         if(controller_type[j]==2){
-            qd[j] = qd_temp[j];
-            q[j] += qd_temp[j] * dt;
+            boost::numeric::odeint::integrate(
+                    [this,j,qd_temp](const state_type &x, state_type &dxdt, double t) {
+                        dxdt[1] = 0;
+                        dxdt[0] = qd_temp[j];
+                    }, joint_state[j], integration_time, integration_time + dt, dt);
+//            qd[j] = qd_temp[j];
+//            q[j] += qd_temp[j] * dt;
         }
+        qd[j] = joint_state[j][1];
+        q[j] = joint_state[j][0];
 //        ROS_INFO("%s control type %d", joint_names[j].c_str(), controller_type[j]);
     }
-    l += Ld * dt;
+    for (int i = 0; i < number_of_cables; i++) {
+        boost::numeric::odeint::integrate(
+                [this,i](const state_type &x, state_type &dxdt, double t) {
+                    dxdt[1] = 0;
+                    dxdt[0] = Ld[i];
+                }, motor_state[i], integration_time, integration_time + dt, dt);
+        l[i] = motor_state[i][0];
+    }
+//    l += Ld * dt;
+    integration_time += dt;
 
     ROS_INFO_STREAM_THROTTLE(1, "M " << M.format(fmt));
     ROS_INFO_STREAM_THROTTLE(1, "C+G " << CG.transpose().format(fmt));
