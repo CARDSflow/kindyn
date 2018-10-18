@@ -9,7 +9,8 @@ Robot::Robot() {
         ros::init(argc, argv, "CARDSflow robot", ros::init_options::NoSigintHandler);
     }
     nh = ros::NodeHandlePtr(new ros::NodeHandle);
-
+    spinner.reset(new ros::AsyncSpinner(0));
+    spinner->start();
     robot_state = nh->advertise<geometry_msgs::PoseStamped>("/robot_state",1);
     tendon_state = nh->advertise<roboy_communication_simulation::Tendon>("/tendon_state",1);
     controller_type_sub = nh->subscribe("/controller_type",100, &Robot::controllerType, this);
@@ -24,6 +25,7 @@ Robot::~Robot() {
     delete[] ub;
     delete[] b;
     delete[] FOpt;
+    delete[] link_to_link_transform;
 }
 
 void Robot::init(string urdf_file_path, string viapoints_file_path) {
@@ -173,6 +175,9 @@ void Robot::init(string urdf_file_path, string viapoints_file_path) {
     M = toEigen(Mass);
 
     world_to_link_transform.resize(number_of_links);
+    link_to_world_transform.resize(number_of_links);
+    frame_transform.resize(number_of_links);
+    link_to_link_transform = new Matrix3d[number_of_links*number_of_links];
 
     V.resize(number_of_cables, 6 * number_of_links);
     V.setZero(number_of_cables, 6 * number_of_links);
@@ -213,6 +218,8 @@ void Robot::init(string urdf_file_path, string viapoints_file_path) {
     ub = new real_t[number_of_cables];
     b = new real_t[number_of_dofs];
     FOpt = new real_t[number_of_cables];
+
+    last_visualization = ros::Time::now();
 }
 
 VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max) {
@@ -291,6 +298,7 @@ VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min
 }
 
 void Robot::update() {
+    ros::Time t0 = ros::Time::now();
     iDynTree::Transform world_H_base_;
     iDynTree::VectorDynSize jointPos, jointVel;
     jointPos.resize(number_of_dofs);
@@ -315,53 +323,62 @@ void Robot::update() {
         Vector3d com = iDynTree::toEigen(model.getLink(i)->getInertia().getCenterOfMass());
         pose.block(0, 3, 3, 1) += pose.block(0, 0, 3, 3) * com;
         world_to_link_transform[i] = pose.inverse();
+        link_to_world_transform[i] = pose;
+        frame_transform[i] = iDynTree::toEigen(model.getFrameTransform(i).asHomogeneousTransform());
+    }
+    for(int k = 1; k<number_of_links; k++){
+        for(int a= 1; a<=k; a++) {
+            link_to_link_transform[k*number_of_links+a] = world_to_link_transform[k].block(0, 0, 3, 3) * world_to_link_transform[a].block(0, 0, 3, 3);
+        }
     }
 
     for (auto muscle:cables) {
         for (auto vp:muscle.viaPoints) {
-            Matrix4d transform = world_to_link_transform[vp->link_index].inverse();
-            vp->global_coordinates = transform.block(0, 3, 3, 1) + transform.block(0, 0, 3, 3) * vp->local_coordinates;
+            vp->global_coordinates = link_to_world_transform[vp->link_index].block(0, 3, 3, 1) +
+                    link_to_world_transform[vp->link_index].block(0, 0, 3, 3) * vp->local_coordinates;
         }
     }
-
+    ROS_INFO_THROTTLE(1,"model update takes %f seconds", (ros::Time::now()-t0).toSec());
+    t0 = ros::Time::now();
     update_V();
+    ROS_INFO_THROTTLE(1,"update V takes %f seconds", (ros::Time::now()-t0).toSec());
+    t0 = ros::Time::now();
     update_P();
+    ROS_INFO_THROTTLE(1,"update P takes %f seconds", (ros::Time::now()-t0).toSec());
 
     W = P * S;
     L = V * W;
     L_t = -L.transpose();
 
-    for(int i=0;i<number_of_cables;i++){
-        roboy_communication_simulation::Tendon msg;
-        msg.name = cables[i].name;
-        msg.force = 0;
-        msg.l = l[i];
-        msg.ld = Ld[i];
-        for(auto vp:cables[i].viaPoints){
-            geometry_msgs::Vector3 VP;
-            tf::vectorEigenToMsg(vp->global_coordinates,VP);
-            msg.viaPoints.push_back(VP);
+    if(1.0/(ros::Time::now()-last_visualization).toSec()<30) {
+        for (int i = 0; i < number_of_cables; i++) {
+            roboy_communication_simulation::Tendon msg;
+            msg.name = cables[i].name;
+            msg.force = 0;
+            msg.l = l[i];
+            msg.ld = Ld[i];
+            for (auto vp:cables[i].viaPoints) {
+                geometry_msgs::Vector3 VP;
+                tf::vectorEigenToMsg(vp->global_coordinates, VP);
+                msg.viaPoints.push_back(VP);
+            }
+            tendon_state.publish(msg);
         }
-        tendon_state.publish(msg);
-    }
-    static int seq = 0;
-    for(int i =0; i<number_of_links; i++){
-        geometry_msgs::PoseStamped msg;
-        msg.header.seq = seq;
-        msg.header.stamp = ros::Time::now();
-        msg.header.frame_id = link_names[i];
-        Isometry3d iso(world_to_link_transform[i].inverse());
-        tf::poseEigenToMsg(iso,msg.pose);
-        robot_state.publish(msg);
+        static int seq = 0;
+        for (int i = 0; i < number_of_links; i++) {
+            geometry_msgs::PoseStamped msg;
+            msg.header.seq = seq;
+            msg.header.stamp = ros::Time::now();
+            msg.header.frame_id = link_names[i];
+            Isometry3d iso(world_to_link_transform[i].inverse());
+            tf::poseEigenToMsg(iso, msg.pose);
+            robot_state.publish(msg);
+        }
     }
 }
 
 void Robot::forwardKinematics(double dt) {
     const iDynTree::Model &model = kinDynComp.model();
-    vector<double> q_target_;
-    nh->getParam("q_target", q_target_);
-    for (int i = 0; i < number_of_dofs; i++)
-        q_target[i] = q_target_[i];
 
 //    qdd = M.block(6, 6, number_of_dofs, number_of_dofs).inverse() * (-L.transpose() * cable_forces + CG);
 //    qd += qdd * dt;
@@ -411,15 +428,16 @@ void Robot::forwardKinematics(double dt) {
 //    l += Ld * dt;
     integration_time += dt;
 
-    ROS_INFO_STREAM_THROTTLE(1, "M " << M.format(fmt));
-    ROS_INFO_STREAM_THROTTLE(1, "C+G " << CG.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(1, "qdd " << qdd.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(1, "qd " << qd.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(1, "q " << q.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(1, "l " << l.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(1, "ld " << Ld.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(1, "torques " << torques.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(1, "cable_forces " << cable_forces.transpose().format(fmt));
+//    ROS_INFO_STREAM_THROTTLE(1, "M " << M.format(fmt));
+//    ROS_INFO_STREAM_THROTTLE(1, "C+G " << CG.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "qdd " << qdd.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "qd " << qd.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "q " << q.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "l " << l.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "ld " << Ld.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "torques " << torques.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "cable_forces " << cable_forces.transpose().format(fmt));
 }
 
 void Robot::update_V() {
@@ -435,14 +453,8 @@ void Robot::update_V() {
 
                 int k = segment.first->link_index;
                 if (k > 0) {
-                    // convert to link coordinate frame
-                    Matrix4d transformMatrix = world_to_link_transform[k];
-                    Matrix3d rotate_to_link_frame = transformMatrix.block(0, 0, 3, 3);
-
-                    Vector3d segmentVector_k = rotate_to_link_frame * segmentVector;
-
                     // Total V term in translations
-                    Vector3d V_ijk_T = Vector3d(segmentVector_k(0), segmentVector_k(1), segmentVector_k(2));
+                    Vector3d V_ijk_T =  world_to_link_transform[k].block(0, 0, 3, 3) * segmentVector;
 
                     Vector3d temp_vec2 = segment.first->local_coordinates;
 
@@ -454,14 +466,8 @@ void Robot::update_V() {
 
                 k = segment.second->link_index;
                 if (k > 0) {
-                    // convert to link coordinate frame
-                    Matrix4d transformMatrix = world_to_link_transform[k];
-                    Matrix3d rotate_to_link_frame = transformMatrix.block(0, 0, 3, 3);
-
-                    Vector3d segmentVector_k = rotate_to_link_frame * segmentVector;
-
                     // Total V term in translations
-                    Vector3d V_ijk_T = Vector3d(segmentVector_k(0), segmentVector_k(1), segmentVector_k(2));
+                    Vector3d V_ijk_T = world_to_link_transform[k].block(0, 0, 3, 3) * segmentVector;
 
                     Vector3d temp_vec2 = segment.second->local_coordinates;
 
@@ -485,7 +491,7 @@ void Robot::update_S() {
         k++;
         j++;
     }
-    ROS_INFO_STREAM("S_t = " << S.transpose().format(fmt));
+//    ROS_INFO_STREAM("S_t = " << S.transpose().format(fmt));
 }
 
 void Robot::update_P() {
@@ -499,31 +505,17 @@ void Robot::update_P() {
 
     static int counter = 0;
     for (int k = 1; k < number_of_links; k++) {
-        Matrix4d transformMatrix_k = world_to_link_transform[k];
-        Matrix3d R_k0 = transformMatrix_k.block(0, 0, 3, 3);
-
         for (int a = 1; a <= k; a++) {
-            Matrix4d transformMatrix_a = world_to_link_transform[a];
-            Matrix3d R_0a = transformMatrix_a.block(0, 0, 3, 3).transpose();
-            R_ka = R_k0 * R_0a;
-
+            R_ka = link_to_link_transform[k*number_of_links+a];
             Matrix3d R_pe;
             Vector3d r_OP, r_OG;
             r_OP.setZero();
-
             R_pe = AngleAxisd(q[a - 1], joint_axis[a - 1].block(0, 0, 3, 1));
-
-            // Calculate forward position kinematics
-            Eigen::MatrixXd pose = iDynTree::toEigen(model.getFrameTransform(a).asHomogeneousTransform());
-            r_OP = R_0a.transpose() * pose.block(0, 3, 3, 1);
-
-            r_OG = R_k0 * transformMatrix_k.inverse().block(0, 3, 3, 1);
-
-            Pak.block(0, 0, 3, 3) = R_ka * R_pe.transpose();
-            Pak.block(0, 3, 3, 3) = -R_ka * EigenExtension::SkewSymmetric2(-r_OP + R_ka.transpose() * r_OG);
-            Pak.block(3, 0, 3, 3) = Matrix3d::Zero(3, 3);
-            Pak.block(3, 3, 3, 3) = R_ka;
-            P.block(6 * k, 6 * a, 6, 6) = Pak;
+            r_OP = link_to_world_transform[a].block(0, 0, 3, 3) * frame_transform[a].block(0, 3, 3, 1);
+            r_OG = world_to_link_transform[k].block(0, 0, 3, 3) * link_to_world_transform[k].block(0, 3, 3, 1);
+            P.block(6 * k, 6 * a, 3, 3) = R_ka * R_pe.transpose();
+            P.block(6 * k, 6 * a + 3, 3, 3) = -R_ka * EigenExtension::SkewSymmetric2(-r_OP + R_ka.transpose() * r_OG);
+            P.block(6 * k + 3, 6 * a + 3, 3, 3) = R_ka;
         }
     }
 

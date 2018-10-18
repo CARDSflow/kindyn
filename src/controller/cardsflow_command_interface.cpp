@@ -19,5 +19,6 @@ namespace hardware_interface
     void CardsflowHandle::setMotorCommand(VectorXd command) {*motor_cmd_ = command;}
     double CardsflowHandle::getJointPositionCommand() const {return *joint_position_cmd_;}
     double CardsflowHandle::getJointVelocityCommand() const {return *joint_velocity_cmd_;}
-
+    void CardsflowHandle::setJointPositionCommand(double cmd){*joint_position_cmd_ = cmd;}
+    void CardsflowHandle::setJointVelocityCommand(double cmd){*joint_velocity_cmd_ = cmd;}
 }

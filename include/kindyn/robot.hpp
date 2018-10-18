@@ -88,7 +88,8 @@ namespace cardsflow {
             bool InverseKinematicsService(roboy_communication_middleware::InverseKinematics::Request &req,
                                           roboy_communication_middleware::InverseKinematics::Response &res);
 
-            vector<Matrix4d> world_to_link_transform;
+            vector<Matrix4d> world_to_link_transform, link_to_world_transform, frame_transform;
+            Matrix3d *link_to_link_transform;
 
             VectorXd resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max);
 
@@ -143,7 +144,7 @@ namespace cardsflow {
             SQProblem qp_solver; /// qpoases quadratic problem solver
             real_t *H, *g, *A, *lb, *ub, *b, *FOpt; /// quadratic problem variables
 
-            double Kp = 100, Kd = 10;
+            ros::Time last_visualization;
         private:
             vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments;
             int joint_angle_mask;

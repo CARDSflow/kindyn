@@ -58,37 +58,42 @@ include_directories(
 #==============================================================================
 # Application
 #==============================================================================
+add_library(CardsflowHardwareInterface
+		src/controller/cardsflow_state_interface.cpp
+		src/controller/cardsflow_command_interface.cpp)
+add_dependencies(CardsflowHardwareInterface roboy_communication_middleware_generate_messages_cpp )
+target_link_libraries(CardsflowHardwareInterface ${catkin_LIBRARIES})
+
+# Cable Length Controller
+add_library(CableLengthController src/controller/cableLengthController.cpp )
+add_dependencies(CableLengthController roboy_communication_middleware_generate_messages_cpp )
+target_link_libraries(CableLengthController ${catkin_LIBRARIES} CardsflowHardwareInterface)
+
+# Torque Position Controller
+add_library(TorquePositionController src/controller/torquePositionController.cpp )
+add_dependencies(TorquePositionController roboy_communication_middleware_generate_messages_cpp )
+target_link_libraries(TorquePositionController ${catkin_LIBRARIES} CardsflowHardwareInterface)
 
 add_library(kindyn SHARED
-        src/EigenExtension.cpp
-        src/robot.cpp
+		src/robot.cpp
+		src/EigenExtension.cpp
 		include/kindyn/EigenExtension.hpp
-        include/kindyn/robot.hpp
-		src/test_robot.cpp include/kindyn/cable.hpp)
-add_dependencies( kindyn roboy_communication_middleware_gencpp )
-target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CableLengthController TorquePositionController)
-
-add_library(CableLengthController
-		src/controller/cableLengthController.cpp
-		src/controller/cardsflow_state_interface.cpp
-		src/controller/cardsflow_command_interface.cpp
-		)
-add_dependencies(CableLengthController roboy_communication_middleware_generate_messages_cpp )
-target_link_libraries(CableLengthController ${catkin_LIBRARIES})
-
-add_library(TorquePositionController
-		src/controller/torquePositionController.cpp
-		src/controller/cardsflow_state_interface.cpp
-		src/controller/cardsflow_command_interface.cpp
-		)
-add_dependencies(TorquePositionController roboy_communication_middleware_generate_messages_cpp )
-target_link_libraries(TorquePositionController ${catkin_LIBRARIES})
+		include/kindyn/robot.hpp
+		include/kindyn/cable.hpp)
+target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CardsflowHardwareInterface
+		CableLengthController TorquePositionController )
 
 add_executable( test_idyntree src/test_idyntree.cpp)
 target_link_libraries(test_idyntree ${iDynTree_LIBRARIES} ${catkin_LIBRARIES})
 
-add_executable( test_robot src/test_robot.cpp)
+add_executable( test_robot src/robots/test_robot.cpp)
 target_link_libraries(test_robot ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+
+add_executable( msj_platform src/robots/msj_platform.cpp)
+target_link_libraries(msj_platform ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+
+add_executable( roboy_upper_body src/robots/roboy_upper_body.cpp)
+target_link_libraries(roboy_upper_body ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 #==============================================================================
 # Installation
 #==============================================================================

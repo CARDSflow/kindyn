@@ -30,7 +30,6 @@ public:
     }
 
     void update(const ros::Time &time, const ros::Duration &period) {
-        double dt = (time-last_update).toSec();
         double q = joint.getPosition();
         double qd = joint.getVelocity();
         double q_target = joint.getEffort();

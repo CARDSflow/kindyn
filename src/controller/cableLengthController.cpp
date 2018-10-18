@@ -6,6 +6,7 @@
 #include "kindyn/robot.hpp"
 #include "kindyn/controller/cardsflow_state_interface.hpp"
 #include <roboy_communication_simulation/ControllerState.h>
+#include <std_msgs/Float32.h>
 
 using namespace std;
 
@@ -28,19 +29,17 @@ public:
         joint = hw->getHandle(joint_name); // throws on failure
         joint_index = joint.getJointIndex();
         last_update = ros::Time::now();
+        joint_command = nh.subscribe((joint_name+"/target").c_str(),1,&CableLengthController::JointCommand, this);
         return true;
     }
 
     void update(const ros::Time &time, const ros::Duration &period) {
-        double dt = (time-last_update).toSec();
         double q = joint.getPosition();
-        double qd = joint.getVelocity();
         double q_target = joint.getJointPositionCommand();
-        double qd_target = joint.getJointVelocityCommand();
         MatrixXd L = joint.getL();
         double p_error = q - q_target;
-        VectorXd ld = L.col(joint_index) * (Kd * (p_error - p_error_last)/dt + Kp * p_error);
-//        ROS_INFO_STREAM_THROTTLE(1, dt);
+        VectorXd ld = L.col(joint_index) * (Kd * (p_error - p_error_last)/period.toSec() + Kp * p_error);
+        ROS_INFO_STREAM_THROTTLE(1, period.toSec());
         joint.setMotorCommand(ld);
         p_error_last = p_error;
         last_update = time;
@@ -55,6 +54,9 @@ public:
     }
     void stopping(const ros::Time& time) { ROS_WARN("cable length controller stopped for %s", joint_name.c_str());}
 
+    void JointCommand(const std_msgs::Float32ConstPtr &msg){
+        joint.setJointPositionCommand(msg->data);
+    }
 private:
     double Kp = 1000, Kd = 10;
     double p_error_last = 0;
@@ -62,6 +64,7 @@ private:
     ros::Publisher controller_state;
     boost::shared_ptr<ros::AsyncSpinner> spinner;
     hardware_interface::CardsflowHandle joint;
+    ros::Subscriber joint_command;
     string joint_name;
     int joint_index;
     ros::Time last_update;

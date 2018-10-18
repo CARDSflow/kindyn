@@ -27,6 +27,8 @@ namespace hardware_interface
         void setMotorCommand(VectorXd command);
         double getJointPositionCommand() const;
         double getJointVelocityCommand() const;
+        void setJointPositionCommand(double cmd);
+        void setJointVelocityCommand(double cmd);
 
     private:
         double *joint_position_cmd_, *joint_velocity_cmd_;
