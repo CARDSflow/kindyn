@@ -326,9 +326,12 @@ void Robot::update() {
         link_to_world_transform[i] = pose;
         frame_transform[i] = iDynTree::toEigen(model.getFrameTransform(i).asHomogeneousTransform());
     }
+    P.setZero(6 * number_of_links, 6 * number_of_links);
+    P.block(0, 0, 6, 6).setIdentity(6, 6);
     for(int k = 1; k<number_of_links; k++){
         for(int a= 1; a<=k; a++) {
             link_to_link_transform[k*number_of_links+a] = world_to_link_transform[k].block(0, 0, 3, 3) * world_to_link_transform[a].block(0, 0, 3, 3);
+            P.block(6 * k + 3, 6 * a + 3, 3, 3) = link_to_link_transform[k*number_of_links+a];
         }
     }
 
@@ -495,27 +498,21 @@ void Robot::update_S() {
 }
 
 void Robot::update_P() {
-    P.setZero(6 * number_of_links, 6 * number_of_links);
-    P.block(0, 0, 6, 6).setIdentity(6, 6);
-
-    Matrix3d R_ka;
-    Eigen::Matrix<double, 6, 6> Pak;
-
-    const iDynTree::Model &model = kinDynComp.model();
-
     static int counter = 0;
+    Matrix3d R_pe;
+    Vector3d r_OP, r_OG;
+    Matrix3d skew;
     for (int k = 1; k < number_of_links; k++) {
         for (int a = 1; a <= k; a++) {
-            R_ka = link_to_link_transform[k*number_of_links+a];
-            Matrix3d R_pe;
-            Vector3d r_OP, r_OG;
-            r_OP.setZero();
-            R_pe = AngleAxisd(q[a - 1], joint_axis[a - 1].block(0, 0, 3, 1));
-            r_OP = link_to_world_transform[a].block(0, 0, 3, 3) * frame_transform[a].block(0, 3, 3, 1);
-            r_OG = world_to_link_transform[k].block(0, 0, 3, 3) * link_to_world_transform[k].block(0, 3, 3, 1);
-            P.block(6 * k, 6 * a, 3, 3) = R_ka * R_pe.transpose();
-            P.block(6 * k, 6 * a + 3, 3, 3) = -R_ka * EigenExtension::SkewSymmetric2(-r_OP + R_ka.transpose() * r_OG);
-            P.block(6 * k + 3, 6 * a + 3, 3, 3) = R_ka;
+            R_pe = AngleAxisd(q[a - 1], joint_axis[a - 1].topLeftCorner(3, 1));
+            r_OP = link_to_world_transform[a].topLeftCorner(3, 3) * frame_transform[a].topRightCorner(3, 1);
+            r_OG = world_to_link_transform[k].topLeftCorner(3, 3) * link_to_world_transform[k].topRightCorner(3, 1);
+            P.block(6 * k, 6 * a, 3, 3) = link_to_link_transform[k*number_of_links+a] * R_pe.transpose();
+            Vector3d v = -r_OP + link_to_link_transform[k*number_of_links+a].transpose() * r_OG;
+            skew <<  0,   -v(2),  v(1),
+                    v(2),    0, -v(0),
+                    -v(1), v(0), 0;
+            P.block(6 * k, 6 * a + 3, 3, 3) = -link_to_link_transform[k*number_of_links+a] * skew;
         }
     }
 

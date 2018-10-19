@@ -11,16 +11,16 @@
     <param name="min_force" type="double" value="0"  />
     <param name="max_force" type="double" value="500"  />
     <param name="controller" type="int" value="2"  />
-    <!--<node name="controller_manager"-->
-          <!--pkg="controller_manager"-->
-          <!--type="spawner"-->
-          <!--args="sphere_axis0 sphere_axis1 sphere_axis2" />-->
     <node name="controller_manager"
           pkg="controller_manager"
           type="spawner"
-          args="hip_joint elbow_left_rot1 elbow_right_rot1 elbow_left_rot0 elbow_right_rot0
-          sphere_left_axis0 sphere_left_axis1 sphere_left_axis2 sphere_right_axis0 sphere_right_axis1 sphere_right_axis2
-          sphere_head_axis0 sphere_head_axis1 sphere_head_axis2" />
+          args="sphere_axis0 sphere_axis1 sphere_axis2" />
+    <!--<node name="controller_manager"-->
+          <!--pkg="controller_manager"-->
+          <!--type="spawner"-->
+          <!--args="hip_joint elbow_left_rot1 elbow_right_rot1 elbow_left_rot0 elbow_right_rot0-->
+          <!--sphere_left_axis0 sphere_left_axis1 sphere_left_axis2 sphere_right_axis0 sphere_right_axis1 sphere_right_axis2-->
+          <!--sphere_head_axis0 sphere_head_axis1 sphere_head_axis2" />-->
 
     <node name="robot_controller"
           pkg="kindyn"
