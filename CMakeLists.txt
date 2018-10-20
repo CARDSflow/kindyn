@@ -94,6 +94,9 @@ target_link_libraries(msj_platform ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kin
 
 add_executable( roboy_upper_body src/robots/roboy_upper_body.cpp)
 target_link_libraries(roboy_upper_body ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+
+add_executable( roboy_arcade_maschine src/robots/roboy_arcade_maschine.cpp)
+target_link_libraries(roboy_arcade_maschine ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 #==============================================================================
 # Installation
 #==============================================================================

@@ -341,13 +341,13 @@ void Robot::update() {
                     link_to_world_transform[vp->link_index].block(0, 0, 3, 3) * vp->local_coordinates;
         }
     }
-    ROS_INFO_THROTTLE(1,"model update takes %f seconds", (ros::Time::now()-t0).toSec());
-    t0 = ros::Time::now();
+//    ROS_INFO_THROTTLE(1,"model update takes %f seconds", (ros::Time::now()-t0).toSec());
+//    t0 = ros::Time::now();
     update_V();
-    ROS_INFO_THROTTLE(1,"update V takes %f seconds", (ros::Time::now()-t0).toSec());
-    t0 = ros::Time::now();
+//    ROS_INFO_THROTTLE(1,"update V takes %f seconds", (ros::Time::now()-t0).toSec());
+//    t0 = ros::Time::now();
     update_P();
-    ROS_INFO_THROTTLE(1,"update P takes %f seconds", (ros::Time::now()-t0).toSec());
+//    ROS_INFO_THROTTLE(1,"update P takes %f seconds", (ros::Time::now()-t0).toSec());
 
     W = P * S;
     L = V * W;
@@ -397,7 +397,7 @@ void Robot::forwardKinematics(double dt) {
     }
     VectorXd qd_temp = EigenExtension::Pinv(L) * Ld;
 
-    for(int j=0;j<joint_names.size();j++){
+    for(int j=0;j<number_of_dofs;j++){
         if(controller_type[j]==0){
             boost::numeric::odeint::integrate(
                     [this,j](const state_type &x, state_type &dxdt, double t) {

@@ -39,7 +39,7 @@ public:
         MatrixXd L = joint.getL();
         double p_error = q - q_target;
         VectorXd ld = L.col(joint_index) * (Kd * (p_error - p_error_last)/period.toSec() + Kp * p_error);
-        ROS_INFO_STREAM_THROTTLE(1, period.toSec());
+//        ROS_INFO_STREAM_THROTTLE(1, period.toSec());
         joint.setMotorCommand(ld);
         p_error_last = p_error;
         last_update = time;
