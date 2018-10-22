@@ -25,6 +25,7 @@
 // Helpers function to convert between 
 // iDynTree datastructures
 #include <iDynTree/Core/EigenHelpers.h>
+#include <iDynTree/InverseKinematics.h>
 
 
 /**
@@ -222,6 +223,28 @@ int main(int argc, char *argv[])
 
     std::cerr << "Inverse dynamics torques: " << std::endl;
     std::cerr << jntTorques << std::endl;
+
+    iDynTree::InverseKinematics ik;
+    ik.setModel(model);
+
+    ROS_INFO_STREAM("rotation parameterization " << ik.rotationParametrization());
+    Eigen::Quaterniond q(-0.8733046,-0.4871745,0,  0);
+    Eigen::Matrix3d rot = q.matrix();
+    iDynTree::Rotation r(rot(0,0),rot(0,1),rot(0,2),rot(1,0),rot(1,1),rot(1,2),rot(2,0),rot(2,1),rot(2,2));
+    ROS_INFO_STREAM("base trasnform " << model.getFrameTransform(model.getFrameIndex("base")).toString());
+    ik.addTarget("base",model.getFrameTransform(model.getFrameIndex("base")));
+    ik.addRotationTarget("top",r);
+//    model.getJointIndex()
+//    ik.setVerbosity(6);
+//    ik.getPoseForFrame()
+    if(ik.solve()) {
+        iDynTree::Transform base_solution;
+        iDynTree::VectorDynSize q_star;
+        ik.getFullJointsSolution(base_solution,q_star);
+        ROS_INFO_STREAM("base solution:" << base_solution.toString() << "\njoint solution: " << q_star.toString());
+    }else{
+        ROS_FATAL("unable to solve ik");
+    }
 
     return EXIT_SUCCESS;
 }

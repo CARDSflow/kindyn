@@ -8,6 +8,7 @@
 #include <iDynTree/KinDynComputations.h>
 #include <iDynTree/ModelIO/ModelLoader.h>
 #include <iDynTree/Core/EigenHelpers.h>
+#include <iDynTree/InverseKinematics.h>
 
 #include "tinyxml.h"
 
@@ -105,9 +106,27 @@ namespace cardsflow {
             boost::shared_ptr <ros::AsyncSpinner> spinner;
             ros::Publisher robot_state, tendon_state;
             ros::Subscriber controller_type_sub;
+            ros::ServiceServer ik_srv, fk_srv;
 
             // robot model
             iDynTree::KinDynComputations kinDynComp;
+            map<string,iDynTree::KinDynComputations> ik_models;
+            map<string,iDynTree::InverseKinematics> ik;
+            map<string,string> ik_base_link;
+            struct iDynTreeRobotState
+            {
+                void resize(int nrOfInternalDOFs)
+                {
+                    jointPos.resize(nrOfInternalDOFs);
+                    jointVel.resize(nrOfInternalDOFs);
+                }
+
+                iDynTree::Transform world_H_base;
+                iDynTree::VectorDynSize jointPos;
+                iDynTree::Twist         baseVel;
+                iDynTree::VectorDynSize jointVel;
+                iDynTree::Vector3       gravity;
+            }robotstate;
         public:
             void forwardKinematics(double dt);
             size_t number_of_dofs = 0; /// number of degrees of freedom for kinematic chain
@@ -143,22 +162,16 @@ namespace cardsflow {
             bool first_time_solving = true;
             SQProblem qp_solver; /// qpoases quadratic problem solver
             real_t *H, *g, *A, *lb, *ub, *b, *FOpt; /// quadratic problem variables
-
             ros::Time last_visualization;
         private:
             vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments;
-            int joint_angle_mask;
-            int controller = 1;
         private:
             Eigen::IOFormat fmt;
-            static int instance;
-            bool verbose, log;
         private:
             hardware_interface::JointStateInterface joint_state_interface;
             hardware_interface::EffortJointInterface joint_command_interface;
             hardware_interface::CardsflowStateInterface cardsflow_state_interface;
             hardware_interface::CardsflowCommandInterface cardsflow_command_interface;
-            VectorXd cmd;
         };
     }
 }

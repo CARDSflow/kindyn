@@ -17,12 +17,12 @@ public:
         init(urdf,cardsflow_xml);
     };
     void read(){
-        ros::Time t0 = ros::Time::now();
+//        ros::Time t0 = ros::Time::now();
         update();
-        ROS_INFO_THROTTLE(1,"update takes %f seconds", (ros::Time::now()-t0).toSec());
-        t0 = ros::Time::now();
+//        ROS_INFO_THROTTLE(1,"update takes %f seconds", (ros::Time::now()-t0).toSec());
+//        t0 = ros::Time::now();
         forwardKinematics(0.000001);
-        ROS_INFO_THROTTLE(1,"forwardKinematics takes %f seconds", (ros::Time::now()-t0).toSec());
+//        ROS_INFO_THROTTLE(1,"forwardKinematics takes %f seconds", (ros::Time::now()-t0).toSec());
     };
 
     void write(){

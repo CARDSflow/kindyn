@@ -14,6 +14,8 @@ Robot::Robot() {
     robot_state = nh->advertise<geometry_msgs::PoseStamped>("/robot_state",1);
     tendon_state = nh->advertise<roboy_communication_simulation::Tendon>("/tendon_state",1);
     controller_type_sub = nh->subscribe("/controller_type",100, &Robot::controllerType, this);
+    ik_srv = nh->advertiseService("/ik",&Robot::InverseKinematicsService, this);
+    fk_srv = nh->advertiseService("/fk",&Robot::ForwardKinematicsService, this);
     fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
 }
 
@@ -68,6 +70,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path) {
             "robot:\ndofs: " << number_of_dofs << "\njoints: " << number_of_joints << "\nlinks: " << number_of_links
                              << "\nnumber_of_cables: " << number_of_cables);
 
+    robotstate.resize(number_of_dofs);
     baseVel.setZero();
     world_H_base.setIdentity();
     gravity << 0, 0, -9.81;
@@ -220,6 +223,44 @@ void Robot::init(string urdf_file_path, string viapoints_file_path) {
     FOpt = new real_t[number_of_cables];
 
     last_visualization = ros::Time::now();
+
+    vector<string> endeffectors;
+    nh->getParam("endeffectors",endeffectors);
+    for(string ef:endeffectors){
+        ROS_INFO_STREAM("configuring endeffector " << ef);
+        vector<string> ik_joints;
+        nh->getParam((ef+"/joints"),ik_joints);
+        if(ik_joints.empty()){
+            ROS_WARN("endeffector %s has no joints defined, check your endeffector.yaml or parameter server.  skipping...", ef.c_str());
+            continue;
+        }
+        string base_link;
+        nh->getParam((ef+"/base_link"),base_link);
+        if(base_link.empty()){
+            ROS_WARN("endeffector %s has no base_link defined, check your endeffector.yaml or parameter server. skipping...", ef.c_str());
+            continue;
+        }
+        ik_base_link[ef] = base_link;
+
+        iDynTree::ModelLoader mdlLoaderIK;
+        bool ok = mdlLoaderIK.loadReducedModelFromFile(urdf_file_path, ik_joints);
+        if (!ok) {
+            ROS_FATAL_STREAM("KinDynComputationsWithEigen: impossible to load model from " << urdf_file_path);
+            return;
+        }
+
+        // Create a KinDynComputations class from the model
+        ok = ik_models[ef].loadRobotModel(mdlLoaderIK.model());
+        if (!ok) {
+            ROS_FATAL_STREAM(
+                    "KinDynComputationsWithEigen: impossible to load the following model in a KinDynComputations class:"
+                            << std::endl
+                            << mdlLoader.model().toString());
+            return;
+        }
+        ik[ef].setModel(ik_models[ef].getRobotModel());
+        ik[ef].setVerbosity(0);
+    }
 }
 
 VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max) {
@@ -299,19 +340,13 @@ VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min
 
 void Robot::update() {
     ros::Time t0 = ros::Time::now();
-    iDynTree::Transform world_H_base_;
-    iDynTree::VectorDynSize jointPos, jointVel;
-    jointPos.resize(number_of_dofs);
-    jointVel.resize(number_of_dofs);
-    iDynTree::Twist baseVel_;
-    iDynTree::Vector3 gravity_;
-    iDynTree::fromEigen(world_H_base_, world_H_base);
-    iDynTree::toEigen(jointPos) = q;
-    iDynTree::fromEigen(baseVel_, baseVel);
-    toEigen(jointVel) = qd;
-    toEigen(gravity_) = gravity;
+    iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
+    iDynTree::toEigen(robotstate.jointPos) = q;
+    iDynTree::fromEigen(robotstate.baseVel, baseVel);
+    toEigen(robotstate.jointVel) = qd;
+    toEigen(robotstate.gravity) = gravity;
 
-    kinDynComp.setRobotState(world_H_base_, jointPos, baseVel_, jointVel, gravity_);
+    kinDynComp.setRobotState(robotstate.world_H_base, robotstate.jointPos, robotstate.baseVel, robotstate.jointVel, robotstate.gravity);
     kinDynComp.generalizedBiasForces(bias);
     kinDynComp.getFreeFloatingMassMatrix(Mass);
     CG = toEigen(bias.jointTorques());
@@ -526,55 +561,100 @@ void Robot::controllerType(const roboy_communication_simulation::ControllerState
     }
 }
 
-//bool Robot::ForwardKinematicsService(roboy_communication_middleware::ForwardKinematics::Request &req,
-//                                     roboy_communication_middleware::ForwardKinematics::Response &res) {
-//
-//    rl::math::Vector target_q = q;
-//    int i = 0;
-//    for (auto val:req.angles) {
-//        target_q[i] = val;
-//        i++;
-//    }
-//    ROS_INFO_STREAM("Serving ForwardKinematics Service robot config " << target_q.transpose());
-//    // Calculate forward position kinematics
-//    kinematic->setPosition(target_q); // input value
-//    kinematic->forwardPosition(); // modify model
-//    const rl::math::Transform &x = kinematic->getOperationalPosition(0);
-//
-//    ROS_INFO_STREAM("endeffector position: " << x.linear());
-//    res.pos.x = x.linear()(0, 0);
-//    res.pos.y = x.linear()(1, 0);
-//    res.pos.z = x.linear()(2, 0);
-//    return true;
-//}
-//
-//bool Robot::InverseKinematicsService(roboy_communication_middleware::InverseKinematics::Request &req,
-//                                     roboy_communication_middleware::InverseKinematics::Response &res) {
-//    kinematic_ik->setPosition(q);
-//    rl::mdl::NloptInverseKinematics ik(kinematic_ik);
-//    ik.duration = std::chrono::seconds(5);
-//    ik.epsilonTranslation = 0.05;
-//    ik.epsilonRotation = 0.05;
-//    rl::math::Transform x_new;
-//    tf::poseMsgToEigen(req.pose, x_new);
-//
-//    ik.goals.push_back(::std::make_pair(x_new, 0)); // goal frame in world coordinates for first TCP
-//
-//    bool result = ik.solve();
-//    if (result) {
-//        rl::math::Vector solution = kinematic_ik->getPosition();
-//        ROS_INFO_STREAM("ik solution " << solution.transpose());
-//        for (int i = 0; i < solution.rows(); i++) {
-//            res.angles.push_back(solution[i]);
-//        }
-//        kinematic_ik->setPosition(q);
-//        return true;
-//    } else {
-//        ROS_ERROR("unable to solve ik for target %.3lf %.3lf %.3lf", req.pose.position.x, req.pose.position.y, req.pose.position.z);
-//        kinematic_ik->setPosition(q);
-//        return false;
-//    }
-//}
+bool Robot::ForwardKinematicsService(roboy_communication_middleware::ForwardKinematics::Request &req,
+                                     roboy_communication_middleware::ForwardKinematics::Response &res) {
+    if(ik_models.find(req.endeffector)==ik_models.end()){
+        ROS_ERROR_STREAM("endeffector " << req.endeffector << " not initialized");
+        return false;
+    }
+    int i=0;
+    for(string joint:req.joint_names){
+        int joint_index = ik[req.endeffector].fullModel().getJointIndex(joint);
+        if(joint_index!=iDynTree::JOINT_INVALID_INDEX){
+            robotstate.jointPos(joint_index) = req.angles[i];
+        }else{
+            ROS_ERROR("joint %s not found in model", joint.c_str());
+        }
+        i++;
+    }
+    ik_models[req.endeffector].setRobotState(robotstate.world_H_base, robotstate.jointPos, robotstate.baseVel, robotstate.jointVel, robotstate.gravity);
+    iDynTree::Transform trans = ik_models[req.endeffector].getRelativeTransform(ik_models[req.endeffector].model().getFrameIndex(ik_base_link[req.endeffector]),
+            ik_models[req.endeffector].model().getFrameIndex(req.frame));
+    Eigen::Matrix4d frame = iDynTree::toEigen(trans.asHomogeneousTransform());
+    Eigen::Isometry3d iso(frame);
+    tf::poseEigenToMsg(iso, res.pose);
+    return true;
+}
+
+bool Robot::InverseKinematicsService(roboy_communication_middleware::InverseKinematics::Request &req,
+                                     roboy_communication_middleware::InverseKinematics::Response &res) {
+    if(ik_models.find(req.endeffector)==ik_models.end()){
+        ROS_ERROR_STREAM("endeffector " << req.endeffector << " not initialized");
+        return false;
+    }
+    ik_models[req.endeffector].setRobotState(robotstate.world_H_base, robotstate.jointPos, robotstate.baseVel, robotstate.jointVel, robotstate.gravity);
+    ik[req.endeffector].clearProblem();
+    // we constrain the base link to stay where it is
+    ik[req.endeffector].addTarget(ik_base_link[req.endeffector],ik_models[req.endeffector].model().getFrameTransform(ik_models[req.endeffector].getFrameIndex(ik_base_link[req.endeffector])));
+    switch(req.type){
+        case 0: {
+            Eigen::Isometry3d iso;
+            tf::poseMsgToEigen(req.pose, iso);
+            iDynTree::Transform trans;
+            iDynTree::fromEigen(trans, iso.matrix());
+            ik[req.endeffector].addTarget(req.frame, trans);
+            break;
+        }
+        case 1: {
+            iDynTree::Position pos(req.pose.position.x, req.pose.position.y, req.pose.position.z);
+            ik[req.endeffector].addPositionTarget(req.frame, pos);
+            break;
+        }
+        case 2: {
+            Eigen::Quaterniond q(req.pose.orientation.w, req.pose.orientation.x, req.pose.orientation.y,
+                                 req.pose.orientation.z);
+            Eigen::Matrix3d rot = q.matrix();
+            iDynTree::Rotation r(rot(0, 0), rot(0, 1), rot(0, 2), rot(1, 0), rot(1, 1), rot(1, 2), rot(2, 0), rot(2, 1),
+                                 rot(2, 2));
+            ik[req.endeffector].addRotationTarget(req.frame, r);
+            break;
+        }
+    }
+    if (ik[req.endeffector].solve()) {
+        iDynTree::Transform base_solution;
+        iDynTree::VectorDynSize q_star;
+        ik[req.endeffector].getFullJointsSolution(base_solution,q_star);
+        ROS_INFO_STREAM("ik solution:\n" << "base solution:" << base_solution.toString() << "\njoint solution: " << q_star.toString());
+        for(int i=0;i<q_star.size();i++){
+            res.joint_names.push_back(ik[req.endeffector].reducedModel().getJointName(i));
+            res.angles.push_back(q_star(i));
+        }
+        return true;
+    } else {
+        switch(req.type){
+            case 0:
+                ROS_ERROR("unable to solve full pose ik for endeffector %s and target frame %s:\n"
+                          "target_position    %.3lf %.3lf %.3lf"
+                          "target_orientation %.3lf %.3lf %.3lf %.3lf", req.endeffector.c_str(), req.frame.c_str(),
+                          req.pose.position.x, req.pose.position.y, req.pose.position.z,
+                          req.pose.orientation.w, req.pose.orientation.x, req.pose.orientation.y, req.pose.orientation.z);
+                break;
+            case 1:
+                ROS_ERROR("unable to solve position ik for endeffector %s and target frame %s:\n"
+                          "target_position    %.3lf %.3lf %.3lf",  req.endeffector.c_str(), req.frame.c_str(),
+                          req.pose.position.x, req.pose.position.y, req.pose.position.z);
+                break;
+
+            case 2:
+                ROS_ERROR("unable to solve orientation ik for endeffector %s and target frame %s:\n"
+                          "target_orientation %.3lf %.3lf %.3lf %.3lf",  req.endeffector.c_str(), req.frame.c_str(),
+                          req.pose.orientation.w, req.pose.orientation.x,req.pose.orientation.y, req.pose.orientation.z);
+                break;
+        }
+
+        return false;
+    }
+}
 
 
 bool Robot::parseViapoints(const string &viapoints_file_path, vector<Cable> &cables) {
