@@ -40,6 +40,7 @@
 #include <roboy_communication_simulation/Tendon.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Vector3.h>
+#include <sensor_msgs/JointState.h>
 #include <roboy_communication_simulation/ControllerState.h>
 
 #include <boost/numeric/odeint.hpp>
@@ -89,6 +90,8 @@ namespace cardsflow {
             bool InverseKinematicsService(roboy_communication_middleware::InverseKinematics::Request &req,
                                           roboy_communication_middleware::InverseKinematics::Response &res);
 
+            void JointState(const sensor_msgs::JointStateConstPtr &msg);
+
             vector<Matrix4d> world_to_link_transform, link_to_world_transform, frame_transform;
             Matrix3d *link_to_link_transform;
 
@@ -105,7 +108,7 @@ namespace cardsflow {
             ros::NodeHandlePtr nh;
             boost::shared_ptr <ros::AsyncSpinner> spinner;
             ros::Publisher robot_state, tendon_state;
-            ros::Subscriber controller_type_sub;
+            ros::Subscriber controller_type_sub, joint_state_sub;
             ros::ServiceServer ik_srv, fk_srv;
 
             // robot model

@@ -11,11 +11,12 @@ namespace cardsflow {
     namespace kindyn {
 
         struct ViaPoint {
-            ViaPoint(string link_name, Vector3d &local_coordinates) :
+            ViaPoint(string link_name, Vector3d &local_coordinates, bool fixed_to_world = false) :
                     link_name(link_name), local_coordinates(local_coordinates),
-                    global_coordinates(local_coordinates) {};
+                    global_coordinates(local_coordinates),fixed_to_world(fixed_to_world) {};
             string link_name;
             int link_index;
+            bool fixed_to_world;
             Vector3d local_coordinates;
             Vector3d global_coordinates;
         };

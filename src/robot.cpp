@@ -14,6 +14,7 @@ Robot::Robot() {
     robot_state = nh->advertise<geometry_msgs::PoseStamped>("/robot_state",1);
     tendon_state = nh->advertise<roboy_communication_simulation::Tendon>("/tendon_state",1);
     controller_type_sub = nh->subscribe("/controller_type",100, &Robot::controllerType, this);
+    joint_state_sub = nh->subscribe("/joint_state",100, &Robot::JointState, this);
     ik_srv = nh->advertiseService("/ik",&Robot::InverseKinematicsService, this);
     fk_srv = nh->advertiseService("/fk",&Robot::ForwardKinematicsService, this);
     fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
@@ -372,8 +373,11 @@ void Robot::update() {
 
     for (auto muscle:cables) {
         for (auto vp:muscle.viaPoints) {
-            vp->global_coordinates = link_to_world_transform[vp->link_index].block(0, 3, 3, 1) +
-                    link_to_world_transform[vp->link_index].block(0, 0, 3, 3) * vp->local_coordinates;
+            if(!vp->fixed_to_world) { // move viapoint with link
+                vp->global_coordinates = link_to_world_transform[vp->link_index].block(0, 3, 3, 1) +
+                                         link_to_world_transform[vp->link_index].block(0, 0, 3, 3) *
+                                         vp->local_coordinates;
+            }
         }
     }
 //    ROS_INFO_THROTTLE(1,"model update takes %f seconds", (ros::Time::now()-t0).toSec());
@@ -412,6 +416,7 @@ void Robot::update() {
             tf::poseEigenToMsg(iso, msg.pose);
             robot_state.publish(msg);
         }
+        last_visualization = ros::Time::now();
     }
 }
 
@@ -656,6 +661,20 @@ bool Robot::InverseKinematicsService(roboy_communication_middleware::InverseKine
     }
 }
 
+void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg){
+    const iDynTree::Model &model = kinDynComp.getRobotModel();
+    int i=0;
+    for(string joint:msg->name){
+        int joint_index = model.getJointIndex(joint);
+        if(joint_index!=iDynTree::JOINT_INVALID_INDEX){
+            q(joint_index) = msg->position[i];
+            qd(joint_index) = msg->velocity[i];
+        }else{
+            ROS_ERROR("joint %s not found in model", joint.c_str());
+        }
+        i++;
+    }
+}
 
 bool Robot::parseViapoints(const string &viapoints_file_path, vector<Cable> &cables) {
     // initialize TiXmlDocument doc from file
@@ -689,7 +708,10 @@ bool Robot::parseViapoints(const string &viapoints_file_path, vector<Cable> &cab
                             return false;
                         }
                         Vector3d local_coordinates(x, y, z);
-                        cable.viaPoints.push_back(ViaPointPtr(new ViaPoint(link_name, local_coordinates)));
+                        if(link_name=="world")
+                            cable.viaPoints.push_back(ViaPointPtr(new ViaPoint(link_name, local_coordinates, true)));
+                        else
+                            cable.viaPoints.push_back(ViaPointPtr(new ViaPoint(link_name, local_coordinates)));
                     }
                     if (cable.viaPoints.empty()) {
                         ROS_ERROR_STREAM_NAMED("parser", "No viaPoint element found in myoMuscle '"
