@@ -92,6 +92,8 @@ namespace cardsflow {
 
             void JointState(const sensor_msgs::JointStateConstPtr &msg);
 
+            void FloatingBase(const geometry_msgs::PoseConstPtr &msg);
+
             vector<Matrix4d> world_to_link_transform, link_to_world_transform, frame_transform;
             Matrix3d *link_to_link_transform;
 
@@ -108,7 +110,7 @@ namespace cardsflow {
             ros::NodeHandlePtr nh;
             boost::shared_ptr <ros::AsyncSpinner> spinner;
             ros::Publisher robot_state, tendon_state;
-            ros::Subscriber controller_type_sub, joint_state_sub;
+            ros::Subscriber controller_type_sub, joint_state_sub,floating_base_sub;
             ros::ServiceServer ik_srv, fk_srv;
 
             // robot model

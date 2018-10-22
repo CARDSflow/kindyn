@@ -1,6 +1,13 @@
 <launch>
     <arg name="robot_name" default="msj_platform"/>
     <arg name="start_controllers" default="sphere_axis0 sphere_axis1 sphere_axis2"/>
+    <arg name="gazebo" default="false"/>
+    <arg name="paused" default="false"/>
+    <arg name="use_sim_time" default="false"/>
+    <arg name="gui" default="true"/>
+    <arg name="headless" default="false"/>
+    <arg name="debug" default="false"/>
+
     <param name="robot_name" type="string" value="$(arg robot_name)"  />
     <param name="robot_description" textfile="$(find robots)/$(arg robot_name)/model.urdf" />
     <param name="urdf_file_path" type="string" value="$(find robots)/$(arg robot_name)/model.urdf" />
@@ -13,6 +20,7 @@
     <param name="min_force" type="double" value="0"  />
     <param name="max_force" type="double" value="500"  />
     <param name="controller" type="int" value="2"  />
+    <param name="gazebo" type="bool" value="$(arg gazebo)"/>
     <node name="controller_manager"
           pkg="controller_manager"
           type="spawner"
@@ -30,6 +38,19 @@
           respawn="false"
           output="screen"
     />
+
+    <group if="$(arg gazebo)">
+        <include file="$(find gazebo_ros)/launch/empty_world.launch">
+            <arg name="debug" value="$(arg debug)"/>
+            <arg name="gui" value="$(arg gui)"/>
+            <arg name="paused" value="$(arg paused)"/>
+            <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+            <arg name="headless" value="$(arg headless)"/>
+        </include>
+        <node name="robot_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+              args="-sdf -file $(find robots)/$(arg model_name)/model.sdf -model $(arg model_name)"
+        />
+    </group>
 
 </launch>
         <!--launch-prefix="gdb -ex run"-->
