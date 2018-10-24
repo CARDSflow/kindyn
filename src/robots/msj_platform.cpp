@@ -1,6 +1,11 @@
 #include "kindyn/robot.hpp"
 #include <thread>
 #include <roboy_communication_middleware/MotorCommand.h>
+#define SPINDLERADIUS 0.016
+#define FS5103R_MAX_SPEED (2.0*M_PI/0.9) // radian per second
+#define FS5103R_FULL_SPEED_BACKWARDS 270
+#define FS5103R_STOP 360
+#define FS5103R_FULL_SPEED_FORWARDS 540
 
 using namespace std;
 
@@ -23,13 +28,24 @@ public:
             forwardKinematics(0.000001);
     };
 
+    int meterPerSecondToServoSpeed(double meterPerSecond){
+        double radianPerSecond = meterPerSecond/(2.0 * M_PI * SPINDLERADIUS);
+        double pwm = radianPerSecond/FS5103R_MAX_SPEED;
+        if(pwm<=-1){
+            return FS5103R_FULL_SPEED_BACKWARDS;
+        }else if(pwm>-1 && pwm<1){
+            return pwm*180;
+        }else{
+            return FS5103R_FULL_SPEED_FORWARDS;
+        }
+    }
+
     void write(){
         roboy_communication_middleware::MotorCommand msg;
         msg.id = 5;
         for (int i = 0; i < number_of_cables; i++) {
             msg.motors.push_back(i);
-            msg.setPoints.push_back(
-                    512 + (l[i] / (2.0 * M_PI * 0.016 * (301.0 / 1024.0 / 360.0)))); //
+            msg.setPoints.push_back(meterPerSecondToServoSpeed(Ld[i])); //
         }
         motor_command.publish(msg);
     };
