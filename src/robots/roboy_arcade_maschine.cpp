@@ -14,15 +14,13 @@ public:
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         motor_command = nh->advertise<roboy_communication_middleware::MotorCommand>("/roboy/middleware/MotorCommand",1);
-        init(urdf,cardsflow_xml);
+        vector<string> joint_names;
+        nh->getParam("joint_names", joint_names);
+        init(urdf,cardsflow_xml,joint_names);
     };
     void read(){
-//        ros::Time t0 = ros::Time::now();
         update();
-//        ROS_INFO_THROTTLE(1,"update takes %f seconds", (ros::Time::now()-t0).toSec());
-//        t0 = ros::Time::now();
         forwardKinematics(0.000001);
-//        ROS_INFO_THROTTLE(1,"forwardKinematics takes %f seconds", (ros::Time::now()-t0).toSec());
     };
 
     void write(){

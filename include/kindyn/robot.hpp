@@ -53,7 +53,6 @@ using iDynTree::fromEigen;
 
 namespace cardsflow {
     namespace kindyn {
-
         class Robot:public hardware_interface::RobotHW{
         public:
             /**
@@ -66,8 +65,9 @@ namespace cardsflow {
              * initializes everything, call before use!
              * @param urdf_file_path path to robot urdf
              * @param viapoints_file_path path to viapoints xml
+             * @param joint_names a vector of joint_names to be considered from the model
              */
-            void init(string urdf_file_path, string viapoints_file_path);
+            void init(string urdf_file_path, string viapoints_file_path, vector<string> joint_names);
 
             void update();
 

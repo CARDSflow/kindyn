@@ -26,6 +26,9 @@ public:
         spinner.reset(new ros::AsyncSpinner(0));
         spinner->start();
         controller_state = nh.advertise<roboy_communication_simulation::ControllerState>("/controller_type",1);
+        ros::Rate r(10);
+        while(controller_state.getNumSubscribers()==0)
+            r.sleep();
         joint = hw->getHandle(joint_name); // throws on failure
         joint_index = joint.getJointIndex();
         last_update = ros::Time::now();
@@ -39,14 +42,14 @@ public:
         MatrixXd L = joint.getL();
         double p_error = q - q_target;
         VectorXd ld = L.col(joint_index) * (Kd * (p_error - p_error_last)/period.toSec() + Kp * p_error);
-//        ROS_INFO_STREAM_THROTTLE(1, period.toSec());
+//        ROS_INFO_STREAM_THROTTLE(1, ld.transpose());
         joint.setMotorCommand(ld);
         p_error_last = p_error;
         last_update = time;
     }
 
     void starting(const ros::Time& time) {
-        ROS_WARN("cable length controller started for %s", joint_name.c_str());
+        ROS_WARN("cable length controller started for %s with index %d", joint_name.c_str(), joint_index);
         roboy_communication_simulation::ControllerState msg;
         msg.joint_name = joint_name;
         msg.type = 2;

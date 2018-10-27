@@ -19,7 +19,9 @@ public:
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         motor_command = nh->advertise<roboy_communication_middleware::MotorCommand>("/roboy/middleware/MotorCommand",1);
-        init(urdf,cardsflow_xml);
+        vector<string> joint_names;
+        nh->getParam("joint_names", joint_names);
+        init(urdf,cardsflow_xml,joint_names);
         nh->getParam("gazebo", gazebo);
     };
     void read(){
