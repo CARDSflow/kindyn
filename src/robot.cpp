@@ -17,13 +17,13 @@ Robot::Robot() {
 }
 
 Robot::~Robot() {
-    delete[] H;
-    delete[] g;
-    delete[] A;
-    delete[] lb;
-    delete[] ub;
-    delete[] b;
-    delete[] FOpt;
+//    delete[] H;
+//    delete[] g;
+//    delete[] A;
+//    delete[] lb;
+//    delete[] ub;
+//    delete[] b;
+//    delete[] FOpt;
     delete[] link_to_link_transform;
 }
 
@@ -205,20 +205,21 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     L = V * W;
     L_t = -L.transpose();
 
-    qp_solver = SQProblem(number_of_cables, number_of_dofs);
-
-    H = new real_t[number_of_cables * number_of_cables];
-    g = new real_t[number_of_cables];
-    A = new real_t[number_of_cables * number_of_cables];
-    lb = new real_t[number_of_cables];
-    ub = new real_t[number_of_cables];
-    b = new real_t[number_of_dofs];
-    FOpt = new real_t[number_of_cables];
+//    qp_solver = SQProblem(number_of_cables, number_of_dofs);
+//
+//    H = new real_t[number_of_cables * number_of_cables];
+//    g = new real_t[number_of_cables];
+//    A = new real_t[number_of_cables * number_of_cables];
+//    lb = new real_t[number_of_cables];
+//    ub = new real_t[number_of_cables];
+//    b = new real_t[number_of_dofs];
+//    FOpt = new real_t[number_of_cables];
 
     last_visualization = ros::Time::now();
 
-
+    int k=0;
     nh->getParam("endeffectors", endeffectors);
+    endeffector_dof_offset.push_back(0);
     for (string ef:endeffectors) {
         ROS_INFO_STREAM("configuring endeffector " << ef);
         vector<string> ik_joints;
@@ -229,7 +230,10 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
                     ef.c_str());
             continue;
         }
+        endeffector_index[ef] = k;
         endeffector_number_of_dofs.push_back(ik_joints.size());
+        if(k>0)
+            endeffector_dof_offset.push_back(endeffector_dof_offset[k-1]+endeffector_number_of_dofs[k-1]);
         string base_link;
         nh->getParam((ef + "/base_link"), base_link);
         if (base_link.empty()) {
@@ -258,6 +262,9 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         }
         ik[ef].setModel(ik_models[ef].getRobotModel());
         ik[ef].setVerbosity(0);
+        tf::Vector3 pos(0,0.3*k,0);
+        make6DofMarker(false,visualization_msgs::InteractiveMarkerControl::MOVE_3D,pos,false,0.15,"world",ef.c_str());
+        k++;
     }
 
     controller_type_sub = nh->subscribe("/controller_type", 100, &Robot::controllerType, this);
@@ -265,82 +272,83 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     floating_base_sub = nh->subscribe("/floating_base", 100, &Robot::FloatingBase, this);
     ik_srv = nh->advertiseService("/ik", &Robot::InverseKinematicsService, this);
     fk_srv = nh->advertiseService("/fk", &Robot::ForwardKinematicsService, this);
+    interactive_marker_sub = nh->subscribe("/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
 }
 
-VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max) {
-    // Initialisation
-    int qp_print_level = PL_NONE;
-    nh->getParam("qp_print_level", qp_print_level);
-    qp_solver.setPrintLevel(static_cast<PrintLevel>(qp_print_level));
-    // Set the optimisation parameters
-    int nWSR = 1000;
-    nh->getParam("qp_working_sets", nWSR);
-
-    // Convert the parameters to be in the correct form
-    for (int i = 0; i < number_of_cables * number_of_cables; i++)
-        A[i] = 0;
-    for (int i = 0; i < number_of_cables; i++) {
-        lb[i] = f_min(i);
-        ub[i] = f_max(i);
-        for (int j = 0; j < number_of_dofs; j++) {
-            if (abs(A_eq(j, i)) > 1e-6) {
-                A[j * number_of_cables + i] = A_eq(j, i);
-            } else {
-                A[j * number_of_cables + i] = 0;
-            }
-        }
-    }
-    for (int j = 0; j < number_of_dofs; j++) {
-        if (abs(b_eq[j]) > 1e-6) {
-            b[j] = b_eq[j];
-        } else {
-            b[j] = 0;
-        }
-    }
-    VectorXd f_opt;
-    f_opt.resize(number_of_cables);
-    f_opt.setZero();
-
-    // Run the optimisation
-    if (first_time_solving) {
-        for (int i = 0; i < number_of_cables * number_of_cables; i++)
-            H[i] = 0;
-        for (int i = 0; i < number_of_cables; i++) {
-            // H is the identity matrix
-            H[i * number_of_cables + i] = 1;
-            g[i] = 0;
-        }
-        returnValue status = qp_solver.init(H, g, A, lb, ub, b, b, nWSR, nullptr);
-        first_time_solving = false;
-    } else {
-        returnValue status = qp_solver.hotstart(H, g, A, lb, ub, b, b, nWSR, nullptr);
-        switch (status) {
-            case SUCCESSFUL_RETURN: { // all good
-                qp_solver.getPrimalSolution(FOpt);
-                for (int i = 0; i < number_of_cables; i++) {
-                    f_opt(i) = FOpt[i];
-                }
-                ROS_INFO_STREAM_THROTTLE(1, "target cable forces:\n" << f_opt.transpose());
-                break;
-            }
-            default: {
-                ROS_ERROR_STREAM_THROTTLE(1, MessageHandling::getErrorCodeMessage(status));
-                if (qp_solver.isInfeasible()) {
-                    qp_solver.getPrimalSolution(FOpt);
-                    for (int i = 0; i < number_of_cables; i++) {
-                        f_opt(i) = FOpt[i];
-                    }
-                    ROS_WARN_STREAM_THROTTLE(1, "infeasible, primal solution " << f_opt.transpose());
-//                    f_opt.setZero();
-                } else {
-                    if (status = (returnValue) 54)
-                        first_time_solving = true;
-                }
-            }
-        }
-    }
-    return f_opt;
-}
+//VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max) {
+//    // Initialisation
+//    int qp_print_level = PL_NONE;
+//    nh->getParam("qp_print_level", qp_print_level);
+//    qp_solver.setPrintLevel(static_cast<PrintLevel>(qp_print_level));
+//    // Set the optimisation parameters
+//    int nWSR = 1000;
+//    nh->getParam("qp_working_sets", nWSR);
+//
+//    // Convert the parameters to be in the correct form
+//    for (int i = 0; i < number_of_cables * number_of_cables; i++)
+//        A[i] = 0;
+//    for (int i = 0; i < number_of_cables; i++) {
+//        lb[i] = f_min(i);
+//        ub[i] = f_max(i);
+//        for (int j = 0; j < number_of_dofs; j++) {
+//            if (abs(A_eq(j, i)) > 1e-6) {
+//                A[j * number_of_cables + i] = A_eq(j, i);
+//            } else {
+//                A[j * number_of_cables + i] = 0;
+//            }
+//        }
+//    }
+//    for (int j = 0; j < number_of_dofs; j++) {
+//        if (abs(b_eq[j]) > 1e-6) {
+//            b[j] = b_eq[j];
+//        } else {
+//            b[j] = 0;
+//        }
+//    }
+//    VectorXd f_opt;
+//    f_opt.resize(number_of_cables);
+//    f_opt.setZero();
+//
+//    // Run the optimisation
+//    if (first_time_solving) {
+//        for (int i = 0; i < number_of_cables * number_of_cables; i++)
+//            H[i] = 0;
+//        for (int i = 0; i < number_of_cables; i++) {
+//            // H is the identity matrix
+//            H[i * number_of_cables + i] = 1;
+//            g[i] = 0;
+//        }
+//        returnValue status = qp_solver.init(H, g, A, lb, ub, b, b, nWSR, nullptr);
+//        first_time_solving = false;
+//    } else {
+//        returnValue status = qp_solver.hotstart(H, g, A, lb, ub, b, b, nWSR, nullptr);
+//        switch (status) {
+//            case SUCCESSFUL_RETURN: { // all good
+//                qp_solver.getPrimalSolution(FOpt);
+//                for (int i = 0; i < number_of_cables; i++) {
+//                    f_opt(i) = FOpt[i];
+//                }
+//                ROS_INFO_STREAM_THROTTLE(1, "target cable forces:\n" << f_opt.transpose());
+//                break;
+//            }
+//            default: {
+//                ROS_ERROR_STREAM_THROTTLE(1, MessageHandling::getErrorCodeMessage(status));
+//                if (qp_solver.isInfeasible()) {
+//                    qp_solver.getPrimalSolution(FOpt);
+//                    for (int i = 0; i < number_of_cables; i++) {
+//                        f_opt(i) = FOpt[i];
+//                    }
+//                    ROS_WARN_STREAM_THROTTLE(1, "infeasible, primal solution " << f_opt.transpose());
+////                    f_opt.setZero();
+//                } else {
+//                    if (status = (returnValue) 54)
+//                        first_time_solving = true;
+//                }
+//            }
+//        }
+//    }
+//    return f_opt;
+//}
 
 void Robot::update() {
     ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
@@ -432,7 +440,7 @@ void Robot::update() {
             msg.header.seq = seq++;
             msg.header.stamp = ros::Time::now();
             msg.header.frame_id = link_names[i];
-            Isometry3d iso(world_to_link_transform[i].inverse());
+            Isometry3d iso(link_to_world_transform[i]);
             tf::poseEigenToMsg(iso, msg.pose);
             robot_state.publish(msg);
         }
@@ -449,8 +457,9 @@ void Robot::forwardKinematics(double dt) {
 
     qdd = M.block(6, 6, number_of_dofs, number_of_dofs).inverse() * (-torques - CG);
 
-    int dof_offset = 0;
+
     for(int i = 0; i<endeffectors.size();i++) {
+        int dof_offset = endeffector_dof_offset[i];
         Ld.setZero();
         for (int j = dof_offset; j < endeffector_number_of_dofs[i]+dof_offset; j++) {
             Ld -= ld[j];
@@ -479,7 +488,6 @@ void Robot::forwardKinematics(double dt) {
             q[j] = joint_state[j][0];
 //        ROS_INFO("%s control type %d", joint_names[j].c_str(), controller_type[j]);
         }
-        dof_offset+=endeffector_number_of_dofs[i];
     }
     for (int i = 0; i < number_of_cables; i++) {
         boost::numeric::odeint::integrate(
@@ -581,18 +589,28 @@ bool Robot::ForwardKinematicsService(roboy_communication_middleware::ForwardKine
         ROS_ERROR_STREAM("endeffector " << req.endeffector << " not initialized");
         return false;
     }
+    int index = endeffector_index[req.endeffector];
+    iDynTree::VectorDynSize jointPos, jointVel;
+    jointPos.resize(endeffector_number_of_dofs[index]);
+    jointVel.resize(endeffector_number_of_dofs[index]);
+    iDynTree::toEigen(jointPos) = q.segment(endeffector_dof_offset[index], endeffector_number_of_dofs[index]);
+    iDynTree::toEigen(jointVel) = qd.segment(endeffector_dof_offset[index], endeffector_number_of_dofs[index]);
+
+    ik_models[req.endeffector].setRobotState(robotstate.world_H_base, jointPos, robotstate.baseVel,
+                                             jointVel, robotstate.gravity);
+
     int i = 0;
     for (string joint:req.joint_names) {
         int joint_index = ik[req.endeffector].fullModel().getJointIndex(joint);
         if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
-            robotstate.jointPos(joint_index) = req.angles[i];
+            jointPos(joint_index) = req.angles[i];
         } else {
             ROS_ERROR("joint %s not found in model", joint.c_str());
         }
         i++;
     }
-    ik_models[req.endeffector].setRobotState(robotstate.world_H_base, robotstate.jointPos, robotstate.baseVel,
-                                             robotstate.jointVel, robotstate.gravity);
+    ik_models[req.endeffector].setRobotState(robotstate.world_H_base, jointPos, robotstate.baseVel,
+                                             jointVel, robotstate.gravity);
     iDynTree::Transform trans = ik_models[req.endeffector].getRelativeTransform(
             ik_models[req.endeffector].model().getFrameIndex(ik_base_link[req.endeffector]),
             ik_models[req.endeffector].model().getFrameIndex(req.frame));
@@ -608,8 +626,15 @@ bool Robot::InverseKinematicsService(roboy_communication_middleware::InverseKine
         ROS_ERROR_STREAM("endeffector " << req.endeffector << " not initialized");
         return false;
     }
-    ik_models[req.endeffector].setRobotState(robotstate.world_H_base, robotstate.jointPos, robotstate.baseVel,
-                                             robotstate.jointVel, robotstate.gravity);
+    int index = endeffector_index[req.endeffector];
+    iDynTree::VectorDynSize jointPos, jointVel;
+    jointPos.resize(endeffector_number_of_dofs[index]);
+    jointVel.resize(endeffector_number_of_dofs[index]);
+    iDynTree::toEigen(jointPos) = q.segment(endeffector_dof_offset[index], endeffector_number_of_dofs[index]);
+    iDynTree::toEigen(jointVel) = qd.segment(endeffector_dof_offset[index], endeffector_number_of_dofs[index]);
+
+    ik_models[req.endeffector].setRobotState(robotstate.world_H_base, jointPos, robotstate.baseVel,
+                                             jointVel, robotstate.gravity);
     ik[req.endeffector].clearProblem();
     // we constrain the base link to stay where it is
     ik[req.endeffector].addTarget(ik_base_link[req.endeffector], ik_models[req.endeffector].model().getFrameTransform(
@@ -674,6 +699,26 @@ bool Robot::InverseKinematicsService(roboy_communication_middleware::InverseKine
         }
 
         return false;
+    }
+}
+
+void Robot::InteractiveMarkerFeedback( const visualization_msgs::InteractiveMarkerFeedbackConstPtr &msg){
+    if(msg->event_type!=visualization_msgs::InteractiveMarkerFeedback::MOUSE_UP)
+        return;
+    auto it = find(endeffectors.begin(),endeffectors.end(),msg->marker_name);
+    if(it!=endeffectors.end()){
+        roboy_communication_middleware::InverseKinematics msg2;
+        msg2.request.pose = msg->pose;
+        msg2.request.endeffector = msg->marker_name;
+        msg2.request.frame = msg->marker_name;
+        msg2.request.type = 1;
+        if(InverseKinematicsService(msg2.request,msg2.response)){
+            int index = endeffector_index[msg->marker_name];
+            for(int i=0;i<msg2.response.joint_names.size();i++){
+                q_target[endeffector_dof_offset[index]+i] = msg2.response.angles[i];
+            }
+
+        }
     }
 }
 
