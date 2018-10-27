@@ -134,10 +134,12 @@ namespace cardsflow {
             }robotstate;
         public:
             void forwardKinematics(double dt);
-            size_t number_of_dofs = 0; /// number of degrees of freedom for kinematic chain
-            size_t number_of_joints = 0; /// number of joints
-            size_t number_of_cables = 0; /// number of cables, ie muscles, for kinematic chain
-            size_t number_of_links = 0; /// number of links for kinematic chain
+            size_t number_of_dofs = 0; /// number of degrees of freedom of the whole robot
+            vector<string> endeffectors; /// names of the endeffectors
+            vector<size_t> endeffector_number_of_dofs; /// number of degrees of freedom of each endeffector
+            size_t number_of_joints = 0; /// number of joints of the whole robot
+            size_t number_of_cables = 0; /// number of cables, ie muscles of the whole robot
+            size_t number_of_links = 0; /// number of links of the whole robot
             Matrix4d world_H_base;
             Eigen::Matrix<double,6,1> baseVel;
             Vector3d gravity;

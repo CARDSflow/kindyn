@@ -217,7 +217,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
 
     last_visualization = ros::Time::now();
 
-    vector<string> endeffectors;
+
     nh->getParam("endeffectors", endeffectors);
     for (string ef:endeffectors) {
         ROS_INFO_STREAM("configuring endeffector " << ef);
@@ -229,6 +229,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
                     ef.c_str());
             continue;
         }
+        endeffector_number_of_dofs.push_back(ik_joints.size());
         string base_link;
         nh->getParam((ef + "/base_link"), base_link);
         if (base_link.empty()) {
@@ -428,7 +429,7 @@ void Robot::update() {
         static int seq = 0;
         for (int i = 0; i < number_of_links; i++) {
             geometry_msgs::PoseStamped msg;
-            msg.header.seq = seq;
+            msg.header.seq = seq++;
             msg.header.stamp = ros::Time::now();
             msg.header.frame_id = link_names[i];
             Isometry3d iso(world_to_link_transform[i].inverse());
@@ -448,30 +449,37 @@ void Robot::forwardKinematics(double dt) {
 
     qdd = M.block(6, 6, number_of_dofs, number_of_dofs).inverse() * (-torques - CG);
 
-    Ld.setZero();
-    for (int i = 0; i < number_of_dofs; i++) {
-        Ld -= ld[i];
-    }
-    VectorXd qd_temp = EigenExtension::Pinv(L) * Ld;
+    int dof_offset = 0;
+    for(int i = 0; i<endeffectors.size();i++) {
+        Ld.setZero();
+        for (int j = dof_offset; j < endeffector_number_of_dofs[i]+dof_offset; j++) {
+            Ld -= ld[j];
+        }
 
-    for (int j = 0; j < number_of_dofs; j++) {
-        if (controller_type[j] == 0) {
-            boost::numeric::odeint::integrate(
-                    [this, j](const state_type &x, state_type &dxdt, double t) {
-                        dxdt[1] = qdd[j];
-                        dxdt[0] = x[1];
-                    }, joint_state[j], integration_time, integration_time + dt, dt);
-        }
-        if (controller_type[j] == 2) {
-            boost::numeric::odeint::integrate(
-                    [this, j, qd_temp](const state_type &x, state_type &dxdt, double t) {
-                        dxdt[1] = 0;
-                        dxdt[0] = qd_temp[j];
-                    }, joint_state[j], integration_time, integration_time + dt, dt);
-        }
-        qd[j] = joint_state[j][1];
-        q[j] = joint_state[j][0];
+        MatrixXd L_endeffector = L.block(0,dof_offset,number_of_cables,endeffector_number_of_dofs[i]);
+        MatrixXd L_endeffector_inv = EigenExtension::Pinv(L_endeffector);
+        VectorXd qd_temp =  L_endeffector_inv * Ld;
+
+        for (int j = dof_offset; j < endeffector_number_of_dofs[i]+dof_offset; j++) {
+            if (controller_type[j] == 0) {
+                boost::numeric::odeint::integrate(
+                        [this, j](const state_type &x, state_type &dxdt, double t) {
+                            dxdt[1] = qdd[j];
+                            dxdt[0] = x[1];
+                        }, joint_state[j], integration_time, integration_time + dt, dt);
+            }
+            if (controller_type[j] == 2) {
+                boost::numeric::odeint::integrate(
+                        [this, j, qd_temp, dof_offset](const state_type &x, state_type &dxdt, double t) {
+                            dxdt[1] = 0;
+                            dxdt[0] = qd_temp[j-dof_offset];
+                        }, joint_state[j], integration_time, integration_time + dt, dt);
+            }
+            qd[j] = joint_state[j][1];
+            q[j] = joint_state[j][0];
 //        ROS_INFO("%s control type %d", joint_names[j].c_str(), controller_type[j]);
+        }
+        dof_offset+=endeffector_number_of_dofs[i];
     }
     for (int i = 0; i < number_of_cables; i++) {
         boost::numeric::odeint::integrate(
