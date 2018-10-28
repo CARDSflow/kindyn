@@ -4,9 +4,14 @@
 
 using namespace std;
 
-class Roboy: public cardsflow::kindyn::Robot{
+class RoboyUpperBody: public cardsflow::kindyn::Robot{
 public:
-    Roboy(string urdf, string cardsflow_xml){
+    /**
+     * Constructor
+     * @param urdf path to urdf
+     * @param cardsflow_xml path to cardsflow xml
+     */
+    RoboyUpperBody(string urdf, string cardsflow_xml){
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
@@ -18,6 +23,10 @@ public:
         nh->getParam("joint_names", joint_names);
         init(urdf,cardsflow_xml,joint_names);
     };
+    /**
+     * Updates the robot model and integrates the robot model using the forwardKinematics function
+     * with a small step length
+     */
     void read(){
         ros::Time t0 = ros::Time::now();
         update();
@@ -26,7 +35,9 @@ public:
         forwardKinematics(0.0001);
         ROS_INFO_THROTTLE(5,"forwardKinematics takes %f seconds", (ros::Time::now()-t0).toSec());
     };
-
+    /**
+     * Sends motor commands to the real robot
+     */
     void write(){
         roboy_communication_middleware::MotorCommand msg;
         msg.id = 5;
@@ -37,13 +48,17 @@ public:
         }
         motor_command.publish(msg);
     };
-    ros::NodeHandlePtr nh;
-    ros::Publisher motor_command;
+    ros::NodeHandlePtr nh; /// ROS nodehandle
+    ros::Publisher motor_command; /// motor command publisher
 };
 
+/**
+ * controller manager update thread. Here you can define how fast your controllers should run
+ * @param cm pointer to the controller manager
+ */
 void update(controller_manager::ControllerManager *cm) {
     ros::Time prev_time = ros::Time::now();
-    ros::Rate rate(100);
+    ros::Rate rate(100); // changing this value affects the control speed of your running controllers
     while (ros::ok()) {
         const ros::Time time = ros::Time::now();
         const ros::Duration period = time - prev_time;
@@ -57,7 +72,7 @@ int main(int argc, char *argv[]) {
     if (!ros::isInitialized()) {
         int argc = 0;
         char **argv = NULL;
-        ros::init(argc, argv, "test_robot");
+        ros::init(argc, argv, "cardsflow_example_robot");
     }
     ros::NodeHandle nh;
     string urdf, cardsflow_xml;
@@ -70,7 +85,7 @@ int main(int argc, char *argv[]) {
     }
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
-    Roboy robot(urdf, cardsflow_xml);
+    RoboyUpperBody robot(urdf, cardsflow_xml);
 
     controller_manager::ControllerManager cm(&robot);
 

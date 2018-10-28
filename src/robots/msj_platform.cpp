@@ -9,9 +9,14 @@
 
 using namespace std;
 
-class Robot: public cardsflow::kindyn::Robot{
+class MsjPlatform: public cardsflow::kindyn::Robot{
 public:
-    Robot(string urdf, string cardsflow_xml){
+    /**
+     * Constructor
+     * @param urdf path to urdf
+     * @param cardsflow_xml path to cardsflow xml
+     */
+    MsjPlatform(string urdf, string cardsflow_xml){
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
@@ -19,17 +24,30 @@ public:
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         motor_command = nh->advertise<roboy_communication_middleware::MotorCommand>("/roboy/middleware/MotorCommand",1);
+        // first we retrieve the active joint names from the parameter server
         vector<string> joint_names;
         nh->getParam("joint_names", joint_names);
+        // then we initialize the robot with the cardsflow xml and the active joints
         init(urdf,cardsflow_xml,joint_names);
+        // if we do not simulate with gazebo, we use the forwardKinematics function to integrate the robot state
         nh->getParam("gazebo", gazebo);
     };
+
+    /**
+     * Updates the robot model and if we do not use gazebo for simulation, we integrate using the forwardKinematics function
+     * with a small step length
+     */
     void read(){
         update();
         if(!gazebo)
             forwardKinematics(0.000001);
     };
 
+    /**
+     * Converts tendon length chages from the cable model to pwm commands of the real robot
+     * @param meterPerSecond tendon length change
+     * @return pwm
+     */
     int meterPerSecondToServoSpeed(double meterPerSecond){
         double radianPerSecond = meterPerSecond/(2.0 * M_PI * SPINDLERADIUS);
         double pwm = radianPerSecond/FS5103R_MAX_SPEED;
@@ -42,6 +60,9 @@ public:
         }
     }
 
+    /**
+     * Sends motor commands to the real robot
+     */
     void write(){
         roboy_communication_middleware::MotorCommand msg;
         msg.id = 5;
@@ -51,14 +72,18 @@ public:
         }
         motor_command.publish(msg);
     };
-    bool gazebo;
-    ros::NodeHandlePtr nh;
-    ros::Publisher motor_command;
+    bool gazebo; /// indicates if we use gazebo for simulation
+    ros::NodeHandlePtr nh; /// ROS nodehandle
+    ros::Publisher motor_command; /// motor command publisher
 };
 
+/**
+ * controller manager update thread. Here you can define how fast your controllers should run
+ * @param cm pointer to the controller manager
+ */
 void update(controller_manager::ControllerManager *cm) {
     ros::Time prev_time = ros::Time::now();
-    ros::Rate rate(100);
+    ros::Rate rate(100); // changing this value affects the control speed of your running controllers
     while (ros::ok()) {
         const ros::Time time = ros::Time::now();
         const ros::Duration period = time - prev_time;
@@ -72,7 +97,7 @@ int main(int argc, char *argv[]) {
     if (!ros::isInitialized()) {
         int argc = 0;
         char **argv = NULL;
-        ros::init(argc, argv, "test_robot");
+        ros::init(argc, argv, "cardsflow_example_robot");
     }
     ros::NodeHandle nh;
     string urdf, cardsflow_xml;
@@ -85,7 +110,7 @@ int main(int argc, char *argv[]) {
     }
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
-    Robot robot(urdf, cardsflow_xml);
+    MsjPlatform robot(urdf, cardsflow_xml);
 
     controller_manager::ControllerManager cm(&robot);
 

@@ -7,8 +7,8 @@ namespace hardware_interface
     CardsflowHandle::CardsflowHandle() : CardsflowStateHandle(){}
 
     /**
-     * \param js This joint's state handle
-     * \param cmd A pointer to the storage for this joint's output command
+     * @param js This joint's state handle
+     * @param cmd A pointer to the storage for this joint's output command
      */
     CardsflowHandle::CardsflowHandle(const CardsflowStateHandle& js, double* joint_position_cmd,
                                      double* joint_velocity_cmd, VectorXd *motor_cmd)
