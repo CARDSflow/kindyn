@@ -3,9 +3,9 @@
 #include <roboy_communication_middleware/MotorCommand.h>
 #define SPINDLERADIUS 0.016
 #define FS5103R_MAX_SPEED (2.0*M_PI/0.9) // radian per second
-#define FS5103R_FULL_SPEED_BACKWARDS 270
-#define FS5103R_STOP 360
-#define FS5103R_FULL_SPEED_FORWARDS 540
+#define FS5103R_FULL_SPEED_BACKWARDS 318
+#define FS5103R_STOP 379
+#define FS5103R_FULL_SPEED_FORWARDS 440
 
 using namespace std;
 
