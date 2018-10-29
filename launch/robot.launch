@@ -48,7 +48,7 @@
             <arg name="headless" value="$(arg headless)"/>
         </include>
         <node name="robot_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-              args="-sdf -file $(find robots)/$(arg model_name)/model.sdf -model $(arg model_name)"
+              args="-sdf -file $(find robots)/$(arg robot_name)/model.sdf -model $(arg robot_name)"
         />
     </group>
 
