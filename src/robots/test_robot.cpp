@@ -6,7 +6,15 @@ using namespace std;
 class Robot: public cardsflow::kindyn::Robot{
 public:
     Robot(string urdf, string cardsflow_xml){
-        init(urdf,cardsflow_xml);
+        if (!ros::isInitialized()) {
+            int argc = 0;
+            char **argv = NULL;
+            ros::init(argc, argv, "roboy_upper_body");
+        }
+        nh = ros::NodeHandlePtr(new ros::NodeHandle);
+        vector<string> joint_names;
+        nh->getParam("joint_names", joint_names);
+        init(urdf,cardsflow_xml,joint_names);
     };
     void read(){
         update();
@@ -16,6 +24,8 @@ public:
     void write(){
 
     };
+private:
+    ros::NodeHandlePtr nh;
 };
 
 void update(controller_manager::ControllerManager *cm) {
