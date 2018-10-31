@@ -248,6 +248,7 @@ namespace cardsflow {
             iDynTree::MatrixDynSize Mass; /// Mass matrix
 
             bool torque_position_controller_active = false, force_position_controller_active = false, cable_length_controller_active = false;
+            VectorXd qdd_torque_control, qdd_force_control;
             MatrixXd S, P, V, W; /// matrices of cable model
             vector<Cable> cables; /// all cables of the robot
             vector <VectorXd> joint_axis; /// joint axis of each joint

@@ -30,7 +30,11 @@ Robot::~Robot() {
 void Robot::init(string urdf_file_path, string viapoints_file_path, vector<string> joint_names_ordered) {
     // Helper class to load the model from an external format
     iDynTree::ModelLoader mdlLoader;
-    bool ok = mdlLoader.loadReducedModelFromFile(urdf_file_path, joint_names_ordered);
+    bool ok ;
+    if(joint_names_ordered.empty())
+        ok = mdlLoader.loadModelFromFile(urdf_file_path);
+    else
+        ok = mdlLoader.loadReducedModelFromFile(urdf_file_path, joint_names_ordered);
 
     if (!ok) {
         ROS_FATAL_STREAM("KinDynComputationsWithEigen: impossible to load model from " << urdf_file_path);
@@ -88,6 +92,10 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     q.resize(number_of_dofs);
     qd.resize(number_of_dofs);
     qdd.resize(number_of_dofs);
+    qdd_torque_control.resize(number_of_dofs);
+    qdd_torque_control.setZero();
+    qdd_force_control.resize(number_of_dofs);
+    qdd_force_control.setZero();
 
     q_target.resize(number_of_dofs);
     qd_target.resize(number_of_dofs);
@@ -287,6 +295,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
 }
 
 VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max) {
+    nWSR = 1000;
     // Convert the parameters to be in the correct form
     for (int i = 0; i < number_of_cables * number_of_cables; i++)
         A[i] = 0;
@@ -473,7 +482,6 @@ void Robot::update() {
 void Robot::forwardKinematics(double dt) {
     const iDynTree::Model &model = kinDynComp.model();
 
-    VectorXd qdd_torque_control, qdd_force_control;
     if(torque_position_controller_active) // we do the calculations only if there is a controller active
         qdd_torque_control = M.block(6, 6, number_of_dofs, number_of_dofs).inverse() * (-torques - CG);
     if(force_position_controller_active) // we do the calculations only if there is a controller active
@@ -494,7 +502,7 @@ void Robot::forwardKinematics(double dt) {
             switch(controller_type[j]){
                 case CARDSflow::ControllerType::torque_position_controller:
                     boost::numeric::odeint::integrate(
-                            [this, j, qdd_torque_control](const state_type &x, state_type &dxdt, double t) {
+                            [this, j](const state_type &x, state_type &dxdt, double t) {
                                 dxdt[1] = qdd_torque_control[j];
                                 dxdt[0] = x[1];
                             }, joint_state[j], integration_time, integration_time + dt, dt);
@@ -508,7 +516,7 @@ void Robot::forwardKinematics(double dt) {
                     break;
                 case CARDSflow::ControllerType::force_position_controller:
                     boost::numeric::odeint::integrate(
-                            [this, j, qdd_force_control](const state_type &x, state_type &dxdt, double t) {
+                            [this, j](const state_type &x, state_type &dxdt, double t) {
                                 dxdt[1] = qdd_force_control[j];
                                 dxdt[0] = x[1];
                             }, joint_state[j], integration_time, integration_time + dt, dt);

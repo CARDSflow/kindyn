@@ -116,7 +116,7 @@ public:
 private:
     double q_target = 0; /// joint position target
     double p_error_prev = 0;
-    double Kp = 1000, Kd = 5; /// PD gains
+    double Kp = 1, Kd = 0; /// PD gains
     ros::NodeHandle nh; /// ROS nodehandle
     ros::Publisher controller_state; /// publisher for controller state
     boost::shared_ptr<ros::AsyncSpinner> spinner;
