@@ -34,6 +34,7 @@
 #include "kindyn/controller/cardsflow_state_interface.hpp"
 #include <roboy_communication_simulation/ControllerType.h>
 #include <std_msgs/Float32.h>
+#include <roboy_communication_control/SetControllerParameters.h>
 
 using namespace std;
 
@@ -67,6 +68,7 @@ public:
         joint_index = joint.getJointIndex();
         last_update = ros::Time::now();
         joint_command = nh.subscribe((joint_name+"/target").c_str(),1,&CableLengthController::JointPositionCommand, this);
+        controller_parameter_srv = nh.advertiseService((joint_name+"/params").c_str(),& CableLengthController::setControllerParameters, this);
         return true;
     }
 
@@ -113,11 +115,26 @@ public:
     void JointPositionCommand(const std_msgs::Float32ConstPtr &msg){
         joint.setJointPositionCommand(msg->data);
     }
+
+    /**
+     * Controller Parameters service
+     * @param req requested gains
+     * @param res success
+     * @return success
+     */
+    bool setControllerParameters( roboy_communication_control::SetControllerParameters::Request &req,
+                                  roboy_communication_control::SetControllerParameters::Response &res){
+        Kp = req.Kp;
+        Kd = req.Kd;
+        res.success = true;
+        return true;
+    }
 private:
     double Kp = 1000, Kd = 10; /// PD gains
     double p_error_last = 0; /// last error
     ros::NodeHandle nh; /// ROS nodehandle
     ros::Publisher controller_state; /// publisher for controller state
+    ros::ServiceServer controller_parameter_srv; /// service for controller parameters
     boost::shared_ptr<ros::AsyncSpinner> spinner; /// ROS async spinner
     hardware_interface::CardsflowHandle joint; /// cardsflow joint handle for access to joint/cable model state
     ros::Subscriber joint_command; /// joint command subscriber

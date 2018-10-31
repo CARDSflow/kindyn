@@ -34,6 +34,7 @@
 #include "kindyn/controller/cardsflow_command_interface.hpp"
 #include <roboy_communication_simulation/ControllerType.h>
 #include <std_msgs/Float32.h>
+#include <roboy_communication_control/SetControllerParameters.h>
 
 using namespace std;
 
@@ -65,6 +66,7 @@ public:
             r.sleep();
         joint = hw->getHandle(joint_name); // throws on failure
         joint_command = nh.subscribe((joint_name+"/target").c_str(),1,&TorquePositionController::JointCommand, this);
+        controller_parameter_srv = nh.advertiseService((joint_name+"/params").c_str(),& TorquePositionController::setControllerParameters, this);
         return true;
     }
 
@@ -108,11 +110,26 @@ public:
     void JointCommand(const std_msgs::Float32ConstPtr &msg){
         q_target = msg->data;
     }
+
+    /**
+     * Controller Parameters service
+     * @param req requested gains
+     * @param res success
+     * @return success
+     */
+    bool setControllerParameters( roboy_communication_control::SetControllerParameters::Request &req,
+                                  roboy_communication_control::SetControllerParameters::Response &res){
+        Kp = req.Kp;
+        Kd = req.Kd;
+        res.success = true;
+        return true;
+    }
 private:
     double q_target = 0; /// joint position target
     double Kp = 1000, Kd = 5; /// PD gains
     ros::NodeHandle nh; /// ROS nodehandle
     ros::Publisher controller_state; /// publisher for controller state
+    ros::ServiceServer controller_parameter_srv; /// service for controller parameters
     boost::shared_ptr<ros::AsyncSpinner> spinner;
     hardware_interface::JointHandle joint;
     ros::Subscriber joint_command; /// joint command subscriber
