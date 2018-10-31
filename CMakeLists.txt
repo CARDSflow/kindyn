@@ -109,6 +109,10 @@ target_link_libraries(roboy_upper_body ${iDynTree_LIBRARIES} ${catkin_LIBRARIES}
 # roboy_arcade_maschine
 add_executable( roboy_arcade_maschine src/robots/roboy_arcade_maschine.cpp)
 target_link_libraries(roboy_arcade_maschine ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+
+# roboy_xylophone
+add_executable( roboy_xylophone src/robots/roboy_arcade_maschine.cpp)
+target_link_libraries(roboy_xylophone ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 #==============================================================================
 # Installation
 #==============================================================================
@@ -122,6 +126,7 @@ install(TARGETS
 		msj_platform
 		roboy_upper_body
 		roboy_arcade_maschine
+		roboy_xylophone
 	    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
