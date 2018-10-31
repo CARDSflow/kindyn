@@ -127,7 +127,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     torques.resize(number_of_dofs);
     torques.setZero();
 
-    controller_type.resize(number_of_cables, 2);
+    controller_type.resize(number_of_cables, CARDSflow::ControllerType::cable_length_controller);
     joint_state.resize(number_of_dofs);
     motor_state.resize(number_of_cables);
     // ros control
@@ -142,7 +142,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
 
         // connect and register the cardsflow command interface
         hardware_interface::CardsflowHandle pos_handle(cardsflow_state_interface.getHandle(joint_names[joint]),
-                                                       &q_target[joint], &qd_target[joint], &ld[joint]);
+                                                       &q_target[joint], &qd_target[joint], &torques[joint], &ld[joint]);
         cardsflow_command_interface.registerHandle(pos_handle);
         // connect and register the cardsflow state interface
         hardware_interface::JointStateHandle state_handle2(joint_names[joint], &q[joint], &qd[joint], &q_target[joint]);
@@ -205,15 +205,26 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     L = V * W;
     L_t = -L.transpose();
 
-//    qp_solver = SQProblem(number_of_cables, number_of_dofs);
-//
-//    H = new real_t[number_of_cables * number_of_cables];
-//    g = new real_t[number_of_cables];
-//    A = new real_t[number_of_cables * number_of_cables];
-//    lb = new real_t[number_of_cables];
-//    ub = new real_t[number_of_cables];
-//    b = new real_t[number_of_dofs];
-//    FOpt = new real_t[number_of_cables];
+    qp_solver = SQProblem(number_of_cables, number_of_dofs);
+
+    H = new real_t[number_of_cables * number_of_cables];
+    g = new real_t[number_of_cables];
+    A = new real_t[number_of_cables * number_of_cables];
+    lb = new real_t[number_of_cables];
+    ub = new real_t[number_of_cables];
+    b = new real_t[number_of_dofs];
+    FOpt = new real_t[number_of_cables];
+    qp_solver.setPrintLevel(static_cast<PrintLevel>(qp_print_level));
+
+    double min_force, max_force;
+    nh->getParam("min_force", min_force);
+    nh->getParam("max_force", max_force);
+
+    f_min = VectorXd::Ones(number_of_cables);
+    f_max = VectorXd::Ones(number_of_cables);
+
+    f_min = min_force * f_min;
+    f_max = max_force * f_max;
 
     last_visualization = ros::Time::now();
 
@@ -275,80 +286,72 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     interactive_marker_sub = nh->subscribe("/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
 }
 
-//VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max) {
-//    // Initialisation
-//    int qp_print_level = PL_NONE;
-//    nh->getParam("qp_print_level", qp_print_level);
-//    qp_solver.setPrintLevel(static_cast<PrintLevel>(qp_print_level));
-//    // Set the optimisation parameters
-//    int nWSR = 1000;
-//    nh->getParam("qp_working_sets", nWSR);
-//
-//    // Convert the parameters to be in the correct form
-//    for (int i = 0; i < number_of_cables * number_of_cables; i++)
-//        A[i] = 0;
-//    for (int i = 0; i < number_of_cables; i++) {
-//        lb[i] = f_min(i);
-//        ub[i] = f_max(i);
-//        for (int j = 0; j < number_of_dofs; j++) {
-//            if (abs(A_eq(j, i)) > 1e-6) {
-//                A[j * number_of_cables + i] = A_eq(j, i);
-//            } else {
-//                A[j * number_of_cables + i] = 0;
-//            }
-//        }
-//    }
-//    for (int j = 0; j < number_of_dofs; j++) {
-//        if (abs(b_eq[j]) > 1e-6) {
-//            b[j] = b_eq[j];
-//        } else {
-//            b[j] = 0;
-//        }
-//    }
-//    VectorXd f_opt;
-//    f_opt.resize(number_of_cables);
-//    f_opt.setZero();
-//
-//    // Run the optimisation
-//    if (first_time_solving) {
-//        for (int i = 0; i < number_of_cables * number_of_cables; i++)
-//            H[i] = 0;
-//        for (int i = 0; i < number_of_cables; i++) {
-//            // H is the identity matrix
-//            H[i * number_of_cables + i] = 1;
-//            g[i] = 0;
-//        }
-//        returnValue status = qp_solver.init(H, g, A, lb, ub, b, b, nWSR, nullptr);
-//        first_time_solving = false;
-//    } else {
-//        returnValue status = qp_solver.hotstart(H, g, A, lb, ub, b, b, nWSR, nullptr);
-//        switch (status) {
-//            case SUCCESSFUL_RETURN: { // all good
-//                qp_solver.getPrimalSolution(FOpt);
-//                for (int i = 0; i < number_of_cables; i++) {
-//                    f_opt(i) = FOpt[i];
-//                }
-//                ROS_INFO_STREAM_THROTTLE(1, "target cable forces:\n" << f_opt.transpose());
-//                break;
-//            }
-//            default: {
-//                ROS_ERROR_STREAM_THROTTLE(1, MessageHandling::getErrorCodeMessage(status));
-//                if (qp_solver.isInfeasible()) {
-//                    qp_solver.getPrimalSolution(FOpt);
-//                    for (int i = 0; i < number_of_cables; i++) {
-//                        f_opt(i) = FOpt[i];
-//                    }
-//                    ROS_WARN_STREAM_THROTTLE(1, "infeasible, primal solution " << f_opt.transpose());
-////                    f_opt.setZero();
-//                } else {
-//                    if (status = (returnValue) 54)
-//                        first_time_solving = true;
-//                }
-//            }
-//        }
-//    }
-//    return f_opt;
-//}
+VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max) {
+    // Convert the parameters to be in the correct form
+    for (int i = 0; i < number_of_cables * number_of_cables; i++)
+        A[i] = 0;
+    for (int i = 0; i < number_of_cables; i++) {
+        lb[i] = f_min(i);
+        ub[i] = f_max(i);
+        for (int j = 0; j < number_of_dofs; j++) {
+            if (abs(A_eq(j, i)) > 1e-6) {
+                A[j * number_of_cables + i] = A_eq(j, i);
+            } else {
+                A[j * number_of_cables + i] = 0;
+            }
+        }
+    }
+    for (int j = 0; j < number_of_dofs; j++) {
+        if (abs(b_eq[j]) > 1e-6) {
+            b[j] = b_eq[j];
+        } else {
+            b[j] = 0;
+        }
+    }
+    VectorXd f_opt;
+    f_opt.resize(number_of_cables);
+    f_opt.setZero();
+
+    // Run the optimisation
+    if (first_time_solving) {
+        for (int i = 0; i < number_of_cables * number_of_cables; i++)
+            H[i] = 0;
+        for (int i = 0; i < number_of_cables; i++) {
+            // H is the identity matrix
+            H[i * number_of_cables + i] = 1;
+            g[i] = 0;
+        }
+        returnValue status = qp_solver.init(H, g, A, lb, ub, b, b, nWSR, nullptr);
+        first_time_solving = false;
+    } else {
+        returnValue status = qp_solver.hotstart(H, g, A, lb, ub, b, b, nWSR, nullptr);
+        switch (status) {
+            case SUCCESSFUL_RETURN: { // all good
+                qp_solver.getPrimalSolution(FOpt);
+                for (int i = 0; i < number_of_cables; i++) {
+                    f_opt(i) = FOpt[i];
+                }
+                ROS_INFO_STREAM_THROTTLE(1, "target cable forces:\n" << f_opt.transpose());
+                break;
+            }
+            default: {
+                ROS_ERROR_STREAM_THROTTLE(1, MessageHandling::getErrorCodeMessage(status));
+                if (qp_solver.isInfeasible()) {
+                    qp_solver.getPrimalSolution(FOpt);
+                    for (int i = 0; i < number_of_cables; i++) {
+                        f_opt(i) = FOpt[i];
+                    }
+                    ROS_WARN_STREAM_THROTTLE(1, "infeasible, primal solution " << f_opt.transpose());
+//                    f_opt.setZero();
+                } else {
+                    if (status = (returnValue) 54)
+                        first_time_solving = true;
+                }
+            }
+        }
+    }
+    return f_opt;
+}
 
 void Robot::update() {
     ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
@@ -419,6 +422,25 @@ void Robot::update() {
 //    ROS_INFO_STREAM_THROTTLE(5, "P " << P.transpose().format(fmt));
 //    ROS_INFO_STREAM_THROTTLE(5, "V " << V.transpose().format(fmt));
 //    ROS_INFO_STREAM_THROTTLE(5, "S " << S.transpose().format(fmt));
+    torque_position_controller_active = force_position_controller_active = cable_length_controller_active = false;
+    for(auto type:controller_type){
+        switch(type){
+            case CARDSflow::ControllerType::cable_length_controller:
+                cable_length_controller_active = true;
+                break;
+            case CARDSflow::ControllerType::torque_position_controller:
+                torque_position_controller_active = true;
+                break;
+            case CARDSflow::ControllerType::force_position_controller:
+                force_position_controller_active = true;
+                break;
+        }
+    }
+
+    // for the cable force controller with do a centralized update
+    if(force_position_controller_active){
+        cable_forces = resolve_function(L_t, torques, f_min, f_max);
+    }
 
     if (1.0 / (ros::Time::now() - last_visualization).toSec() < 30) {
         for (int i = 0; i < number_of_cables; i++) {
@@ -451,12 +473,11 @@ void Robot::update() {
 void Robot::forwardKinematics(double dt) {
     const iDynTree::Model &model = kinDynComp.model();
 
-//    qdd = M.block(6, 6, number_of_dofs, number_of_dofs).inverse() * (-L.transpose() * cable_forces + CG);
-//    qd += qdd * dt;
-//    q += qd * dt;
-
-    qdd = M.block(6, 6, number_of_dofs, number_of_dofs).inverse() * (-torques - CG);
-
+    VectorXd qdd_torque_control, qdd_force_control;
+    if(torque_position_controller_active) // we do the calculations only if there is a controller active
+        qdd_torque_control = M.block(6, 6, number_of_dofs, number_of_dofs).inverse() * (-torques - CG);
+    if(force_position_controller_active) // we do the calculations only if there is a controller active
+        qdd_force_control = M.block(6, 6, number_of_dofs, number_of_dofs).inverse() * (L_t * cable_forces - CG);
 
     for(int i = 0; i<endeffectors.size();i++) {
         int dof_offset = endeffector_dof_offset[i];
@@ -470,19 +491,28 @@ void Robot::forwardKinematics(double dt) {
         VectorXd qd_temp =  L_endeffector_inv * Ld;
 
         for (int j = dof_offset; j < endeffector_number_of_dofs[i]+dof_offset; j++) {
-            if (controller_type[j] == 0) {
-                boost::numeric::odeint::integrate(
-                        [this, j](const state_type &x, state_type &dxdt, double t) {
-                            dxdt[1] = qdd[j];
-                            dxdt[0] = x[1];
-                        }, joint_state[j], integration_time, integration_time + dt, dt);
-            }
-            if (controller_type[j] == 2) {
-                boost::numeric::odeint::integrate(
-                        [this, j, qd_temp, dof_offset](const state_type &x, state_type &dxdt, double t) {
-                            dxdt[1] = 0;
-                            dxdt[0] = qd_temp[j-dof_offset];
-                        }, joint_state[j], integration_time, integration_time + dt, dt);
+            switch(controller_type[j]){
+                case CARDSflow::ControllerType::torque_position_controller:
+                    boost::numeric::odeint::integrate(
+                            [this, j, qdd_torque_control](const state_type &x, state_type &dxdt, double t) {
+                                dxdt[1] = qdd_torque_control[j];
+                                dxdt[0] = x[1];
+                            }, joint_state[j], integration_time, integration_time + dt, dt);
+                    break;
+                case CARDSflow::ControllerType::cable_length_controller:
+                    boost::numeric::odeint::integrate(
+                            [this, j, qd_temp, dof_offset](const state_type &x, state_type &dxdt, double t) {
+                                dxdt[1] = 0;
+                                dxdt[0] = qd_temp[j-dof_offset];
+                            }, joint_state[j], integration_time, integration_time + dt, dt);
+                    break;
+                case CARDSflow::ControllerType::force_position_controller:
+                    boost::numeric::odeint::integrate(
+                            [this, j, qdd_force_control](const state_type &x, state_type &dxdt, double t) {
+                                dxdt[1] = qdd_force_control[j];
+                                dxdt[0] = x[1];
+                            }, joint_state[j], integration_time, integration_time + dt, dt);
+                    break;
             }
             qd[j] = joint_state[j][1];
             q[j] = joint_state[j][0];
@@ -576,9 +606,13 @@ void Robot::update_P() {
     counter++;
 }
 
-void Robot::controllerType(const roboy_communication_simulation::ControllerStateConstPtr &msg) {
+void Robot::controllerType(const roboy_communication_simulation::ControllerTypeConstPtr &msg) {
     auto it = find(joint_names.begin(), joint_names.end(),msg->joint_name);
     if(it!=joint_names.end()) {
+        ROS_INFO("%s changed controller to %s", msg->joint_name.c_str(),
+                 (msg->type==CARDSflow::ControllerType::cable_length_controller?"cable_length_controller":
+                  msg->type==CARDSflow::ControllerType::torque_position_controller?"torque_position_controller":
+                  msg->type==CARDSflow::ControllerType::force_position_controller?"force_position_controller":"UNKNOWN"));
         controller_type[distance(joint_names.begin(), it)] = msg->type;
     }
 }

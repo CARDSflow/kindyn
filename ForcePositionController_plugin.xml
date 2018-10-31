@@ -1,0 +1,6 @@
+<library path="lib/libForcePositionController">
+    <class name="cardsflow/kindyn/ForcePositionController" type="ForcePositionController"
+           base_class_type="controller_interface::ControllerBase">
+        <description>This is a cardsflow force position controller</description>
+    </class>
+</library>

@@ -32,7 +32,7 @@
 #include <pluginlib/class_list_macros.h>
 #include "kindyn/robot.hpp"
 #include "kindyn/controller/cardsflow_state_interface.hpp"
-#include <roboy_communication_simulation/ControllerState.h>
+#include <roboy_communication_simulation/ControllerType.h>
 #include <std_msgs/Float32.h>
 
 using namespace std;
@@ -59,14 +59,14 @@ public:
         }
         spinner.reset(new ros::AsyncSpinner(0));
         spinner->start();
-        controller_state = nh.advertise<roboy_communication_simulation::ControllerState>("/controller_type",1);
+        controller_state = nh.advertise<roboy_communication_simulation::ControllerType>("/controller_type",1);
         ros::Rate r(10);
         while(controller_state.getNumSubscribers()==0) // we wait until the controller state is available
             r.sleep();
         joint = hw->getHandle(joint_name); // throws on failure
         joint_index = joint.getJointIndex();
         last_update = ros::Time::now();
-        joint_command = nh.subscribe((joint_name+"/target").c_str(),1,&CableLengthController::JointCommand, this);
+        joint_command = nh.subscribe((joint_name+"/target").c_str(),1,&CableLengthController::JointPositionCommand, this);
         return true;
     }
 
@@ -95,9 +95,9 @@ public:
      */
     void starting(const ros::Time& time) {
         ROS_WARN("cable length controller started for %s with index %d", joint_name.c_str(), joint_index);
-        roboy_communication_simulation::ControllerState msg;
+        roboy_communication_simulation::ControllerType msg;
         msg.joint_name = joint_name;
-        msg.type = 2;
+        msg.type = CARDSflow::ControllerType::cable_length_controller;
         controller_state.publish(msg);
     }
     /**
@@ -110,7 +110,7 @@ public:
      * Joint position command callback for this joint
      * @param msg joint position target in radians
      */
-    void JointCommand(const std_msgs::Float32ConstPtr &msg){
+    void JointPositionCommand(const std_msgs::Float32ConstPtr &msg){
         joint.setJointPositionCommand(msg->data);
     }
 private:

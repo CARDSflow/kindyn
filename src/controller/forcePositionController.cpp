@@ -23,7 +23,7 @@
     OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
     OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     author: Simon Trendel ( st@gi.ai ), 2018
-    description: A Torque controller for joint position targets using PD control
+    description: A Force controller for joint position targets using PD control
 */
 
 #include <type_traits>
@@ -31,18 +31,19 @@
 #include <hardware_interface/joint_command_interface.h>
 #include <pluginlib/class_list_macros.h>
 #include "kindyn/robot.hpp"
-#include "kindyn/controller/cardsflow_command_interface.hpp"
+#include "kindyn/controller/cardsflow_state_interface.hpp"
 #include <roboy_communication_simulation/ControllerType.h>
 #include <std_msgs/Float32.h>
 
 using namespace std;
+using namespace Eigen;
 
-class TorquePositionController : public controller_interface::Controller<hardware_interface::EffortJointInterface> {
+class ForcePositionController : public controller_interface::Controller<hardware_interface::CardsflowCommandInterface> {
 public:
     /**
      * Constructor
      */
-    TorquePositionController() {};
+    ForcePositionController() {};
 
     /**
      * Initializes the controller. Will be call by controller_manager when loading this controller
@@ -50,7 +51,7 @@ public:
      * @param n the nodehandle
      * @return success
      */
-    bool init(hardware_interface::EffortJointInterface *hw, ros::NodeHandle &n) {
+    bool init(hardware_interface::CardsflowCommandInterface *hw, ros::NodeHandle &n) {
         nh = n;
         // get joint name from the parameter server
         if (!n.getParam("joint", joint_name)) {
@@ -64,7 +65,8 @@ public:
         while(controller_state.getNumSubscribers()==0)
             r.sleep();
         joint = hw->getHandle(joint_name); // throws on failure
-        joint_command = nh.subscribe((joint_name+"/target").c_str(),1,&TorquePositionController::JointCommand, this);
+        joint_command = nh.subscribe((joint_name+"/target").c_str(),1,&ForcePositionController::JointPositionCommand, this);
+        joint_index = joint.getJointIndex();
         return true;
     }
 
@@ -76,11 +78,14 @@ public:
      */
     void update(const ros::Time &time, const ros::Duration &period) {
         double q = joint.getPosition();
-        double qd = joint.getVelocity();
         double p_error = q - q_target;
-        double cmd = Kp * p_error + Kd *qd;
-        joint.setCommand(cmd);
+        double q_dd_cmd = Kp * p_error + Kd *((p_error - p_error_prev)/period.toSec());
+        MatrixXd M = joint.getM();
+        VectorXd CG = joint.getCG();
+        double torque = M(joint_index,joint_index) * q_dd_cmd + CG[joint_index];
+        joint.setJointTorqueCommand(torque);
 //        ROS_INFO_THROTTLE(1, "%s target %lf current %lf", joint_name.c_str(), q_target, q);
+        p_error_prev = p_error;
     }
 
     /**
@@ -88,10 +93,10 @@ public:
      * @param time current time
      */
     void starting(const ros::Time& time) {
-        ROS_WARN("torque position controller started for %s", joint_name.c_str());
+        ROS_WARN("force position controller started for %s", joint_name.c_str());
         roboy_communication_simulation::ControllerType msg;
         msg.joint_name = joint_name;
-        msg.type = CARDSflow::ControllerType::torque_position_controller;
+        msg.type = CARDSflow::ControllerType::force_position_controller;
         controller_state.publish(msg);
     }
 
@@ -105,17 +110,19 @@ public:
      * Joint position command callback for this joint
      * @param msg joint position target in radians
      */
-    void JointCommand(const std_msgs::Float32ConstPtr &msg){
+    void JointPositionCommand(const std_msgs::Float32ConstPtr &msg){
         q_target = msg->data;
     }
 private:
     double q_target = 0; /// joint position target
+    double p_error_prev = 0;
     double Kp = 1000, Kd = 5; /// PD gains
     ros::NodeHandle nh; /// ROS nodehandle
     ros::Publisher controller_state; /// publisher for controller state
     boost::shared_ptr<ros::AsyncSpinner> spinner;
-    hardware_interface::JointHandle joint;
+    hardware_interface::CardsflowHandle joint; /// cardsflow joint handle for access to joint/cable model state
     ros::Subscriber joint_command; /// joint command subscriber
     string joint_name; /// name of the controlled joint
+    int joint_index;
 };
-PLUGINLIB_EXPORT_CLASS(TorquePositionController, controller_interface::ControllerBase);
+PLUGINLIB_EXPORT_CLASS(ForcePositionController, controller_interface::ControllerBase);

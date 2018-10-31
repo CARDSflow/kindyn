@@ -1,11 +1,12 @@
 #include "kindyn/robot.hpp"
 #include <thread>
 #include <roboy_communication_middleware/MotorCommand.h>
-#define SPINDLERADIUS 0.016
+#define SPINDLERADIUS 0.0045
 #define FS5103R_MAX_SPEED (2.0*M_PI/0.9) // radian per second
-#define FS5103R_FULL_SPEED_BACKWARDS 318
-#define FS5103R_STOP 379
-#define FS5103R_FULL_SPEED_FORWARDS 440
+
+#define FS5103R_FULL_SPEED_BACKWARDS 400.0
+#define FS5103R_STOP 375.0
+#define FS5103R_FULL_SPEED_FORWARDS 350.0
 
 using namespace std;
 
@@ -29,8 +30,8 @@ public:
         nh->getParam("joint_names", joint_names);
         // then we initialize the robot with the cardsflow xml and the active joints
         init(urdf,cardsflow_xml,joint_names);
-        // if we do not simulate with gazebo, we use the forwardKinematics function to integrate the robot state
-        nh->getParam("gazebo", gazebo);
+        // if we do not get the robot state externally, we use the forwardKinematics function to integrate the robot state
+        nh->getParam("external_robot_state", external_robot_state);
     };
 
     /**
@@ -39,7 +40,7 @@ public:
      */
     void read(){
         update();
-        if(!gazebo)
+        if(!external_robot_state)
             forwardKinematics(0.000001);
     };
 
@@ -50,11 +51,11 @@ public:
      */
     int meterPerSecondToServoSpeed(double meterPerSecond){
         double radianPerSecond = meterPerSecond/(2.0 * M_PI * SPINDLERADIUS);
-        double pwm = radianPerSecond/FS5103R_MAX_SPEED;
+        double pwm = radianPerSecond;
         if(pwm<=-1){
             return FS5103R_FULL_SPEED_BACKWARDS;
         }else if(pwm>-1 && pwm<1){
-            return pwm*180;
+            return -pwm*(FS5103R_FULL_SPEED_BACKWARDS-FS5103R_STOP)+FS5103R_STOP;
         }else{
             return FS5103R_FULL_SPEED_FORWARDS;
         }
@@ -66,13 +67,16 @@ public:
     void write(){
         roboy_communication_middleware::MotorCommand msg;
         msg.id = 5;
+        stringstream str;
         for (int i = 0; i < number_of_cables; i++) {
             msg.motors.push_back(i);
             msg.setPoints.push_back(meterPerSecondToServoSpeed(Ld[i])); //
+            str << meterPerSecondToServoSpeed(Ld[i]) << "\t" << Ld[i] << "\t";
         }
+//        ROS_INFO_STREAM_THROTTLE(1,str.str());
         motor_command.publish(msg);
     };
-    bool gazebo; /// indicates if we use gazebo for simulation
+    bool external_robot_state; /// indicates if we get the robot state externally
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
 };
