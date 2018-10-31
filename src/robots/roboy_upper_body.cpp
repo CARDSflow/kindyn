@@ -22,18 +22,17 @@ public:
         vector<string> joint_names;
         nh->getParam("joint_names", joint_names);
         init(urdf,cardsflow_xml,joint_names);
+        // if we do not get the robot state externally, we use the forwardKinematics function to integrate the robot state
+        nh->getParam("external_robot_state", external_robot_state);
     };
     /**
      * Updates the robot model and integrates the robot model using the forwardKinematics function
      * with a small step length
      */
     void read(){
-        ros::Time t0 = ros::Time::now();
         update();
-        ROS_INFO_THROTTLE(5,"update takes %f seconds", (ros::Time::now()-t0).toSec());
-        t0 = ros::Time::now();
-        forwardKinematics(0.0001);
-        ROS_INFO_THROTTLE(5,"forwardKinematics takes %f seconds", (ros::Time::now()-t0).toSec());
+        if(!external_robot_state)
+            forwardKinematics(0.0001);
     };
     /**
      * Sends motor commands to the real robot
@@ -50,6 +49,7 @@ public:
     };
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
+    bool external_robot_state; /// indicates if we get the robot state externally
 };
 
 /**

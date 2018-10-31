@@ -58,7 +58,7 @@
 #include <eigen_conversions/eigen_msg.h>
 #include <grid_map_ros/GridMapMsgHelpers.hpp>
 
-//#include <qpOASES.hpp>
+#include <qpOASES.hpp>
 
 #include <controller_manager/controller_manager.h>
 #include <controller_manager_msgs/LoadController.h>
@@ -70,14 +70,14 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Vector3.h>
 #include <sensor_msgs/JointState.h>
-#include <roboy_communication_simulation/ControllerState.h>
+#include <roboy_communication_simulation/ControllerType.h>
 
 #include <boost/numeric/odeint.hpp>
 
 #include <common_utilities/rviz_visualization.hpp>
 #include <visualization_msgs/InteractiveMarkerFeedback.h>
 
-//using namespace qpOASES;
+using namespace qpOASES;
 using namespace std;
 using namespace Eigen;
 using iDynTree::toEigen;
@@ -169,7 +169,7 @@ namespace cardsflow {
             vector<Matrix4d> world_to_link_transform, link_to_world_transform, frame_transform;
             Matrix3d *link_to_link_transform;
 
-//            VectorXd resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max);
+            VectorXd resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max);
 
             /**
              * Updates the V matrix of the cable model
@@ -191,7 +191,7 @@ namespace cardsflow {
              * integrates the robot states
              * @param msg message containing the joint_name/type pair
              */
-            void controllerType(const roboy_communication_simulation::ControllerStateConstPtr &msg);
+            void controllerType(const roboy_communication_simulation::ControllerTypeConstPtr &msg);
 
             ros::NodeHandlePtr nh; /// ROS node handle
             boost::shared_ptr <ros::AsyncSpinner> spinner; /// async ROS spinner
@@ -247,6 +247,7 @@ namespace cardsflow {
             iDynTree::FreeFloatingGeneralizedTorques bias; /// Coriolis+Gravity term
             iDynTree::MatrixDynSize Mass; /// Mass matrix
 
+            bool torque_position_controller_active = false, force_position_controller_active = false, cable_length_controller_active = false;
             MatrixXd S, P, V, W; /// matrices of cable model
             vector<Cable> cables; /// all cables of the robot
             vector <VectorXd> joint_axis; /// joint axis of each joint
@@ -256,15 +257,15 @@ namespace cardsflow {
             double integration_time =0; /// odeint integration time
             typedef boost::array< double , 2 > state_type; /// second order dynamics integration
             vector<state_type> joint_state, motor_state; /// joint and cable states
-//            bool first_time_solving = true;
-//            SQProblem qp_solver; /// qpoases quadratic problem solver
-//            real_t *H, *g, *A, *lb, *ub, *b, *FOpt; /// quadratic problem variables
+            bool first_time_solving = true;
+            int nWSR = 1000; /// qp working sets
+            VectorXd f_min, f_max;
+            int qp_print_level = PL_NONE; /// qpoases print level
+            SQProblem qp_solver; /// qpoases quadratic problem solver
+            real_t *H, *g, *A, *lb, *ub, *b, *FOpt; /// quadratic problem variables
             ros::Time last_visualization; /// timestamp for visualization at reasonable intervals
-        private:
             vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments
-        private:
             Eigen::IOFormat fmt; /// formator for terminal printouts
-        private:
             hardware_interface::JointStateInterface joint_state_interface; /// ros control joint state interface
             hardware_interface::EffortJointInterface joint_command_interface; /// ros control joint command interface
             hardware_interface::CardsflowStateInterface cardsflow_state_interface; /// cardsflow state interface

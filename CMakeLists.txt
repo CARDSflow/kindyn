@@ -58,6 +58,7 @@ include_directories(
 #==============================================================================
 # Application
 #==============================================================================
+# CARDSflow hardware interface
 add_library(CardsflowHardwareInterface
 		src/controller/cardsflow_state_interface.cpp
 		src/controller/cardsflow_command_interface.cpp)
@@ -74,6 +75,12 @@ add_library(TorquePositionController src/controller/torquePositionController.cpp
 add_dependencies(TorquePositionController roboy_communication_middleware_generate_messages_cpp )
 target_link_libraries(TorquePositionController ${catkin_LIBRARIES} CardsflowHardwareInterface)
 
+# Force Position Controller
+add_library(ForcePositionController src/controller/forcePositionController.cpp )
+add_dependencies(ForcePositionController roboy_communication_middleware_generate_messages_cpp )
+target_link_libraries(ForcePositionController ${catkin_LIBRARIES} CardsflowHardwareInterface)
+
+# kindyn library
 add_library(kindyn SHARED
 		src/robot.cpp
 		src/EigenExtension.cpp
@@ -81,20 +88,25 @@ add_library(kindyn SHARED
 		include/kindyn/robot.hpp
 		include/kindyn/cable.hpp)
 target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CardsflowHardwareInterface
-		CableLengthController TorquePositionController )
+		CableLengthController TorquePositionController ForcePositionController)
 
+# testing idyntree
 add_executable( test_idyntree src/test_idyntree.cpp)
 target_link_libraries(test_idyntree ${iDynTree_LIBRARIES} ${catkin_LIBRARIES})
 
+# test_robot
 add_executable( test_robot src/robots/test_robot.cpp)
 target_link_libraries(test_robot ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
+# msj_platform
 add_executable( msj_platform src/robots/msj_platform.cpp)
 target_link_libraries(msj_platform ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
+# roboy_upper_body
 add_executable( roboy_upper_body src/robots/roboy_upper_body.cpp)
 target_link_libraries(roboy_upper_body ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
+# roboy_arcade_maschine
 add_executable( roboy_arcade_maschine src/robots/roboy_arcade_maschine.cpp)
 target_link_libraries(roboy_arcade_maschine ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 #==============================================================================
@@ -102,21 +114,28 @@ target_link_libraries(roboy_arcade_maschine ${iDynTree_LIBRARIES} ${catkin_LIBRA
 #==============================================================================
 install(TARGETS
 		kindyn
+		CardsflowHardwareInterface
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
 
 install(TARGETS
-		test_idyntree
+		msj_platform
+		roboy_upper_body
+		roboy_arcade_maschine
 	    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 install(FILES
         package.xml
+		CableLengthController_plugin.xml
+		TorquePositionController_plugin.xml
+		ForcePositionController_plugin.xml
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
 install(DIRECTORY
 		include/kindyn/
+		include/kindyn/controller
 		DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 		FILES_MATCHING PATTERN "*.hpp"
 		)

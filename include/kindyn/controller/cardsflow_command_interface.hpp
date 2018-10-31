@@ -37,7 +37,16 @@
 
 using namespace Eigen;
 
+namespace CARDSflow {
+    enum ControllerType {
+        cable_length_controller,
+        torque_position_controller,
+        force_position_controller
+    };
+}
+
 namespace hardware_interface {
+
     class CardsflowHandle : public CardsflowStateHandle {
     public:
         CardsflowHandle();
@@ -46,10 +55,11 @@ namespace hardware_interface {
          * @param js joint state handle
          * @param joint_position_cmd joint position command
          * @param joint_velocity_cmd joint velocity command
+         * @param joint_torque_cmd joint torque command
          * @param motor_cmd cable command
          */
         CardsflowHandle(const CardsflowStateHandle &js, double *joint_position_cmd, double *joint_velocity_cmd,
-                        VectorXd *motor_cmd);
+                        double* joint_torque_cmd, VectorXd *motor_cmd);
 
         /**
          * Cable length command
@@ -70,6 +80,12 @@ namespace hardware_interface {
         double getJointVelocityCommand() const;
 
         /**
+         * Returns the joint torque command
+         * @return joint torque command
+         */
+        double getJointTorqueCommand() const;
+
+        /**
          * Sets the joint position command
          * @param cmd joint position command
          */
@@ -81,8 +97,14 @@ namespace hardware_interface {
          */
         void setJointVelocityCommand(double cmd);
 
+        /**
+         * Sets the joint torque command
+         * @param cmd joint torque command
+         */
+        void setJointTorqueCommand(double cmd);
+
     private:
-        double *joint_position_cmd_, *joint_velocity_cmd_; /// joint position/velocity command
+        double *joint_position_cmd_, *joint_velocity_cmd_, *joint_torque_cmd_; /// joint position/velocity/torque command
         VectorXd *motor_cmd_; /// cable command
     };
 
