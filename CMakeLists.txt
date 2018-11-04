@@ -23,7 +23,6 @@ find_package(catkin REQUIRED COMPONENTS
 		tf_conversions
         robot_state_publisher
 		grid_map_ros
-		eus_qpoases
 		controller_interface
 		hardware_interface
 		controller_manager

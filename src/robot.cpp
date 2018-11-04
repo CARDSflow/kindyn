@@ -11,8 +11,9 @@ Robot::Robot() {
     nh = ros::NodeHandlePtr(new ros::NodeHandle);
     spinner.reset(new ros::AsyncSpinner(0));
     spinner->start();
-    robot_state = nh->advertise<geometry_msgs::PoseStamped>("/robot_state", 1);
-    tendon_state = nh->advertise<roboy_communication_simulation::Tendon>("/tendon_state", 1);
+    robot_state_pub = nh->advertise<geometry_msgs::PoseStamped>("/robot_state", 1);
+    tendon_state_pub = nh->advertise<roboy_communication_simulation::Tendon>("/tendon_state", 1);
+    joint_state_pub = nh->advertise<roboy_communication_simulation::JointState>("/joint_state", 1);
     fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
 }
 
@@ -451,29 +452,48 @@ void Robot::update() {
         cable_forces = resolve_function(L_t, torques, f_min, f_max);
     }
 
-    if (1.0 / (ros::Time::now() - last_visualization).toSec() < 30) {
-        for (int i = 0; i < number_of_cables; i++) {
+    if ((1.0 / (ros::Time::now() - last_visualization).toSec()) < 30) {
+        { // tendon state publisher
             roboy_communication_simulation::Tendon msg;
-            msg.name = cables[i].name;
-            msg.force = 0;
-            msg.l = l[i];
-            msg.ld = Ld[i];
-            for (auto vp:cables[i].viaPoints) {
-                geometry_msgs::Vector3 VP;
-                tf::vectorEigenToMsg(vp->global_coordinates, VP);
-                msg.viaPoints.push_back(VP);
+            for (int i = 0; i < number_of_cables; i++) {
+                msg.name.push_back(cables[i].name);
+                msg.force.push_back(cable_forces[i]);
+                msg.l.push_back(l[i]);
+                msg.ld.push_back(Ld[i]);
+                msg.number_of_viapoints.push_back(cables[i].viaPoints.size());
+                for (auto vp:cables[i].viaPoints) {
+                    geometry_msgs::Vector3 VP;
+                    tf::vectorEigenToMsg(vp->global_coordinates, VP);
+                    msg.viaPoints.push_back(VP);
+                }
             }
-            tendon_state.publish(msg);
+            tendon_state_pub.publish(msg);
         }
-        static int seq = 0;
-        for (int i = 0; i < number_of_links; i++) {
-            geometry_msgs::PoseStamped msg;
-            msg.header.seq = seq++;
-            msg.header.stamp = ros::Time::now();
-            msg.header.frame_id = link_names[i];
-            Isometry3d iso(link_to_world_transform[i]);
-            tf::poseEigenToMsg(iso, msg.pose);
-            robot_state.publish(msg);
+        { // robot state publisher
+            static int seq = 0;
+            for (int i = 0; i < number_of_links; i++) {
+                geometry_msgs::PoseStamped msg;
+                msg.header.seq = seq++;
+                msg.header.stamp = ros::Time::now();
+                msg.header.frame_id = link_names[i];
+                Isometry3d iso(link_to_world_transform[i]);
+                tf::poseEigenToMsg(iso, msg.pose);
+                robot_state_pub.publish(msg);
+            }
+        }
+        { // joint state publisher
+            roboy_communication_simulation::JointState msg;
+            msg.names = joint_names;
+            for (int i = 1; i < number_of_links; i++) {
+                Matrix4d pose = iDynTree::toEigen(kinDynComp.getWorldTransform(i).asHomogeneousTransform());
+                Vector3d axis;
+                axis << joint_axis[i - 1][3], joint_axis[i - 1][4], joint_axis[i - 1][5];
+                axis = pose.block(0, 0, 3, 3) * axis;
+                msg.origin.push_back(convertEigenToGeometry(pose.topRightCorner(3, 1)));
+                msg.axis.push_back(convertEigenToGeometry(axis));
+                msg.torque.push_back(torques[i - 1]);
+            }
+            joint_state_pub.publish(msg);
         }
         last_visualization = ros::Time::now();
     }

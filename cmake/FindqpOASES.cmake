@@ -41,9 +41,9 @@ include(FindPackageHandleStandardArgs)
 #             NAMES qpOASES 
 #             PATH /home/darwin/Documents/qpOASES/libs)
 
-set(qpOASES_INCLUDE_DIRS /opt/ros/kinetic/include)
+set(qpOASES_INCLUDE_DIRS /usr/local/include)
 FIND_LIBRARY(qpOASES_LIBRARIES NAMES qpOASES
-        PATHS /opt/ros/kinetic/lib/
+        PATHS /usr/local/lib/
         )
 find_package_handle_standard_args(qpOASES DEFAULT_MSG qpOASES_LIBRARIES
                                                       qpOASES_INCLUDE_DIRS)
