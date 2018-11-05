@@ -110,7 +110,7 @@ add_executable( roboy_arcade_maschine src/robots/roboy_arcade_maschine.cpp)
 target_link_libraries(roboy_arcade_maschine ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
 # roboy_xylophone
-add_executable( roboy_xylophone src/robots/roboy_arcade_maschine.cpp)
+add_executable( roboy_xylophone src/robots/roboy_xylophone.cpp)
 target_link_libraries(roboy_xylophone ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
 # theClaw
