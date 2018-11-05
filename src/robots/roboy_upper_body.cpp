@@ -1,6 +1,9 @@
 #include "kindyn/robot.hpp"
 #include <thread>
 #include <roboy_communication_middleware/MotorCommand.h>
+#include <roboy_communication_middleware/ControlMode.h>
+#include <common_utilities/CommonDefinitions.h>
+#include <roboy_communication_control/SetControllerParameters.h>
 
 using namespace std;
 
@@ -19,11 +22,21 @@ public:
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         motor_command = nh->advertise<roboy_communication_middleware::MotorCommand>("/roboy/middleware/MotorCommand",1);
+        motor_control_mode = nh->serviceClient<roboy_communication_middleware::ControlMode>("/roboy/shoulder_left/middleware/ControlMode");
+//        motor_config = nh->serviceClient<roboy_communication_middleware::MotorC>("/roboy/shoulder_left/middleware/ControlMode");
+        sphere_left_axis0_params = nh->serviceClient<roboy_communication_control::SetControllerParameters>("/sphere_left_axis0/sphere_left_axis0/params");
+        sphere_left_axis1_params = nh->serviceClient<roboy_communication_control::SetControllerParameters>("/sphere_left_axis1/sphere_left_axis1/params");
+        sphere_left_axis2_params = nh->serviceClient<roboy_communication_control::SetControllerParameters>("/sphere_left_axis2/sphere_left_axis2/params");
         vector<string> joint_names;
         nh->getParam("joint_names", joint_names);
         init(urdf,cardsflow_xml,joint_names);
         // if we do not get the robot state externally, we use the forwardKinematics function to integrate the robot state
         nh->getParam("external_robot_state", external_robot_state);
+        roboy_communication_middleware::ControlMode msg;
+        msg.request.control_mode = VELOCITY;
+        msg.request.setPoint = 0;
+        if(!motor_control_mode.call(msg))
+            ROS_WARN("failed to change control mode to velocity");
     };
     /**
      * Updates the robot model and integrates the robot model using the forwardKinematics function
@@ -32,24 +45,30 @@ public:
     void read(){
         update();
         if(!external_robot_state)
-            forwardKinematics(0.0001);
+            forwardKinematics(0.00001);
     };
     /**
      * Sends motor commands to the real robot
      */
     void write(){
         roboy_communication_middleware::MotorCommand msg;
-        msg.id = 5;
-        for (int i = 0; i < number_of_cables; i++) {
-            msg.motors.push_back(i);
-            msg.setPoints.push_back(
-                    512 + (l[i] / (2.0 * M_PI * 0.016 * (301.0 / 1024.0 / 360.0)))); //
+        msg.id = SHOULDER_LEFT;
+        msg.motors = left_arm_motors;
+        stringstream str;
+        for (int i = 0; i < left_arm_motors.size(); i++) {
+            double ld_meter = -ld[0][left_arm_motors[i]];
+            str << ld_meter << "\t";
+            msg.setPoints.push_back(myoMuscleEncoderTicksPerMeter(ld_meter)); //
         }
+        str << endl;
+        ROS_INFO_STREAM_THROTTLE(1,str.str());
         motor_command.publish(msg);
     };
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
+    ros::ServiceClient motor_control_mode, motor_config, sphere_left_axis0_params, sphere_left_axis1_params, sphere_left_axis2_params;
     bool external_robot_state; /// indicates if we get the robot state externally
+    vector<short unsigned int> left_arm_motors = {0,1,2,3,4,5,6,7,8};
 };
 
 /**

@@ -364,16 +364,6 @@ VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min
 }
 
 void Robot::update() {
-    ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "qdd " << qdd.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "qd " << qd.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "q " << q.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "l " << l.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "ld " << Ld.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "torques " << torques.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "cable_forces " << cable_forces.transpose().format(fmt));
-
-
     ros::Time t0 = ros::Time::now();
     iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
     iDynTree::toEigen(robotstate.jointPos) = q;
@@ -447,6 +437,15 @@ void Robot::update() {
         }
     }
 
+    ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "qdd " << qdd.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "qd " << qd.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "q " << q.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "l " << l.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "ld " << Ld.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "torques " << torques.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "cable_forces " << cable_forces.transpose().format(fmt));
+
     // for the cable force controller with do a centralized update
     if(force_position_controller_active){
         cable_forces = resolve_function(L_t, torques, f_min, f_max);
@@ -510,10 +509,9 @@ void Robot::forwardKinematics(double dt) {
     for(int i = 0; i<endeffectors.size();i++) {
         int dof_offset = endeffector_dof_offset[i];
         Ld.setZero();
-        for (int j = dof_offset; j < endeffector_number_of_dofs[i]+dof_offset; j++) {
+        for (int j = dof_offset; j < endeffector_number_of_dofs[i] + dof_offset; j++) {
             Ld -= ld[j];
         }
-
         MatrixXd L_endeffector = L.block(0,dof_offset,number_of_cables,endeffector_number_of_dofs[i]);
         MatrixXd L_endeffector_inv = EigenExtension::Pinv(L_endeffector);
         VectorXd qd_temp =  L_endeffector_inv * Ld;
@@ -546,15 +544,16 @@ void Robot::forwardKinematics(double dt) {
             q[j] = joint_state[j][0];
 //        ROS_INFO("%s control type %d", joint_names[j].c_str(), controller_type[j]);
         }
+        for (int i = 0; i < number_of_cables; i++) {
+            boost::numeric::odeint::integrate(
+                    [this, i](const state_type &x, state_type &dxdt, double t) {
+                        dxdt[1] = 0;
+                        dxdt[0] = Ld[i];
+                    }, motor_state[i], integration_time, integration_time + dt, dt);
+            l[i] = motor_state[i][0];
+        }
     }
-    for (int i = 0; i < number_of_cables; i++) {
-        boost::numeric::odeint::integrate(
-                [this, i](const state_type &x, state_type &dxdt, double t) {
-                    dxdt[1] = 0;
-                    dxdt[0] = Ld[i];
-                }, motor_state[i], integration_time, integration_time + dt, dt);
-        l[i] = motor_state[i][0];
-    }
+
     integration_time += dt;
     ROS_INFO_THROTTLE(5, "forward kinematics calculated for %lf s", integration_time);
 }
