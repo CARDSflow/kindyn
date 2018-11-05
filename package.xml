@@ -17,7 +17,6 @@
     <depend>controller_interface</depend>
     <depend>roboy_communication_middleware</depend>
     <depend>roboy_communication_simulation</depend>
-    <depend>eus_qpoases</depend>
 
     <export>
         <controller_interface plugin="${prefix}/CableLengthController_plugin.xml"/>
