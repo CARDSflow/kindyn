@@ -107,12 +107,20 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     qd_target.resize(number_of_dofs);
     qdd_target.resize(number_of_dofs);
 
+    q_target_prev.resize(number_of_dofs);
+    qd_target_prev.resize(number_of_dofs);
+    qdd_target_prev.resize(number_of_dofs);
+
     q.setZero();
     qd.setZero();
     qdd.setZero();
     q_target.setZero();
     qd_target.setZero();
     qdd_target.setZero();
+
+    q_target_prev.setZero();
+    qd_target_prev.setZero();
+    qdd_target_prev.setZero();
 
     l.resize(number_of_cables);
     Ld.resize(number_of_cables);
@@ -486,27 +494,32 @@ void Robot::update() {
             }
         }
         { // robot target publisher
-            iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
-            iDynTree::toEigen(robotstate.jointPos) = q_target;
-            iDynTree::fromEigen(robotstate.baseVel, baseVel);
-            toEigen(robotstate.jointVel) = qd_target;
-            toEigen(robotstate.gravity) = gravity;
+            if((q_target-q_target_prev).norm()>0.001 || (qd_target-qd_target_prev).norm()>0.001 ) { // only if target changed
+                q_target_prev = q_target;
+                qd_target_prev = qd_target;
+                iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
+                iDynTree::toEigen(robotstate.jointPos) = q_target;
+                iDynTree::fromEigen(robotstate.baseVel, baseVel);
+                toEigen(robotstate.jointVel) = qd_target;
+                toEigen(robotstate.gravity) = gravity;
 
-            kinDynCompTarget.setRobotState(robotstate.world_H_base, robotstate.jointPos, robotstate.baseVel, robotstate.jointVel,
-                                     robotstate.gravity);
+                kinDynCompTarget.setRobotState(robotstate.world_H_base, robotstate.jointPos, robotstate.baseVel,
+                                               robotstate.jointVel,
+                                               robotstate.gravity);
 
-            static int seq = 0;
-            for (int i = 0; i < number_of_links; i++) {
-                Matrix4d pose = iDynTree::toEigen(kinDynCompTarget.getWorldTransform(i).asHomogeneousTransform());
-                Vector3d com = iDynTree::toEigen(model.getLink(i)->getInertia().getCenterOfMass());
-                pose.block(0, 3, 3, 1) += pose.block(0, 0, 3, 3) * com;
-                geometry_msgs::PoseStamped msg;
-                msg.header.seq = seq++;
-                msg.header.stamp = ros::Time::now();
-                msg.header.frame_id = link_names[i];
-                Isometry3d iso(pose);
-                tf::poseEigenToMsg(iso, msg.pose);
-                robot_state_target_pub.publish(msg);
+                static int seq = 0;
+                for (int i = 0; i < number_of_links; i++) {
+                    Matrix4d pose = iDynTree::toEigen(kinDynCompTarget.getWorldTransform(i).asHomogeneousTransform());
+                    Vector3d com = iDynTree::toEigen(model.getLink(i)->getInertia().getCenterOfMass());
+                    pose.block(0, 3, 3, 1) += pose.block(0, 0, 3, 3) * com;
+                    geometry_msgs::PoseStamped msg;
+                    msg.header.seq = seq++;
+                    msg.header.stamp = ros::Time::now();
+                    msg.header.frame_id = link_names[i];
+                    Isometry3d iso(pose);
+                    tf::poseEigenToMsg(iso, msg.pose);
+                    robot_state_target_pub.publish(msg);
+                }
             }
         }
         { // joint state publisher
