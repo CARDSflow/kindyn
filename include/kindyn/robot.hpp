@@ -197,10 +197,11 @@ namespace cardsflow {
             ros::NodeHandlePtr nh; /// ROS node handle
             boost::shared_ptr <ros::AsyncSpinner> spinner; /// async ROS spinner
             ros::Publisher robot_state_pub, tendon_state_pub, joint_state_pub; /// ROS robot pose and tendon publisher
+            ros::Publisher robot_state_target_pub, tendon_state_target_pub, joint_state_target_pub; /// target publisher
             ros::Subscriber controller_type_sub, joint_state_sub, floating_base_sub, interactive_marker_sub; /// ROS subscribers
             ros::ServiceServer ik_srv, fk_srv;
 
-            iDynTree::KinDynComputations kinDynComp; /// the full robot model
+            iDynTree::KinDynComputations kinDynComp, kinDynCompTarget; /// the full robot model
             map<string,iDynTree::KinDynComputations> ik_models; /// the robot models for each endeffector
             map<string,iDynTree::InverseKinematics> ik; /// the ik for each endeffector
             map<string,string> ik_base_link; /// the base link of each endeffector

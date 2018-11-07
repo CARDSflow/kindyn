@@ -14,6 +14,9 @@ Robot::Robot() {
     robot_state_pub = nh->advertise<geometry_msgs::PoseStamped>("/robot_state", 1);
     tendon_state_pub = nh->advertise<roboy_communication_simulation::Tendon>("/tendon_state", 1);
     joint_state_pub = nh->advertise<roboy_communication_simulation::JointState>("/joint_state", 1);
+    robot_state_target_pub = nh->advertise<geometry_msgs::PoseStamped>("/robot_state_target", 1);
+    tendon_state_target_pub = nh->advertise<roboy_communication_simulation::Tendon>("/tendon_state_target", 1);
+    joint_state_target_pub = nh->advertise<roboy_communication_simulation::JointState>("/joint_state_target", 1);
     fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
 }
 
@@ -54,6 +57,8 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     }
 
     ROS_INFO_STREAM(kinDynComp.getDescriptionOfDegreesOfFreedom());
+
+    kinDynCompTarget.loadRobotModel(mdlLoader.model());
 
 //    kinDynComp.setFloatingBase("base");
     const iDynTree::Model &model = kinDynComp.model();
@@ -478,6 +483,30 @@ void Robot::update() {
                 Isometry3d iso(link_to_world_transform[i]);
                 tf::poseEigenToMsg(iso, msg.pose);
                 robot_state_pub.publish(msg);
+            }
+        }
+        { // robot target publisher
+            iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
+            iDynTree::toEigen(robotstate.jointPos) = q_target;
+            iDynTree::fromEigen(robotstate.baseVel, baseVel);
+            toEigen(robotstate.jointVel) = qd_target;
+            toEigen(robotstate.gravity) = gravity;
+
+            kinDynCompTarget.setRobotState(robotstate.world_H_base, robotstate.jointPos, robotstate.baseVel, robotstate.jointVel,
+                                     robotstate.gravity);
+
+            static int seq = 0;
+            for (int i = 0; i < number_of_links; i++) {
+                Matrix4d pose = iDynTree::toEigen(kinDynCompTarget.getWorldTransform(i).asHomogeneousTransform());
+                Vector3d com = iDynTree::toEigen(model.getLink(i)->getInertia().getCenterOfMass());
+                pose.block(0, 3, 3, 1) += pose.block(0, 0, 3, 3) * com;
+                geometry_msgs::PoseStamped msg;
+                msg.header.seq = seq++;
+                msg.header.stamp = ros::Time::now();
+                msg.header.frame_id = link_names[i];
+                Isometry3d iso(pose);
+                tf::poseEigenToMsg(iso, msg.pose);
+                robot_state_target_pub.publish(msg);
             }
         }
         { // joint state publisher
