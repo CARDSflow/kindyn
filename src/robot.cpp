@@ -115,10 +115,12 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     qdd_target.setZero();
 
     l.resize(number_of_cables);
+    l_target.resize(number_of_cables);
     Ld.resize(number_of_cables);
     Ld.setZero();
     ld.resize(number_of_dofs);
     l.setZero();
+    l_target.setZero();
     for (int i = 0; i < number_of_dofs; i++) {
         ld[i].resize(number_of_cables);
         ld[i].setZero();
@@ -402,14 +404,22 @@ void Robot::update() {
         }
     }
 
+    int i=0;
     for (auto muscle:cables) {
+        l[i] = 0;
+        int j=0;
         for (auto vp:muscle.viaPoints) {
             if (!vp->fixed_to_world) { // move viapoint with link
                 vp->global_coordinates = link_to_world_transform[vp->link_index].block(0, 3, 3, 1) +
                                          link_to_world_transform[vp->link_index].block(0, 0, 3, 3) *
                                          vp->local_coordinates;
             }
+            if(j>1){
+                l[i] += (muscle.viaPoints[j]->global_coordinates-muscle.viaPoints[j-1]->global_coordinates).norm();
+            }
+            j++;
         }
+        i++;
     }
 //    ROS_INFO_THROTTLE(1,"model update takes %f seconds", (ros::Time::now()-t0).toSec());
 //    t0 = ros::Time::now();

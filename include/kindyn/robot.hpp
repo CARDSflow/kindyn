@@ -239,7 +239,7 @@ namespace cardsflow {
             VectorXd CG; /// The Coriolis+Gravity term of the robot
             VectorXd q, qd, qdd; /// joint positon, velocity, acceleration
             VectorXd q_target, qd_target, qdd_target; /// joint positon, velocity, acceleration targets
-            VectorXd l, Ld; /// tendon length and length change
+            VectorXd l, l_target, Ld; /// tendon length and length change
             VectorXd torques; /// joint torques
             VectorXd cable_forces; /// the cable forces in Newton
             vector<VectorXd> ld; /// tendon length changes for each controller
