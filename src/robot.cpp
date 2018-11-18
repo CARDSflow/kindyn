@@ -431,10 +431,11 @@ void Robot::update() {
     L = V * W;
     L_t = -L.transpose();
 
-    ROS_INFO_STREAM_THROTTLE(5, "Lt = " << L_t.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "P = " << P.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "V = " << V.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "S = " << S.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "Lt = \n" << L_t.format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "P = \n" << P.format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "V = \n" << V.format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "W = \n" << W.format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "S = \n" << S.format(fmt));
     torque_position_controller_active = force_position_controller_active = cable_length_controller_active = false;
     for(auto type:controller_type){
         switch(type){
@@ -676,7 +677,7 @@ void Robot::update_P() {
             Vector3d r_OP, r_OG;
             r_OP.setZero();
 
-            R_pe = AngleAxisd(q[a - 1], joint_axis[a - 1].block(3, 0, 3, 1));
+            R_pe = AngleAxisd(q[a - 1], -joint_axis[a - 1].block(3, 0, 3, 1));
 
             // absolute joint location
             Matrix4d pose = iDynTree::toEigen(kinDynComp.getWorldTransform(a).asHomogeneousTransform());
@@ -695,7 +696,6 @@ void Robot::update_P() {
             P.block(6 * k, 6 * a, 6, 6) = Pak;
         }
     }
-
     counter++;
 //    static int counter = 0;
 //    Matrix3d R_pe;
