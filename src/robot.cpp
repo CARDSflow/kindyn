@@ -431,11 +431,11 @@ void Robot::update() {
     L = V * W;
     L_t = -L.transpose();
 
-    ROS_INFO_STREAM_THROTTLE(5, "Lt = \n" << L_t.format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "P = \n" << P.format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "V = \n" << V.format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "W = \n" << W.format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "S = \n" << S.format(fmt));
+//    ROS_INFO_STREAM_THROTTLE(5, "Lt = \n" << L_t.format(fmt));
+//    ROS_INFO_STREAM_THROTTLE(5, "P = \n" << P.format(fmt));
+//    ROS_INFO_STREAM_THROTTLE(5, "V = \n" << V.format(fmt));
+//    ROS_INFO_STREAM_THROTTLE(5, "W = \n" << W.format(fmt));
+//    ROS_INFO_STREAM_THROTTLE(5, "S = \n" << S.format(fmt));
     torque_position_controller_active = force_position_controller_active = cable_length_controller_active = false;
     for(auto type:controller_type){
         switch(type){
