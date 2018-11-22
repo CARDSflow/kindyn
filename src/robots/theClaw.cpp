@@ -1,6 +1,6 @@
 #include "kindyn/robot.hpp"
 #include <thread>
-#include <roboy_communication_middleware/MotorCommand.h>
+#include <roboy_middleware_msgs/MotorCommand.h>
 #define SPINDLERADIUS 0.0045
 #define FS5103R_MAX_SPEED (2.0*M_PI/0.9) // radian per second
 
@@ -24,7 +24,7 @@ public:
             ros::init(argc, argv, "theClaw");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
-        motor_command = nh->advertise<roboy_communication_middleware::MotorCommand>("/roboy/middleware/MotorCommand",1);
+        motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
         // first we retrieve the active joint names from the parameter server
         vector<string> joint_names;
         nh->getParam("joint_names", joint_names);
@@ -65,12 +65,12 @@ public:
      * Sends motor commands to the real robot
      */
     void write(){
-        roboy_communication_middleware::MotorCommand msg;
+        roboy_middleware_msgs::MotorCommand msg;
         msg.id = 5;
         stringstream str;
         for (int i = 0; i < number_of_cables; i++) {
             msg.motors.push_back(i);
-            msg.setPoints.push_back(meterPerSecondToServoSpeed(Ld[i])); //
+            msg.set_points.push_back(meterPerSecondToServoSpeed(Ld[i])); //
             str << meterPerSecondToServoSpeed(Ld[i]) << "\t" << Ld[i] << "\t";
         }
 //        ROS_INFO_STREAM_THROTTLE(1,str.str());

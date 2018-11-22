@@ -46,10 +46,10 @@
 #include "kindyn/controller/cardsflow_state_interface.hpp"
 #include "kindyn/controller/cardsflow_command_interface.hpp"
 
-#include <roboy_communication_middleware/ForwardKinematics.h>
-#include <roboy_communication_middleware/InverseKinematics.h>
-#include <roboy_communication_middleware/MotorCommand.h>
-#include <roboy_communication_middleware/MotorStatus.h>
+#include <roboy_middleware_msgs/ForwardKinematics.h>
+#include <roboy_middleware_msgs/InverseKinematics.h>
+#include <roboy_middleware_msgs/MotorCommand.h>
+#include <roboy_middleware_msgs/MotorStatus.h>
 
 #include <tf/tf.h>
 #include <tf/transform_broadcaster.h>
@@ -66,12 +66,13 @@
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/robot_hw.h>
 
-#include <roboy_communication_simulation/Tendon.h>
+#include <roboy_simulation_msgs_msgs/Tendon.h>
+#include <roboy_simulation_msgs/Tendon.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Vector3.h>
 #include <sensor_msgs/JointState.h>
-#include <roboy_communication_simulation/ControllerType.h>
-#include <roboy_communication_simulation/JointState.h>
+#include <roboy_simulation_msgs/ControllerType.h>
+#include <roboy_simulation_msgs/JointState.h>
 
 #include <boost/numeric/odeint.hpp>
 
@@ -138,16 +139,16 @@ namespace cardsflow {
              * @param res 3d resulting position of endeffector
              * @return success
              */
-            bool ForwardKinematicsService(roboy_communication_middleware::ForwardKinematics::Request &req,
-                                          roboy_communication_middleware::ForwardKinematics::Response &res);
+            bool ForwardKinematicsService(roboy_middleware_msgs::ForwardKinematics::Request &req,
+                                          roboy_middleware_msgs::ForwardKinematics::Response &res);
             /**
              * Inverse kinematic service for endeffectors
              * @param req endeffector and ik type
              * @param res joint configuration solution
              * @return success
              */
-            bool InverseKinematicsService(roboy_communication_middleware::InverseKinematics::Request &req,
-                                          roboy_communication_middleware::InverseKinematics::Response &res);
+            bool InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::Request &req,
+                                          roboy_middleware_msgs::InverseKinematics::Response &res);
             /**
              * Callback for Interactive Marker Feedback of endeffectors. When the Interactive Marker is released in rviz,
              * the IK routine is called and the solution directly applied to the robot q_target angles
@@ -192,7 +193,7 @@ namespace cardsflow {
              * integrates the robot states
              * @param msg message containing the joint_name/type pair
              */
-            void controllerType(const roboy_communication_simulation::ControllerTypeConstPtr &msg);
+            void controllerType(const roboy_simulation_msgs::ControllerTypeConstPtr &msg);
 
             ros::NodeHandlePtr nh; /// ROS node handle
             boost::shared_ptr <ros::AsyncSpinner> spinner; /// async ROS spinner

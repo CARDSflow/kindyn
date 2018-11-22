@@ -1,9 +1,9 @@
 #include "kindyn/robot.hpp"
 #include <thread>
-#include <roboy_communication_middleware/MotorCommand.h>
-#include <roboy_communication_middleware/ControlMode.h>
+#include <roboy_middleware_msgs/MotorCommand.h>
+#include <roboy_middleware_msgs/ControlMode.h>
 #include <common_utilities/CommonDefinitions.h>
-#include <roboy_communication_control/SetControllerParameters.h>
+#include <roboy_control_msgs/SetControllerParameters.h>
 
 using namespace std;
 
@@ -21,20 +21,20 @@ public:
             ros::init(argc, argv, "roboy_upper_body");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
-        motor_command = nh->advertise<roboy_communication_middleware::MotorCommand>("/roboy/middleware/MotorCommand",1);
-        motor_control_mode = nh->serviceClient<roboy_communication_middleware::ControlMode>("/roboy/shoulder_left/middleware/ControlMode");
-//        motor_config = nh->serviceClient<roboy_communication_middleware::MotorC>("/roboy/shoulder_left/middleware/ControlMode");
-        sphere_left_axis0_params = nh->serviceClient<roboy_communication_control::SetControllerParameters>("/sphere_left_axis0/sphere_left_axis0/params");
-        sphere_left_axis1_params = nh->serviceClient<roboy_communication_control::SetControllerParameters>("/sphere_left_axis1/sphere_left_axis1/params");
-        sphere_left_axis2_params = nh->serviceClient<roboy_communication_control::SetControllerParameters>("/sphere_left_axis2/sphere_left_axis2/params");
+        motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
+        motor_control_mode = nh->serviceClient<roboy_middleware_msgs::ControlMode>("/roboy/shoulder_left/middleware/ControlMode");
+//        motor_config = nh->serviceClient<roboy_middleware_msgs::MotorC>("/roboy/shoulder_left/middleware/ControlMode");
+        sphere_left_axis0_params = nh->serviceClient<roboy_control_msgs::SetControllerParameters>("/sphere_left_axis0/sphere_left_axis0/params");
+        sphere_left_axis1_params = nh->serviceClient<roboy_control_msgs::SetControllerParameters>("/sphere_left_axis1/sphere_left_axis1/params");
+        sphere_left_axis2_params = nh->serviceClient<roboy_control_msgs::SetControllerParameters>("/sphere_left_axis2/sphere_left_axis2/params");
         vector<string> joint_names;
         nh->getParam("joint_names", joint_names);
         init(urdf,cardsflow_xml,joint_names);
         // if we do not get the robot state externally, we use the forwardKinematics function to integrate the robot state
         nh->getParam("external_robot_state", external_robot_state);
-        roboy_communication_middleware::ControlMode msg;
+        roboy_middleware_msgs::ControlMode msg;
         msg.request.control_mode = VELOCITY;
-        msg.request.setPoint = 0;
+        msg.request.set_point = 0;
         if(!motor_control_mode.call(msg))
             ROS_WARN("failed to change control mode to velocity");
     };
@@ -51,14 +51,14 @@ public:
      * Sends motor commands to the real robot
      */
     void write(){
-        roboy_communication_middleware::MotorCommand msg;
+        roboy_middleware_msgs::MotorCommand msg;
         msg.id = SHOULDER_LEFT;
         msg.motors = left_arm_motors;
         stringstream str;
         for (int i = 0; i < left_arm_motors.size(); i++) {
             double ld_meter = -ld[0][left_arm_motors[i]];
             str << ld_meter << "\t";
-            msg.setPoints.push_back(myoMuscleEncoderTicksPerMeter(ld_meter)); //
+            msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(ld_meter)); //
         }
         str << endl;
         ROS_INFO_STREAM_THROTTLE(1,str.str());

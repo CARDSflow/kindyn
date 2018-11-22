@@ -23,8 +23,9 @@ find_package(catkin REQUIRED COMPONENTS
 		std_msgs geometry_msgs
 		message_generation
 		common_utilities
-		roboy_communication_middleware
-		roboy_communication_simulation
+		roboy_middleware_msgs
+		roboy_simulation_msgs
+		roboy_simulation_msgs_msgs
 		tf
 		tf_conversions
         robot_state_publisher
@@ -36,7 +37,7 @@ find_package(catkin REQUIRED COMPONENTS
 		effort_controllers
 )
 
-catkin_package( CATKIN_DEPENDS roboy_communication_middleware common_utilities
+catkin_package( CATKIN_DEPENDS roboy_middleware_msgs common_utilities
         INCLUDE_DIRS include)
 
 # Eigen
@@ -67,22 +68,22 @@ include_directories(
 add_library(CardsflowHardwareInterface
 		src/controller/cardsflow_state_interface.cpp
 		src/controller/cardsflow_command_interface.cpp)
-add_dependencies(CardsflowHardwareInterface roboy_communication_middleware_generate_messages_cpp)
+add_dependencies(CardsflowHardwareInterface roboy_middleware_msgs_generate_messages_cpp)
 target_link_libraries(CardsflowHardwareInterface ${catkin_LIBRARIES})
 
 # Cable Length Controller
 add_library(CableLengthController src/controller/cableLengthController.cpp )
-add_dependencies(CableLengthController roboy_communication_middleware_generate_messages_cpp roboy_communication_control_generate_messages_cpp)
+add_dependencies(CableLengthController roboy_middleware_msgs_generate_messages_cpp roboy_control_msgs_generate_messages_cpp)
 target_link_libraries(CableLengthController ${catkin_LIBRARIES} CardsflowHardwareInterface)
 
 # Torque Position Controller
 add_library(TorquePositionController src/controller/torquePositionController.cpp )
-add_dependencies(TorquePositionController roboy_communication_middleware_generate_messages_cpp roboy_communication_control_generate_messages_cpp)
+add_dependencies(TorquePositionController roboy_middleware_msgs_generate_messages_cpp roboy_control_msgs_generate_messages_cpp)
 target_link_libraries(TorquePositionController ${catkin_LIBRARIES} CardsflowHardwareInterface)
 
 # Force Position Controller
 add_library(ForcePositionController src/controller/forcePositionController.cpp )
-add_dependencies(ForcePositionController roboy_communication_middleware_generate_messages_cpp roboy_communication_control_generate_messages_cpp)
+add_dependencies(ForcePositionController roboy_middleware_msgs_generate_messages_cpp roboy_control_msgs_generate_messages_cpp)
 target_link_libraries(ForcePositionController ${catkin_LIBRARIES} CardsflowHardwareInterface)
 
 # kindyn library
@@ -92,7 +93,7 @@ add_library(kindyn SHARED
 		include/kindyn/EigenExtension.hpp
 		include/kindyn/robot.hpp
 		include/kindyn/cable.hpp)
-add_dependencies(kindyn roboy_communication_simulation_generate_messages_cpp)
+add_dependencies(kindyn roboy_simulation_msgs_generate_messages_cpp roboy_simulation_msgs_msgs_generate_messages_cpp)
 target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CardsflowHardwareInterface
 		CableLengthController TorquePositionController ForcePositionController)
 
