@@ -801,12 +801,12 @@ bool Robot::InverseKinematicsService(roboy_communication_middleware::InverseKine
             tf::poseMsgToEigen(req.pose, iso);
             iDynTree::Transform trans;
             iDynTree::fromEigen(trans, iso.matrix());
-            ik[req.endeffector].addTarget(req.frame, trans);
+            ik[req.endeffector].addTarget(req.target_frame, trans);
             break;
         }
         case 1: {
             iDynTree::Position pos(req.pose.position.x, req.pose.position.y, req.pose.position.z);
-            ik[req.endeffector].addPositionTarget(req.frame, pos);
+            ik[req.endeffector].addPositionTarget(req.target_frame, pos);
             break;
         }
         case 2: {
@@ -815,7 +815,7 @@ bool Robot::InverseKinematicsService(roboy_communication_middleware::InverseKine
             Eigen::Matrix3d rot = q.matrix();
             iDynTree::Rotation r(rot(0, 0), rot(0, 1), rot(0, 2), rot(1, 0), rot(1, 1), rot(1, 2), rot(2, 0), rot(2, 1),
                                  rot(2, 2));
-            ik[req.endeffector].addRotationTarget(req.frame, r);
+            ik[req.endeffector].addRotationTarget(req.target_frame, r);
             break;
         }
     }
@@ -835,20 +835,20 @@ bool Robot::InverseKinematicsService(roboy_communication_middleware::InverseKine
             case 0:
                 ROS_ERROR("unable to solve full pose ik for endeffector %s and target frame %s:\n"
                           "target_position    %.3lf %.3lf %.3lf"
-                          "target_orientation %.3lf %.3lf %.3lf %.3lf", req.endeffector.c_str(), req.frame.c_str(),
+                          "target_orientation %.3lf %.3lf %.3lf %.3lf", req.endeffector.c_str(), req.target_frame.c_str(),
                           req.pose.position.x, req.pose.position.y, req.pose.position.z,
                           req.pose.orientation.w, req.pose.orientation.x, req.pose.orientation.y,
                           req.pose.orientation.z);
                 break;
             case 1:
                 ROS_ERROR("unable to solve position ik for endeffector %s and target frame %s:\n"
-                          "target_position    %.3lf %.3lf %.3lf", req.endeffector.c_str(), req.frame.c_str(),
+                          "target_position    %.3lf %.3lf %.3lf", req.endeffector.c_str(), req.target_frame.c_str(),
                           req.pose.position.x, req.pose.position.y, req.pose.position.z);
                 break;
 
             case 2:
                 ROS_ERROR("unable to solve orientation ik for endeffector %s and target frame %s:\n"
-                          "target_orientation %.3lf %.3lf %.3lf %.3lf", req.endeffector.c_str(), req.frame.c_str(),
+                          "target_orientation %.3lf %.3lf %.3lf %.3lf", req.endeffector.c_str(), req.target_frame.c_str(),
                           req.pose.orientation.w, req.pose.orientation.x, req.pose.orientation.y,
                           req.pose.orientation.z);
                 break;
@@ -866,7 +866,7 @@ void Robot::InteractiveMarkerFeedback( const visualization_msgs::InteractiveMark
         roboy_communication_middleware::InverseKinematics msg2;
         msg2.request.pose = msg->pose;
         msg2.request.endeffector = msg->marker_name;
-        msg2.request.frame = msg->marker_name;
+        msg2.request.target_frame = msg->marker_name;
         msg2.request.type = 1;
         if(InverseKinematicsService(msg2.request,msg2.response)){
             int index = endeffector_index[msg->marker_name];
