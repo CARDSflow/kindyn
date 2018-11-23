@@ -300,6 +300,12 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         tf::Vector3 pos(0,0.3*k,0);
         make6DofMarker(false,visualization_msgs::InteractiveMarkerControl::MOVE_3D,pos,false,0.15,"world",ef.c_str());
         k++;
+
+        moveEndEffector_as[ef].reset(
+                new actionlib::SimpleActionServer<roboy_communication_control::MoveEndEffectorAction>(
+                        *(nh.get()), ("CARDSflow/MoveEndEffector/"+ef).c_str(),
+                        boost::bind(&Robot::MoveEndEffector, this, _1), false));
+        moveEndEffector_as[ef]->start();
     }
 
     controller_type_sub = nh->subscribe("/controller_type", 100, &Robot::controllerType, this);
@@ -422,7 +428,7 @@ void Robot::update() {
                                          link_to_world_transform[vp->link_index].block(0, 0, 3, 3) *
                                          vp->local_coordinates;
             }
-            if(j>1){
+            if(j>0){
                 l[i] += (muscle.viaPoints[j]->global_coordinates-muscle.viaPoints[j-1]->global_coordinates).norm();
             }
             j++;
@@ -897,6 +903,94 @@ void Robot::FloatingBase(const geometry_msgs::PoseConstPtr &msg) {
     Isometry3d iso;
     tf::poseMsgToEigen(*msg, iso);
     world_H_base = iso.matrix();
+}
+
+void Robot::MoveEndEffector(const roboy_communication_control::MoveEndEffectorGoalConstPtr &goal){
+    roboy_communication_control::MoveEndEffectorFeedback feedback;
+    roboy_communication_control::MoveEndEffectorResult result;
+    bool success = true, timeout = false;
+
+    double error = 10000;
+    ros::Time last_feedback_time = ros::Time::now(), start_time = ros::Time::now();
+    bool ik_solution_available = false;
+
+    auto it = find(endeffectors.begin(),endeffectors.end(),goal->endeffector);
+    if (it == endeffectors.end()) {
+        ROS_WARN_STREAM("MoveEndEffector: FAILED endeffector " << goal->endeffector << " does not exist");
+        moveEndEffector_as[goal->endeffector]->setAborted(result, "endeffector " + goal->endeffector + " does not exist");
+        return;
+    }
+
+//    moveEndEffector_as[casp]->acceptNewGoal();
+
+    roboy_communication_middleware::InverseKinematics srv;
+    srv.request.type = goal->ik_type;
+    srv.request.target_frame = goal->target_frame;
+    srv.request.endeffector = goal->endeffector;
+
+    switch (goal->type) {
+        case 0: {
+            srv.request.pose = goal->pose;
+            break;
+        }
+        case 1: {
+            geometry_msgs::Pose p;
+            getTransform("world",goal->target_frame,p);
+            Quaterniond q0(p.orientation.w,p.orientation.x,p.orientation.y,p.orientation.z);
+            Quaterniond q1(goal->pose.orientation.w,goal->pose.orientation.x,goal->pose.orientation.y,goal->pose.orientation.z);
+            Quaterniond q2 = q0*q1;
+            p.orientation.w = q.w();
+            p.orientation.x = q.x();
+            p.orientation.y = q.y();
+            p.orientation.z = q.z();
+            srv.request.pose = p;
+            break;
+        }
+        default:
+            success = false;
+    }
+
+    publishCube(srv.request.pose, "world", "ik_target", 696969, COLOR(0, 1, 0, 1), 0.05, goal->timeout);
+
+    while (error > goal->tolerance && success && !timeout) {
+        if (moveEndEffector_as[goal->endeffector]->isPreemptRequested() || !ros::ok()) {
+            ROS_INFO("LookAt: Preempted");
+            // set the action state to preempted
+            moveEndEffector_as[goal->endeffector]->setPreempted();
+            timeout = true;
+        }
+
+        if (!ik_solution_available && (goal->type == 0 || goal->type == 1)) {
+            if (InverseKinematicsService(srv.request, srv.response)) {
+                ik_solution_available = true;
+                for (int i = 0; i < number_of_dofs; i++) {
+                    q_target[i] = srv.response.angles[i];
+                }
+            } else {
+                ik_solution_available = false;
+            }
+        }
+
+        if ((ros::Time::now() - last_feedback_time).toSec() > 1) {
+            last_feedback_time = ros::Time::now();
+            // publish the feedback
+            feedback.error = error;
+            moveEndEffector_as[goal->endeffector]->publishFeedback(feedback);
+        }
+        if ((ros::Time::now() - start_time).toSec() > goal->timeout) {
+            ROS_ERROR("move endeffector timeout %d", goal->timeout);
+            success = false;
+        }
+    }
+    // publish the feedback
+    moveEndEffector_as[goal->endeffector]->publishFeedback(feedback);
+    if (error < goal->tolerance && success && !timeout) {
+        ROS_INFO("MoveEndEffector: Succeeded");
+        moveEndEffector_as[goal->endeffector]->setSucceeded(result, "done");
+    } else {
+        ROS_WARN("MoveEndEffector: FAILED");
+        moveEndEffector_as[goal->endeffector]->setAborted(result, "failed");
+    }
 }
 
 bool Robot::parseViapoints(const string &viapoints_file_path, vector<Cable> &cables) {

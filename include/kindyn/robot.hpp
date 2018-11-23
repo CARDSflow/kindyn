@@ -46,10 +46,19 @@
 #include "kindyn/controller/cardsflow_state_interface.hpp"
 #include "kindyn/controller/cardsflow_command_interface.hpp"
 
+#include <actionlib/server/simple_action_server.h>
+
+#include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/Vector3.h>
+#include <sensor_msgs/JointState.h>
+#include <roboy_communication_simulation/Tendon.h>
+#include <roboy_communication_simulation/ControllerType.h>
+#include <roboy_communication_simulation/JointState.h>
 #include <roboy_communication_middleware/ForwardKinematics.h>
 #include <roboy_communication_middleware/InverseKinematics.h>
 #include <roboy_communication_middleware/MotorCommand.h>
 #include <roboy_communication_middleware/MotorStatus.h>
+#include <roboy_communication_control/MoveEndEffectorAction.h>
 
 #include <tf/tf.h>
 #include <tf/transform_broadcaster.h>
@@ -65,13 +74,6 @@
 #include <hardware_interface/joint_state_interface.h>
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/robot_hw.h>
-
-#include <roboy_communication_simulation/Tendon.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <geometry_msgs/Vector3.h>
-#include <sensor_msgs/JointState.h>
-#include <roboy_communication_simulation/ControllerType.h>
-#include <roboy_communication_simulation/JointState.h>
 
 #include <boost/numeric/odeint.hpp>
 
@@ -125,6 +127,11 @@ namespace cardsflow {
             };
 
         private:
+            /**
+             * Move endeffector action server
+             * @param goal
+             */
+            void MoveEndEffector(const roboy_communication_control::MoveEndEffectorGoalConstPtr &goal);
             /**
              * parses the cardsflow xml file for viapoint definitions
              * @param viapoints_file_path path to the cardsflow.xml file
@@ -200,6 +207,8 @@ namespace cardsflow {
             ros::Publisher robot_state_target_pub, tendon_state_target_pub, joint_state_target_pub; /// target publisher
             ros::Subscriber controller_type_sub, joint_state_sub, floating_base_sub, interactive_marker_sub; /// ROS subscribers
             ros::ServiceServer ik_srv, fk_srv;
+            map<string,boost::shared_ptr<actionlib::SimpleActionServer<roboy_communication_control::MoveEndEffectorAction>>> moveEndEffector_as;
+
 
             iDynTree::KinDynComputations kinDynComp, kinDynCompTarget; /// the full robot model
             map<string,iDynTree::KinDynComputations> ik_models; /// the robot models for each endeffector
