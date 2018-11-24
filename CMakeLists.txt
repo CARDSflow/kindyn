@@ -25,7 +25,6 @@ find_package(catkin REQUIRED COMPONENTS
 		common_utilities
 		roboy_middleware_msgs
 		roboy_simulation_msgs
-		roboy_simulation_msgs_msgs
 		tf
 		tf_conversions
         robot_state_publisher

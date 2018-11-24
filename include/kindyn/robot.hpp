@@ -66,7 +66,6 @@
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/robot_hw.h>
 
-#include <roboy_simulation_msgs_msgs/Tendon.h>
 #include <roboy_simulation_msgs/Tendon.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Vector3.h>
