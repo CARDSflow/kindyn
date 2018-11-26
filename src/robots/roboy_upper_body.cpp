@@ -64,10 +64,23 @@ public:
             roboy_communication_middleware::MotorCommand msg;
             msg.id = bodyPartIDs[ef];
             msg.motors = motors[ef];
-            for (int i = 0; i < sim_motors.size(); i++) {
-                double l_meter = l[sim_motors[ef][i]];
+            for (int i = 0; i < sim_motors[ef].size(); i++) {
+                double l_meter = -l[sim_motors[ef][i]];
                 str  <<  l_meter << "\t";
-                msg.setPoints.push_back(myoMuscleEncoderTicksPerMeter(l_meter)); //
+                switch(motor_type[msg.id][i]){
+                    case MYOBRICK100N:{
+                        msg.setPoints.push_back(myoBrick100NEncoderTicksPerMeter(l_meter));
+                        break;
+                    }
+                    case MYOBRICK300N:{
+                        msg.setPoints.push_back(myoBrick300NEncoderTicksPerMeter(l_meter));
+                        break;
+                    }
+                    case MYOMUSCLE500N:{
+                        msg.setPoints.push_back(myoMuscleEncoderTicksPerMeter(l_meter));
+                        break;
+                    }
+                }
             }
             str << endl;
             motor_command.publish(msg);
@@ -78,7 +91,7 @@ public:
     ros::Publisher motor_command; /// motor command publisher
     ros::ServiceClient motor_config, sphere_left_axis0_params, sphere_left_axis1_params, sphere_left_axis2_params;
     map<string,ros::ServiceClient> motor_control_mode;
-    vector<string> endeffectors = {"head", "shoulder_left", "shoulder_right", "spine_right"};
+    vector<string> endeffectors = {"spine_right"}; //"head", "shoulder_left", "shoulder_right",
     map<string, vector<string>> endeffector_jointnames;
     bool external_robot_state; /// indicates if we get the robot state externally
     map<string,vector<short unsigned int>> motors = {
@@ -88,10 +101,10 @@ public:
             {"spine_right",{9,10,11,12,13,14}}
     };
     map<string,vector<short unsigned int>> sim_motors = {
-            {"head",{9,10,11,12,13,14}},
+            {"head",{36,37,35,34,32,33}},
             {"shoulder_left",{0,1,2,3,4,5,6,7,8,9,10}},
             {"shoulder_right",{0,1,2,3,4,5,6,7,8,9,11}},
-            {"spine_right",{0,1,2,3,4,5}}
+            {"spine_right",{11,10,13,14,12,9}}
     };
     map<string,vector<double>> l_offset = {
             {"head",{0,0,0,0,0,0}},
