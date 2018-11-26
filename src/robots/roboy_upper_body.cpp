@@ -22,21 +22,28 @@ public:
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         motor_command = nh->advertise<roboy_communication_middleware::MotorCommand>("/roboy/middleware/MotorCommand",1);
-        motor_control_mode = nh->serviceClient<roboy_communication_middleware::ControlMode>("/roboy/shoulder_left/middleware/ControlMode");
-//        motor_config = nh->serviceClient<roboy_communication_middleware::MotorC>("/roboy/shoulder_left/middleware/ControlMode");
-        sphere_left_axis0_params = nh->serviceClient<roboy_communication_control::SetControllerParameters>("/sphere_left_axis0/sphere_left_axis0/params");
-        sphere_left_axis1_params = nh->serviceClient<roboy_communication_control::SetControllerParameters>("/sphere_left_axis1/sphere_left_axis1/params");
-        sphere_left_axis2_params = nh->serviceClient<roboy_communication_control::SetControllerParameters>("/sphere_left_axis2/sphere_left_axis2/params");
+        for(auto ef:endeffectors) {
+            motor_control_mode[ef] = nh->serviceClient<roboy_communication_middleware::ControlMode>(
+                    "/roboy/" + ef + "/middleware/ControlMode");
+            nh->getParam((ef+"/joints").c_str(),endeffector_jointnames[ef]);
+        }
         vector<string> joint_names;
         nh->getParam("joint_names", joint_names);
         init(urdf,cardsflow_xml,joint_names);
         // if we do not get the robot state externally, we use the forwardKinematics function to integrate the robot state
         nh->getParam("external_robot_state", external_robot_state);
         roboy_communication_middleware::ControlMode msg;
-        msg.request.control_mode = VELOCITY;
+        msg.request.control_mode = POSITION;
         msg.request.setPoint = 0;
-        if(!motor_control_mode.call(msg))
-            ROS_WARN("failed to change control mode to velocity");
+        for(auto control:motor_control_mode){
+            if(!control.second.call(msg))
+                ROS_WARN("failed to change control mode to position");
+        }
+        update();
+        for(auto ef:endeffectors) {
+            for(int i=0;i<sim_motors[ef].size();i++)
+                l_offset[ef][i] = l[sim_motors[ef][i]];
+        }
     };
     /**
      * Updates the robot model and integrates the robot model using the forwardKinematics function
@@ -51,24 +58,47 @@ public:
      * Sends motor commands to the real robot
      */
     void write(){
-        roboy_communication_middleware::MotorCommand msg;
-        msg.id = SHOULDER_LEFT;
-        msg.motors = left_arm_motors;
         stringstream str;
-        for (int i = 0; i < left_arm_motors.size(); i++) {
-            double ld_meter = -ld[0][left_arm_motors[i]];
-            str << ld_meter << "\t";
-            msg.setPoints.push_back(myoMuscleEncoderTicksPerMeter(ld_meter)); //
+        for(auto ef:endeffectors) {
+            str << ef << ": ";
+            roboy_communication_middleware::MotorCommand msg;
+            msg.id = bodyPartIDs[ef];
+            msg.motors = motors[ef];
+            for (int i = 0; i < sim_motors.size(); i++) {
+                double l_meter = l[sim_motors[ef][i]];
+                str  <<  l_meter << "\t";
+                msg.setPoints.push_back(myoMuscleEncoderTicksPerMeter(l_meter)); //
+            }
+            str << endl;
+            motor_command.publish(msg);
         }
-        str << endl;
-        ROS_INFO_STREAM_THROTTLE(1,str.str());
-        motor_command.publish(msg);
+        ROS_INFO_STREAM_THROTTLE(1, str.str());
     };
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
-    ros::ServiceClient motor_control_mode, motor_config, sphere_left_axis0_params, sphere_left_axis1_params, sphere_left_axis2_params;
+    ros::ServiceClient motor_config, sphere_left_axis0_params, sphere_left_axis1_params, sphere_left_axis2_params;
+    map<string,ros::ServiceClient> motor_control_mode;
+    vector<string> endeffectors = {"head", "shoulder_left", "shoulder_right", "spine_right"};
+    map<string, vector<string>> endeffector_jointnames;
     bool external_robot_state; /// indicates if we get the robot state externally
-    vector<short unsigned int> left_arm_motors = {0,1,2,3,4,5,6,7,8};
+    map<string,vector<short unsigned int>> motors = {
+            {"head",{9,10,11,12,13,14}},
+            {"shoulder_left",{0,1,2,3,4,5,6,7,8,9,10}},
+            {"shoulder_right",{0,1,2,3,4,5,6,7,8,9,11}},
+            {"spine_right",{9,10,11,12,13,14}}
+    };
+    map<string,vector<short unsigned int>> sim_motors = {
+            {"head",{9,10,11,12,13,14}},
+            {"shoulder_left",{0,1,2,3,4,5,6,7,8,9,10}},
+            {"shoulder_right",{0,1,2,3,4,5,6,7,8,9,11}},
+            {"spine_right",{0,1,2,3,4,5}}
+    };
+    map<string,vector<double>> l_offset = {
+            {"head",{0,0,0,0,0,0}},
+            {"shoulder_left",{0,0,0,0,0,0,0,0,0,0,0,0}},
+            {"shoulder_right",{0,0,0,0,0,0,0,0,0,0,0,0}},
+            {"spine_right",{0,0,0,0,0,0}}
+    };
 };
 
 /**
