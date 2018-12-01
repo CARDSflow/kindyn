@@ -535,6 +535,8 @@ void Robot::update() {
                 msg.origin.push_back(convertEigenToGeometry(pose.topRightCorner(3, 1)));
                 msg.axis.push_back(convertEigenToGeometry(axis));
                 msg.torque.push_back(torques[i - 1]);
+                msg.q.push_back(q[i-1]);
+                msg.qd.push_back(qd[i-1]);
             }
             joint_state_pub.publish(msg);
         }
