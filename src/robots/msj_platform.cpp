@@ -41,7 +41,7 @@ public:
     void read(){
         update();
         if(!external_robot_state)
-            forwardKinematics(0.001);
+            forwardKinematics(0.00001);
     };
 
     /**
@@ -65,16 +65,16 @@ public:
      * Sends motor commands to the real robot
      */
     void write(){
-        roboy_communication_middleware::MotorCommand msg;
-        msg.id = 5;
-        stringstream str;
-        for (int i = 0; i < number_of_cables; i++) {
-            msg.motors.push_back(i);
-            msg.setPoints.push_back(meterPerSecondToServoSpeed(Ld[i])); //
-            str << meterPerSecondToServoSpeed(Ld[i]) << "\t" << Ld[i] << "\t";
-        }
-//        ROS_INFO_STREAM_THROTTLE(1,str.str());
-        motor_command.publish(msg);
+//        roboy_communication_middleware::MotorCommand msg;
+//        msg.id = 5;
+//        stringstream str;
+//        for (int i = 0; i < number_of_cables; i++) {
+//            msg.motors.push_back(i);
+//            msg.setPoints.push_back(meterPerSecondToServoSpeed(Ld[i])); //
+//            str << meterPerSecondToServoSpeed(Ld[i]) << "\t" << Ld[i] << "\t";
+//        }
+////        ROS_INFO_STREAM_THROTTLE(1,str.str());
+//        motor_command.publish(msg);
     };
     bool external_robot_state; /// indicates if we get the robot state externally
     ros::NodeHandlePtr nh; /// ROS nodehandle
