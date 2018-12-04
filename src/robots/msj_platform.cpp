@@ -1,12 +1,11 @@
 #include "kindyn/robot.hpp"
 #include <thread>
 #include <roboy_communication_middleware/MotorCommand.h>
-#define SPINDLERADIUS 0.0045
-#define FS5103R_MAX_SPEED (2.0*M_PI/0.9) // radian per second
 
-#define FS5103R_FULL_SPEED_BACKWARDS 400.0
-#define FS5103R_STOP 375.0
-#define FS5103R_FULL_SPEED_FORWARDS 350.0
+#define NUMBER_OF_MOTORS 8
+#define SPINDLERADIUS 0.0055
+#define msjMeterPerEncoderTick(encoderTicks) (((encoderTicks)/4096.0*2.0*M_PI)*(2.0*M_PI*SPINDLERADIUS))
+#define msjEncoderTicksPerMeter(meter) ((meter)/(2.0*M_PI*SPINDLERADIUS)*4096.0/(2.0*M_PI))
 
 using namespace std;
 
@@ -32,6 +31,9 @@ public:
         init(urdf,cardsflow_xml,joint_names);
         // if we do not get the robot state externally, we use the forwardKinematics function to integrate the robot state
         nh->getParam("external_robot_state", external_robot_state);
+        update();
+        for(int i=0;i<NUMBER_OF_MOTORS;i++)
+            l_offset[i] = l[i];
     };
 
     /**
@@ -45,40 +47,24 @@ public:
     };
 
     /**
-     * Converts tendon length chages from the cable model to pwm commands of the real robot
-     * @param meterPerSecond tendon length change
-     * @return pwm
-     */
-    int meterPerSecondToServoSpeed(double meterPerSecond){
-        double radianPerSecond = meterPerSecond/(2.0 * M_PI * SPINDLERADIUS);
-        double pwm = radianPerSecond;
-        if(pwm<=-1){
-            return FS5103R_FULL_SPEED_BACKWARDS;
-        }else if(pwm>-1 && pwm<1){
-            return -pwm*(FS5103R_FULL_SPEED_BACKWARDS-FS5103R_STOP)+FS5103R_STOP;
-        }else{
-            return FS5103R_FULL_SPEED_FORWARDS;
-        }
-    }
-
-    /**
      * Sends motor commands to the real robot
      */
     void write(){
-//        roboy_communication_middleware::MotorCommand msg;
-//        msg.id = 5;
-//        stringstream str;
-//        for (int i = 0; i < number_of_cables; i++) {
-//            msg.motors.push_back(i);
-//            msg.setPoints.push_back(meterPerSecondToServoSpeed(Ld[i])); //
-//            str << meterPerSecondToServoSpeed(Ld[i]) << "\t" << Ld[i] << "\t";
-//        }
-////        ROS_INFO_STREAM_THROTTLE(1,str.str());
-//        motor_command.publish(msg);
+        roboy_communication_middleware::MotorCommand msg;
+        msg.id = 5;
+        stringstream str;
+        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
+            msg.motors.push_back(i);
+            msg.setPoints.push_back(-msjEncoderTicksPerMeter(l[i])); //
+            str << msg.setPoints.back() << "\t";
+        }
+        ROS_INFO_STREAM_THROTTLE(1,str.str());
+        motor_command.publish(msg);
     };
     bool external_robot_state; /// indicates if we get the robot state externally
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
+    double l_offset[NUMBER_OF_MOTORS];
 };
 
 /**
