@@ -18,7 +18,7 @@ public:
     };
     void read(){
         update();
-        forwardKinematics(0.000001);
+        forwardKinematics(0.001);
     };
 
     void write(){

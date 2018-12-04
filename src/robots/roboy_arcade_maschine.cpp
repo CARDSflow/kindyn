@@ -32,7 +32,7 @@ public:
     void read(){
         update();
         if(!external_robot_state)
-            forwardKinematics(0.000001);
+            forwardKinematics(0.001);
     };
 
     /**
