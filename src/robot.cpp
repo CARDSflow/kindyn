@@ -251,7 +251,13 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     f_min = min_force * f_min;
     f_max = max_force * f_max;
 
-    last_visualization = ros::Time::now()-ros::Duration(10); // triggers immediate visualization in first iteratiom
+    try {
+        last_visualization =
+                ros::Time::now() - ros::Duration(10); // triggers immediate visualization in first iteratiom
+    }
+    catch(std::runtime_error& ex) {
+        ROS_ERROR("Exception: [%s]", ex.what());
+    }
 
     int k=0;
     nh->getParam("endeffectors", endeffectors);
