@@ -3,9 +3,9 @@
 #include <roboy_communication_middleware/MotorCommand.h>
 
 #define NUMBER_OF_MOTORS 8
-#define SPINDLERADIUS 0.0055
-#define msjMeterPerEncoderTick(encoderTicks) (((encoderTicks)/4096.0*2.0*M_PI)*(2.0*M_PI*SPINDLERADIUS))
-#define msjEncoderTicksPerMeter(meter) ((meter)/(2.0*M_PI*SPINDLERADIUS)*4096.0/(2.0*M_PI))
+#define SPINDLERADIUS 0.00575
+#define msjMeterPerEncoderTick(encoderTicks) (((encoderTicks)/(4096.0)*(2.0*M_PI*SPINDLERADIUS)))
+#define msjEncoderTicksPerMeter(meter) ((meter)*(4096.0)/(2.0*M_PI*SPINDLERADIUS))
 
 using namespace std;
 
@@ -55,8 +55,9 @@ public:
         stringstream str;
         for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
             msg.motors.push_back(i);
-            msg.setPoints.push_back(-msjEncoderTicksPerMeter(l[i])); //
-            str << msg.setPoints.back() << "\t";
+            double l_change = l[i]-l_offset[i];
+            msg.setPoints.push_back(-msjEncoderTicksPerMeter(l_change)); //
+            str << l_change << "\t";
         }
         ROS_INFO_STREAM_THROTTLE(1,str.str());
         motor_command.publish(msg);

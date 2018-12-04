@@ -123,11 +123,13 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     qdd_target_prev.setZero();
 
     l.resize(number_of_cables);
+    l_int.resize(number_of_cables);
     l_target.resize(number_of_cables);
     Ld.resize(number_of_cables);
     Ld.setZero();
     ld.resize(number_of_dofs);
     l.setZero();
+    l_int.setZero();
     l_target.setZero();
     for (int i = 0; i < number_of_dofs; i++) {
         ld[i].resize(number_of_cables);
@@ -609,7 +611,7 @@ void Robot::forwardKinematics(double dt) {
                         dxdt[1] = 0;
                         dxdt[0] = Ld[i];
                     }, motor_state[i], integration_time, integration_time + dt, dt);
-            l[i] = motor_state[i][0];
+            l_int[i] = motor_state[i][0];
         }
     }
 
