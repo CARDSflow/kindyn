@@ -34,7 +34,7 @@ public:
         nh->getParam("external_robot_state", external_robot_state);
         roboy_middleware_msgs::ControlMode msg;
         msg.request.control_mode = POSITION;
-        msg.request.setPoint = 0;
+        msg.request.set_point = 0;
         for(auto control:motor_control_mode){
             if(!control.second.call(msg))
                 ROS_WARN("failed to change control mode to position");
@@ -69,15 +69,15 @@ public:
                 str  <<  l_meter << "\t";
                 switch(motor_type[msg.id][i]){
                     case MYOBRICK100N:{
-                        msg.setPoints.push_back(myoBrick100NEncoderTicksPerMeter(l_meter));
+                        msg.set_points.push_back(myoBrick100NEncoderTicksPerMeter(l_meter));
                         break;
                     }
                     case MYOBRICK300N:{
-                        msg.setPoints.push_back(myoBrick300NEncoderTicksPerMeter(l_meter));
+                        msg.set_points.push_back(myoBrick300NEncoderTicksPerMeter(l_meter));
                         break;
                     }
                     case MYOMUSCLE500N:{
-                        msg.setPoints.push_back(myoMuscleEncoderTicksPerMeter(l_meter));
+                        msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(l_meter));
                         break;
                     }
                 }

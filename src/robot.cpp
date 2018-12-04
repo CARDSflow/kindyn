@@ -303,7 +303,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         k++;
 
         moveEndEffector_as[ef].reset(
-                new actionlib::SimpleActionServer<roboy_communication_control::MoveEndEffectorAction>(
+                new actionlib::SimpleActionServer<roboy_control_msgs::MoveEndEffectorAction>(
                         *(nh.get()), ("CARDSflow/MoveEndEffector/"+ef).c_str(),
                         boost::bind(&Robot::MoveEndEffector, this, _1), false));
         moveEndEffector_as[ef]->start();
@@ -906,9 +906,9 @@ void Robot::FloatingBase(const geometry_msgs::PoseConstPtr &msg) {
     world_H_base = iso.matrix();
 }
 
-void Robot::MoveEndEffector(const roboy_communication_control::MoveEndEffectorGoalConstPtr &goal){
-    roboy_communication_control::MoveEndEffectorFeedback feedback;
-    roboy_communication_control::MoveEndEffectorResult result;
+void Robot::MoveEndEffector(const roboy_control_msgs::MoveEndEffectorGoalConstPtr &goal){
+    roboy_control_msgs::MoveEndEffectorFeedback feedback;
+    roboy_control_msgs::MoveEndEffectorResult result;
     bool success = true, timeout = false;
 
     double error = 10000;
@@ -924,7 +924,7 @@ void Robot::MoveEndEffector(const roboy_communication_control::MoveEndEffectorGo
 
 //    moveEndEffector_as[casp]->acceptNewGoal();
 
-    roboy_communication_middleware::InverseKinematics srv;
+    roboy_middleware_msgs::InverseKinematics srv;
     srv.request.type = goal->ik_type;
     srv.request.target_frame = goal->target_frame;
     srv.request.endeffector = goal->endeffector;

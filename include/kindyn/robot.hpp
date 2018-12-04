@@ -59,7 +59,7 @@
 #include <roboy_middleware_msgs/InverseKinematics.h>
 #include <roboy_middleware_msgs/MotorCommand.h>
 #include <roboy_middleware_msgs/MotorStatus.h>
-#include <roboy_middleware_msgs/MoveEndEffectorAction.h>
+#include <roboy_control_msgs/MoveEndEffectorAction.h>
 
 #include <tf/tf.h>
 #include <tf/transform_broadcaster.h>
@@ -132,7 +132,7 @@ namespace cardsflow {
              * Move endeffector action server
              * @param goal
              */
-            void MoveEndEffector(const roboy_communication_control::MoveEndEffectorGoalConstPtr &goal);
+            void MoveEndEffector(const roboy_control_msgs::MoveEndEffectorGoalConstPtr &goal);
             /**
              * parses the cardsflow xml file for viapoint definitions
              * @param viapoints_file_path path to the cardsflow.xml file
@@ -208,7 +208,7 @@ namespace cardsflow {
             ros::Publisher robot_state_target_pub, tendon_state_target_pub, joint_state_target_pub; /// target publisher
             ros::Subscriber controller_type_sub, joint_state_sub, floating_base_sub, interactive_marker_sub; /// ROS subscribers
             ros::ServiceServer ik_srv, fk_srv;
-            map<string,boost::shared_ptr<actionlib::SimpleActionServer<roboy_communication_control::MoveEndEffectorAction>>> moveEndEffector_as;
+            map<string,boost::shared_ptr<actionlib::SimpleActionServer<roboy_control_msgs::MoveEndEffectorAction>>> moveEndEffector_as;
 
 
             iDynTree::KinDynComputations kinDynComp, kinDynCompTarget; /// the full robot model
