@@ -1,12 +1,6 @@
 #include "kindyn/robot.hpp"
 #include <thread>
-<<<<<<< HEAD
-#include <roboy_middleware_msgs/MotorCommand.h>
-#define SPINDLERADIUS 0.0045
-#define FS5103R_MAX_SPEED (2.0*M_PI/0.9) // radian per second
-=======
 #include <roboy_communication_middleware/MotorCommand.h>
->>>>>>> master
 
 #define NUMBER_OF_MOTORS 8
 #define SPINDLERADIUS 0.00575
@@ -56,15 +50,6 @@ public:
      * Sends motor commands to the real robot
      */
     void write(){
-<<<<<<< HEAD
-        roboy_middleware_msgs::MotorCommand msg;
-        msg.id = 5;
-        for (int i = 0; i < number_of_cables; i++) {
-            msg.motors.push_back(i);
-            msg.set_points.push_back(
-                    512 + (l[i] / (2.0 * M_PI * 0.016 * (301.0 / 1024.0 / 360.0)))); //
-        }
-=======
         roboy_communication_middleware::MotorCommand msg;
         msg.id = 5;
         stringstream str;
@@ -75,7 +60,6 @@ public:
             str << l_change << "\t";
         }
         ROS_INFO_STREAM_THROTTLE(1,str.str());
->>>>>>> master
         motor_command.publish(msg);
     };
     bool external_robot_state; /// indicates if we get the robot state externally
