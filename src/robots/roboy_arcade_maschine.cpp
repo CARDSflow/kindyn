@@ -1,6 +1,6 @@
 #include "kindyn/robot.hpp"
 #include <thread>
-#include <roboy_communication_middleware/MotorCommand.h>
+#include <roboy_middleware_msgs/MotorCommand.h>
 
 using namespace std;
 
@@ -18,7 +18,7 @@ public:
             ros::init(argc, argv, "roboy_arcade_machine");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
-        motor_command = nh->advertise<roboy_communication_middleware::MotorCommand>("/roboy/middleware/MotorCommand",1);
+        motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
         vector<string> joint_names;
         nh->getParam("joint_names", joint_names);
         init(urdf,cardsflow_xml,joint_names);
@@ -39,11 +39,11 @@ public:
      * Sends motor commands to the real robot
      */
     void write(){
-        roboy_communication_middleware::MotorCommand msg;
+        roboy_middleware_msgs::MotorCommand msg;
         msg.id = 5;
         for (int i = 0; i < number_of_cables; i++) {
             msg.motors.push_back(i);
-            msg.setPoints.push_back(
+            msg.set_points.push_back(
                     512 + (l[i] / (2.0 * M_PI * 0.016 * (301.0 / 1024.0 / 360.0)))); //
         }
         motor_command.publish(msg);

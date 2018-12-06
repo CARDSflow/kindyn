@@ -32,9 +32,9 @@
 #include <pluginlib/class_list_macros.h>
 #include "kindyn/robot.hpp"
 #include "kindyn/controller/cardsflow_state_interface.hpp"
-#include <roboy_communication_simulation/ControllerType.h>
+#include <roboy_simulation_msgs/ControllerType.h>
 #include <std_msgs/Float32.h>
-#include <roboy_communication_control/SetControllerParameters.h>
+#include <roboy_control_msgs/SetControllerParameters.h>
 
 using namespace std;
 
@@ -60,7 +60,7 @@ public:
         }
         spinner.reset(new ros::AsyncSpinner(0));
         spinner->start();
-        controller_state = nh.advertise<roboy_communication_simulation::ControllerType>("/controller_type",1);
+        controller_state = nh.advertise<roboy_simulation_msgs::ControllerType>("/controller_type",1);
         ros::Rate r(10);
         while(controller_state.getNumSubscribers()==0) // we wait until the controller state is available
             r.sleep();
@@ -97,7 +97,7 @@ public:
      */
     void starting(const ros::Time& time) {
         ROS_WARN("cable length controller started for %s with index %d", joint_name.c_str(), joint_index);
-        roboy_communication_simulation::ControllerType msg;
+        roboy_simulation_msgs::ControllerType msg;
         msg.joint_name = joint_name;
         msg.type = CARDSflow::ControllerType::cable_length_controller;
         controller_state.publish(msg);
@@ -122,10 +122,10 @@ public:
      * @param res success
      * @return success
      */
-    bool setControllerParameters( roboy_communication_control::SetControllerParameters::Request &req,
-                                  roboy_communication_control::SetControllerParameters::Response &res){
-        Kp = req.Kp;
-        Kd = req.Kd;
+    bool setControllerParameters( roboy_control_msgs::SetControllerParameters::Request &req,
+                                  roboy_control_msgs::SetControllerParameters::Response &res){
+        Kp = req.kp;
+        Kd = req.kd;
         res.success = true;
         return true;
     }

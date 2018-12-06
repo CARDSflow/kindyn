@@ -1,9 +1,9 @@
 #include "kindyn/robot.hpp"
 #include <thread>
-#include <roboy_communication_middleware/MotorCommand.h>
-#include <roboy_communication_middleware/ControlMode.h>
+#include <roboy_middleware_msgs/MotorCommand.h>
+#include <roboy_middleware_msgs/ControlMode.h>
 #include <common_utilities/CommonDefinitions.h>
-#include <roboy_communication_control/SetControllerParameters.h>
+#include <roboy_control_msgs/SetControllerParameters.h>
 
 using namespace std;
 
@@ -21,9 +21,9 @@ public:
             ros::init(argc, argv, "roboy_upper_body");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
-        motor_command = nh->advertise<roboy_communication_middleware::MotorCommand>("/roboy/middleware/MotorCommand",1);
+        motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
         for(auto ef:endeffectors) {
-            motor_control_mode[ef] = nh->serviceClient<roboy_communication_middleware::ControlMode>(
+            motor_control_mode[ef] = nh->serviceClient<roboy_middleware_msgs::ControlMode>(
                     "/roboy/" + ef + "/middleware/ControlMode");
             nh->getParam((ef+"/joints").c_str(),endeffector_jointnames[ef]);
         }
@@ -32,9 +32,9 @@ public:
         init(urdf,cardsflow_xml,joint_names);
         // if we do not get the robot state externally, we use the forwardKinematics function to integrate the robot state
         nh->getParam("external_robot_state", external_robot_state);
-        roboy_communication_middleware::ControlMode msg;
+        roboy_middleware_msgs::ControlMode msg;
         msg.request.control_mode = POSITION;
-        msg.request.setPoint = 0;
+        msg.request.set_point = 0;
         for(auto control:motor_control_mode){
             if(!control.second.call(msg))
                 ROS_WARN("failed to change control mode to position");
@@ -61,7 +61,7 @@ public:
         stringstream str;
         for(auto ef:endeffectors) {
             str << ef << ": ";
-            roboy_communication_middleware::MotorCommand msg;
+            roboy_middleware_msgs::MotorCommand msg;
             msg.id = bodyPartIDs[ef];
             msg.motors = motors[ef];
             for (int i = 0; i < sim_motors[ef].size(); i++) {
@@ -69,15 +69,15 @@ public:
                 str  <<  l_meter << "\t";
                 switch(motor_type[msg.id][i]){
                     case MYOBRICK100N:{
-                        msg.setPoints.push_back(myoBrick100NEncoderTicksPerMeter(l_meter));
+                        msg.set_points.push_back(myoBrick100NEncoderTicksPerMeter(l_meter));
                         break;
                     }
                     case MYOBRICK300N:{
-                        msg.setPoints.push_back(myoBrick300NEncoderTicksPerMeter(l_meter));
+                        msg.set_points.push_back(myoBrick300NEncoderTicksPerMeter(l_meter));
                         break;
                     }
                     case MYOMUSCLE500N:{
-                        msg.setPoints.push_back(myoMuscleEncoderTicksPerMeter(l_meter));
+                        msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(l_meter));
                         break;
                     }
                 }

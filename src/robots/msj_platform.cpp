@@ -1,6 +1,6 @@
 #include "kindyn/robot.hpp"
 #include <thread>
-#include <roboy_communication_middleware/MotorCommand.h>
+#include <roboy_middleware_msgs/MotorCommand.h>
 
 #define NUMBER_OF_MOTORS 8
 #define SPINDLERADIUS 0.00575
@@ -23,7 +23,7 @@ public:
             ros::init(argc, argv, "msj_platform");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
-        motor_command = nh->advertise<roboy_communication_middleware::MotorCommand>("/roboy/middleware/MotorCommand",1);
+        motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
         // first we retrieve the active joint names from the parameter server
         vector<string> joint_names;
         nh->getParam("joint_names", joint_names);
@@ -50,13 +50,13 @@ public:
      * Sends motor commands to the real robot
      */
     void write(){
-        roboy_communication_middleware::MotorCommand msg;
+        roboy_middleware_msgs::MotorCommand msg;
         msg.id = 5;
         stringstream str;
         for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
             msg.motors.push_back(i);
             double l_change = l[i]-l_offset[i];
-            msg.setPoints.push_back(-msjEncoderTicksPerMeter(l_change)); //
+            msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
             str << l_change << "\t";
         }
         ROS_INFO_STREAM_THROTTLE(1,str.str());
