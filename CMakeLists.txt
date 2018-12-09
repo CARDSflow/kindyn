@@ -127,6 +127,10 @@ target_link_libraries(theClaw ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 # yatr
 add_executable( yatr src/robots/yatr.cpp)
 target_link_libraries(yatr ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+
+# rikshaw
+add_executable( rikshaw src/robots/rikshaw.cpp)
+target_link_libraries(rikshaw ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 #==============================================================================
 # Installation
 #==============================================================================
