@@ -123,8 +123,8 @@ namespace cardsflow {
                 ROS_WARN_STREAM_THROTTLE(1, "writing virtual, "
                         "you probably forgot to implement your own write function?!");
             };
-
         private:
+
             /**
              * parses the cardsflow xml file for viapoint definitions
              * @param viapoints_file_path path to the cardsflow.xml file
@@ -246,7 +246,7 @@ namespace cardsflow {
             vector<VectorXd> ld; /// tendon length changes for each controller
             MatrixXd L, L_t; /// L and -L^T
 
-        private:
+        protected:
             iDynTree::FreeFloatingGeneralizedTorques bias; /// Coriolis+Gravity term
             iDynTree::MatrixDynSize Mass; /// Mass matrix
 

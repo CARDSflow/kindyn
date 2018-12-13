@@ -304,7 +304,8 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     controller_type_sub = nh->subscribe("/controller_type", 100, &Robot::controllerType, this);
     joint_state_sub = nh->subscribe("/joint_states", 100, &Robot::JointState, this);
     floating_base_sub = nh->subscribe("/floating_base", 100, &Robot::FloatingBase, this);
-    ik_srv = nh->advertiseService("/ik", &Robot::InverseKinematicsService, this);
+    
+ik_srv = nh->advertiseService("/ik", &Robot::InverseKinematicsService, this);
     fk_srv = nh->advertiseService("/fk", &Robot::ForwardKinematicsService, this);
     interactive_marker_sub = nh->subscribe("/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
 }
@@ -452,15 +453,6 @@ void Robot::update() {
         }
     }
 
-    //To avoid setting Ld to zero after gym_step service call
-    for(int i = 0; i<endeffectors.size();i++) {
-        int dof_offset = endeffector_dof_offset[i];
-        Ld.setZero();
-        for (int j = dof_offset; j < endeffector_number_of_dofs[i] + dof_offset; j++) {
-            Ld -= ld[j];
-        }
-    }
-    /*
     ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "qdd " << qdd.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "qd " << qd.transpose().format(fmt));
@@ -469,7 +461,6 @@ void Robot::update() {
     ROS_INFO_STREAM_THROTTLE(5, "ld " << Ld.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "torques " << torques.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "cable_forces " << cable_forces.transpose().format(fmt));
-    */
 
     // for the cable force controller with do a centralized update
     if(force_position_controller_active){
@@ -552,14 +543,6 @@ void Robot::update() {
         }
         last_visualization = ros::Time::now();
     }
-    ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "qdd " << qdd.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "qd " << qd.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "q " << q.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "l " << l.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "ld " << Ld.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "torques " << torques.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "cable_forces " << cable_forces.transpose().format(fmt));
 }
 
 void Robot::forwardKinematics(double dt) {
@@ -572,6 +555,10 @@ void Robot::forwardKinematics(double dt) {
 
     for(int i = 0; i<endeffectors.size();i++) {
         int dof_offset = endeffector_dof_offset[i];
+        Ld.setZero();
+        for (int j = dof_offset; j < endeffector_number_of_dofs[i] + dof_offset; j++) {
+            Ld -= ld[j];
+        }
         MatrixXd L_endeffector = L.block(0,dof_offset,number_of_cables,endeffector_number_of_dofs[i]);
         MatrixXd L_endeffector_inv = EigenExtension::Pinv(L_endeffector);
         VectorXd qd_temp =  L_endeffector_inv * Ld;

@@ -1,6 +1,9 @@
 #include "kindyn/robot.hpp"
 #include <thread>
 #include <roboy_middleware_msgs/MotorCommand.h>
+#include <roboy_simulation_msgs/GymStep.h>
+#include <roboy_simulation_msgs/GymReset.h>
+
 #define SPINDLERADIUS 0.0045
 #define FS5103R_MAX_SPEED (2.0*M_PI/0.9) // radian per second
 
@@ -17,6 +20,7 @@ public:
      * @param urdf path to urdf
      * @param cardsflow_xml path to cardsflow xml
      */
+
     MsjPlatform(string urdf, string cardsflow_xml){
         if (!ros::isInitialized()) {
             int argc = 0;
@@ -25,6 +29,8 @@ public:
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
+        gym_step = nh->advertiseService("/gym_step", &MsjPlatform::GymStepService,this);
+        gym_reset = nh->advertiseService("/gym_reset", &MsjPlatform::GymResetService,this);
         // first we retrieve the active joint names from the parameter server
         vector<string> joint_names;
         nh->getParam("joint_names", joint_names);
@@ -73,12 +79,65 @@ public:
             msg.set_points.push_back(meterPerSecondToServoSpeed(Ld[i])); //
             str << meterPerSecondToServoSpeed(Ld[i]) << "\t" << Ld[i] << "\t";
         }
-//        ROS_INFO_STREAM_THROTTLE(1,str.str());
+		//ROS_INFO_STREAM_THROTTLE(1,str.str());
         motor_command.publish(msg);
     };
+    bool GymStepService(roboy_simulation_msgs::GymStep::Request &req,
+                        roboy_simulation_msgs::GymStep::Response &res){
+        
+        if(req.set_points.size() != 0){ //If no set_point set then jut return observation.
+        	ROS_INFO("Gymstep is called");
+        	update();
+	        for(int i=0; i< number_of_cables; i++){
+	        	//Set the commanded tendon velocity from RL agent to simulation 
+	        	Ld[i] = req.set_points[i]; 	
+	        }
+	        if(!external_robot_state)
+	            forwardKinematics(0.0001);
+
+	        ROS_INFO_STREAM_THROTTLE(5, "Ld = \n" << Ld.format(fmt));
+	        write();
+	        ROS_INFO("Gymstep is done");
+	    }
+        for(int i=0; i< q.size(); i++ ){
+        	res.q.push_back(q[i]);
+        	res.qdot.push_back(qd[i]);
+        }
+
+        return true;
+    }
+    bool GymResetService(roboy_simulation_msgs::GymReset::Request &req,
+                        roboy_simulation_msgs::GymReset::Response &res){
+    	ROS_INFO("Gymreset is called");      
+    	integration_time = 0.0;
+        for(int i=0; i< number_of_dofs; i++){
+	       	//Set the commanded tendon velocity from RL agent to simulation 
+	       	//Set the joint states to arrange the initial condition or reset it. Not the q and qdot
+			joint_state[i][0] = 0.0;		//Velocity of ith joint
+			joint_state[i][1] = 0.0;		//Position of ith joint
+	    }
+
+	    for(int i=0; i< number_of_cables; i++){
+	        	//Set the commanded tendon velocity from RL agent to simulation 
+	        	motor_state[i][0] =0.0; 	//Length of the ith cable
+				motor_state[i][1] = 0.0;	//Velocity of the ith cable
+	    }
+
+	 	update();
+        
+        ROS_INFO_STREAM_THROTTLE(5, "q = \n" << q.format(fmt));
+        for(int i=0; i< q.size(); i++ ){
+        	res.q.push_back(q[i]);
+        	res.qdot.push_back(qd[i]);
+        }
+        ROS_INFO("Gymreset is done");
+        return true;
+    }
     bool external_robot_state; /// indicates if we get the robot state externally
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
+    ros::ServiceServer gym_step; //OpenAI Gym training environment step function, ros service instance
+    ros::ServiceServer gym_reset; //OpenAI Gym training environment reset function, ros service instance
 };
 
 /**
@@ -125,8 +184,8 @@ int main(int argc, char *argv[]) {
     ROS_INFO("STARTING ROBOT MAIN LOOP...");
 
     while(ros::ok()){
-        robot.read();
-        robot.write();
+        //robot.read();
+        //robot.write();
         ros::spinOnce();
     }
 
