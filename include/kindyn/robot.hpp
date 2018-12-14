@@ -80,6 +80,7 @@
 
 #include <common_utilities/rviz_visualization.hpp>
 #include <visualization_msgs/InteractiveMarkerFeedback.h>
+#include <thread>
 
 using namespace qpOASES;
 using namespace std;
@@ -229,7 +230,7 @@ namespace cardsflow {
                 iDynTree::VectorDynSize jointVel;
                 iDynTree::Vector3       gravity;
             }robotstate;
-        public:
+        protected:
             /**
              * Integrates the robot equation of motions using odeint
              * @param dt the integrations step length in seconds
@@ -255,14 +256,14 @@ namespace cardsflow {
             VectorXd cable_forces; /// the cable forces in Newton
             vector<VectorXd> ld; /// tendon length changes for each controller
             MatrixXd L, L_t; /// L and -L^T
-
+            MatrixXd S, P, V, W; /// matrices of cable model
         private:
             iDynTree::FreeFloatingGeneralizedTorques bias; /// Coriolis+Gravity term
             iDynTree::MatrixDynSize Mass; /// Mass matrix
 
             bool torque_position_controller_active = false, force_position_controller_active = false, cable_length_controller_active = false;
             VectorXd qdd_torque_control, qdd_force_control;
-            MatrixXd S, P, V, W; /// matrices of cable model
+
             vector<Cable> cables; /// all cables of the robot
             vector <VectorXd> joint_axis; /// joint axis of each joint
             vector <string> link_names, joint_names; /// link and joint names of the robot

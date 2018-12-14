@@ -131,6 +131,10 @@ target_link_libraries(yatr ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 # rikshaw
 add_executable( rikshaw src/robots/rikshaw.cpp)
 target_link_libraries(rikshaw ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+
+# robot_configuration_estimator
+add_executable( robot_configuration_estimator src/robots/robot_configuration_estimator.cpp)
+target_link_libraries(robot_configuration_estimator ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 #==============================================================================
 # Installation
 #==============================================================================
