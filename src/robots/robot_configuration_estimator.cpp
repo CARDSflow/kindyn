@@ -8,6 +8,8 @@
 #include <iostream>
 #include "kindyn/robot.hpp"
 #include <std_msgs/Float32.h>
+#include <controller_manager_msgs/LoadController.h>
+#include <controller_manager_msgs/SwitchController.h>
 
 using namespace Eigen;
 using namespace std;
@@ -34,6 +36,9 @@ public:
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
+        sphere_axis0 = nh->advertise<std_msgs::Float32>("/sphere_axis0/sphere_axis0/target", 1);
+        sphere_axis1 = nh->advertise<std_msgs::Float32>("/sphere_axis1/sphere_axis1/target", 1);
+        sphere_axis2 = nh->advertise<std_msgs::Float32>("/sphere_axis2/sphere_axis2/target", 1);
         // first we retrieve the active joint names from the parameter server
         vector<string> joint_names;
         nh->getParam("joint_names", joint_names);
@@ -44,6 +49,24 @@ public:
         update();
         for(int i=0;i<NUMBER_OF_MOTORS;i++)
             l_offset[i] = l[i];
+
+        string path = ros::package::getPath("robots");
+        path+="/msj_platform/joint_limits.txt";
+        FILE*       file = fopen(path.c_str(),"r");
+        if (NULL != file) {
+            fscanf(file, "%*[^\n]\n", NULL);
+            float qx,qy;
+            int i =0;
+            while(fscanf(file,"%f %f\n",&qx,&qy)==2){
+                limits[0].push_back(qx);
+                limits[1].push_back(qy);
+                cout << qx << "\t" << qy << endl;
+                i++;
+            }
+            printf("read %d joint limit values\n", i);
+        }else{
+            cout << "could not open " << path << endl;
+        }
     };
 
     /**
@@ -83,7 +106,9 @@ public:
         return c;
     }
 
-    void randomPoseRecord(int number_of_samples, vector<double> &qd_record, vector<double> &ld_record, vector<MatrixXd> &W_record){
+    void randomPoseRecord(int number_of_samples, vector<VectorXd> &qd_record, vector<VectorXd> &ld_record,
+                          vector<MatrixXd> &W_record, vector<vector<Vector3d>> &viaPoints_local,
+                          vector<vector<Vector3d>> &viaPoints_global, vector<Matrix4d> &w2l){
         ros::Time start_time = ros::Time::now();
         double min[3] = {0,0,-1}, max[3] = {0,0,1};
         for(int i=0;i<limits[0].size();i++){
@@ -96,7 +121,10 @@ public:
             if(limits[1][i]>max[1])
                 max[1] = limits[1][i];
         }
-        while((ros::Time::now()-start_time).toSec()<60){
+        viaPoints_local.resize(number_of_samples);
+        viaPoints_global.resize(number_of_samples);
+        int sample = 0;
+        while(sample<number_of_samples){
             double q0 = rand()/(double)RAND_MAX*(max[0]-min[0])+min[0];
             double q1 = rand()/(double)RAND_MAX*(max[1]-min[1])+min[1];
             double q2 = rand()/(double)RAND_MAX*(max[2]-min[2])+min[2];
@@ -109,15 +137,28 @@ public:
                 sphere_axis1.publish(msg);
                 msg.data = q2;
                 sphere_axis2.publish(msg);
-                ros::Time t0 = ros::Time::now();
-                while((ros::Time::now()-t0).toSec()<3 && qd_record.size()<number_of_samples){
-                    read();
-//                    qd_record.push_back(qd);
-//                    ld_record.push_back(Ld);
-//                    W_record.push_back(W);
+                ros::Rate r(10);
+                ros::Time t0 = ros::Time::now(), t1 = ros::Time::now();
+                while((ros::Time::now()-t0).toSec()<1 && sample<number_of_samples){
+                    update();
+                    if((ros::Time::now()-t1).toSec()>0.01) {
+                        qd_record.push_back(qd);
+                        ld_record.push_back(Ld);
+                        W_record.push_back(W);
+                        for (int i = 0; i < 8; i++) {
+                            viaPoints_local[i].push_back(segments[i][0].second->local_coordinates);
+                            viaPoints_global[i].push_back(segments[i][0].second->global_coordinates);
+                        }
+                        w2l.push_back(world_to_link_transform.back());
+                        sample++;
+                        t1 = ros::Time::now();
+                    }
+                    if(!external_robot_state)
+                        forwardKinematics(0.000005);
                     ros::spinOnce();
                 }
             }
+            ROS_INFO_STREAM(sample);
         }
     }
 
@@ -153,8 +194,8 @@ struct Functor {
 
 struct RobotConfigurationEstimator : Functor<double> {
 
-    RobotConfigurationEstimator(int cables, int number_of_samples):
-            Functor<double>(3*cables, 3 * number_of_samples), number_of_samples(number_of_samples), cables(cables) {
+    RobotConfigurationEstimator(int number_of_samples, int number_of_cables, int number_of_links):
+            Functor<double>(3*number_of_cables, 3*number_of_cables), number_of_samples(number_of_samples), number_of_cables(number_of_cables), number_of_links(number_of_links) {
 
     };
 
@@ -165,18 +206,48 @@ struct RobotConfigurationEstimator : Functor<double> {
      * @return
      */
     int operator()(const VectorXd &x, VectorXd &fvec) const{
+        MatrixXd V;
+        V.resize(number_of_cables, 6 * number_of_links);
+        V.setZero();
+        fvec.setZero();
+        for(int sample=0;sample<number_of_samples;sample++) {
+            V.setZero(number_of_cables, 6 * number_of_links);
+            for (int cable = 0; cable < number_of_cables; cable++) {
+                for (auto &segment:segments[cable]) {
+                    // V term associated with segment translation
+                    Vector3d segmentVector;
+                    Vector3d global_estimate(x[cable*3+0],x[cable*3+1],x[cable*3+2]);
+                    segmentVector =  viaPoints_global[cable][sample] - global_estimate;
+                    segmentVector.normalize();
 
+                    // Total V term in translations
+                    Vector3d V_ijk_T = world_to_link_transform[sample].block(0, 0, 3, 3) * segmentVector;
+
+                    Vector3d V_itk_T = viaPoints_local[cable][sample].cross(V_ijk_T);
+
+                    V.block(cable, 6 * 6, 1, 3) = V.block(cable, 6 * 6, 1, 3) + V_ijk_T.transpose();
+                    V.block(cable, 6 * 6 + 3, 1, 3) =
+                            V.block(cable, 6 * 6 + 3, 1, 3) + V_itk_T.transpose();
+                }
+            }
+            MatrixXd L = V * W_record[sample];
+            VectorXd ld_error = L*qd_record[sample]-ld_record[sample];
+            for(int j=0;j<number_of_cables;j++) {
+                fvec[j*3 ] += abs(ld_error[j]);
+                fvec[j*3 + 1] += abs(ld_error[j]);
+                fvec[j*3 + 2] += abs(ld_error[j]);
+            }
+        }
+        ROS_INFO_STREAM_THROTTLE(10,fvec.norm() << endl << x.transpose());
     };
 
-
-
     vector<VectorXd> qd_record, ld_record;
+    vector<vector<Vector3d>> viaPoints_local, viaPoints_global;
+    vector<Matrix4d> world_to_link_transform;
+    vector <vector<pair < cardsflow::kindyn::ViaPointPtr, cardsflow::kindyn::ViaPointPtr>>> segments;
+    vector<MatrixXd> W_record;
 
-    bool external_robot_state; /// indicates if we get the robot state externally
-    ros::NodeHandlePtr nh; /// ROS nodehandle
-    ros::Publisher sphere_axis0, sphere_axis1, sphere_axis2;
-    vector<double> limits[3];
-    int number_of_samples, cables;
+    int number_of_samples, number_of_cables, number_of_links;
 };
 
 /**
@@ -212,6 +283,9 @@ int main(){
     }
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
+    ros::AsyncSpinner spinner(0);
+    spinner.start();
+
     MsjPlatform robot(urdf, cardsflow_xml);
 
     controller_manager::ControllerManager cm(&robot);
@@ -222,19 +296,59 @@ int main(){
 
     ROS_INFO("STARTING ROBOT MAIN LOOP...");
 
-//    robot.randomPoseRecord();
-//    NumericalDiff<RobotConfigurationEstimator> *numDiff1;
-//    Eigen::LevenbergMarquardt<Eigen::NumericalDiff<RobotConfigurationEstimator>, double> *lm;
-//    numDiff1 = new NumericalDiff<RobotConfigurationEstimator>(robot);
-//    lm = new LevenbergMarquardt<NumericalDiff<RobotConfigurationEstimator>, double>(*numDiff1);
-//    lm->parameters.maxfev = 1000;
-//    lm->parameters.xtol = 1e-10;
-//    VectorXd x(10);
-//    x << 0.0000001, 0, 0, 0, 0, 0, 0, 0, 0, 0;
-//    int ret = lm->minimize(x);
-//    double error = lm->fnorm;
+    ros::ServiceClient load_controller = nh.serviceClient<controller_manager_msgs::LoadController>("/controller_manager/load_controller");
+    ros::ServiceClient switch_controller = nh.serviceClient<controller_manager_msgs::SwitchController>("/controller_manager/switch_controller");
+    controller_manager_msgs::LoadController msg;
+    msg.request.name = "sphere_axis0";
+    load_controller.call(msg);
+    msg.request.name = "sphere_axis1";
+    load_controller.call(msg);
+    msg.request.name = "sphere_axis2";
+    load_controller.call(msg);
 
-    ROS_INFO("TERMINATING...");
+    controller_manager_msgs::SwitchController msg2;
+    msg2.request.start_controllers.push_back("sphere_axis0");
+    msg2.request.start_controllers.push_back("sphere_axis1");
+    msg2.request.start_controllers.push_back("sphere_axis2");
+    msg2.request.strictness = msg2.request.BEST_EFFORT;
+    switch_controller.call(msg2);
+
+    RobotConfigurationEstimator estimator(1000,8,7);
+    estimator.segments = robot.segments;
+
+    robot.randomPoseRecord(estimator.number_of_samples,estimator.qd_record,estimator.ld_record,estimator.W_record,
+                           estimator.viaPoints_local,estimator.viaPoints_global, estimator.world_to_link_transform);
+    NumericalDiff<RobotConfigurationEstimator> *numDiff1;
+    Eigen::LevenbergMarquardt<Eigen::NumericalDiff<RobotConfigurationEstimator>, double> *lm;
+    numDiff1 = new NumericalDiff<RobotConfigurationEstimator>(estimator);
+    lm = new LevenbergMarquardt<NumericalDiff<RobotConfigurationEstimator>, double>(*numDiff1);
+    lm->parameters.maxfev = 10000;
+    lm->parameters.xtol = 1e-10;
+    VectorXd x(24);
+    x.setZero();
+    for(int cable=0;cable<8;cable++){
+        x[cable*3] = 0.001*rand()/(double)RAND_MAX;
+        x[cable*3+1] = 0.001*rand()/(double)RAND_MAX;
+        x[cable*3+2] = 0;
+    }
+    ROS_INFO_STREAM(x.transpose());
+//    x = 0.001*x;
+    int ret = lm->minimize(x);
+    double error = lm->fnorm;
+    robot.number_of_markers_to_publish_at_once = 1;
+    for(int cable=0;cable<8;cable++){
+        geometry_msgs::Pose msg;
+        msg.position.x = x[cable*3];
+        msg.position.y = x[cable*3+1];
+        msg.position.z = x[cable*3+2];
+        msg.orientation.w = 1;
+        char str[100];
+        sprintf(str,"cable_estimate_%d", cable);
+        robot.publishTransform("world",str,msg);
+        ros::spinOnce();
+    }
+
+    ROS_INFO_STREAM(error << endl << x.transpose());
 
     update_thread.join();
     return 0;

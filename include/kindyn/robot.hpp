@@ -176,7 +176,6 @@ namespace cardsflow {
              */
             void FloatingBase(const geometry_msgs::PoseConstPtr &msg);
 
-            vector<Matrix4d> world_to_link_transform, link_to_world_transform, frame_transform;
             Matrix3d *link_to_link_transform;
 
             VectorXd resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max);
@@ -244,6 +243,7 @@ namespace cardsflow {
             size_t number_of_cables = 0; /// number of cables, ie muscles of the whole robot
             size_t number_of_links = 0; /// number of links of the whole robot
             Matrix4d world_H_base; /// floating base 6-DoF pose
+            vector<Matrix4d> world_to_link_transform, link_to_world_transform, frame_transform;
             Eigen::Matrix<double,6,1> baseVel; /// the velocity of the floating base
             Vector3d gravity; /// gravity vector (default: (0,0,-9.81)
             MatrixXd M; /// The Mass matrix of the robot
@@ -257,6 +257,8 @@ namespace cardsflow {
             vector<VectorXd> ld; /// tendon length changes for each controller
             MatrixXd L, L_t; /// L and -L^T
             MatrixXd S, P, V, W; /// matrices of cable model
+        public:
+            vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments
         private:
             iDynTree::FreeFloatingGeneralizedTorques bias; /// Coriolis+Gravity term
             iDynTree::MatrixDynSize Mass; /// Mass matrix
@@ -279,7 +281,6 @@ namespace cardsflow {
             SQProblem qp_solver; /// qpoases quadratic problem solver
             real_t *H, *g, *A, *lb, *ub, *b, *FOpt; /// quadratic problem variables
             ros::Time last_visualization; /// timestamp for visualization at reasonable intervals
-            vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments
             Eigen::IOFormat fmt; /// formator for terminal printouts
             hardware_interface::JointStateInterface joint_state_interface; /// ros control joint state interface
             hardware_interface::EffortJointInterface joint_command_interface; /// ros control joint command interface
