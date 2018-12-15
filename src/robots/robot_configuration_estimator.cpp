@@ -10,6 +10,7 @@
 #include <std_msgs/Float32.h>
 #include <controller_manager_msgs/LoadController.h>
 #include <controller_manager_msgs/SwitchController.h>
+#include <tf/transform_broadcaster.h>
 
 using namespace Eigen;
 using namespace std;
@@ -141,7 +142,9 @@ public:
                 ros::Time t0 = ros::Time::now(), t1 = ros::Time::now();
                 while((ros::Time::now()-t0).toSec()<1 && sample<number_of_samples){
                     update();
-                    if((ros::Time::now()-t1).toSec()>0.01) {
+                    if(!external_robot_state)
+                        forwardKinematics(0.000005);
+                    if((ros::Time::now()-t1).toSec()>0.1) {
                         qd_record.push_back(qd);
                         ld_record.push_back(Ld);
                         W_record.push_back(W);
@@ -153,8 +156,6 @@ public:
                         sample++;
                         t1 = ros::Time::now();
                     }
-                    if(!external_robot_state)
-                        forwardKinematics(0.000005);
                     ros::spinOnce();
                 }
             }
@@ -196,7 +197,7 @@ struct RobotConfigurationEstimator : Functor<double> {
 
     RobotConfigurationEstimator(int number_of_samples, int number_of_cables, int number_of_links):
             Functor<double>(3*number_of_cables, 3*number_of_cables), number_of_samples(number_of_samples), number_of_cables(number_of_cables), number_of_links(number_of_links) {
-
+        broadcaster = new tf::TransformBroadcaster;
     };
 
     /**
@@ -238,7 +239,24 @@ struct RobotConfigurationEstimator : Functor<double> {
                 fvec[j*3 + 2] += abs(ld_error[j]);
             }
         }
-        ROS_INFO_STREAM_THROTTLE(10,fvec.norm() << endl << x.transpose());
+        static int counter = 0;
+        if((counter++%100)==0){
+            ROS_INFO_STREAM(fvec.norm() << endl << x.transpose());
+            static geometry_msgs::TransformStamped msg;
+            for(int cable=0;cable<number_of_cables;cable++) {
+                msg.header.stamp = ros::Time::now();
+                msg.header.frame_id = "world";
+                msg.header.seq++;
+                char str[100];
+                sprintf(str, "cable_estimate_%d", cable);
+                msg.child_frame_id = str;
+                msg.transform.rotation.w = 1;
+                msg.transform.translation.x = x[cable * 3];
+                msg.transform.translation.y = x[cable * 3 + 1];
+                msg.transform.translation.z = x[cable * 3 + 2];
+                broadcaster->sendTransform(msg);
+            }
+        }
     };
 
     vector<VectorXd> qd_record, ld_record;
@@ -246,9 +264,12 @@ struct RobotConfigurationEstimator : Functor<double> {
     vector<Matrix4d> world_to_link_transform;
     vector <vector<pair < cardsflow::kindyn::ViaPointPtr, cardsflow::kindyn::ViaPointPtr>>> segments;
     vector<MatrixXd> W_record;
+    static tf::TransformBroadcaster *broadcaster;
 
     int number_of_samples, number_of_cables, number_of_links;
 };
+
+tf::TransformBroadcaster *RobotConfigurationEstimator::broadcaster;
 
 /**
  * controller manager update thread. Here you can define how fast your controllers should run
@@ -313,7 +334,7 @@ int main(){
     msg2.request.strictness = msg2.request.BEST_EFFORT;
     switch_controller.call(msg2);
 
-    RobotConfigurationEstimator estimator(1000,8,7);
+    RobotConfigurationEstimator estimator(2000,8,7);
     estimator.segments = robot.segments;
 
     robot.randomPoseRecord(estimator.number_of_samples,estimator.qd_record,estimator.ld_record,estimator.W_record,
@@ -322,7 +343,7 @@ int main(){
     Eigen::LevenbergMarquardt<Eigen::NumericalDiff<RobotConfigurationEstimator>, double> *lm;
     numDiff1 = new NumericalDiff<RobotConfigurationEstimator>(estimator);
     lm = new LevenbergMarquardt<NumericalDiff<RobotConfigurationEstimator>, double>(*numDiff1);
-    lm->parameters.maxfev = 10000;
+    lm->parameters.maxfev = 50000;
     lm->parameters.xtol = 1e-10;
     VectorXd x(24);
     x.setZero();
@@ -348,7 +369,7 @@ int main(){
         ros::spinOnce();
     }
 
-    ROS_INFO_STREAM(error << endl << x.transpose());
+    ROS_INFO_STREAM(ret << endl << error << endl << x.transpose());
 
     update_thread.join();
     return 0;
