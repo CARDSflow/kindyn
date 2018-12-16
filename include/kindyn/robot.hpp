@@ -229,7 +229,7 @@ namespace cardsflow {
                 iDynTree::VectorDynSize jointVel;
                 iDynTree::Vector3       gravity;
             }robotstate;
-        protected:
+        public:
             /**
              * Integrates the robot equation of motions using odeint
              * @param dt the integrations step length in seconds
@@ -257,7 +257,6 @@ namespace cardsflow {
             vector<VectorXd> ld; /// tendon length changes for each controller
             MatrixXd L, L_t; /// L and -L^T
             MatrixXd S, P, V, W; /// matrices of cable model
-        public:
             vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments
         private:
             iDynTree::FreeFloatingGeneralizedTorques bias; /// Coriolis+Gravity term

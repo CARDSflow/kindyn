@@ -40,7 +40,6 @@
           type="$(arg robot_name)"
           respawn="false"
           output="screen"
-          launch-prefix="gdb -ex run"
     />
 
     <group if="$(arg gazebo)">

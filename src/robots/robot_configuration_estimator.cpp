@@ -68,6 +68,9 @@ public:
         }else{
             cout << "could not open " << path << endl;
         }
+
+        pose_thread.reset(new std::thread(&MsjPlatform::randomPose, this));
+        pose_thread->detach();
     };
 
     /**
@@ -107,9 +110,7 @@ public:
         return c;
     }
 
-    void randomPoseRecord(int number_of_samples, vector<VectorXd> &qd_record, vector<VectorXd> &ld_record,
-                          vector<MatrixXd> &W_record, vector<vector<Vector3d>> &viaPoints_local,
-                          vector<vector<Vector3d>> &viaPoints_global, vector<Matrix4d> &w2l){
+    void randomPose(){
         ros::Time start_time = ros::Time::now();
         double min[3] = {0,0,-1}, max[3] = {0,0,1};
         for(int i=0;i<limits[0].size();i++){
@@ -122,10 +123,9 @@ public:
             if(limits[1][i]>max[1])
                 max[1] = limits[1][i];
         }
-        viaPoints_local.resize(number_of_samples);
-        viaPoints_global.resize(number_of_samples);
+
         int sample = 0;
-        while(sample<number_of_samples){
+        while(ros::ok()){
             double q0 = rand()/(double)RAND_MAX*(max[0]-min[0])+min[0];
             double q1 = rand()/(double)RAND_MAX*(max[1]-min[1])+min[1];
             double q2 = rand()/(double)RAND_MAX*(max[2]-min[2])+min[2];
@@ -138,26 +138,12 @@ public:
                 sphere_axis1.publish(msg);
                 msg.data = q2;
                 sphere_axis2.publish(msg);
-                ros::Rate r(10);
-                ros::Time t0 = ros::Time::now(), t1 = ros::Time::now();
-                while((ros::Time::now()-t0).toSec()<1 && sample<number_of_samples){
+                ros::Time t0 = ros::Time::now();
+                while((ros::Time::now()-t0).toSec()<3){
                     update();
-                    if(!external_robot_state)
-                        forwardKinematics(0.000005);
-                    if((ros::Time::now()-t1).toSec()>0.1) {
-                        qd_record.push_back(qd);
-                        ld_record.push_back(Ld);
-                        W_record.push_back(W);
-                        for (int i = 0; i < 8; i++) {
-                            viaPoints_local[i].push_back(segments[i][0].second->local_coordinates);
-                            viaPoints_global[i].push_back(segments[i][0].second->global_coordinates);
-                        }
-                        w2l.push_back(world_to_link_transform.back());
-                        sample++;
-                        t1 = ros::Time::now();
-                    }
-                    ros::spinOnce();
+                    forwardKinematics(0.0000001);
                 }
+                sample++;
             }
             ROS_INFO_STREAM(sample);
         }
@@ -168,6 +154,7 @@ public:
     ros::Publisher motor_command, sphere_axis0, sphere_axis1, sphere_axis2; /// motor command publisher
     double l_offset[NUMBER_OF_MOTORS];
     vector<double> limits[3];
+    boost::shared_ptr<std::thread> pose_thread;
 };
 
 // Generic functor for Eigen Levenberg-Marquardt minimizer
@@ -197,7 +184,6 @@ struct RobotConfigurationEstimator : Functor<double> {
 
     RobotConfigurationEstimator(int number_of_samples, int number_of_cables, int number_of_links):
             Functor<double>(3*number_of_cables, 3*number_of_cables), number_of_samples(number_of_samples), number_of_cables(number_of_cables), number_of_links(number_of_links) {
-        broadcaster = new tf::TransformBroadcaster;
     };
 
     /**
@@ -211,65 +197,52 @@ struct RobotConfigurationEstimator : Functor<double> {
         V.resize(number_of_cables, 6 * number_of_links);
         V.setZero();
         fvec.setZero();
-        for(int sample=0;sample<number_of_samples;sample++) {
-            V.setZero(number_of_cables, 6 * number_of_links);
-            for (int cable = 0; cable < number_of_cables; cable++) {
-                for (auto &segment:segments[cable]) {
-                    // V term associated with segment translation
-                    Vector3d segmentVector;
-                    Vector3d global_estimate(x[cable*3+0],x[cable*3+1],x[cable*3+2]);
-                    segmentVector =  viaPoints_global[cable][sample] - global_estimate;
-                    segmentVector.normalize();
+        V.setZero(number_of_cables, 6 * number_of_links);
+        for (int cable = 0; cable < number_of_cables; cable++) {
+            // V term associated with segment translation
+            Vector3d segmentVector;
+            Vector3d global_estimate(x[cable*3+0],x[cable*3+1],x[cable*3+2]);
+            segmentVector =  robot->segments[cable][0].second->global_coordinates - global_estimate;
+            segmentVector.normalize();
 
-                    // Total V term in translations
-                    Vector3d V_ijk_T = world_to_link_transform[sample].block(0, 0, 3, 3) * segmentVector;
+            // Total V term in translations
+            Vector3d V_ijk_T = robot->world_to_link_transform.back().block(0, 0, 3, 3) * segmentVector;
 
-                    Vector3d V_itk_T = viaPoints_local[cable][sample].cross(V_ijk_T);
+            Vector3d V_itk_T = robot->segments[cable][0].second->local_coordinates.cross(V_ijk_T);
 
-                    V.block(cable, 6 * 6, 1, 3) = V.block(cable, 6 * 6, 1, 3) + V_ijk_T.transpose();
-                    V.block(cable, 6 * 6 + 3, 1, 3) =
-                            V.block(cable, 6 * 6 + 3, 1, 3) + V_itk_T.transpose();
-                }
-            }
-            MatrixXd L = V * W_record[sample];
-            VectorXd ld_error = L*qd_record[sample]-ld_record[sample];
-            for(int j=0;j<number_of_cables;j++) {
-                fvec[j*3 ] += abs(ld_error[j]);
-                fvec[j*3 + 1] += abs(ld_error[j]);
-                fvec[j*3 + 2] += abs(ld_error[j]);
-            }
+            V.block(cable, 6 * 6, 1, 3) = V.block(cable, 6 * 6, 1, 3) + V_ijk_T.transpose();
+            V.block(cable, 6 * 6 + 3, 1, 3) =
+                    V.block(cable, 6 * 6 + 3, 1, 3) + V_itk_T.transpose();
         }
+        MatrixXd L = V * robot->W;
+        VectorXd ld_error = L*robot->qd-robot->Ld;
+        for(int j=0;j<number_of_cables;j++) {
+            fvec[j*3 ] += abs(ld_error[j]);
+            fvec[j*3 + 1] += abs(ld_error[j]);
+            fvec[j*3 + 2] += abs(ld_error[j]);
+        }
+
         static int counter = 0;
         if((counter++%100)==0){
-            ROS_INFO_STREAM(fvec.norm() << endl << x.transpose());
-            static geometry_msgs::TransformStamped msg;
+            ROS_INFO_STREAM_THROTTLE(5,fvec.norm() << endl << x.transpose());
             for(int cable=0;cable<number_of_cables;cable++) {
-                msg.header.stamp = ros::Time::now();
-                msg.header.frame_id = "world";
-                msg.header.seq++;
                 char str[100];
                 sprintf(str, "cable_estimate_%d", cable);
-                msg.child_frame_id = str;
-                msg.transform.rotation.w = 1;
-                msg.transform.translation.x = x[cable * 3];
-                msg.transform.translation.y = x[cable * 3 + 1];
-                msg.transform.translation.z = x[cable * 3 + 2];
-                broadcaster->sendTransform(msg);
+                geometry_msgs::Pose msg;
+                msg.position.x = x[cable*3];
+                msg.position.y = x[cable*3+1];
+                msg.position.z = x[cable*3+2];
+                robot->publishTransform("world",str,msg);
             }
         }
     };
 
-    vector<VectorXd> qd_record, ld_record;
-    vector<vector<Vector3d>> viaPoints_local, viaPoints_global;
-    vector<Matrix4d> world_to_link_transform;
-    vector <vector<pair < cardsflow::kindyn::ViaPointPtr, cardsflow::kindyn::ViaPointPtr>>> segments;
-    vector<MatrixXd> W_record;
-    static tf::TransformBroadcaster *broadcaster;
+    static cardsflow::kindyn::Robot *robot;
 
     int number_of_samples, number_of_cables, number_of_links;
 };
 
-tf::TransformBroadcaster *RobotConfigurationEstimator::broadcaster;
+cardsflow::kindyn::Robot *RobotConfigurationEstimator::robot;
 
 /**
  * controller manager update thread. Here you can define how fast your controllers should run
@@ -334,11 +307,15 @@ int main(){
     msg2.request.strictness = msg2.request.BEST_EFFORT;
     switch_controller.call(msg2);
 
-    RobotConfigurationEstimator estimator(2000,8,7);
-    estimator.segments = robot.segments;
+    RobotConfigurationEstimator estimator(100,8,7);
+    estimator.robot = &robot;
 
-    robot.randomPoseRecord(estimator.number_of_samples,estimator.qd_record,estimator.ld_record,estimator.W_record,
-                           estimator.viaPoints_local,estimator.viaPoints_global, estimator.world_to_link_transform);
+    ros::Time t0 = ros::Time::now();
+    while((ros::Time::now()-t0).toSec()<3){
+        robot.update();
+        robot.forwardKinematics(0.000001);
+    }
+
     NumericalDiff<RobotConfigurationEstimator> *numDiff1;
     Eigen::LevenbergMarquardt<Eigen::NumericalDiff<RobotConfigurationEstimator>, double> *lm;
     numDiff1 = new NumericalDiff<RobotConfigurationEstimator>(estimator);
