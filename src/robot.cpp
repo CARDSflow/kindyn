@@ -475,6 +475,13 @@ void Robot::update() {
                 break;
         }
     }
+    Ld.setZero();
+    for(int i = 0; i<endeffectors.size();i++) {
+        int dof_offset = endeffector_dof_offset[i];
+        for (int j = dof_offset; j < endeffector_number_of_dofs[i] + dof_offset; j++) {
+            Ld -= ld[j];
+        }
+    }
 
     ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "qdd " << qdd.transpose().format(fmt));
@@ -578,10 +585,6 @@ void Robot::forwardKinematics(double dt) {
 
     for(int i = 0; i<endeffectors.size();i++) {
         int dof_offset = endeffector_dof_offset[i];
-        Ld.setZero();
-        for (int j = dof_offset; j < endeffector_number_of_dofs[i] + dof_offset; j++) {
-            Ld -= ld[j];
-        }
         MatrixXd L_endeffector = L.block(0,dof_offset,number_of_cables,endeffector_number_of_dofs[i]);
         MatrixXd L_endeffector_inv = EigenExtension::Pinv(L_endeffector);
         VectorXd qd_temp =  L_endeffector_inv * Ld;
@@ -594,6 +597,8 @@ void Robot::forwardKinematics(double dt) {
                                 dxdt[1] = qdd_torque_control[j];
                                 dxdt[0] = x[1];
                             }, joint_state[j], integration_time, integration_time + dt, dt);
+                    qd[j] = joint_state[j][1];
+                    q[j] = joint_state[j][0];
                     break;
                 case CARDSflow::ControllerType::cable_length_controller:
                     boost::numeric::odeint::integrate(
@@ -601,6 +606,8 @@ void Robot::forwardKinematics(double dt) {
                                 dxdt[1] = 0;
                                 dxdt[0] = qd_temp[j-dof_offset];
                             }, joint_state[j], integration_time, integration_time + dt, dt);
+                    qd[j] = qd_temp[j-dof_offset];
+                    q[j] = joint_state[j][0];
                     break;
                 case CARDSflow::ControllerType::force_position_controller:
                     boost::numeric::odeint::integrate(
@@ -608,10 +615,10 @@ void Robot::forwardKinematics(double dt) {
                                 dxdt[1] = qdd_force_control[j];
                                 dxdt[0] = x[1];
                             }, joint_state[j], integration_time, integration_time + dt, dt);
+                    qd[j] = joint_state[j][1];
+                    q[j] = joint_state[j][0];
                     break;
             }
-            qd[j] = joint_state[j][1];
-            q[j] = joint_state[j][0];
 //        ROS_INFO("%s control type %d", joint_names[j].c_str(), controller_type[j]);
         }
         for (int i = 0; i < number_of_cables; i++) {
