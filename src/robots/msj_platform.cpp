@@ -99,7 +99,7 @@ public:
 	        write();
 	        ROS_INFO("Gymstep is done");
 	    }
-        for(int i=0; i< q.size(); i++ ){
+        for(int i=0; i< number_of_dofs; i++ ){
         	res.q.push_back(q[i]);
         	res.qdot.push_back(qd[i]);
         }
@@ -126,7 +126,7 @@ public:
 	 	update();
         
         ROS_INFO_STREAM_THROTTLE(5, "q = \n" << q.format(fmt));
-        for(int i=0; i< q.size(); i++ ){
+        for(int i=0; i< number_of_dofs,; i++ ){
         	res.q.push_back(q[i]);
         	res.qdot.push_back(qd[i]);
         }
