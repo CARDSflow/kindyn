@@ -173,8 +173,8 @@ int main(int argc, char *argv[]) {
     ROS_INFO("STARTING ROBOT MAIN LOOP...");
 
     while(ros::ok()){
-        //robot.read();
-        //robot.write();
+        robot.read();
+        robot.write();
         ros::spinOnce();
     }
 

@@ -1,6 +1,6 @@
 <launch>
     <arg name="robot_name" default="msj_platform"/>
-    <arg name="model_name" default="msj_platform"/>
+    <arg name="model_name" default="$(arg robot_name)"/>
     <arg name="start_controllers" default="sphere_axis0 sphere_axis1 sphere_axis2"/>
     <arg name="gazebo" default="false"/>
     <arg name="paused" default="false"/>
