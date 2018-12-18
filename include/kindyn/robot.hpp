@@ -127,8 +127,8 @@ namespace cardsflow {
                 ROS_WARN_STREAM_THROTTLE(1, "writing virtual, "
                         "you probably forgot to implement your own write function?!");
             };
-
         private:
+
             /**
              * Move endeffector action server
              * @param goal
@@ -251,14 +251,16 @@ namespace cardsflow {
             VectorXd q, qd, qdd; /// joint positon, velocity, acceleration
             VectorXd q_target, qd_target, qdd_target; /// joint positon, velocity, acceleration targets
             VectorXd q_target_prev, qd_target_prev, qdd_target_prev; /// joint positon, velocity, acceleration targets
-            VectorXd l_int, l, Ld, l_target; /// tendon length and length change
+            VectorXd l_int, l, l_target; /// tendon length and length change
+            vector<VectorXd> Ld; // tendon velocity per endeffector
             VectorXd torques; /// joint torques
             VectorXd cable_forces; /// the cable forces in Newton
             vector<VectorXd> ld; /// tendon length changes for each controller
             MatrixXd L, L_t; /// L and -L^T
+
             MatrixXd S, P, V, W; /// matrices of cable model
             vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments
-        private:
+        protected:
             iDynTree::FreeFloatingGeneralizedTorques bias; /// Coriolis+Gravity term
             iDynTree::MatrixDynSize Mass; /// Mass matrix
 
