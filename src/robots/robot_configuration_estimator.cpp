@@ -215,12 +215,12 @@ struct RobotConfigurationEstimator : Functor<double> {
                     V.block(cable, 6 * 6 + 3, 1, 3) + V_itk_T.transpose();
         }
         MatrixXd L = V * robot->W;
-        VectorXd ld_error = L*robot->qd-robot->Ld;
-        for(int j=0;j<number_of_cables;j++) {
-            fvec[j*3 ] += abs(ld_error[j]);
-            fvec[j*3 + 1] += abs(ld_error[j]);
-            fvec[j*3 + 2] += abs(ld_error[j]);
-        }
+//        VectorXd ld_error = L*robot->qd-robot->Ld; // TODO adapt to multiple endeffectors
+//        for(int j=0;j<number_of_cables;j++) {
+//            fvec[j*3 ] += abs(ld_error[j]);
+//            fvec[j*3 + 1] += abs(ld_error[j]);
+//            fvec[j*3 + 2] += abs(ld_error[j]);
+//        }
 
         static int counter = 0;
         if((counter++%100)==0){

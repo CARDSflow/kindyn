@@ -251,7 +251,8 @@ namespace cardsflow {
             VectorXd q, qd, qdd; /// joint positon, velocity, acceleration
             VectorXd q_target, qd_target, qdd_target; /// joint positon, velocity, acceleration targets
             VectorXd q_target_prev, qd_target_prev, qdd_target_prev; /// joint positon, velocity, acceleration targets
-            VectorXd l_int, l, Ld, l_target; /// tendon length and length change
+            VectorXd l_int, l, l_target; /// tendon length and length change
+            vector<VectorXd> Ld; // tendon velocity per endeffector
             VectorXd torques; /// joint torques
             VectorXd cable_forces; /// the cable forces in Newton
             vector<VectorXd> ld; /// tendon length changes for each controller
