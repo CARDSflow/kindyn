@@ -124,10 +124,12 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     qdd_target_prev.setZero();
 
     l.resize(number_of_cables);
-    Ld.resize(number_of_cables);
-    Ld.setZero();
+    l_int.resize(number_of_cables);
+    l_target.resize(number_of_cables);
     ld.resize(number_of_dofs);
     l.setZero();
+    l_int.setZero();
+    l_target.setZero();
     for (int i = 0; i < number_of_dofs; i++) {
         ld[i].resize(number_of_cables);
         ld[i].setZero();
@@ -249,11 +251,18 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     f_min = min_force * f_min;
     f_max = max_force * f_max;
 
-    last_visualization = ros::Time::now();
+    try {
+        last_visualization =
+                ros::Time::now() - ros::Duration(10); // triggers immediate visualization in first iteratiom
+    }
+    catch(std::runtime_error& ex) {
+        ROS_ERROR("Exception: [%s]", ex.what());
+    }
 
     int k=0;
     nh->getParam("endeffectors", endeffectors);
     endeffector_dof_offset.push_back(0);
+    Ld.resize(endeffectors.size());
     for (string ef:endeffectors) {
         ROS_INFO_STREAM("configuring endeffector " << ef);
         vector<string> ik_joints;
@@ -298,6 +307,15 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         ik[ef].setVerbosity(0);
         tf::Vector3 pos(0,0.3*k,0);
         make6DofMarker(false,visualization_msgs::InteractiveMarkerControl::MOVE_3D,pos,false,0.15,"world",ef.c_str());
+
+        moveEndEffector_as[ef].reset(
+                new actionlib::SimpleActionServer<roboy_control_msgs::MoveEndEffectorAction>(
+                        *(nh.get()), ("CARDSflow/MoveEndEffector/"+ef).c_str(),
+                        boost::bind(&Robot::MoveEndEffector, this, _1), false));
+        moveEndEffector_as[ef]->start();
+
+        Ld[k].resize(number_of_cables);
+        Ld[k].setZero();
         k++;
     }
 
@@ -411,14 +429,22 @@ void Robot::update() {
         }
     }
 
+    int i=0;
     for (auto muscle:cables) {
+        l[i] = 0;
+        int j=0;
         for (auto vp:muscle.viaPoints) {
             if (!vp->fixed_to_world) { // move viapoint with link
                 vp->global_coordinates = link_to_world_transform[vp->link_index].block(0, 3, 3, 1) +
                                          link_to_world_transform[vp->link_index].block(0, 0, 3, 3) *
                                          vp->local_coordinates;
             }
+            if(j>0){
+                l[i] += (muscle.viaPoints[j]->global_coordinates-muscle.viaPoints[j-1]->global_coordinates).norm();
+            }
+            j++;
         }
+        i++;
     }
 //    ROS_INFO_THROTTLE(1,"model update takes %f seconds", (ros::Time::now()-t0).toSec());
 //    t0 = ros::Time::now();
@@ -451,22 +477,21 @@ void Robot::update() {
                 break;
         }
     }
-
-    //To avoid setting Ld to zero after gym_step service call
     for(int i = 0; i<endeffectors.size();i++) {
+        Ld[i].setZero();
         int dof_offset = endeffector_dof_offset[i];
-        Ld.setZero();
         for (int j = dof_offset; j < endeffector_number_of_dofs[i] + dof_offset; j++) {
-            Ld -= ld[j];
+            Ld[i] -= ld[j];
         }
     }
+
     /*
     ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "qdd " << qdd.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "qd " << qd.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "q " << q.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "l " << l.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "ld " << Ld.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "ld " << Ld[0].transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "torques " << torques.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "cable_forces " << cable_forces.transpose().format(fmt));
     */
@@ -483,7 +508,7 @@ void Robot::update() {
                 msg.name.push_back(cables[i].name);
                 msg.force.push_back(cable_forces[i]);
                 msg.l.push_back(l[i]);
-                msg.ld.push_back(Ld[i]);
+                msg.ld.push_back(Ld[0][i]); // TODO: only first endeffector Ld is send here
                 msg.number_of_viapoints.push_back(cables[i].viaPoints.size());
                 for (auto vp:cables[i].viaPoints) {
                     geometry_msgs::Vector3 VP;
@@ -557,7 +582,7 @@ void Robot::update() {
     ROS_INFO_STREAM_THROTTLE(5, "qd " << qd.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "q " << q.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "l " << l.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "ld " << Ld.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "ld " << Ld[0].transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "torques " << torques.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "cable_forces " << cable_forces.transpose().format(fmt));
 }
@@ -574,7 +599,7 @@ void Robot::forwardKinematics(double dt) {
         int dof_offset = endeffector_dof_offset[i];
         MatrixXd L_endeffector = L.block(0,dof_offset,number_of_cables,endeffector_number_of_dofs[i]);
         MatrixXd L_endeffector_inv = EigenExtension::Pinv(L_endeffector);
-        VectorXd qd_temp =  L_endeffector_inv * Ld;
+        VectorXd qd_temp =  L_endeffector_inv * Ld[i];
 
         for (int j = dof_offset; j < endeffector_number_of_dofs[i]+dof_offset; j++) {
             switch(controller_type[j]){
@@ -584,6 +609,8 @@ void Robot::forwardKinematics(double dt) {
                                 dxdt[1] = qdd_torque_control[j];
                                 dxdt[0] = x[1];
                             }, joint_state[j], integration_time, integration_time + dt, dt);
+                    qd[j] = joint_state[j][1];
+                    q[j] = joint_state[j][0];
                     break;
                 case CARDSflow::ControllerType::cable_length_controller:
                     boost::numeric::odeint::integrate(
@@ -591,6 +618,8 @@ void Robot::forwardKinematics(double dt) {
                                 dxdt[1] = 0;
                                 dxdt[0] = qd_temp[j-dof_offset];
                             }, joint_state[j], integration_time, integration_time + dt, dt);
+                    qd[j] = qd_temp[j-dof_offset];
+                    q[j] = joint_state[j][0];
                     break;
                 case CARDSflow::ControllerType::force_position_controller:
                     boost::numeric::odeint::integrate(
@@ -598,19 +627,19 @@ void Robot::forwardKinematics(double dt) {
                                 dxdt[1] = qdd_force_control[j];
                                 dxdt[0] = x[1];
                             }, joint_state[j], integration_time, integration_time + dt, dt);
+                    qd[j] = joint_state[j][1];
+                    q[j] = joint_state[j][0];
                     break;
             }
-            qd[j] = joint_state[j][1];
-            q[j] = joint_state[j][0];
 //        ROS_INFO("%s control type %d", joint_names[j].c_str(), controller_type[j]);
         }
-        for (int i = 0; i < number_of_cables; i++) {
+        for (int l = 0; l < number_of_cables; l++) {
             boost::numeric::odeint::integrate(
-                    [this, i](const state_type &x, state_type &dxdt, double t) {
+                    [this, i, l](const state_type &x, state_type &dxdt, double t) {
                         dxdt[1] = 0;
-                        dxdt[0] = Ld[i];
-                    }, motor_state[i], integration_time, integration_time + dt, dt);
-            l[i] = motor_state[i][0];
+                        dxdt[0] = Ld[i][l];
+                    }, motor_state[l], integration_time, integration_time + dt, dt);
+            l_int[l] = motor_state[l][0];
         }
     }
 
@@ -808,12 +837,12 @@ bool Robot::InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::R
             tf::poseMsgToEigen(req.pose, iso);
             iDynTree::Transform trans;
             iDynTree::fromEigen(trans, iso.matrix());
-            ik[req.endeffector].addTarget(req.frame, trans);
+            ik[req.endeffector].addTarget(req.target_frame, trans);
             break;
         }
         case 1: {
             iDynTree::Position pos(req.pose.position.x, req.pose.position.y, req.pose.position.z);
-            ik[req.endeffector].addPositionTarget(req.frame, pos);
+            ik[req.endeffector].addPositionTarget(req.target_frame, pos);
             break;
         }
         case 2: {
@@ -822,7 +851,7 @@ bool Robot::InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::R
             Eigen::Matrix3d rot = q.matrix();
             iDynTree::Rotation r(rot(0, 0), rot(0, 1), rot(0, 2), rot(1, 0), rot(1, 1), rot(1, 2), rot(2, 0), rot(2, 1),
                                  rot(2, 2));
-            ik[req.endeffector].addRotationTarget(req.frame, r);
+            ik[req.endeffector].addRotationTarget(req.target_frame, r);
             break;
         }
     }
@@ -842,20 +871,20 @@ bool Robot::InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::R
             case 0:
                 ROS_ERROR("unable to solve full pose ik for endeffector %s and target frame %s:\n"
                           "target_position    %.3lf %.3lf %.3lf"
-                          "target_orientation %.3lf %.3lf %.3lf %.3lf", req.endeffector.c_str(), req.frame.c_str(),
+                          "target_orientation %.3lf %.3lf %.3lf %.3lf", req.endeffector.c_str(), req.target_frame.c_str(),
                           req.pose.position.x, req.pose.position.y, req.pose.position.z,
                           req.pose.orientation.w, req.pose.orientation.x, req.pose.orientation.y,
                           req.pose.orientation.z);
                 break;
             case 1:
                 ROS_ERROR("unable to solve position ik for endeffector %s and target frame %s:\n"
-                          "target_position    %.3lf %.3lf %.3lf", req.endeffector.c_str(), req.frame.c_str(),
+                          "target_position    %.3lf %.3lf %.3lf", req.endeffector.c_str(), req.target_frame.c_str(),
                           req.pose.position.x, req.pose.position.y, req.pose.position.z);
                 break;
 
             case 2:
                 ROS_ERROR("unable to solve orientation ik for endeffector %s and target frame %s:\n"
-                          "target_orientation %.3lf %.3lf %.3lf %.3lf", req.endeffector.c_str(), req.frame.c_str(),
+                          "target_orientation %.3lf %.3lf %.3lf %.3lf", req.endeffector.c_str(), req.target_frame.c_str(),
                           req.pose.orientation.w, req.pose.orientation.x, req.pose.orientation.y,
                           req.pose.orientation.z);
                 break;
@@ -873,7 +902,7 @@ void Robot::InteractiveMarkerFeedback( const visualization_msgs::InteractiveMark
         roboy_middleware_msgs::InverseKinematics msg2;
         msg2.request.pose = msg->pose;
         msg2.request.endeffector = msg->marker_name;
-        msg2.request.frame = msg->marker_name;
+        msg2.request.target_frame = msg->marker_name;
         msg2.request.type = 1;
         if(InverseKinematicsService(msg2.request,msg2.response)){
             int index = endeffector_index[msg->marker_name];
@@ -904,6 +933,94 @@ void Robot::FloatingBase(const geometry_msgs::PoseConstPtr &msg) {
     Isometry3d iso;
     tf::poseMsgToEigen(*msg, iso);
     world_H_base = iso.matrix();
+}
+
+void Robot::MoveEndEffector(const roboy_control_msgs::MoveEndEffectorGoalConstPtr &goal){
+    roboy_control_msgs::MoveEndEffectorFeedback feedback;
+    roboy_control_msgs::MoveEndEffectorResult result;
+    bool success = true, timeout = false;
+
+    double error = 10000;
+    ros::Time last_feedback_time = ros::Time::now(), start_time = ros::Time::now();
+    bool ik_solution_available = false;
+
+    auto it = find(endeffectors.begin(),endeffectors.end(),goal->endeffector);
+    if (it == endeffectors.end()) {
+        ROS_WARN_STREAM("MoveEndEffector: FAILED endeffector " << goal->endeffector << " does not exist");
+        moveEndEffector_as[goal->endeffector]->setAborted(result, "endeffector " + goal->endeffector + " does not exist");
+        return;
+    }
+
+//    moveEndEffector_as[casp]->acceptNewGoal();
+
+    roboy_middleware_msgs::InverseKinematics srv;
+    srv.request.type = goal->ik_type;
+    srv.request.target_frame = goal->target_frame;
+    srv.request.endeffector = goal->endeffector;
+
+    switch (goal->type) {
+        case 0: {
+            srv.request.pose = goal->pose;
+            break;
+        }
+        case 1: {
+            geometry_msgs::Pose p;
+            getTransform("world",goal->target_frame,p);
+            Quaterniond q0(p.orientation.w,p.orientation.x,p.orientation.y,p.orientation.z);
+            Quaterniond q1(goal->pose.orientation.w,goal->pose.orientation.x,goal->pose.orientation.y,goal->pose.orientation.z);
+            Quaterniond q2 = q0*q1;
+            p.orientation.w = q.w();
+            p.orientation.x = q.x();
+            p.orientation.y = q.y();
+            p.orientation.z = q.z();
+            srv.request.pose = p;
+            break;
+        }
+        default:
+            success = false;
+    }
+
+    publishCube(srv.request.pose, "world", "ik_target", 696969, COLOR(0, 1, 0, 1), 0.05, goal->timeout);
+
+    while (error > goal->tolerance && success && !timeout) {
+        if (moveEndEffector_as[goal->endeffector]->isPreemptRequested() || !ros::ok()) {
+            ROS_INFO("LookAt: Preempted");
+            // set the action state to preempted
+            moveEndEffector_as[goal->endeffector]->setPreempted();
+            timeout = true;
+        }
+
+        if (!ik_solution_available && (goal->type == 0 || goal->type == 1)) {
+            if (InverseKinematicsService(srv.request, srv.response)) {
+                ik_solution_available = true;
+                for (int i = 0; i < number_of_dofs; i++) {
+                    q_target[i] = srv.response.angles[i];
+                }
+            } else {
+                ik_solution_available = false;
+            }
+        }
+
+        if ((ros::Time::now() - last_feedback_time).toSec() > 1) {
+            last_feedback_time = ros::Time::now();
+            // publish the feedback
+            feedback.error = error;
+            moveEndEffector_as[goal->endeffector]->publishFeedback(feedback);
+        }
+        if ((ros::Time::now() - start_time).toSec() > goal->timeout) {
+            ROS_ERROR("move endeffector timeout %d", goal->timeout);
+            success = false;
+        }
+    }
+    // publish the feedback
+    moveEndEffector_as[goal->endeffector]->publishFeedback(feedback);
+    if (error < goal->tolerance && success && !timeout) {
+        ROS_INFO("MoveEndEffector: Succeeded");
+        moveEndEffector_as[goal->endeffector]->setSucceeded(result, "done");
+    } else {
+        ROS_WARN("MoveEndEffector: FAILED");
+        moveEndEffector_as[goal->endeffector]->setAborted(result, "failed");
+    }
 }
 
 bool Robot::parseViapoints(const string &viapoints_file_path, vector<Cable> &cables) {

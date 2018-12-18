@@ -7,18 +7,18 @@
 
 using namespace std;
 
-class RoboyUpperBody: public cardsflow::kindyn::Robot{
+class Rikshaw: public cardsflow::kindyn::Robot{
 public:
     /**
      * Constructor
      * @param urdf path to urdf
      * @param cardsflow_xml path to cardsflow xml
      */
-    RoboyUpperBody(string urdf, string cardsflow_xml){
+    Rikshaw(string urdf, string cardsflow_xml){
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
-            ros::init(argc, argv, "roboy_upper_body");
+            ros::init(argc, argv, "rikshaw");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
@@ -40,10 +40,10 @@ public:
                 ROS_WARN("failed to change control mode to position");
         }
         update();
-        for(auto ef:endeffectors) {
-            for(int i=0;i<sim_motors[ef].size();i++)
-                l_offset[ef][i] = l[sim_motors[ef][i]];
-        }
+//        for(auto ef:endeffectors) {
+//            for(int i=0;i<sim_motors[ef].size();i++)
+//                l_offset[ef][i] = l[sim_motors[ef][i]];
+//        }
     };
     /**
      * Updates the robot model and integrates the robot model using the forwardKinematics function
@@ -58,34 +58,34 @@ public:
      * Sends motor commands to the real robot
      */
     void write(){
-        stringstream str;
-        for(auto ef:endeffectors) {
-            str << ef << ": ";
-            roboy_middleware_msgs::MotorCommand msg;
-            msg.id = bodyPartIDs[ef];
-            msg.motors = motors[ef];
-            for (int i = 0; i < sim_motors[ef].size(); i++) {
-                double l_meter = -l[sim_motors[ef][i]];
-                str  <<  l_meter << "\t";
-                switch(motor_type[msg.id][i]){
-                    case MYOBRICK100N:{
-                        msg.set_points.push_back(myoBrick100NEncoderTicksPerMeter(l_meter));
-                        break;
-                    }
-                    case MYOBRICK300N:{
-                        msg.set_points.push_back(myoBrick300NEncoderTicksPerMeter(l_meter));
-                        break;
-                    }
-                    case MYOMUSCLE500N:{
-                        msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(l_meter));
-                        break;
-                    }
-                }
-            }
-            str << endl;
-            motor_command.publish(msg);
-        }
-        ROS_INFO_STREAM_THROTTLE(1, str.str());
+//        stringstream str;
+//        for(auto ef:endeffectors) {
+//            str << ef << ": ";
+//            roboy_middleware_msgs::MotorCommand msg;
+//            msg.id = bodyPartIDs[ef];
+//            msg.motors = motors[ef];
+//            for (int i = 0; i < sim_motors[ef].size(); i++) {
+//                double l_meter = -l[sim_motors[ef][i]];
+//                str  <<  l_meter << "\t";
+//                switch(motor_type[msg.id][i]){
+//                    case MYOBRICK100N:{
+//                        msg.set_points.push_back(myoBrick100NEncoderTicksPerMeter(l_meter));
+//                        break;
+//                    }
+//                    case MYOBRICK300N:{
+//                        msg.set_points.push_back(myoBrick300NEncoderTicksPerMeter(l_meter));
+//                        break;
+//                    }
+//                    case MYOMUSCLE500N:{
+//                        msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(l_meter));
+//                        break;
+//                    }
+//                }
+//            }
+//            str << endl;
+//            motor_command.publish(msg);
+//        }
+//        ROS_INFO_STREAM_THROTTLE(1, str.str());
     };
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
@@ -147,7 +147,7 @@ int main(int argc, char *argv[]) {
     }
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
-    RoboyUpperBody robot(urdf, cardsflow_xml);
+    Rikshaw robot(urdf, cardsflow_xml);
 
     controller_manager::ControllerManager cm(&robot);
 
