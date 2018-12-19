@@ -96,7 +96,7 @@ public:
      * @param time current time
      */
     void starting(const ros::Time& time) {
-        ROS_WARN("cable length velocity controller started for %s with index %d", joint_name.c_str(), joint_index);
+        ROS_WARN("cable length controller started for %s with index %d", joint_name.c_str(), joint_index);
         roboy_simulation_msgs::ControllerType msg;
         msg.joint_name = joint_name;
         msg.type = CARDSflow::ControllerType::cable_length_controller;

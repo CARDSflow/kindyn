@@ -60,6 +60,59 @@ def plotPedalTrajectories():
     plt.legend()
     plt.show()
 
+def plotEverything(numSamples, jointAngleDict):
+
+    plt.figure(1)
+    plt.title('Pedal trajectory planned and ik result')
+    capturedPositions = getPedalPositions(numSamples)
+    x_values = []
+    z_values = []
+    for pointIterator in capturedPositions:
+        x_values.append(pointIterator[1])
+        z_values.append(pointIterator[3])
+    plt.plot(x_values, z_values,label="Ideal")
+    for pointIter in range(jointAngleDict["num_points"]):
+        if "point_"+str(pointIter) in jointAngleDict:
+            if "Pedal" in jointAngleDict["point_"+str(pointIter)]:
+                plt.plot(jointAngleDict["point_"+str(pointIter)]["Pedal"][0], jointAngleDict["point_"+str(pointIter)]["Pedal"][1], 'rs',label="IK recorded")
+
+    
+    plt.figure(2)
+    plt.title('Hip positions')
+    x_values = []
+    z_values = []
+    for pointIter in range(jointAngleDict["num_points"]):
+        if "point_"+str(pointIter) in jointAngleDict:
+            if "Hip" in jointAngleDict["point_"+str(pointIter)]:
+                x_values.append(pointIter)
+                z_values.append(jointAngleDict["point_"+str(pointIter)]["Hip"])
+    plt.plot(x_values, z_values)
+
+    plt.figure(3)
+    plt.title('Knee positions')
+    x_values = []
+    z_values = []
+    for pointIter in range(jointAngleDict["num_points"]):
+        if "point_"+str(pointIter) in jointAngleDict:
+            if "Knee" in jointAngleDict["point_"+str(pointIter)]:
+                x_values.append(pointIter)
+                z_values.append(jointAngleDict["point_"+str(pointIter)]["Knee"])
+    plt.plot(x_values, z_values)
+
+    plt.figure(4)
+    plt.title('Ankle positions')
+    x_values = []
+    z_values = []
+    for pointIter in range(jointAngleDict["num_points"]):
+        if "point_"+str(pointIter) in jointAngleDict:
+            if "Ankle" in jointAngleDict["point_"+str(pointIter)]:
+                x_values.append(pointIter)
+                z_values.append(jointAngleDict["point_"+str(pointIter)]["Ankle"])
+    plt.plot(x_values, z_values)
+
+    plt.show()
+
+
 
 def inverse_kinematics_client(endeffector, frame, x, y, z):
     rospy.wait_for_service('ik')
@@ -109,15 +162,17 @@ def main():
         thisZ = capturedPositions[pointIter][3]
         jointAngleResult = inverse_kinematics_client(endeffector, frame, thisX, y_offset, thisZ)
         if (jointAngleResult and ("joint_hip_right" in jointAngleResult) and ("joint_knee_right" in jointAngleResult) and ("joint_foot_right" in jointAngleResult)):
-		jointAngleDict["point_"+str(pointIter)] = {}
-		jointAngleDict["point_"+str(pointIter)]["Pedal"] = [thisX, thisZ]
-		jointAngleDict["point_"+str(pointIter)]["Hip"] = jointAngleResult["joint_hip_right"]
-		jointAngleDict["point_"+str(pointIter)]["Knee"] = jointAngleResult["joint_knee_right"]
-		jointAngleDict["point_"+str(pointIter)]["Ankle"] = jointAngleResult["joint_foot_right"]
+    		jointAngleDict["point_"+str(pointIter)] = {}
+    		jointAngleDict["point_"+str(pointIter)]["Pedal"] = [thisX, thisZ]
+    		jointAngleDict["point_"+str(pointIter)]["Hip"] = jointAngleResult["joint_hip_right"]
+    		jointAngleDict["point_"+str(pointIter)]["Knee"] = jointAngleResult["joint_knee_right"]
+    		jointAngleDict["point_"+str(pointIter)]["Ankle"] = jointAngleResult["joint_foot_right"]
 
-    print(jointAngleDict)
+    #print(jointAngleDict)
     with open(JSON_FILENAME, "w") as write_file:
         json.dump(jointAngleDict, write_file, indent=4, sort_keys=True)
+
+    plotEverything(num_points, jointAngleDict)
 
     return 1
 

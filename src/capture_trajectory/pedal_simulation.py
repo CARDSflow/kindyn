@@ -4,7 +4,8 @@ import math
 import time
 
 import rospy
-from roboy_middleware_msgs.srv import InverseKinematics
+from roboy_middleware_msgs.srv import InverseKinematics, ForwardKinematics
+from roboy_simulation_msgs.msg import JointState
 from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Float32
 
@@ -13,21 +14,29 @@ from std_msgs.msg import Float32
 ###   MODULE PARAMETERS   ###
 #############################
 
+PRINT_DEBUG = True
+
 RECORDED_TRAJECTORY_FILENAME = "captured_trajectory_ik.json"
 
-PEDAL_POSITION_ERROR_TOLERANCE = 10  # [millimeters]
-PEDAL_SINGLE_ROTATION_DURATION = 10  # [seconds]
+PEDAL_POSITION_ERROR_TOLERANCE = 0.02  # [meters]
+PEDAL_SINGLE_ROTATION_DURATION = 30  # [seconds]
 TRAJECTORY_POINT_DURATION      = 1
-CONTROLLER_FREQUENCY           = 20  # [Hz]
+CONTROLLER_FREQUENCY           = 50  # [Hz]
 
 ############################
 ###   GLOBAL VARIABLES   ###
 ############################
 
+ROS_JOINT_HIP_RIGHT   = "joint_hip_right"
+ROS_JOINT_KNEE_RIGHT  = "joint_knee_right"
+ROS_JOINT_ANKLE_RIGHT = "joint_foot_right"
+ROS_JOINT_HIP_LEFT    = "joint_hip_left"
+ROS_JOINT_KNEE_LEFT   = "joint_knee_left"
+ROS_JOINT_ANKLE_LEFT  = "joint_foot_left"
+
 RIGHT_HIP_JOINT   = "right_hip"
 RIGHT_KNEE_JOINT  = "right_knee"
 RIGHT_ANKLE_JOINT = "right_ankle"
-
 LEFT_HIP_JOINT    = "left_hip"
 LEFT_KNEE_JOINT   = "left_knee"
 LEFT_ANKLE_JOINT  = "left_ankle"
@@ -116,6 +125,33 @@ _jointsControlData = {
     LEFT_ANKLE_JOINT:   _parametersLeftAnkle
 }
 
+_jointsStatusData = {
+    RIGHT_HIP_JOINT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    },
+    LEFT_HIP_JOINT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    },
+    RIGHT_KNEE_JOINT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    },
+    LEFT_KNEE_JOINT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    },
+    RIGHT_ANKLE_JOINT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    },
+    LEFT_ANKLE_JOINT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    }
+}
+
 numTrajectoryPoints = 0
 trajectoryStartingPoint = 0
 
@@ -128,7 +164,37 @@ ankleTrajectory = []
 ###   UTILITY FUNCTIONS   ###
 ##############################
 
+def jointStateCallback(joint_data):
+    global _jointsStatusData
+    # Assert order of joints
+    for stringIter in range(len(joint_data.names)):
+        if joint_data.names[stringIter] == ROS_JOINT_HIP_RIGHT:
+            _jointsStatusData[RIGHT_HIP_JOINT]["Pos"] = joint_data.q[stringIter]
+            _jointsStatusData[RIGHT_HIP_JOINT]["Vel"] = joint_data.qd[stringIter]
+        elif joint_data.names[stringIter] == ROS_JOINT_HIP_LEFT:
+            _jointsStatusData[LEFT_HIP_JOINT]["Pos"] = joint_data.q[stringIter]
+            _jointsStatusData[LEFT_HIP_JOINT]["Vel"] = joint_data.qd[stringIter]
+        elif joint_data.names[stringIter] == ROS_JOINT_KNEE_RIGHT:
+            _jointsStatusData[RIGHT_KNEE_JOINT]["Pos"] = joint_data.q[stringIter]
+            _jointsStatusData[RIGHT_KNEE_JOINT]["Vel"] = joint_data.qd[stringIter]
+        elif joint_data.names[stringIter] == ROS_JOINT_KNEE_LEFT:
+            _jointsStatusData[LEFT_KNEE_JOINT]["Pos"] = joint_data.q[stringIter]
+            _jointsStatusData[LEFT_KNEE_JOINT]["Vel"] = joint_data.qd[stringIter]
+        elif joint_data.names[stringIter] == ROS_JOINT_ANKLE_RIGHT:
+            _jointsStatusData[RIGHT_ANKLE_JOINT]["Pos"] = joint_data.q[stringIter]
+            _jointsStatusData[RIGHT_ANKLE_JOINT]["Vel"] = joint_data.qd[stringIter]
+        elif joint_data.names[stringIter] == ROS_JOINT_ANKLE_LEFT:
+            _jointsStatusData[LEFT_ANKLE_JOINT]["Pos"] = joint_data.q[stringIter]
+            _jointsStatusData[LEFT_ANKLE_JOINT]["Vel"] = joint_data.qd[stringIter]
+
 def importJointTrajectoryRecord():
+
+    global numTrajectoryPoints
+    global pedalTrajectory
+    global hipTrajectory
+    global kneeTrajectory
+    global ankleTrajectory
+    global PRINT_DEBUG
 
     with open(RECORDED_TRAJECTORY_FILENAME, "r") as read_file:
         loaded_data = json.load(read_file)
@@ -152,28 +218,67 @@ def importJointTrajectoryRecord():
 	else:
 		numTrajectoryPoints -= 1
 
-    print("--------- Num trajectory points:")
-    print(numTrajectoryPoints)
-    print("--------- Hip trajectory:")
-    print(hipTrajectory)
-    print("--------- Knee trajectory:")
-    print(kneeTrajectory)
-    print("--------- Ankle trajectory:")
-    print(ankleTrajectory)
+    if PRINT_DEBUG:
+        print("--------- Num trajectory points:")
+        print(numTrajectoryPoints)
+        print("--------- Hip trajectory:")
+        print(hipTrajectory)
+        print("--------- Knee trajectory:")
+        print(kneeTrajectory)
+        print("--------- Ankle trajectory:")
+        print(ankleTrajectory)
 
-    return numTrajectoryPoints
 
 def getJointPosition(jointName):
-
-    return 1
+    return _jointsStatusData[jointName]["Pos"]
 
 def setJointPosition(jointName):
-
     return 1
 
-def getPedalPosition():
+def getJointVelocity(jointName):
+    return _jointsStatusData[jointName]["Vel"]
 
-    return [0.0, 0.0] #[x, y]
+def getPosition(endeffector, frame):
+    fkJointNamesList = [ROS_JOINT_HIP_RIGHT, ROS_JOINT_HIP_LEFT, ROS_JOINT_KNEE_RIGHT, ROS_JOINT_KNEE_LEFT, ROS_JOINT_ANKLE_RIGHT, ROS_JOINT_ANKLE_LEFT]
+    fkJointPositions = [_jointsStatusData[RIGHT_HIP_JOINT]["Pos"], _jointsStatusData[LEFT_HIP_JOINT]["Pos"], _jointsStatusData[RIGHT_KNEE_JOINT]["Pos"], _jointsStatusData[LEFT_KNEE_JOINT]["Pos"], _jointsStatusData[RIGHT_ANKLE_JOINT]["Pos"], _jointsStatusData[LEFT_ANKLE_JOINT]["Pos"]]
+
+    rospy.wait_for_service('fk')
+    try:
+        fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
+        fk_result = fk_srv(endeffector, frame, fkJointNamesList, fkJointPositions)
+        return [fk_result.pose.position.x, fk_result.pose.position.z]
+
+    except rospy.ServiceException, e:
+        print "Service call failed: %s"%e
+    return [0.0, 0.0] #[x, z]
+
+def getPositionLeftFoot():
+    fkJointNamesList = [ROS_JOINT_HIP_LEFT, ROS_JOINT_KNEE_LEFT, ROS_JOINT_ANKLE_LEFT]
+    fkJointPositions = [_jointsStatusData[LEFT_HIP_JOINT]["Pos"], _jointsStatusData[LEFT_KNEE_JOINT]["Pos"], _jointsStatusData[LEFT_ANKLE_JOINT]["Pos"]]
+
+    rospy.wait_for_service('fk')
+    try:
+        fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
+        fk_result = fk_srv("pedal_left", "pedal_left", fkJointNamesList, fkJointPositions)
+        return [fk_result.pose.position.x, fk_result.pose.position.z]
+
+    except rospy.ServiceException, e:
+        print "Service call failed: %s"%e
+    return [0.0, 0.0] #[x, z]
+
+def getPositionRightFoot():
+    fkJointNamesList = [ROS_JOINT_HIP_RIGHT, ROS_JOINT_KNEE_RIGHT, ROS_JOINT_ANKLE_RIGHT]
+    fkJointPositions = [_jointsStatusData[RIGHT_HIP_JOINT]["Pos"], _jointsStatusData[RIGHT_KNEE_JOINT]["Pos"], _jointsStatusData[RIGHT_ANKLE_JOINT]["Pos"]]
+
+    rospy.wait_for_service('fk')
+    try:
+        fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
+        fk_result = fk_srv("pedal_right", "pedal_right", fkJointNamesList, fkJointPositions)
+        return [fk_result.pose.position.x, fk_result.pose.position.z]
+
+    except rospy.ServiceException, e:
+        print "Service call failed: %s"%e
+    return [0.0, 0.0] #[x, z]
 
 def getDistance(point1,point2):
 
@@ -183,23 +288,55 @@ def getDistance(point1,point2):
     return math.sqrt(x_diff*x_diff + y_diff*y_diff)
 
 def setPedalSingleRotationDuration(new_duration_seconds):
+    global PEDAL_SINGLE_ROTATION_DURATION
     PEDAL_SINGLE_ROTATION_DURATION = new_duration_seconds
     setTrajectoryPointDuration()
     return 1
 
 def setTrajectoryPointDuration():
-    #if numTrajectoryPoints != 0:
-    #    TRAJECTORY_POINT_DURATION = float(PEDAL_SINGLE_ROTATION_DURATION) / numTrajectoryPoints
-    #else:
-    #    TRAJECTORY_POINT_DURATION = 1
-    #    return 0
-    TRAJECTORY_POINT_DURATION = 3
+    global TRAJECTORY_POINT_DURATION
+    if numTrajectoryPoints != 0:
+        TRAJECTORY_POINT_DURATION = float(PEDAL_SINGLE_ROTATION_DURATION) / numTrajectoryPoints
+    else:
+        TRAJECTORY_POINT_DURATION = 1
+        return 0
+
     return 1
 
 def interpolateTrajectoryPoints(jointName, value1, value2, startTime, currTime, endTime):
     if currTime > endTime:
         return value2
     return value1 + (value2 - value1)*(float(currTime - startTime)/(endTime - startTime))
+
+
+#############################
+###   CONTROL FUNCTIONS   ###
+#############################
+
+# PID Controller
+def computeVelocitySetpoint(jointName, goalPos, currTime, endTime):
+
+    global _jointsControlData
+
+
+    currPos = getJointPosition(jointName)
+    jointTravelDistance = goalPos - currPos
+    if currTime < endTime:
+        jointTravelTime = endTime - currTime
+    else:
+        jointTravelTime = 1
+
+    jointVelocityReachGoal = float(jointTravelDistance) / jointTravelTime
+
+    print("COMPUTED %s VELOCITY SETPOINT: %s (jointTravelTime: %s, jointTravelDistance: %s)" % (jointName, jointVelocityReachGoal, jointTravelTime, jointTravelDistance))
+
+    _jointsControlData[jointName]["pos_error_integral"] += jointTravelDistance
+    #_jointsControlData[jointName]["prev_time"] = currTime
+    #_jointsControlData[jointName]["prev_pos"] = currPos
+    #_jointsControlData[jointName]["prev_error"] = thisPosError
+    #return _jointsControlData[jointName]["param_p"]*thisPosError + _jointsControlData[jointName]["param_i"]*_jointsControlData[jointName]["error_integral"] + _jointsControlData[jointName]["param_d"]*thisPosErrorDerivative
+
+    return jointVelocityReachGoal + 0.1*_jointsControlData[jointName]["pos_error_integral"]
 
 
 #########################
@@ -211,6 +348,10 @@ PEDAL             = "PEDAL"
 UPDATE_PARAMETERS = "UPDATE_PARAMETERS"
 
 def FSM():
+
+    global numTrajectoryPoints
+    global _jointsControlData
+    global _jointsList
 
     _runFSM = 1
 
@@ -225,7 +366,11 @@ def FSM():
     ros_right_hip_publisher = rospy.Publisher('/joint_hip_right/joint_hip_right/target', Float32, queue_size=2)
     ros_right_knee_publisher = rospy.Publisher('/joint_knee_right/joint_knee_right/target', Float32, queue_size=2)
     ros_right_ankle_publisher = rospy.Publisher('/joint_foot_right/joint_foot_right/target', Float32, queue_size=2)
-    rospy.init_node('pedal_simulation_ddr', anonymous=True)
+
+    ros_left_hip_publisher = rospy.Publisher('/joint_hip_left/joint_hip_left/target', Float32, queue_size=2)
+    ros_left_knee_publisher = rospy.Publisher('/joint_knee_left/joint_knee_left/target', Float32, queue_size=2)
+    ros_left_ankle_publisher = rospy.Publisher('/joint_foot_left/joint_foot_left/target', Float32, queue_size=2)
+
 
     while _runFSM:
 
@@ -233,7 +378,7 @@ def FSM():
         if _currState == INIT:
         ##############################################
 
-            numTrajectoryPoints = importJointTrajectoryRecord()
+            importJointTrajectoryRecord()
             setTrajectoryPointDuration()
 
             # Find starting point on the trajectory
@@ -262,16 +407,16 @@ def FSM():
             _prevTime = _currTime
 
             # Check if trajectory point reached and act accordingly
-            #if getDistance(getPedalPosition, pedalTrajectory[_currTrajectoryPoint]) <= PEDAL_POSITION_ERROR_TOLERANCE:
-            if float(float(_currTime) - float(_startTime)) > TRAJECTORY_POINT_DURATION:
-                print("CURR TRAJECTORY POINT: %s. NUM TRAJECTORY POINTS (-1): %s " % (_currTrajectoryPoint, (numTrajectoryPoints-1)))
+            if getDistance(getPositionLeftFoot(), pedalTrajectory[_currTrajectoryPoint]) <= PEDAL_POSITION_ERROR_TOLERANCE and getDistance(getPositionRightFoot(), pedalTrajectory[_currTrajectoryPoint]) <= PEDAL_POSITION_ERROR_TOLERANCE and _currTime >= _endTime:
                 for thisJointName in _jointsList:
                     _jointsControlData[thisJointName]["trajectory_startpoint"] = hipTrajectory[_currTrajectoryPoint]
+                    _jointsControlData[thisJointName]["pos_error_integral"] = 0
                 if (_currTrajectoryPoint < (numTrajectoryPoints-1)):
                     _currTrajectoryPoint += 1
                 elif (_currTrajectoryPoint >= (numTrajectoryPoints-1)):
                     _currTrajectoryPoint = 0
-                print("UPDATING TRAJECTORY POINT. NEW POINT: %s" % (_currTrajectoryPoint))
+                if PRINT_DEBUG:
+                    print("UPDATING TRAJECTORY POINT. NEW POINT: %s" % (_currTrajectoryPoint))
                 _startTime = time.time()
                 _endTime = _startTime + TRAJECTORY_POINT_DURATION
 
@@ -286,15 +431,25 @@ def FSM():
                 elif ((thisJointName == RIGHT_ANKLE_JOINT) or (thisJointName == LEFT_ANKLE_JOINT)):
                     thisJointPositionGoalpoint = ankleTrajectory[_currTrajectoryPoint]
 
-                #_currTime = time.time()
-                thisJointPositionSetpoint = thisJointPositionGoalpoint  #interpolateTrajectoryPoints(thisJointName, _jointsControlData[thisJointName]["trajectory_startpoint"], thisJointPositionGoalpoint, _startTime, _currTime, _endTime)
+
+                _currTime = time.time()
+
+                #thisJointPositionSetpoint = interpolateTrajectoryPoints(thisJointName, _jointsControlData[thisJointName]["trajectory_startpoint"], thisJointPositionGoalpoint, _startTime, _currTime, _endTime)
+
+                thisJointVelocitySetpoint = computeVelocitySetpoint(thisJointName, thisJointPositionGoalpoint, _currTime, _endTime)
 
                 if thisJointName == RIGHT_HIP_JOINT:
-                    ros_right_hip_publisher.publish(thisJointPositionSetpoint)
+                    ros_right_hip_publisher.publish(thisJointVelocitySetpoint)
                 elif thisJointName == RIGHT_KNEE_JOINT:
-                    ros_right_knee_publisher.publish(thisJointPositionSetpoint)
+                    ros_right_knee_publisher.publish(thisJointVelocitySetpoint)
                 elif thisJointName == RIGHT_ANKLE_JOINT:
-                    ros_right_ankle_publisher.publish(thisJointPositionSetpoint)
+                    ros_right_ankle_publisher.publish(thisJointVelocitySetpoint)
+                elif thisJointName == LEFT_HIP_JOINT:
+                    ros_left_hip_publisher.publish(thisJointVelocitySetpoint)
+                elif thisJointName == LEFT_KNEE_JOINT:
+                    ros_left_knee_publisher.publish(thisJointVelocitySetpoint)
+                elif thisJointName == LEFT_ANKLE_JOINT:
+                    ros_left_ankle_publisher.publish(thisJointVelocitySetpoint)
 
         ##############################################
         #if _currState == UPDATE_PARAMETERS:
@@ -310,6 +465,9 @@ def FSM():
 
 def main():
 
+    rospy.init_node('pedal_simulation', anonymous=True)
+    rospy.Subscriber("joint_state", JointState, jointStateCallback)
+
     FSM()
 
     return 1
@@ -317,4 +475,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
