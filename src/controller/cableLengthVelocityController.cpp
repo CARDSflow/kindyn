@@ -130,7 +130,7 @@ public:
         return true;
     }
 private:
-    double Kp = 1, Kd = 0; /// PD gains
+    double Kp = 0.1, Kd = 0; /// PD gains
     double p_error_last = 0; /// last error
     ros::NodeHandle nh; /// ROS nodehandle
     ros::Publisher controller_state; /// publisher for controller state
