@@ -4,12 +4,10 @@
 #include <roboy_simulation_msgs/GymStep.h>
 #include <roboy_simulation_msgs/GymReset.h>
 
-#define SPINDLERADIUS 0.0045
-#define FS5103R_MAX_SPEED (2.0*M_PI/0.9) // radian per second
-
-#define FS5103R_FULL_SPEED_BACKWARDS 400.0
-#define FS5103R_STOP 375.0
-#define FS5103R_FULL_SPEED_FORWARDS 350.0
+#define NUMBER_OF_MOTORS 8
+#define SPINDLERADIUS 0.00575
+#define msjMeterPerEncoderTick(encoderTicks) (((encoderTicks)/(4096.0)*(2.0*M_PI*SPINDLERADIUS)))
+#define msjEncoderTicksPerMeter(meter) ((meter)*(4096.0)/(2.0*M_PI*SPINDLERADIUS))
 
 using namespace std;
 
@@ -58,6 +56,11 @@ public:
         }else{
             cout << "could not open " << path << endl;
         }
+
+        update();
+        for(int i=0;i<NUMBER_OF_MOTORS;i++)
+            l_offset[i] = l[i];
+
     };
 
     /**
@@ -67,25 +70,8 @@ public:
     void read(){
         update();
         if(!external_robot_state)
-            forwardKinematics(0.000001);
+            forwardKinematics(0.0001);
     };
-
-    /**
-     * Converts tendon length chages from the cable model to pwm commands of the real robot
-     * @param meterPerSecond tendon length change
-     * @return pwm
-     */
-    int meterPerSecondToServoSpeed(double meterPerSecond){
-        double radianPerSecond = meterPerSecond/(2.0 * M_PI * SPINDLERADIUS);
-        double pwm = radianPerSecond;
-        if(pwm<=-1){
-            return FS5103R_FULL_SPEED_BACKWARDS;
-        }else if(pwm>-1 && pwm<1){
-            return -pwm*(FS5103R_FULL_SPEED_BACKWARDS-FS5103R_STOP)+FS5103R_STOP;
-        }else{
-            return FS5103R_FULL_SPEED_FORWARDS;
-        }
-    }
 
     /**
      * Sends motor commands to the real robot
@@ -94,12 +80,14 @@ public:
         roboy_middleware_msgs::MotorCommand msg;
         msg.id = 5;
         stringstream str;
-        for (int i = 0; i < number_of_cables; i++) {
+        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
             msg.motors.push_back(i);
-            msg.set_points.push_back(meterPerSecondToServoSpeed(Ld[i])); //
-            str << meterPerSecondToServoSpeed(Ld[i]) << "\t" << Ld[i] << "\t";
+            double l_change = l[i]-l_offset[i];
+            msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
+            str << l_change << "\t";
         }
 		//ROS_INFO_STREAM_THROTTLE(1,str.str());
+
         motor_command.publish(msg);
     };
 
@@ -121,12 +109,15 @@ public:
         	update();
 	        for(int i=0; i< number_of_cables; i++){
 	        	//Set the commanded tendon velocity from RL agent to simulation 
-	        	Ld[i] = req.set_points[i]; 	
+	        	Ld[0][i] = req.set_points[i];
 	        }
 	        if(!external_robot_state)
 	            forwardKinematics(req.step_size);
 
 	        //ROS_INFO_STREAM_THROTTLE(5, "Ld = " << Ld.format(fmt));
+
+	        ROS_INFO_STREAM_THROTTLE(5, "Ld = \n" << Ld[0].format(fmt));
+
 	        write();
 	        ROS_INFO("Gymstep is done");
 	    }
@@ -179,6 +170,8 @@ public:
     ros::ServiceServer gym_step; //OpenAI Gym training environment step function, ros service instance
     ros::ServiceServer gym_reset; //OpenAI Gym training environment reset function, ros service instance
     vector<double> limits[3];
+    double l_offset[NUMBER_OF_MOTORS];
+
 };
 
 /**

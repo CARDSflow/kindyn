@@ -1,5 +1,6 @@
 <launch>
     <arg name="robot_name" default="msj_platform"/>
+    <arg name="model_name" default="msj_platform"/>
     <arg name="start_controllers" default="sphere_axis0 sphere_axis1 sphere_axis2"/>
     <arg name="gazebo" default="false"/>
     <arg name="paused" default="false"/>
@@ -10,11 +11,12 @@
     <arg name="external_robot_state" default="false"/>
 
     <param name="robot_name" type="string" value="$(arg robot_name)"  />
-    <param name="robot_description" textfile="$(find robots)/$(arg robot_name)/model.urdf" />
-    <param name="urdf_file_path" type="string" value="$(find robots)/$(arg robot_name)/model.urdf" />
-    <param name="cardsflow_xml" type="string" value="$(find robots)/$(arg robot_name)/cardsflow.xml" />
-    <rosparam file="$(find robots)/$(arg robot_name)/config/controller.yaml" command="load"/>
-    <rosparam file="$(find robots)/$(arg robot_name)/config/endeffectors.yaml" command="load"/>
+    <param name="model_name" type="string" value="$(arg model_name)"  />
+    <param name="robot_description" textfile="$(find robots)/$(arg model_name)/model.urdf" />
+    <param name="urdf_file_path" type="string" value="$(find robots)/$(arg model_name)/model.urdf" />
+    <param name="cardsflow_xml" type="string" value="$(find robots)/$(arg model_name)/cardsflow.xml" />
+    <rosparam file="$(find robots)/$(arg model_name)/config/controller.yaml" command="load"/>
+    <rosparam file="$(find robots)/$(arg model_name)/config/endeffectors.yaml" command="load"/>
     <param name="Kp" type="double" value="100"  />
     <param name="Kd" type="double" value="10"  />
     <rosparam param="q_target">[0.0, 0.0, 0.0]</rosparam>
@@ -49,7 +51,7 @@
             <arg name="headless" value="$(arg headless)"/>
         </include>
         <node name="robot_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-              args="-sdf -file $(find robots)/$(arg robot_name)/model.sdf -model $(arg robot_name)"
+              args="-sdf -file $(find robots)/$(arg model_name)/model.sdf -model $(arg model_name)"
         />
     </group>
 

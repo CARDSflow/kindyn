@@ -46,10 +46,20 @@
 #include "kindyn/controller/cardsflow_state_interface.hpp"
 #include "kindyn/controller/cardsflow_command_interface.hpp"
 
+
+#include <actionlib/server/simple_action_server.h>
+
+#include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/Vector3.h>
+#include <sensor_msgs/JointState.h>
+#include <roboy_simulation_msgs/Tendon.h>
+#include <roboy_simulation_msgs/ControllerType.h>
+#include <roboy_simulation_msgs/JointState.h>
 #include <roboy_middleware_msgs/ForwardKinematics.h>
 #include <roboy_middleware_msgs/InverseKinematics.h>
 #include <roboy_middleware_msgs/MotorCommand.h>
 #include <roboy_middleware_msgs/MotorStatus.h>
+#include <roboy_control_msgs/MoveEndEffectorAction.h>
 
 #include <tf/tf.h>
 #include <tf/transform_broadcaster.h>
@@ -66,17 +76,11 @@
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/robot_hw.h>
 
-#include <roboy_simulation_msgs/Tendon.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <geometry_msgs/Vector3.h>
-#include <sensor_msgs/JointState.h>
-#include <roboy_simulation_msgs/ControllerType.h>
-#include <roboy_simulation_msgs/JointState.h>
-
 #include <boost/numeric/odeint.hpp>
 
 #include <common_utilities/rviz_visualization.hpp>
 #include <visualization_msgs/InteractiveMarkerFeedback.h>
+#include <thread>
 
 using namespace qpOASES;
 using namespace std;
@@ -126,6 +130,11 @@ namespace cardsflow {
         private:
 
             /**
+             * Move endeffector action server
+             * @param goal
+             */
+            void MoveEndEffector(const roboy_control_msgs::MoveEndEffectorGoalConstPtr &goal);
+            /**
              * parses the cardsflow xml file for viapoint definitions
              * @param viapoints_file_path path to the cardsflow.xml file
              * @param cables will be filled with the parsed viapoints of the defined cables
@@ -167,7 +176,6 @@ namespace cardsflow {
              */
             void FloatingBase(const geometry_msgs::PoseConstPtr &msg);
 
-            vector<Matrix4d> world_to_link_transform, link_to_world_transform, frame_transform;
             Matrix3d *link_to_link_transform;
 
             VectorXd resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max);
@@ -200,6 +208,8 @@ namespace cardsflow {
             ros::Publisher robot_state_target_pub, tendon_state_target_pub, joint_state_target_pub; /// target publisher
             ros::Subscriber controller_type_sub, joint_state_sub, floating_base_sub, interactive_marker_sub; /// ROS subscribers
             ros::ServiceServer ik_srv, fk_srv;
+            map<string,boost::shared_ptr<actionlib::SimpleActionServer<roboy_control_msgs::MoveEndEffectorAction>>> moveEndEffector_as;
+
 
             iDynTree::KinDynComputations kinDynComp, kinDynCompTarget; /// the full robot model
             map<string,iDynTree::KinDynComputations> ik_models; /// the robot models for each endeffector
@@ -233,6 +243,7 @@ namespace cardsflow {
             size_t number_of_cables = 0; /// number of cables, ie muscles of the whole robot
             size_t number_of_links = 0; /// number of links of the whole robot
             Matrix4d world_H_base; /// floating base 6-DoF pose
+            vector<Matrix4d> world_to_link_transform, link_to_world_transform, frame_transform;
             Eigen::Matrix<double,6,1> baseVel; /// the velocity of the floating base
             Vector3d gravity; /// gravity vector (default: (0,0,-9.81)
             MatrixXd M; /// The Mass matrix of the robot
@@ -240,19 +251,22 @@ namespace cardsflow {
             VectorXd q, qd, qdd; /// joint positon, velocity, acceleration
             VectorXd q_target, qd_target, qdd_target; /// joint positon, velocity, acceleration targets
             VectorXd q_target_prev, qd_target_prev, qdd_target_prev; /// joint positon, velocity, acceleration targets
-            VectorXd l, Ld; /// tendon length and length change
+            VectorXd l_int, l, l_target; /// tendon length and length change
+            vector<VectorXd> Ld; // tendon velocity per endeffector
             VectorXd torques; /// joint torques
             VectorXd cable_forces; /// the cable forces in Newton
             vector<VectorXd> ld; /// tendon length changes for each controller
             MatrixXd L, L_t; /// L and -L^T
 
+            MatrixXd S, P, V, W; /// matrices of cable model
+            vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments
         protected:
             iDynTree::FreeFloatingGeneralizedTorques bias; /// Coriolis+Gravity term
             iDynTree::MatrixDynSize Mass; /// Mass matrix
 
             bool torque_position_controller_active = false, force_position_controller_active = false, cable_length_controller_active = false;
             VectorXd qdd_torque_control, qdd_force_control;
-            MatrixXd S, P, V, W; /// matrices of cable model
+
             vector<Cable> cables; /// all cables of the robot
             vector <VectorXd> joint_axis; /// joint axis of each joint
             vector <string> link_names, joint_names; /// link and joint names of the robot
@@ -268,7 +282,6 @@ namespace cardsflow {
             SQProblem qp_solver; /// qpoases quadratic problem solver
             real_t *H, *g, *A, *lb, *ub, *b, *FOpt; /// quadratic problem variables
             ros::Time last_visualization; /// timestamp for visualization at reasonable intervals
-            vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments
             Eigen::IOFormat fmt; /// formator for terminal printouts
             hardware_interface::JointStateInterface joint_state_interface; /// ros control joint state interface
             hardware_interface::EffortJointInterface joint_command_interface; /// ros control joint command interface

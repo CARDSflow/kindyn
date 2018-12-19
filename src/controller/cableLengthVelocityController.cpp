@@ -38,12 +38,12 @@
 
 using namespace std;
 
-class CableLengthController : public controller_interface::Controller<hardware_interface::CardsflowCommandInterface> {
+class CableLengthVelocityController : public controller_interface::Controller<hardware_interface::CardsflowCommandInterface> {
 public:
     /**
      * Constructor
      */
-    CableLengthController() {};
+    CableLengthVelocityController() {};
 
     /**
      * Initializes the controller. Will be call by controller_manager when loading this controller
@@ -67,8 +67,8 @@ public:
         joint = hw->getHandle(joint_name); // throws on failure
         joint_index = joint.getJointIndex();
         last_update = ros::Time::now();
-        joint_command = nh.subscribe((joint_name+"/target").c_str(),1,&CableLengthController::JointPositionCommand, this);
-        controller_parameter_srv = nh.advertiseService((joint_name+"/params").c_str(),& CableLengthController::setControllerParameters, this);
+        joint_command = nh.subscribe((joint_name+"/target").c_str(),1,&CableLengthVelocityController::JointVelocityCommand, this);
+        controller_parameter_srv = nh.advertiseService((joint_name+"/params").c_str(),& CableLengthVelocityController::setControllerParameters, this);
         return true;
     }
 
@@ -79,10 +79,10 @@ public:
      * @param period period since last control
      */
     void update(const ros::Time &time, const ros::Duration &period) {
-        double q = joint.getPosition();
-        double q_target = joint.getJointPositionCommand();
+        double qd = joint.getVelocity();
+        double qd_target = joint.getJointVelocityCommand();
         MatrixXd L = joint.getL();
-        double p_error = q - q_target;
+        double p_error = qd - qd_target;
         // we use the joint_index column of the L matrix to calculate the result for this joint only
         VectorXd ld = L.col(joint_index) * (Kd * (p_error - p_error_last)/period.toSec() + Kp * p_error);
 //        ROS_INFO_STREAM_THROTTLE(1, ld.transpose());
@@ -112,8 +112,8 @@ public:
      * Joint position command callback for this joint
      * @param msg joint position target in radians
      */
-    void JointPositionCommand(const std_msgs::Float32ConstPtr &msg){
-        joint.setJointPositionCommand(msg->data);
+    void JointVelocityCommand(const std_msgs::Float32ConstPtr &msg){
+        joint.setJointVelocityCommand(msg->data);
     }
 
     /**
@@ -130,7 +130,7 @@ public:
         return true;
     }
 private:
-    double Kp = 1000, Kd = 0; /// PD gains
+    double Kp = 1, Kd = 0; /// PD gains
     double p_error_last = 0; /// last error
     ros::NodeHandle nh; /// ROS nodehandle
     ros::Publisher controller_state; /// publisher for controller state
@@ -142,4 +142,4 @@ private:
     int joint_index; /// index of the controlled joint in the robot model
     ros::Time last_update; /// time of last update
 };
-PLUGINLIB_EXPORT_CLASS(CableLengthController, controller_interface::ControllerBase);
+PLUGINLIB_EXPORT_CLASS(CableLengthVelocityController, controller_interface::ControllerBase);
