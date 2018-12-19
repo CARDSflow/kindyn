@@ -24,11 +24,11 @@ PRINT_DEBUG = True
 RECORDED_TRAJECTORY_FILENAME = "captured_trajectory_ik.json"
 
 PEDAL_POSITION_ERROR_TOLERANCE = 0.03  # [meters]
-PEDAL_SINGLE_ROTATION_DURATION = 20  # [seconds]
+PEDAL_SINGLE_ROTATION_DURATION = 10  # [seconds]
 TRAJECTORY_POINT_DURATION      = 1
 CONTROLLER_FREQUENCY           = 10  # [Hz]
-MIN_JOINT_VEL                  = -1
-MAX_JOINT_VEL                  = 1
+MIN_JOINT_VEL                  = -300
+MAX_JOINT_VEL                  = 300
 
 ############################
 ###   GLOBAL VARIABLES   ###
@@ -52,7 +52,7 @@ _jointsList = [RIGHT_HIP_JOINT, RIGHT_KNEE_JOINT, RIGHT_ANKLE_JOINT, LEFT_HIP_JO
 
 
 _parametersRightHip = {
-    "param_p":               0.5,
+    "param_p":               1500.0,
     "param_i":               0.1,
     "param_d":               0.0,
     "prev_pos":              0.0,
@@ -64,7 +64,7 @@ _parametersRightHip = {
 }
 
 _parametersRightKnee = {
-    "param_p":               0.5,
+    "param_p":               2000.0,
     "param_i":               0.1,
     "param_d":               0.0,
     "prev_pos":              0.0,
@@ -469,12 +469,12 @@ def FSM():
                     ros_right_knee_publisher.publish(thisJointVelocitySetpoint)
                 elif thisJointName == RIGHT_ANKLE_JOINT:
                     ros_right_ankle_publisher.publish(thisJointVelocitySetpoint)
-                #elif thisJointName == LEFT_HIP_JOINT:
-                #    ros_left_hip_publisher.publish(thisJointVelocitySetpoint)
-                #elif thisJointName == LEFT_KNEE_JOINT:
-                #    ros_left_knee_publisher.publish(thisJointVelocitySetpoint)
-                #elif thisJointName == LEFT_ANKLE_JOINT:
-                #    ros_left_ankle_publisher.publish(thisJointVelocitySetpoint)
+                elif thisJointName == LEFT_HIP_JOINT:
+                    ros_left_hip_publisher.publish(thisJointVelocitySetpoint)
+                elif thisJointName == LEFT_KNEE_JOINT:
+                    ros_left_knee_publisher.publish(thisJointVelocitySetpoint)
+                elif thisJointName == LEFT_ANKLE_JOINT:
+                    ros_left_ankle_publisher.publish(thisJointVelocitySetpoint)
 
         ##############################################
         #if _currState == UPDATE_PARAMETERS:
