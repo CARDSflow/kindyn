@@ -38,6 +38,26 @@ public:
         init(urdf,cardsflow_xml,joint_names);
         // if we do not get the robot state externally, we use the forwardKinematics function to integrate the robot state
         nh->getParam("external_robot_state", external_robot_state);
+        string path = ros::package::getPath("robots");
+        path+="/msj_platform/joint_limits.txt";
+        FILE*       file = fopen(path.c_str(),"r");
+        cout << "file:" << file;
+        if (NULL != file) {
+            fscanf(file, "%*[^\n]\n", NULL);
+            cout << "fscanf"  << fscanf(file, "%*[^\n]\n", NULL)<< endl;
+            float qx,qy;
+            int i =0;
+            cout << "fscanf file qx qy: "<< fscanf(file,"%f %f\n",&qx,&qy) << endl;
+            while(fscanf(file,"%f %f\n",&qx,&qy) == 2){
+                limits[0].push_back(qx);
+                limits[1].push_back(qy);
+                cout << qx << "\t" << qy << endl;
+                i++;
+            }
+            printf("read %d joint limit values\n", i);
+        }else{
+            cout << "could not open " << path << endl;
+        }
     };
 
     /**
@@ -82,6 +102,17 @@ public:
 		//ROS_INFO_STREAM_THROTTLE(1,str.str());
         motor_command.publish(msg);
     };
+
+    int pnpoly(vector<double> limits_x, vector<double> limits_y, double testx, double testy){
+        int i, j, c = 0;
+        for (i = 0, j = limits_x.size()-1; i < limits_x.size(); j = i++) {
+            if ( ((limits_y[i]>testy) != (limits_y[j]>testy)) &&
+                 (testx < (limits_x[j]-limits_x[i]) * (testy-limits_y[i]) / (limits_y[j]-limits_y[i]) + limits_x[i]) )
+                c = !c;
+        }
+        return c;
+    }
+
     bool GymStepService(roboy_simulation_msgs::GymStep::Request &req,
                         roboy_simulation_msgs::GymStep::Response &res){
         
@@ -95,7 +126,7 @@ public:
 	        if(!external_robot_state)
 	            forwardKinematics(req.step_size);
 
-	        ROS_INFO_STREAM_THROTTLE(5, "Ld = \n" << Ld.format(fmt));
+	        //ROS_INFO_STREAM_THROTTLE(5, "Ld = " << Ld.format(fmt));
 	        write();
 	        ROS_INFO("Gymstep is done");
 	    }
@@ -103,7 +134,14 @@ public:
         	res.q.push_back(q[i]);
         	res.qdot.push_back(qd[i]);
         }
-
+        if(pnpoly(limits[0],limits[1],q[0],q[1])){
+            //task space is feasible
+            res.feasible = true;
+        }
+        else{
+            //task space is not feasible
+            res.feasible = false;
+        }
         return true;
     }
     bool GymResetService(roboy_simulation_msgs::GymReset::Request &req,
@@ -127,7 +165,7 @@ public:
 
 	 	update();
 
-        ROS_INFO_STREAM_THROTTLE(5, "q = \n" << q.format(fmt));
+        //ROS_INFO_STREAM_THROTTLE(5, "q = \n" << q.format(fmt));
         for(int i=0; i< number_of_dofs; i++ ){
         	res.q.push_back(q[i]);
         	res.qdot.push_back(qd[i]);
@@ -140,6 +178,7 @@ public:
     ros::Publisher motor_command; /// motor command publisher
     ros::ServiceServer gym_step; //OpenAI Gym training environment step function, ros service instance
     ros::ServiceServer gym_reset; //OpenAI Gym training environment reset function, ros service instance
+    vector<double> limits[3];
 };
 
 /**
