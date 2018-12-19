@@ -26,9 +26,9 @@ RECORDED_TRAJECTORY_FILENAME = "captured_trajectory_ik.json"
 PEDAL_POSITION_ERROR_TOLERANCE = 0.03  # [meters]
 PEDAL_SINGLE_ROTATION_DURATION = 20  # [seconds]
 TRAJECTORY_POINT_DURATION      = 1
-CONTROLLER_FREQUENCY           = 50  # [Hz]
-MIN_JOINT_VEL                  = -3
-MAX_JOINT_VEL                  = 3
+CONTROLLER_FREQUENCY           = 10  # [Hz]
+MIN_JOINT_VEL                  = -1
+MAX_JOINT_VEL                  = 1
 
 ############################
 ###   GLOBAL VARIABLES   ###
@@ -52,7 +52,7 @@ _jointsList = [RIGHT_HIP_JOINT, RIGHT_KNEE_JOINT, RIGHT_ANKLE_JOINT, LEFT_HIP_JO
 
 
 _parametersRightHip = {
-    "param_p":               10.0,
+    "param_p":               0.5,
     "param_i":               0.1,
     "param_d":               0.0,
     "prev_pos":              0.0,
@@ -64,7 +64,7 @@ _parametersRightHip = {
 }
 
 _parametersRightKnee = {
-    "param_p":               10.0,
+    "param_p":               0.5,
     "param_i":               0.1,
     "param_d":               0.0,
     "prev_pos":              0.0,
@@ -380,7 +380,7 @@ def FSM():
     _runFSM = 1
 
     _currState = INIT
-    _currTrajectoryPoint = 0
+    _currTrajectoryPoint = -1
 
     _startTime = 0.0
     _endTime = 0.0
@@ -414,7 +414,7 @@ def FSM():
         ##############################################
 
             # Initialize state
-            if _currTrajectoryPoint == 0:
+            if _currTrajectoryPoint == -1:
                 _currTrajectoryPoint = trajectoryStartingPoint
             if _startTime == 0.0:
                 _startTime = time.time()
@@ -434,7 +434,7 @@ def FSM():
             print("%0.5f" % (getDistance(getPositionRightFoot(), pedalTrajectory[_currTrajectoryPoint])), end='\r')
             if getDistance(getPositionRightFoot(), pedalTrajectory[_currTrajectoryPoint]) <= PEDAL_POSITION_ERROR_TOLERANCE and _currTime >= _endTime:
                 for thisJointName in _jointsList: #getDistance(getPositionLeftFoot(), pedalTrajectory[_currTrajectoryPoint]) <= PEDAL_POSITION_ERROR_TOLERANCE and 
-                    _jointsControlData[thisJointName]["trajectory_startpoint"] = hipTrajectory[_currTrajectoryPoint]
+                    #!!!!_jointsControlData[thisJointName]["trajectory_startpoint"] = hipTrajectory[_currTrajectoryPoint]
                     _jointsControlData[thisJointName]["pos_error_integral"] = 0
                 if (_currTrajectoryPoint < (numTrajectoryPoints-1)):
                     _currTrajectoryPoint += 1
