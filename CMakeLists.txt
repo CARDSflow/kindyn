@@ -114,8 +114,8 @@ add_executable( msj_platform src/robots/msj_platform.cpp)
 target_link_libraries(msj_platform ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
 # roboy_upper_body
-add_executable( roboy_upper_body src/robots/roboy_upper_body.cpp)
-target_link_libraries(roboy_upper_body ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+#add_executable( roboy_upper_body src/robots/roboy_upper_body.cpp)
+#target_link_libraries(roboy_upper_body ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
 # roboy_arcade_maschine
 add_executable( roboy_arcade_maschine src/robots/roboy_arcade_maschine.cpp)
@@ -138,8 +138,8 @@ add_executable( rikshaw src/robots/rikshaw.cpp)
 target_link_libraries(rikshaw ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
 # robot_configuration_estimator
-add_executable( robot_configuration_estimator src/robots/robot_configuration_estimator.cpp)
-target_link_libraries(robot_configuration_estimator ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+#add_executable( robot_configuration_estimator src/robots/robot_configuration_estimator.cpp)
+#target_link_libraries(robot_configuration_estimator ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 #==============================================================================
 # Installation
 #==============================================================================
@@ -151,7 +151,7 @@ install(TARGETS
 
 install(TARGETS
 		msj_platform
-		roboy_upper_body
+		#roboy_upper_body
 		roboy_arcade_maschine
 		roboy_xylophone
 	    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
