@@ -52,7 +52,7 @@ public:
     void read(){
         update();
         if(!external_robot_state)
-            forwardKinematics(0.01);
+            forwardKinematics(0.0001);
     };
     /**
      * Sends motor commands to the real robot
@@ -120,7 +120,7 @@ public:
  */
 void update(controller_manager::ControllerManager *cm) {
     ros::Time prev_time = ros::Time::now();
-    ros::Rate rate(100); // changing this value affects the control speed of your running controllers
+    ros::Rate rate(300); // changing this value affects the control speed of your running controllers
     while (ros::ok()) {
         const ros::Time time = ros::Time::now();
         const ros::Duration period = time - prev_time;
