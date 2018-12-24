@@ -3,6 +3,7 @@
 #include <roboy_middleware_msgs/MotorCommand.h>
 #include <roboy_simulation_msgs/GymStep.h>
 #include <roboy_simulation_msgs/GymReset.h>
+#include <roboy_simulation_msgs/GymGoal.h>
 
 #define NUMBER_OF_MOTORS 8
 #define SPINDLERADIUS 0.00575
@@ -29,6 +30,7 @@ public:
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
         gym_step = nh->advertiseService("/gym_step", &MsjPlatform::GymStepService,this);
         gym_reset = nh->advertiseService("/gym_reset", &MsjPlatform::GymResetService,this);
+        gym_goal = nh->advertiseService("/gym_goal", &MsjPlatform::GymGoalService,this);
         // first we retrieve the active joint names from the parameter server
         vector<string> joint_names;
         nh->getParam("joint_names", joint_names);
@@ -100,6 +102,33 @@ public:
         }
         return c;
     }
+    bool GymGoalService(roboy_simulation_msgs::GymGoal::Request &req,
+                        roboy_simulation_msgs::GymGoal::Response &res){
+        bool not_feasible = true;
+        double min[3] = {0,0,-1}, max[3] = {0,0,1};
+        for(int i=0;i<limits[0].size();i++){
+            if(limits[0][i]<min[0])
+                min[0] = limits[0][i];
+            if(limits[1][i]<min[1])
+                min[1] = limits[1][i];
+            if(limits[0][i]>max[0])
+                max[0] = limits[0][i];
+            if(limits[1][i]>max[1])
+                max[1] = limits[1][i];
+        }
+        while(not_feasible) {
+            float q0 = rand() / (float) RAND_MAX * (max[0] - min[0]) + min[0];
+            float q1 = rand() / (float) RAND_MAX * (max[1] - min[1]) + min[1];
+            float q2 = rand() / (float) RAND_MAX * (max[2] - min[2]) + min[2];
+            if (pnpoly(limits[0], limits[1], q0, q1)) {
+                res.q.push_back(q0);
+                res.q.push_back(q1);
+                res.q.push_back(q1);
+                not_feasible = false;
+            }
+        }
+
+    }
 
     bool GymStepService(roboy_simulation_msgs::GymStep::Request &req,
                         roboy_simulation_msgs::GymStep::Response &res){
@@ -169,6 +198,7 @@ public:
     ros::Publisher motor_command; /// motor command publisher
     ros::ServiceServer gym_step; //OpenAI Gym training environment step function, ros service instance
     ros::ServiceServer gym_reset; //OpenAI Gym training environment reset function, ros service instance
+    ros::ServiceServer gym_goal; //OpenAI Gym training environment sets new goal function, ros service instance
     vector<double> limits[3];
     double l_offset[NUMBER_OF_MOTORS];
 
