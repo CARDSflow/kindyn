@@ -531,9 +531,9 @@ void Robot::update() {
             }
         }
         { // robot target publisher
-            if((q_target-q_target_prev).norm()>0.001 || (qd_target-qd_target_prev).norm()>0.001 ) { // only if target changed
-                q_target_prev = q_target;
-                qd_target_prev = qd_target;
+           // if((q_target-q_target_prev).norm()>0.001 || (qd_target-qd_target_prev).norm()>0.001 ) { // only if target changed // Commented out for visualization of the training of the OpenAI gym.
+                q_target_prev = q_target;                                                              //Traget is not changing but the robot_state should be published to visualize
+                qd_target_prev = qd_target; 
                 iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
                 iDynTree::toEigen(robotstate.jointPos) = q_target;
                 iDynTree::fromEigen(robotstate.baseVel, baseVel);
@@ -557,7 +557,7 @@ void Robot::update() {
                     tf::poseEigenToMsg(iso, msg.pose);
                     robot_state_target_pub.publish(msg);
                 }
-            }
+           // }
         }
         { // joint state publisher
             roboy_simulation_msgs::JointState msg;

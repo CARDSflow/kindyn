@@ -28,6 +28,7 @@ public:
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
+        // OpenAI gym services
         gym_step = nh->advertiseService("/gym_step", &MsjPlatform::GymStepService,this);
         gym_reset = nh->advertiseService("/gym_reset", &MsjPlatform::GymResetService,this);
         gym_goal = nh->advertiseService("/gym_goal", &MsjPlatform::GymGoalService,this);
@@ -38,6 +39,7 @@ public:
         init(urdf,cardsflow_xml,joint_names);
         // if we do not get the robot state externally, we use the forwardKinematics function to integrate the robot state
         nh->getParam("external_robot_state", external_robot_state);
+        // Get the limits of joints
         string path = ros::package::getPath("robots");
         path+="/msj_platform/joint_limits.txt";
         FILE*       file = fopen(path.c_str(),"r");
@@ -134,7 +136,7 @@ public:
                         roboy_simulation_msgs::GymStep::Response &res){
         
         if(req.set_points.size() != 0){ //If no set_point set then jut return observation.
-        	ROS_INFO("Gymstep is called");
+        	//ROS_INFO("Gymstep is called");
         	update();
 	        for(int i=0; i< number_of_cables; i++){
 	        	//Set the commanded tendon velocity from RL agent to simulation 
@@ -148,7 +150,7 @@ public:
 	        ROS_INFO_STREAM_THROTTLE(5, "Ld = \n" << Ld[0].format(fmt));
 
 	        write();
-	        ROS_INFO("Gymstep is done");
+	        //ROS_INFO("Gymstep is done");
 	    }
         for(int i=0; i< number_of_dofs; i++ ){
         	res.q.push_back(q[i]);
@@ -166,7 +168,7 @@ public:
     }
     bool GymResetService(roboy_simulation_msgs::GymReset::Request &req,
                         roboy_simulation_msgs::GymReset::Response &res){
-    	ROS_INFO("Gymreset is called");      
+    	//ROS_INFO("Gymreset is called");      
     	integration_time = 0.0;
         for(int i=0; i< number_of_dofs; i++){
 	       	//Set the commanded tendon velocity from RL agent to simulation 
@@ -190,7 +192,7 @@ public:
         	res.q.push_back(q[i]);
         	res.qdot.push_back(qd[i]);
         }
-        ROS_INFO("Gymreset is done");
+        //ROS_INFO("Gymreset is done");
         return true;
     }
     bool external_robot_state; /// indicates if we get the robot state externally
