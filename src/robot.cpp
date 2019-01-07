@@ -181,6 +181,8 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         joint_command_interface.registerHandle(torque_handle);
         joint_state[joint][0] = 0;
         joint_state[joint][1] = 0;
+
+        joint_command_pub.push_back(nh->advertise<std_msgs::Float32>((joint_names[joint]+"/"+joint_names[joint].c_str()+"/target").c_str(),1));
     }
     registerInterface(&cardsflow_command_interface);
     registerInterface(&joint_command_interface);
@@ -925,8 +927,8 @@ void Robot::MoveEndEffector(const roboy_control_msgs::MoveEndEffectorGoalConstPt
 
     auto it = find(endeffectors.begin(),endeffectors.end(),goal->endeffector);
     if (it == endeffectors.end()) {
-        ROS_WARN_STREAM("MoveEndEffector: FAILED endeffector " << goal->endeffector << " does not exist");
-        moveEndEffector_as[goal->endeffector]->setAborted(result, "endeffector " + goal->endeffector + " does not exist");
+        ROS_ERROR_STREAM("MoveEndEffector: FAILED endeffector " << goal->endeffector << " does not exist");
+//        moveEndEffector_as[goal->endeffector]->setAborted(result, "endeffector " + goal->endeffector + " does not exist");
         return;
     }
 
@@ -960,10 +962,10 @@ void Robot::MoveEndEffector(const roboy_control_msgs::MoveEndEffectorGoalConstPt
     }
 
     publishCube(srv.request.pose, "world", "ik_target", 696969, COLOR(0, 1, 0, 1), 0.05, goal->timeout);
-
+    int offset = endeffector_dof_offset[endeffector_index[goal->endeffector]];
     while (error > goal->tolerance && success && !timeout) {
         if (moveEndEffector_as[goal->endeffector]->isPreemptRequested() || !ros::ok()) {
-            ROS_INFO("LookAt: Preempted");
+            ROS_INFO("move endeffector: Preempted");
             // set the action state to preempted
             moveEndEffector_as[goal->endeffector]->setPreempted();
             timeout = true;
@@ -972,12 +974,27 @@ void Robot::MoveEndEffector(const roboy_control_msgs::MoveEndEffectorGoalConstPt
         if (!ik_solution_available && (goal->type == 0 || goal->type == 1)) {
             if (InverseKinematicsService(srv.request, srv.response)) {
                 ik_solution_available = true;
-                for (int i = 0; i < number_of_dofs; i++) {
-                    q_target[i] = srv.response.angles[i];
+                int j =0;
+                std_msgs::Float32 msg;
+                for (int i = offset; i < offset+endeffector_number_of_dofs[endeffector_index[goal->endeffector]]; i++) {
+                    msg.data = srv.response.angles[j];
+                    joint_command_pub[i].publish(msg);
+                    j++;
                 }
             } else {
                 ik_solution_available = false;
             }
+        }
+        error = 0;
+        for (int i = offset; i < offset+endeffector_number_of_dofs[endeffector_index[goal->endeffector]]; i++) {
+            if(controller_type[i]!=CARDSflow::ControllerType::cable_length_controller)
+                continue;
+            error += pow(q_target[i]-q[i],2.0);
+        }
+        error = sqrt(error);
+        if(error < goal->tolerance ) {
+            success = true;
+            break;
         }
 
         if ((ros::Time::now() - last_feedback_time).toSec() > 1) {

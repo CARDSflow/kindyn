@@ -51,6 +51,7 @@
 
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Vector3.h>
+#include <std_msgs/Float32.h>
 #include <sensor_msgs/JointState.h>
 #include <roboy_simulation_msgs/Tendon.h>
 #include <roboy_simulation_msgs/ControllerType.h>
@@ -267,6 +268,7 @@ namespace cardsflow {
             vector <VectorXd> joint_axis; /// joint axis of each joint
             vector <string> link_names, joint_names; /// link and joint names of the robot
             map<string, int> link_index, joint_index; /// link and joint indices of the robot
+            vector<ros::Publisher> joint_command_pub;
             vector<int> controller_type; /// currently active controller type
             double integration_time =0; /// odeint integration time
             typedef boost::array< double , 2 > state_type; /// second order dynamics integration

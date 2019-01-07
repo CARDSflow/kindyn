@@ -42,8 +42,7 @@ public:
         msg.id = 5;
         for (int i = 0; i < number_of_cables; i++) {
             msg.motors.push_back(i);
-            msg.set_points.push_back(
-                    512 + (l[i] / (2.0 * M_PI * 0.016 * (301.0 / 1024.0 / 360.0)))); //
+            msg.set_points.push_back(l[i]); //
         }
         motor_command.publish(msg);
     };
