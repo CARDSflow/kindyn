@@ -8,7 +8,7 @@ import rospy
 from roboy_middleware_msgs.srv import InverseKinematics
 from geometry_msgs.msg import Pose, Point, Quaternion
 
-JSON_FILENAME = "captured_trajectory_2_ik.json"
+JSON_FILENAME = "captured_trajectory.json"
 
 ###############################
 ###   MEASURED PARAMETERS   ###
@@ -142,17 +142,19 @@ def main():
     if len(sys.argv) > 1:
         num_points = int(sys.argv[1])
     else:
-        num_points = 36
+        num_points = 72
 
     #plotPedalTrajectories()
 
     capturedPositions = getPedalPositions(num_points)
-    #for thisLine in capturedPositions:
-    #    print(thisLine)
 
-    endeffector = "pedal_right"
-    frame = "foot_right"
-    y_offset = 0.2095
+    endeffector_right = "pedal_right"
+    frame_right = "pedal_right"
+    y_offset_right = RIGHT_LEG_OFFSET_Y
+
+    endeffector_left = "pedal_left"
+    frame_left = "pedal_left"
+    y_offset_left = LEFT_LEG_OFFSET_Y
 
     jointAngleDict = {}
     jointAngleDict["num_points"] = num_points
@@ -160,13 +162,20 @@ def main():
     for pointIter in range(num_points):
         thisX = capturedPositions[pointIter][1]
         thisZ = capturedPositions[pointIter][3]
-        jointAngleResult = inverse_kinematics_client(endeffector, frame, thisX, y_offset, thisZ)
+        jointAngleResult_right = inverse_kinematics_client(endeffector_right, frame_right, thisX, y_offset_right, thisZ)
+        jointAngleResult_left = inverse_kinematics_client(endeffector_left, frame_left, thisX, y_offset_left, thisZ)
         if (jointAngleResult and ("joint_hip_right" in jointAngleResult) and ("joint_knee_right" in jointAngleResult) and ("joint_foot_right" in jointAngleResult)):
     		jointAngleDict["point_"+str(pointIter)] = {}
-    		jointAngleDict["point_"+str(pointIter)]["Pedal"] = [thisX, thisZ]
-    		jointAngleDict["point_"+str(pointIter)]["Hip"] = jointAngleResult["joint_hip_right"]
-    		jointAngleDict["point_"+str(pointIter)]["Knee"] = jointAngleResult["joint_knee_right"]
-    		jointAngleDict["point_"+str(pointIter)]["Ankle"] = jointAngleResult["joint_foot_right"]
+        	jointAngleDict["point_"+str(pointIter)]["Left"] = {}
+        	jointAngleDict["point_"+str(pointIter)]["Right"] = {}
+    		jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal"] = [thisX, thisZ]
+    		jointAngleDict["point_"+str(pointIter)]["Left"]["Hip"] = jointAngleResult["joint_hip_left"]
+    		jointAngleDict["point_"+str(pointIter)]["Left"]["Knee"] = jointAngleResult["joint_knee_left"]
+    		jointAngleDict["point_"+str(pointIter)]["Left"]["Ankle"] = jointAngleResult["joint_foot_left"]
+        	jointAngleDict["point_"+str(pointIter)]["Right"]["Pedal"] = [thisX, thisZ]
+    		jointAngleDict["point_"+str(pointIter)]["Right"]["Hip"] = jointAngleResult["joint_hip_right"]
+    		jointAngleDict["point_"+str(pointIter)]["Right"]["Knee"] = jointAngleResult["joint_knee_right"]
+    		jointAngleDict["point_"+str(pointIter)]["Right"]["Ankle"] = jointAngleResult["joint_foot_right"]
 
     #print(jointAngleDict)
     with open(JSON_FILENAME, "w") as write_file:

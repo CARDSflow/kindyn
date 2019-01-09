@@ -23,9 +23,9 @@ from std_msgs.msg import Float32
 
 PRINT_DEBUG = True
 
-RECORDED_TRAJECTORY_FILENAME = "captured_trajectory_2_ik.json"
+RECORDED_TRAJECTORY_FILENAME = "captured_trajectory.json"
 
-PEDAL_POSITION_ERROR_TOLERANCE   = 0.03  # [meters]
+PEDAL_POSITION_ERROR_TOLERANCE   = 0.02  # [meters]
 JOINT_TRAJECTORY_ERROR_TOLERANCE = 0.02
 PEDAL_SINGLE_ROTATION_DURATION   = 20  # [seconds]
 TRAJECTORY_POINT_DURATION        = 1
