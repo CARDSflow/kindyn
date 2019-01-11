@@ -32,7 +32,7 @@ TRAJECTORY_POINT_DURATION        = 1
 CONTROLLER_FREQUENCY             = 100  # [Hz]
 MIN_JOINT_VEL                    = -500
 MAX_JOINT_VEL                    = 500
-JOINT_VELOCITY_FACTOR            = 10000
+JOINT_VELOCITY_FACTOR            = 1000
 
 ############################
 ###   GLOBAL VARIABLES   ###
@@ -200,6 +200,7 @@ ankleTrajectoryLeft  = []
 ###   UTILITY FUNCTIONS   ###
 ##############################
 
+
 def jointStateCallback(joint_data):
     global _jointsStatusData
     # Assert order of joints
@@ -223,6 +224,7 @@ def jointStateCallback(joint_data):
             _jointsStatusData[LEFT_ANKLE_JOINT]["Pos"] = joint_data.q[stringIter]
             _jointsStatusData[LEFT_ANKLE_JOINT]["Vel"] = joint_data.qd[stringIter]
 
+
 def importJointTrajectoryRecord():
 
     global numTrajectoryPoints
@@ -239,7 +241,7 @@ def importJointTrajectoryRecord():
     with open(RECORDED_TRAJECTORY_FILENAME, "r") as read_file:
         loaded_data = json.load(read_file)
 
-    if loaded_data["num_points"] == None:
+    if loaded_data["num_points"] is None:
         return 0
     else:
         numTrajectoryPoints = loaded_data["num_points"]
@@ -253,19 +255,19 @@ def importJointTrajectoryRecord():
     del hipTrajectoryLeft[:]
     del kneeTrajectoryLeft[:]
     del ankleTrajectoryLeft[:]
-    for pointIterator in range (numTrajectoryPoints):
-	if ("point_"+str(pointIterator) in loaded_data):
-		pedalTrajectoryLeft.append(loaded_data["point_"+str(pointIterator)]["Left"]["Pedal"])
-		pedalTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Pedal"])
-		hipTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Hip"])
-		kneeTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Knee"])
-		ankleTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Ankle"])
-		hipTrajectoryLeft.append(loaded_data["point_"+str(pointIterator)]["Left"]["Hip"])
-		kneeTrajectoryLeft.append(loaded_data["point_"+str(pointIterator)]["Left"]["Knee"])
-		ankleTrajectoryLeft.append(loaded_data["point_"+str(pointIterator)]["Left"]["Ankle"])
-	else:
-		print("WARNINGL: No point_%s in trajectory" %(pointIterator))
-		numTrajectoryPoints -= 1
+    for pointIterator in range(numTrajectoryPoints):
+        if ("point_"+str(pointIterator) in loaded_data):
+            pedalTrajectoryLeft.append(loaded_data["point_"+str(pointIterator)]["Left"]["Pedal"])
+            pedalTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Pedal"])
+            hipTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Hip"])
+            kneeTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Knee"])
+            ankleTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Ankle"])
+            hipTrajectoryLeft.append(loaded_data["point_"+str(pointIterator)]["Left"]["Hip"])
+            kneeTrajectoryLeft.append(loaded_data["point_"+str(pointIterator)]["Left"]["Knee"])
+            ankleTrajectoryLeft.append(loaded_data["point_"+str(pointIterator)]["Left"]["Ankle"])
+        else:
+            print("WARNING: No point_%s in trajectory" % (pointIterator))
+            numTrajectoryPoints -= 1
 
     if PRINT_DEBUG:
         print("--------- Num trajectory points:")
@@ -281,6 +283,7 @@ def getJointVelocity(jointName):
     global _jointsStatusData
     return _jointsStatusData[jointName]["Vel"]
 
+
 def getPosition(endeffector, frame):
     fkJointNamesList = [ROS_JOINT_HIP_RIGHT, ROS_JOINT_HIP_LEFT, ROS_JOINT_KNEE_RIGHT, ROS_JOINT_KNEE_LEFT, ROS_JOINT_ANKLE_RIGHT, ROS_JOINT_ANKLE_LEFT]
     fkJointPositions = [_jointsStatusData[RIGHT_HIP_JOINT]["Pos"], _jointsStatusData[LEFT_HIP_JOINT]["Pos"], _jointsStatusData[RIGHT_KNEE_JOINT]["Pos"], _jointsStatusData[LEFT_KNEE_JOINT]["Pos"], _jointsStatusData[RIGHT_ANKLE_JOINT]["Pos"], _jointsStatusData[LEFT_ANKLE_JOINT]["Pos"]]
@@ -292,8 +295,9 @@ def getPosition(endeffector, frame):
         return [fk_result.pose.position.x, fk_result.pose.position.z]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s"%(e))
-    return [0.0, 0.0] #[x, z]
+        print("Service call failed: %s" % (e))
+    return [0.0, 0.0]  # [x, z]
+
 
 def getPositionLeftFoot():
     fkJointNamesList = [ROS_JOINT_HIP_LEFT, ROS_JOINT_KNEE_LEFT, ROS_JOINT_ANKLE_LEFT]
@@ -302,14 +306,15 @@ def getPositionLeftFoot():
     rospy.wait_for_service('fk')
     try:
         fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
-        fk_result = fk_srv("pedal_left", "foot_left", fkJointNamesList, fkJointPositions)
+        fk_result = fk_srv("pedal_left", "pedal_left", fkJointNamesList, fkJointPositions)
         return [fk_result.pose.position.x, fk_result.pose.position.z]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s"%(e))
+        print("Service call failed: %s" % (e))
 
-    print("ERROR fk failed")
-    return [0.0, 0.0] #[x, z]
+    print("ERROR fk foot_left failed")
+    return [0.0, 0.0]  # [x, z]
+
 
 def getPositionRightFoot():
     fkJointNamesList = [ROS_JOINT_HIP_RIGHT, ROS_JOINT_KNEE_RIGHT, ROS_JOINT_ANKLE_RIGHT]
@@ -318,21 +323,23 @@ def getPositionRightFoot():
     rospy.wait_for_service('fk')
     try:
         fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
-        fk_result = fk_srv("pedal_right", "foot_right", fkJointNamesList, fkJointPositions)
+        fk_result = fk_srv("pedal_right", "pedal_right", fkJointNamesList, fkJointPositions)
         return [fk_result.pose.position.x, fk_result.pose.position.z]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s"%(e))
+        print("Service call failed: %s" % (e))
 
-    print("ERROR fk failed")
-    return [0.0, 0.0] #[x, z]
+    print("ERROR fk foot_right failed")
+    return [0.0, 0.0]  # [x, z]
 
-def getDistance(point1,point2):
+
+def getDistance(point1, point2):
 
     x_diff = point2[0] - point1[0]
     y_diff = point2[1] - point1[1]
 
     return math.sqrt((x_diff*x_diff) + (y_diff*y_diff))
+
 
 def setPedalSingleRotationDuration(new_duration_seconds):
     global PEDAL_SINGLE_ROTATION_DURATION
@@ -340,8 +347,11 @@ def setPedalSingleRotationDuration(new_duration_seconds):
     setTrajectoryPointDuration()
     return 1
 
+
 def setTrajectoryPointDuration():
     global TRAJECTORY_POINT_DURATION
+    global PEDAL_SINGLE_ROTATION_DURATION
+    global numTrajectoryPoints
     if numTrajectoryPoints != 0:
         TRAJECTORY_POINT_DURATION = float(PEDAL_SINGLE_ROTATION_DURATION) / numTrajectoryPoints
     else:
@@ -360,18 +370,17 @@ def interpolateTrajectoryPoints(value1, value2, startTime, currTime, endTime):
         return value2
     return value1 + (value2 - value1)*(float(currTime - startTime)/(endTime - startTime))
 
+
 def checkOutputLimits(inputVal):
 
     returnVal = inputVal
 
     if inputVal > MAX_JOINT_VEL:
-	returnVal = MAX_JOINT_VEL
+        returnVal = MAX_JOINT_VEL
     elif inputVal < MIN_JOINT_VEL:
-	returnVal = MIN_JOINT_VEL
+        returnVal = MIN_JOINT_VEL
 
     return returnVal
-
-# PID Controller
 
 
 def computeVelocitySetpoint(jointName, endPos, startTime, currTime, endTime):
@@ -386,39 +395,38 @@ def computeVelocitySetpoint(jointName, endPos, startTime, currTime, endTime):
     jointError = goalPos - currPos
 
     if _jointsControlData[jointName]["bool_update_iv"]:
-	    if currTime < endTime:
-	        jointTravelTime = endTime - currTime
-		jointTravelDistance = endPos - currPos
-                jointIdealVelocity = float(jointTravelDistance) / jointTravelTime
-		_jointsControlData[jointName]["ideal_velocity"] = jointIdealVelocity
-		_jointsControlData[jointName]["bool_update_iv"] = False
-            else:
-		print("ERROR in compute ideal joint velocity: currTime > endTime")
+        if currTime < endTime:
+            jointTravelTime = endTime - currTime
+            jointTravelDistance = endPos - currPos
+            jointIdealVelocity = float(jointTravelDistance) / jointTravelTime
+            _jointsControlData[jointName]["ideal_velocity"] = jointIdealVelocity
+            _jointsControlData[jointName]["bool_update_iv"] = False
+        else:
+            print("ERROR in compute ideal joint velocity: currTime > endTime")
 
     thisPosErrorDerivative = float(jointError - _jointsControlData[jointName]["prev_error"])/CONTROLLER_FREQUENCY
 
     #print("COMPUTED %s VELOCITY SETPOINT: %s (jointTravelTime: %s, jointTravelDistance: %s)" % (jointName, jointVelocityReachGoal, jointTravelTime, jointTravelDistance))
 
-
     thisReturnVal = _jointsControlData[jointName]["ideal_velocity"]
     thisReturnVal = thisReturnVal*JOINT_VELOCITY_FACTOR
     # SWITCH CONTROL MODE IF STATEMENT IS TRUE (FROM IDEAL VELOCITY TO PID POSITION ERROR)
-    if  currTime > endTime: #jointError > JOINT_TRAJECTORY_ERROR_TOLERANCE or
-	if PRINT_DEBUG:
-	    print("Switching control to PID for joint %s" % (jointName))
-	_jointsControlData[jointName]["pos_error_integral"] += float(jointError)/CONTROLLER_FREQUENCY
-	_jointsControlData[jointName]["prev_time"] = currTime
-	_jointsControlData[jointName]["prev_pos"] = currPos
-	_jointsControlData[jointName]["prev_error"] = jointError
-	thisReturnVal = _jointsControlData[jointName]["param_p"]*jointError + _jointsControlData[jointName]["param_i"]*_jointsControlData[jointName]["pos_error_integral"] + _jointsControlData[jointName]["param_d"]*thisPosErrorDerivative
-    
+    if currTime > endTime:  # jointError > JOINT_TRAJECTORY_ERROR_TOLERANCE or
+        if PRINT_DEBUG:
+            print("Switching control to PID for joint %s" % (jointName))
+        _jointsControlData[jointName]["pos_error_integral"] += float(jointError)/CONTROLLER_FREQUENCY
+        _jointsControlData[jointName]["prev_time"] = currTime
+        _jointsControlData[jointName]["prev_pos"] = currPos
+        _jointsControlData[jointName]["prev_error"] = jointError
+        thisReturnVal = _jointsControlData[jointName]["param_p"]*jointError + _jointsControlData[jointName]["param_i"]*_jointsControlData[jointName]["pos_error_integral"] + _jointsControlData[jointName]["param_d"]*thisPosErrorDerivative
+
     thisReturnVal = checkOutputLimits(thisReturnVal)
 
     if PRINT_DEBUG:
-	    if jointName == RIGHT_HIP_JOINT:
-		print("\t\t\t\t%0.5f\t\t\t\t%0.5f" % (jointError, thisReturnVal), end='\r')
-	    elif jointName == RIGHT_KNEE_JOINT:
-		print("\t\t\t\t\t\t\t\t\t\t\t\t%0.5f\t\t\t\t%0.5f" % (jointError, thisReturnVal), end='\r')
+        if jointName == RIGHT_HIP_JOINT:
+            print("\t\t\t\t%0.5f\t\t\t\t%0.5f" % (jointError, thisReturnVal), end='\r')
+        elif jointName == RIGHT_KNEE_JOINT:
+            print("\t\t\t\t\t\t\t\t\t\t\t\t%0.5f\t\t\t\t%0.5f" % (jointError, thisReturnVal), end='\r')
 
     return thisReturnVal
 
@@ -431,6 +439,7 @@ INIT              = "INIT"
 PEDAL             = "PEDAL"
 UPDATE_PARAMETERS = "UPDATE_PARAMETERS"
 
+
 def FSM():
 
     global numTrajectoryPoints
@@ -442,7 +451,7 @@ def FSM():
     global y_pedal_record
     global pedalTrajectoryRight
 
-    _runFSM = 1
+    _runFSM = True
 
     _currState = INIT
     _currTrajectoryPoint = -1
@@ -452,8 +461,8 @@ def FSM():
     _currTime = 0.0
     _prevTime = 0.0
 
-    first_trajectory_point = 0
-    past_first_trajectory_point = False
+    initial_trajectory_point = 0
+    past_initial_trajectory_point = False
 
     ros_right_hip_publisher = rospy.Publisher('/joint_hip_right/joint_hip_right/target', Float32, queue_size=2)
     ros_right_knee_publisher = rospy.Publisher('/joint_knee_right/joint_knee_right/target', Float32, queue_size=2)
@@ -462,7 +471,6 @@ def FSM():
     ros_left_hip_publisher = rospy.Publisher('/joint_hip_left/joint_hip_left/target', Float32, queue_size=2)
     ros_left_knee_publisher = rospy.Publisher('/joint_knee_left/joint_knee_left/target', Float32, queue_size=2)
     ros_left_ankle_publisher = rospy.Publisher('/joint_foot_left/joint_foot_left/target', Float32, queue_size=2)
-
 
     while _runFSM:
 
@@ -484,7 +492,7 @@ def FSM():
             # Initialize state
             if _currTrajectoryPoint == -1:
                 _currTrajectoryPoint = trajectoryStartingPoint
-		first_trajectory_point = _currTrajectoryPoint
+                initial_trajectory_point = _currTrajectoryPoint
             if _startTime == 0.0:
                 _startTime = time.time()
             if _endTime == 0.0:
@@ -492,18 +500,18 @@ def FSM():
             if _prevTime == 0.0:
                 _prevTime = time.time()
 
-	    currPedalPosXY = getPositionRightFoot()
-	    x_pedal_record.append(currPedalPosXY[0])
-	    y_pedal_record.append(currPedalPosXY[1])
+            currPedalPosXY = getPositionRightFoot()
+            x_pedal_record.append(currPedalPosXY[0])
+            y_pedal_record.append(currPedalPosXY[1])
 
-	    if _currTrajectoryPoint == first_trajectory_point and past_first_trajectory_point:
-                print(len(pedalTrajectoryRight))             
+            if _currTrajectoryPoint == initial_trajectory_point and past_initial_trajectory_point:
+                print(len(pedalTrajectoryRight))
                 print("Reached starting point")
                 for pedal_pos in pedalTrajectoryRight:
-                    plt.plot(pedal_pos[0],pedal_pos[1], '*')
-                plt.plot(x_pedal_record,y_pedal_record)
+                    plt.plot(pedal_pos[0], pedal_pos[1], '*')
+                plt.plot(x_pedal_record, y_pedal_record)
                 plt.show()
-                past_first_trajectory_point = False
+                past_initial_trajectory_point = False
 
             # Regulate update frequency
             _currTime = time.time()
@@ -517,10 +525,11 @@ def FSM():
 
             # Check if trajectory point reached and act accordingly
             if PRINT_DEBUG:
-		print("%0.5f" % (getDistance(getPositionRightFoot(), pedalTrajectoryRight[_currTrajectoryPoint])), end='\r')
-            if getDistance(getPositionRightFoot(), pedalTrajectoryRight[_currTrajectoryPoint]) <= PEDAL_POSITION_ERROR_TOLERANCE: #and _currTime >= _endTime 
-#getDistance(getPositionLeftFoot(), pedalTrajectoryLeft[_currTrajectoryPoint]) <= PEDAL_POSITION_ERROR_TOLERANCE and
-                past_first_trajectory_point = True
+                print("%0.5f" % (getDistance(getPositionRightFoot(), pedalTrajectoryRight[_currTrajectoryPoint])), end='\r')
+
+            if getDistance(getPositionRightFoot(), pedalTrajectoryRight[_currTrajectoryPoint]) <= PEDAL_POSITION_ERROR_TOLERANCE:  # and _currTime >= _endTime
+                # getDistance(getPositionLeftFoot(), pedalTrajectoryLeft[_currTrajectoryPoint]) <= PEDAL_POSITION_ERROR_TOLERANCE and
+                past_initial_trajectory_point = True
                 if (_currTrajectoryPoint < (numTrajectoryPoints-1)):
                     _currTrajectoryPoint += 1
                 elif (_currTrajectoryPoint >= (numTrajectoryPoints-1)):
@@ -529,47 +538,46 @@ def FSM():
                     print("UPDATING TRAJECTORY POINT. NEW POINT: %s" % (_currTrajectoryPoint))
                 _startTime = time.time()
                 _endTime = _startTime + TRAJECTORY_POINT_DURATION
-		for thisJointName in _jointsList:
+                for thisJointName in _jointsList:
                     _jointsControlData[thisJointName]["trajectory_startpoint"] = getJointPosition(thisJointName)
                     _jointsControlData[thisJointName]["pos_error_integral"] = 0
-		    _jointsControlData[thisJointName]["bool_update_iv"] = True
+                    _jointsControlData[thisJointName]["bool_update_iv"] = True
 
-            # Iterate through joints and update setpoints
-            for thisJointName in _jointsList:
+                # Iterate through joints and update setpoints
+                for thisJointName in _jointsList:
 
-                thisJointPositionGoalpoint = 0.0
-                if thisJointName == RIGHT_HIP_JOINT:
-                    thisJointPositionGoalpoint = hipTrajectoryRight[_currTrajectoryPoint]
-                elif thisJointName == RIGHT_KNEE_JOINT:
-                    thisJointPositionGoalpoint = kneeTrajectoryRight[_currTrajectoryPoint]
-                elif thisJointName == RIGHT_ANKLE_JOINT:
-                    thisJointPositionGoalpoint = ankleTrajectoryRight[_currTrajectoryPoint]
-                elif thisJointName == LEFT_HIP_JOINT:
-                    thisJointPositionGoalpoint = hipTrajectoryLeft[_currTrajectoryPoint]
-                elif thisJointName == LEFT_KNEE_JOINT:
-                    thisJointPositionGoalpoint = kneeTrajectoryLeft[_currTrajectoryPoint]
-                elif thisJointName == LEFT_ANKLE_JOINT:
-                    thisJointPositionGoalpoint = ankleTrajectoryLeft[_currTrajectoryPoint]
+                    thisJointPositionGoalpoint = 0.0
+                    if thisJointName == RIGHT_HIP_JOINT:
+                        thisJointPositionGoalpoint = hipTrajectoryRight[_currTrajectoryPoint]
+                    elif thisJointName == RIGHT_KNEE_JOINT:
+                        thisJointPositionGoalpoint = kneeTrajectoryRight[_currTrajectoryPoint]
+                    elif thisJointName == RIGHT_ANKLE_JOINT:
+                        thisJointPositionGoalpoint = ankleTrajectoryRight[_currTrajectoryPoint]
+                    elif thisJointName == LEFT_HIP_JOINT:
+                        thisJointPositionGoalpoint = hipTrajectoryLeft[_currTrajectoryPoint]
+                    elif thisJointName == LEFT_KNEE_JOINT:
+                        thisJointPositionGoalpoint = kneeTrajectoryLeft[_currTrajectoryPoint]
+                    elif thisJointName == LEFT_ANKLE_JOINT:
+                        thisJointPositionGoalpoint = ankleTrajectoryLeft[_currTrajectoryPoint]
 
+                    _currTime = time.time()
 
-                _currTime = time.time()
+                    #thisJointPositionSetpoint = interpolateTrajectoryPoints(_jointsControlData[thisJointName]["trajectory_startpoint"], thisJointPositionGoalpoint, _startTime, _currTime, _endTime)
 
-                #thisJointPositionSetpoint = interpolateTrajectoryPoints(_jointsControlData[thisJointName]["trajectory_startpoint"], thisJointPositionGoalpoint, _startTime, _currTime, _endTime)
+                    thisJointVelocitySetpoint = computeVelocitySetpoint(thisJointName, thisJointPositionGoalpoint, _startTime, _currTime, _endTime)
 
-                thisJointVelocitySetpoint = computeVelocitySetpoint(thisJointName, thisJointPositionGoalpoint, _startTime, _currTime, _endTime)
-
-                if thisJointName == RIGHT_HIP_JOINT:
-                    ros_right_hip_publisher.publish(thisJointVelocitySetpoint)
-                elif thisJointName == RIGHT_KNEE_JOINT:
-                    ros_right_knee_publisher.publish(thisJointVelocitySetpoint)
-                elif thisJointName == RIGHT_ANKLE_JOINT:
-                    ros_right_ankle_publisher.publish(thisJointVelocitySetpoint)
-#                elif thisJointName == LEFT_HIP_JOINT:
-#                    ros_left_hip_publisher.publish(thisJointVelocitySetpoint)
-#                elif thisJointName == LEFT_KNEE_JOINT:
-#                    ros_left_knee_publisher.publish(thisJointVelocitySetpoint)
-#                elif thisJointName == LEFT_ANKLE_JOINT:
-#                    ros_left_ankle_publisher.publish(thisJointVelocitySetpoint)
+                    if thisJointName == RIGHT_HIP_JOINT:
+                        ros_right_hip_publisher.publish(thisJointVelocitySetpoint)
+                    elif thisJointName == RIGHT_KNEE_JOINT:
+                        ros_right_knee_publisher.publish(thisJointVelocitySetpoint)
+                    elif thisJointName == RIGHT_ANKLE_JOINT:
+                        ros_right_ankle_publisher.publish(thisJointVelocitySetpoint)
+#                    elif thisJointName == LEFT_HIP_JOINT:
+#                        ros_left_hip_publisher.publish(thisJointVelocitySetpoint)
+#                    elif thisJointName == LEFT_KNEE_JOINT:
+#                        ros_left_knee_publisher.publish(thisJointVelocitySetpoint)
+#                    elif thisJointName == LEFT_ANKLE_JOINT:
+#                        ros_left_ankle_publisher.publish(thisJointVelocitySetpoint)
 
         ##############################################
         #if _currState == UPDATE_PARAMETERS:
@@ -583,6 +591,7 @@ def FSM():
 ###   MAIN   ###
 ################
 
+
 def main():
 
     rospy.init_node('pedal_simulation', anonymous=True)
@@ -595,5 +604,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
