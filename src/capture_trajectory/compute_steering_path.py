@@ -87,31 +87,8 @@ def main():
     global _centerHandlebarTrajectory
 
     computeSteeringAngles()
-#    plt.figure(1)
-#    pointListX = []
-#    pointListY = []
-#    for itemIterator in range(len(_steeringAngles)):
-#        print("%s: %s" % (itemIterator, _steeringAngles[itemIterator]))
-#        pointListX.append(math.cos(_steeringAngles[itemIterator]))
-#        pointListY.append(math.sin(_steeringAngles[itemIterator]))
-#    plt.plot(pointListX, pointListY)
-#    plt.show()
-
     computeHandTrajectories()
-#    plt.figure(1)
-#    rightHandPointsX = []
-#    rightHandPointsY = []
-#    leftHandPointsX = []
-#    leftHandPointsY = []
-#    for rightIterator in range(len(_rightHandTrajectory)):
-#        rightHandPointsX.append(_rightHandTrajectory[rightIterator][0])
-#        rightHandPointsY.append(_rightHandTrajectory[rightIterator][1])
-#    for leftIterator in range(len(_leftHandTrajectory)):
-#        leftHandPointsX.append(_leftHandTrajectory[leftIterator][0])
-#        leftHandPointsY.append(_leftHandTrajectory[leftIterator][1])
-#    plt.plot(rightHandPointsX, rightHandPointsY)
-#    plt.plot(leftHandPointsX, leftHandPointsY, '*')
-#    plt.show()
+
     plt.figure(1)
     for steeringAngleIterator in range(len(_steeringAngles)):
         plt.plot([RIKSHAW_TURN_JOINT_X_OFFSET, _centerHandlebarTrajectory[steeringAngleIterator][0]], [RIKSHAW_TURN_JOINT_Y_OFFSET, _centerHandlebarTrajectory[steeringAngleIterator][1]])
