@@ -162,6 +162,7 @@ def main():
     for pointIter in range(num_points):
         thisX = capturedPositions[pointIter][1]
         thisZ = capturedPositions[pointIter][3]
+        thisPedalAngle = = capturedPositions[pointIter][0]
         jointAngleResult_right = inverse_kinematics_client(endeffector_right, frame_right, thisX, y_offset_right, thisZ)
         jointAngleResult_left = inverse_kinematics_client(endeffector_left, frame_left, thisX, y_offset_left, thisZ)
         if (jointAngleResult and ("joint_hip_right" in jointAngleResult) and ("joint_knee_right" in jointAngleResult) and ("joint_foot_right" in jointAngleResult)):
@@ -169,10 +170,12 @@ def main():
         	jointAngleDict["point_"+str(pointIter)]["Left"] = {}
         	jointAngleDict["point_"+str(pointIter)]["Right"] = {}
     		jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal"] = [thisX, thisZ]
+            jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal_angle"] = thisPedalAngle
     		jointAngleDict["point_"+str(pointIter)]["Left"]["Hip"] = jointAngleResult["joint_hip_left"]
     		jointAngleDict["point_"+str(pointIter)]["Left"]["Knee"] = jointAngleResult["joint_knee_left"]
     		jointAngleDict["point_"+str(pointIter)]["Left"]["Ankle"] = jointAngleResult["joint_foot_left"]
         	jointAngleDict["point_"+str(pointIter)]["Right"]["Pedal"] = [thisX, thisZ]
+            jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal_angle"] = thisPedalAngle
     		jointAngleDict["point_"+str(pointIter)]["Right"]["Hip"] = jointAngleResult["joint_hip_right"]
     		jointAngleDict["point_"+str(pointIter)]["Right"]["Knee"] = jointAngleResult["joint_knee_right"]
     		jointAngleDict["point_"+str(pointIter)]["Right"]["Ankle"] = jointAngleResult["joint_foot_right"]
