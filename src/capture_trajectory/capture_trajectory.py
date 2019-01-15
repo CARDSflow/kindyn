@@ -171,14 +171,14 @@ def main():
         	jointAngleDict["point_"+str(pointIter)]["Right"] = {}
     		jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal"] = [thisX, thisZ]
             jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal_angle"] = thisPedalAngle
-    		jointAngleDict["point_"+str(pointIter)]["Left"]["Hip"] = jointAngleResult["joint_hip_left"]
-    		jointAngleDict["point_"+str(pointIter)]["Left"]["Knee"] = jointAngleResult["joint_knee_left"]
-    		jointAngleDict["point_"+str(pointIter)]["Left"]["Ankle"] = jointAngleResult["joint_foot_left"]
+    		jointAngleDict["point_"+str(pointIter)]["Left"]["Hip"] = jointAngleResult_left["joint_hip_left"]
+    		jointAngleDict["point_"+str(pointIter)]["Left"]["Knee"] = jointAngleResult_left["joint_knee_left"]
+    		jointAngleDict["point_"+str(pointIter)]["Left"]["Ankle"] = jointAngleResult_left["joint_foot_left"]
         	jointAngleDict["point_"+str(pointIter)]["Right"]["Pedal"] = [thisX, thisZ]
             jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal_angle"] = thisPedalAngle
-    		jointAngleDict["point_"+str(pointIter)]["Right"]["Hip"] = jointAngleResult["joint_hip_right"]
-    		jointAngleDict["point_"+str(pointIter)]["Right"]["Knee"] = jointAngleResult["joint_knee_right"]
-    		jointAngleDict["point_"+str(pointIter)]["Right"]["Ankle"] = jointAngleResult["joint_foot_right"]
+    		jointAngleDict["point_"+str(pointIter)]["Right"]["Hip"] = jointAngleResult_right["joint_hip_right"]
+    		jointAngleDict["point_"+str(pointIter)]["Right"]["Knee"] = jointAngleResult_right["joint_knee_right"]
+    		jointAngleDict["point_"+str(pointIter)]["Right"]["Ankle"] = jointAngleResult_right["joint_foot_right"]
 
     #print(jointAngleDict)
     with open(JSON_FILENAME, "w") as write_file:
