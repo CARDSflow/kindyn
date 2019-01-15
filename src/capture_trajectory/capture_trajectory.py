@@ -140,24 +140,24 @@ def inverse_kinematics_client(endeffector, frame, x, y, z):
 def main():
 
     if len(sys.argv) > 1:
-        num_points = int(sys.argv[1])
+        num_requested_points = int(sys.argv[1])
     else:
-        num_points = 72
+        num_requested_points = 72
 
     #plotPedalTrajectories()
 
     capturedPositions = getPedalPositions(num_points)
 
-    endeffector_right = "pedal_right"
-    frame_right = "pedal_right"
+    endeffector_right = "right_leg"
+    frame_right = "right_leg"
     y_offset_right = RIGHT_LEG_OFFSET_Y
 
-    endeffector_left = "pedal_left"
-    frame_left = "pedal_left"
+    endeffector_left = "left_leg"
+    frame_left = "left_leg"
     y_offset_left = LEFT_LEG_OFFSET_Y
 
     jointAngleDict = {}
-    jointAngleDict["num_points"] = num_points
+    jointAngleDict["num_points"] = num_requested_points
 
     for pointIter in range(num_points):
         thisX = capturedPositions[pointIter][1]
@@ -165,7 +165,7 @@ def main():
         thisPedalAngle = = capturedPositions[pointIter][0]
         jointAngleResult_right = inverse_kinematics_client(endeffector_right, frame_right, thisX, y_offset_right, thisZ)
         jointAngleResult_left = inverse_kinematics_client(endeffector_left, frame_left, thisX, y_offset_left, thisZ)
-        if (jointAngleResult and ("joint_hip_right" in jointAngleResult) and ("joint_knee_right" in jointAngleResult) and ("joint_foot_right" in jointAngleResult)):
+        if (jointAngleResult_right and jointAngleResult_left):
     		jointAngleDict["point_"+str(pointIter)] = {}
         	jointAngleDict["point_"+str(pointIter)]["Left"] = {}
         	jointAngleDict["point_"+str(pointIter)]["Right"] = {}
@@ -179,12 +179,14 @@ def main():
     		jointAngleDict["point_"+str(pointIter)]["Right"]["Hip"] = jointAngleResult_right["joint_hip_right"]
     		jointAngleDict["point_"+str(pointIter)]["Right"]["Knee"] = jointAngleResult_right["joint_knee_right"]
     		jointAngleDict["point_"+str(pointIter)]["Right"]["Ankle"] = jointAngleResult_right["joint_foot_right"]
+        else:
+            jointAngleDict["num_points"] = jointAngleDict["num_points"] - 1
 
     #print(jointAngleDict)
     with open(JSON_FILENAME, "w") as write_file:
         json.dump(jointAngleDict, write_file, indent=4, sort_keys=True)
 
-    plotEverything(num_points, jointAngleDict)
+    plotEverything(jointAngleDict["num_points"], jointAngleDict)
 
     return 1
 
