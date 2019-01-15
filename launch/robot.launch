@@ -9,6 +9,9 @@
     <arg name="headless" default="false"/>
     <arg name="debug" default="false"/>
     <arg name="external_robot_state" default="false"/>
+    <arg name="x" default="0"/>
+    <arg name="y" default="0"/>
+    <arg name="z" default="0"/>
 
     <param name="robot_name" type="string" value="$(arg robot_name)"  />
     <param name="model_name" type="string" value="$(arg model_name)"  />
@@ -17,8 +20,8 @@
     <param name="cardsflow_xml" type="string" value="$(find robots)/$(arg model_name)/cardsflow.xml" />
     <rosparam file="$(find robots)/$(arg model_name)/config/controller.yaml" command="load"/>
     <rosparam file="$(find robots)/$(arg model_name)/config/endeffectors.yaml" command="load"/>
-    <param name="Kp" type="double" value="100"  />
-    <param name="Kd" type="double" value="10"  />
+    <param name="musclemodel_Kp" type="double" value="10"  />
+    <param name="musclemodel_Kd" type="double" value="1"  />
     <rosparam param="q_target">[0.0, 0.0, 0.0]</rosparam>
     <param name="min_force" type="double" value="0"  />
     <param name="max_force" type="double" value="100000"  />
@@ -28,12 +31,6 @@
           pkg="controller_manager"
           type="spawner"
           args="$(arg start_controllers)" />
-    <!--<node name="controller_manager"-->
-          <!--pkg="controller_manager"-->
-          <!--type="spawner"-->
-          <!--args="hip_joint elbow_left_rot1 elbow_right_rot1 elbow_left_rot0 elbow_right_rot0-->
-          <!--sphere_left_axis0 sphere_left_axis1 sphere_left_axis2 sphere_right_axis0 sphere_right_axis1 sphere_right_axis2-->
-          <!--sphere_head_axis0 sphere_head_axis1 sphere_head_axis2" />-->
 
     <node name="robot_controller"
           pkg="kindyn"
@@ -51,7 +48,8 @@
             <arg name="headless" value="$(arg headless)"/>
         </include>
         <node name="robot_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-              args="-sdf -file $(find robots)/$(arg model_name)/model.sdf -model $(arg model_name)"
+              args="-sdf -file $(find robots)/$(arg model_name)/model.sdf -model $(arg model_name)
+              -x $(arg x) -y $(arg y) -z $(arg z)"
         />
     </group>
 

@@ -3,6 +3,7 @@
 #include <roboy_middleware_msgs/MotorCommand.h>
 #include <roboy_simulation_msgs/GymStep.h>
 #include <roboy_simulation_msgs/GymReset.h>
+#include <common_utilities/CommonDefinitions.h>
 
 #define NUMBER_OF_MOTORS 8
 #define SPINDLERADIUS 0.00575
@@ -58,11 +59,21 @@ public:
         roboy_middleware_msgs::MotorCommand msg;
         msg.id = 5;
         stringstream str;
+//        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
+//            msg.motors.push_back(i);
+//            double l_change = l[i]-l_offset[i];
+//            msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
+//            str << l_change << "\t";
+//        }
+//        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
+//            msg.motors.push_back(i);
+//            double l_change = l[i]-l_offset[i];
+//            msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(l_change)); //
+//            str << l_change << "\t";
+//        }
         for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
-            msg.motors.push_back(i);
-            double l_change = l[i]-l_offset[i];
-            msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
-            str << l_change << "\t";
+                msg.motors.push_back(i);
+                msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(Ld[0][i]));
         }
 		//ROS_INFO_STREAM_THROTTLE(1,str.str());
 
@@ -135,7 +146,7 @@ public:
  */
 void update(controller_manager::ControllerManager *cm) {
     ros::Time prev_time = ros::Time::now();
-    ros::Rate rate(100); // changing this value affects the control speed of your running controllers
+    ros::Rate rate(500); // changing this value affects the control speed of your running controllers
     while (ros::ok()) {
         const ros::Time time = ros::Time::now();
         const ros::Duration period = time - prev_time;
