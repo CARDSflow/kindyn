@@ -73,41 +73,83 @@ def plotEverything(numSamples, jointAngleDict):
     plt.plot(x_values, z_values,label="Ideal")
     for pointIter in range(jointAngleDict["num_points"]):
         if "point_"+str(pointIter) in jointAngleDict:
-            if "Pedal" in jointAngleDict["point_"+str(pointIter)]:
-                plt.plot(jointAngleDict["point_"+str(pointIter)]["Pedal"][0], jointAngleDict["point_"+str(pointIter)]["Pedal"][1], 'rs',label="IK recorded")
+            if "Pedal" in jointAngleDict["point_"+str(pointIter)]["Left"]:
+                plt.plot(jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal"][0], jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal"][1], 'rs',label="IK recorded left")
+            if "Pedal" in jointAngleDict["point_"+str(pointIter)]["Right"]:
+                plt.plot(jointAngleDict["point_"+str(pointIter)]["Right"]["Pedal"][0], jointAngleDict["point_"+str(pointIter)]["Right"]["Pedal"][1], 'gs',label="IK recorded right")
 
-    
+
     plt.figure(2)
-    plt.title('Hip positions')
+    plt.title('Hip positions left')
     x_values = []
     z_values = []
-    for pointIter in range(jointAngleDict["num_points"]):
+    tot_points = jointAngleDict["num_points"]
+    for pointIter in range(tot_points):
         if "point_"+str(pointIter) in jointAngleDict:
-            if "Hip" in jointAngleDict["point_"+str(pointIter)]:
-                x_values.append(pointIter)
-                z_values.append(jointAngleDict["point_"+str(pointIter)]["Hip"])
+            if "Hip" in jointAngleDict["point_"+str(pointIter)]["Left"]:
+                x_values.append(pointIter * (2 * math.pi / tot_points))
+                z_values.append(jointAngleDict["point_"+str(pointIter)]["Left"]["Hip"])
     plt.plot(x_values, z_values)
 
     plt.figure(3)
-    plt.title('Knee positions')
+    plt.title('Hip positions right')
     x_values = []
     z_values = []
-    for pointIter in range(jointAngleDict["num_points"]):
+    tot_points = jointAngleDict["num_points"]
+    for pointIter in range(tot_points):
         if "point_"+str(pointIter) in jointAngleDict:
-            if "Knee" in jointAngleDict["point_"+str(pointIter)]:
-                x_values.append(pointIter)
-                z_values.append(jointAngleDict["point_"+str(pointIter)]["Knee"])
+            if "Hip" in jointAngleDict["point_"+str(pointIter)]["Right"]:
+                x_values.append(pointIter * (2 * math.pi / tot_points))
+                z_values.append(jointAngleDict["point_"+str(pointIter)]["Right"]["Hip"])
     plt.plot(x_values, z_values)
 
+
     plt.figure(4)
-    plt.title('Ankle positions')
+    plt.title('Knee positions left')
     x_values = []
     z_values = []
-    for pointIter in range(jointAngleDict["num_points"]):
+    tot_points = jointAngleDict["num_points"]
+    for pointIter in range(tot_points):
         if "point_"+str(pointIter) in jointAngleDict:
-            if "Ankle" in jointAngleDict["point_"+str(pointIter)]:
-                x_values.append(pointIter)
-                z_values.append(jointAngleDict["point_"+str(pointIter)]["Ankle"])
+            if "Knee" in jointAngleDict["point_"+str(pointIter)]["Left"]:
+                x_values.append(pointIter * (2 * math.pi / tot_points))
+                z_values.append(jointAngleDict["point_"+str(pointIter)]["Left"]["Knee"])
+    plt.plot(x_values, z_values)
+
+    plt.figure(5)
+    plt.title('Knee positions right')
+    x_values = []
+    z_values = []
+    tot_points = jointAngleDict["num_points"]
+    for pointIter in range(tot_points):
+        if "point_"+str(pointIter) in jointAngleDict:
+            if "Knee" in jointAngleDict["point_"+str(pointIter)]["Right"]:
+                x_values.append(pointIter * (2 * math.pi / tot_points))
+                z_values.append(jointAngleDict["point_"+str(pointIter)]["Right"]["Knee"])
+    plt.plot(x_values, z_values)
+
+    plt.figure(6)
+    plt.title('Ankle positions left')
+    x_values = []
+    z_values = []
+    tot_points = jointAngleDict["num_points"]
+    for pointIter in range(tot_points):
+        if "point_"+str(pointIter) in jointAngleDict:
+            if "Ankle" in jointAngleDict["point_"+str(pointIter)]["Left"]:
+                x_values.append(pointIter * (2 * math.pi / tot_points))
+                z_values.append(jointAngleDict["point_"+str(pointIter)]["Left"]["Ankle"])
+    plt.plot(x_values, z_values)
+
+    plt.figure(7)
+    plt.title('Ankle positions right')
+    x_values = []
+    z_values = []
+    tot_points = jointAngleDict["num_points"]
+    for pointIter in range(tot_points):
+        if "point_"+str(pointIter) in jointAngleDict:
+            if "Ankle" in jointAngleDict["point_"+str(pointIter)]["Right"]:
+                x_values.append(pointIter * (2 * math.pi / tot_points))
+                z_values.append(jointAngleDict["point_"+str(pointIter)]["Right"]["Ankle"])
     plt.plot(x_values, z_values)
 
     plt.show()
@@ -146,39 +188,39 @@ def main():
 
     #plotPedalTrajectories()
 
-    capturedPositions = getPedalPositions(num_points)
+    capturedPositions = getPedalPositions(num_requested_points)
 
     endeffector_right = "right_leg"
-    frame_right = "right_leg"
+    frame_right = "foot_right_tip"
     y_offset_right = RIGHT_LEG_OFFSET_Y
 
     endeffector_left = "left_leg"
-    frame_left = "left_leg"
+    frame_left = "foot_left_tip"
     y_offset_left = LEFT_LEG_OFFSET_Y
 
     jointAngleDict = {}
     jointAngleDict["num_points"] = num_requested_points
 
-    for pointIter in range(num_points):
+    for pointIter in range(num_requested_points):
         thisX = capturedPositions[pointIter][1]
         thisZ = capturedPositions[pointIter][3]
-        thisPedalAngle = = capturedPositions[pointIter][0]
+        thisPedalAngle = capturedPositions[pointIter][0]
         jointAngleResult_right = inverse_kinematics_client(endeffector_right, frame_right, thisX, y_offset_right, thisZ)
         jointAngleResult_left = inverse_kinematics_client(endeffector_left, frame_left, thisX, y_offset_left, thisZ)
         if (jointAngleResult_right and jointAngleResult_left):
-    		jointAngleDict["point_"+str(pointIter)] = {}
-        	jointAngleDict["point_"+str(pointIter)]["Left"] = {}
-        	jointAngleDict["point_"+str(pointIter)]["Right"] = {}
-    		jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal"] = [thisX, thisZ]
+            jointAngleDict["point_"+str(pointIter)] = {}
+            jointAngleDict["point_"+str(pointIter)]["Left"] = {}
+            jointAngleDict["point_"+str(pointIter)]["Right"] = {}
+            jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal"] = [thisX, thisZ]
             jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal_angle"] = thisPedalAngle
-    		jointAngleDict["point_"+str(pointIter)]["Left"]["Hip"] = jointAngleResult_left["joint_hip_left"]
-    		jointAngleDict["point_"+str(pointIter)]["Left"]["Knee"] = jointAngleResult_left["joint_knee_left"]
-    		jointAngleDict["point_"+str(pointIter)]["Left"]["Ankle"] = jointAngleResult_left["joint_foot_left"]
-        	jointAngleDict["point_"+str(pointIter)]["Right"]["Pedal"] = [thisX, thisZ]
+            jointAngleDict["point_"+str(pointIter)]["Left"]["Hip"] = jointAngleResult_left["joint_hip_left"]
+            jointAngleDict["point_"+str(pointIter)]["Left"]["Knee"] = jointAngleResult_left["joint_knee_left"]
+            jointAngleDict["point_"+str(pointIter)]["Left"]["Ankle"] = jointAngleResult_left["joint_foot_left"]
+            jointAngleDict["point_"+str(pointIter)]["Right"]["Pedal"] = [thisX, thisZ]
             jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal_angle"] = thisPedalAngle
-    		jointAngleDict["point_"+str(pointIter)]["Right"]["Hip"] = jointAngleResult_right["joint_hip_right"]
-    		jointAngleDict["point_"+str(pointIter)]["Right"]["Knee"] = jointAngleResult_right["joint_knee_right"]
-    		jointAngleDict["point_"+str(pointIter)]["Right"]["Ankle"] = jointAngleResult_right["joint_foot_right"]
+            jointAngleDict["point_"+str(pointIter)]["Right"]["Hip"] = jointAngleResult_right["joint_hip_right"]
+            jointAngleDict["point_"+str(pointIter)]["Right"]["Knee"] = jointAngleResult_right["joint_knee_right"]
+            jointAngleDict["point_"+str(pointIter)]["Right"]["Ankle"] = jointAngleResult_right["joint_foot_right"]
         else:
             jointAngleDict["num_points"] = jointAngleDict["num_points"] - 1
 
