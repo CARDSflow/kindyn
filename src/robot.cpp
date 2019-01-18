@@ -531,7 +531,9 @@ void Robot::update() {
             }
         }
         { // robot target publisher
-            if((q_target-q_target_prev).norm()>0.001 || (qd_target-qd_target_prev).norm()>0.001 ) { // only if target changed
+            if((q_target-q_target_prev).norm()>0.001 || (qd_target-qd_target_prev).norm()>0.001 || first_update) { // only if target changed
+                if(first_update)
+                    first_update = false;
                 q_target_prev = q_target;
                 qd_target_prev = qd_target;
                 iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
@@ -545,17 +547,37 @@ void Robot::update() {
                                                robotstate.gravity);
 
                 static int seq = 0;
+                vector<Matrix4d> target_poses;
                 for (int i = 0; i < number_of_links; i++) {
-                    Matrix4d pose = iDynTree::toEigen(kinDynCompTarget.getWorldTransform(i).asHomogeneousTransform());
+                    target_poses.push_back(iDynTree::toEigen(kinDynCompTarget.getWorldTransform(i).asHomogeneousTransform()));
                     Vector3d com = iDynTree::toEigen(model.getLink(i)->getInertia().getCenterOfMass());
-                    pose.block(0, 3, 3, 1) += pose.block(0, 0, 3, 3) * com;
+                    target_poses[i].block(0, 3, 3, 1) += target_poses[i].block(0, 0, 3, 3) * com;
                     geometry_msgs::PoseStamped msg;
                     msg.header.seq = seq++;
                     msg.header.stamp = ros::Time::now();
                     msg.header.frame_id = link_names[i];
-                    Isometry3d iso(pose);
+                    Isometry3d iso(target_poses[i]);
                     tf::poseEigenToMsg(iso, msg.pose);
                     robot_state_target_pub.publish(msg);
+                }
+
+                int i=0;
+                for (auto muscle:cables) {
+                    l_target[i] = 0;
+                    int j=0;
+                    vector<Vector3d> target_viapoints;
+                    for (auto vp:muscle.viaPoints) {
+                        if (!vp->fixed_to_world) { // move viapoint with link
+                            target_viapoints.push_back(target_poses[vp->link_index].block(0, 3, 3, 1) +
+                                                               target_poses[vp->link_index].block(0, 0, 3, 3) *
+                                                     vp->local_coordinates);
+                        }
+                        if(j>0){
+                            l_target[i] += (target_viapoints[j]-target_viapoints[j-1]).norm();
+                        }
+                        j++;
+                    }
+                    i++;
                 }
             }
         }

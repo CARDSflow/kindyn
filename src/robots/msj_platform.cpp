@@ -65,17 +65,17 @@ public:
 //            msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
 //            str << l_change << "\t";
 //        }
-//        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
-//            msg.motors.push_back(i);
-//            double l_change = l[i]-l_offset[i];
-//            msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(l_change)); //
-//            str << l_change << "\t";
-//        }
         for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
-                msg.motors.push_back(i);
-                msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(Ld[0][i]));
+            msg.motors.push_back(i);
+            double l_change = l_target[i]-l_offset[i];
+            msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(l_change)); //
+            str << l_change << "\t";
         }
-		//ROS_INFO_STREAM_THROTTLE(1,str.str());
+//        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
+//                msg.motors.push_back(i);
+//                msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(Ld[0][i]));
+//        }
+		ROS_INFO_STREAM_THROTTLE(1,str.str());
 
         motor_command.publish(msg);
     };
