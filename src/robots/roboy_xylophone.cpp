@@ -28,8 +28,6 @@ public:
             l_offset.push_back(l[i]);
         // if we do not get the robot state externally, we use the forwardKinematics function to integrate the robot state
         nh->getParam("external_robot_state", external_robot_state);
-        ros::Duration d(5);
-        d.sleep();
     };
     /**
      * Updates the robot model and integrates the robot model using the forwardKinematics function
@@ -45,10 +43,10 @@ public:
      */
     void write(){
         roboy_middleware_msgs::MotorCommand msg;
-        msg.id = 0;
+        msg.id = 5;
         for(int i=0;i<number_of_cables;i++){
             msg.motors.push_back(i);
-            msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(Ld[0][i]));
+            msg.set_points.push_back(l_target[i]);
         }
 //        for(int i=0;i<number_of_cables;i++){
 //            msg.motors.push_back(i);
@@ -68,7 +66,7 @@ public:
  */
 void update(controller_manager::ControllerManager *cm) {
     ros::Time prev_time = ros::Time::now();
-    ros::Rate rate(500); // changing this value affects the control speed of your running controllers
+    ros::Rate rate(100); // changing this value affects the control speed of your running controllers
     while (ros::ok()) {
         const ros::Time time = ros::Time::now();
         const ros::Duration period = time - prev_time;

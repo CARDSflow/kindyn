@@ -40,6 +40,7 @@ public:
                 ROS_WARN("failed to change control mode to position");
         }
         update();
+
 //        for(auto ef:endeffectors) {
 //            for(int i=0;i<sim_motors[ef].size();i++)
 //                l_offset[ef][i] = l[sim_motors[ef][i]];

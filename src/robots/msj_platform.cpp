@@ -58,7 +58,7 @@ public:
     void write(){
         roboy_middleware_msgs::MotorCommand msg;
         msg.id = 5;
-        stringstream str;
+//        stringstream str;
 //        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
 //            msg.motors.push_back(i);
 //            double l_change = l[i]-l_offset[i];
@@ -67,15 +67,15 @@ public:
 //        }
         for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
             msg.motors.push_back(i);
-            double l_change = l_target[i]-l_offset[i];
-            msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(l_change)); //
-            str << l_change << "\t";
+//            double l_change = l_target[i]-l_offset[i];
+            msg.set_points.push_back(l_target[i]); //
+//            str << l_target[i] << "\t";
         }
 //        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
 //                msg.motors.push_back(i);
 //                msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(Ld[0][i]));
 //        }
-		ROS_INFO_STREAM_THROTTLE(1,str.str());
+//		ROS_INFO_STREAM_THROTTLE(1,str.str());
 
         motor_command.publish(msg);
     };
@@ -146,7 +146,7 @@ public:
  */
 void update(controller_manager::ControllerManager *cm) {
     ros::Time prev_time = ros::Time::now();
-    ros::Rate rate(500); // changing this value affects the control speed of your running controllers
+    ros::Rate rate(100); // changing this value affects the control speed of your running controllers
     while (ros::ok()) {
         const ros::Time time = ros::Time::now();
         const ros::Duration period = time - prev_time;
