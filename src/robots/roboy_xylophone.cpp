@@ -66,7 +66,7 @@ public:
  */
 void update(controller_manager::ControllerManager *cm) {
     ros::Time prev_time = ros::Time::now();
-    ros::Rate rate(100); // changing this value affects the control speed of your running controllers
+    ros::Rate rate(1000); // changing this value affects the control speed of your running controllers
     while (ros::ok()) {
         const ros::Time time = ros::Time::now();
         const ros::Duration period = time - prev_time;
