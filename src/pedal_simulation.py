@@ -3,6 +3,7 @@ from __future__ import print_function
 
 #roslaunch kindyn robot.launch robot_name:=rikshaw model_name:=rikshaw start_controllers:='joint_hip_right joint_knee_right joint_foot_right joint_hip_left joint_knee_left joint_foot_left joint_pedal'
 
+#roslaunch kindyn robot.launch robot_name:=rikshaw start_controllers:='joint_hip_left joint_hip_right joint_wheel_right joint_wheel_back joint_pedal spine_joint joint_wheel_left joint_front joint_pedal_right joint_pedal_left elbow_right_rot1 joint_foot_left joint_knee_right joint_knee_left joint_foot_right left_shoulder_axis0 left_shoulder_axis1 left_shoulder_axis2 elbow_left_rot1 elbow_left_rot0 left_wrist_0 left_wrist_1 right_shoulder_axis0 right_shoulder_axis2 right_shoulder_axis1 elbow_right_rot0 right_wrist_0 right_wrist_1 head_axis0 head_axis1 head_axis2'
 
 import json
 import math
@@ -23,7 +24,7 @@ from std_msgs.msg import Float32
 
 PRINT_DEBUG = True
 
-RECORDED_TRAJECTORY_FILENAME = "captured_trajectory.json"
+RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/captured_trajectory.json"
 
 PEDAL_POSITION_ERROR_TOLERANCE   = 0.02  # [meters]
 JOINT_TRAJECTORY_ERROR_TOLERANCE = 0.02
@@ -306,7 +307,7 @@ def getPositionLeftFoot():
     rospy.wait_for_service('fk')
     try:
         fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
-        fk_result = fk_srv("pedal_left", "pedal_left", fkJointNamesList, fkJointPositions)
+        fk_result = fk_srv("left_leg", "foot_left_tip", fkJointNamesList, fkJointPositions)
         return [fk_result.pose.position.x, fk_result.pose.position.z]
 
     except rospy.ServiceException, e:
@@ -323,7 +324,7 @@ def getPositionRightFoot():
     rospy.wait_for_service('fk')
     try:
         fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
-        fk_result = fk_srv("pedal_right", "pedal_right", fkJointNamesList, fkJointPositions)
+        fk_result = fk_srv("right_leg", "foot_right_tip", fkJointNamesList, fkJointPositions)
         return [fk_result.pose.position.x, fk_result.pose.position.z]
 
     except rospy.ServiceException, e:
