@@ -151,6 +151,8 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     cable_forces.setZero();
     torques.resize(number_of_dofs);
     torques.setZero();
+    q_min.resize(number_of_dofs);
+    q_max.resize(number_of_dofs);
 
     controller_type.resize(number_of_cables, CARDSflow::ControllerType::cable_length_controller);
     joint_state.resize(number_of_dofs);
@@ -179,6 +181,8 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         joint_command_interface.registerHandle(torque_handle);
         joint_state[joint][0] = 0;
         joint_state[joint][1] = 0;
+        q_min[joint] = model.getJoint(joint)->getMinPosLimit(0);
+        q_max[joint] = model.getJoint(joint)->getMaxPosLimit(0);
     }
     registerInterface(&cardsflow_command_interface);
     registerInterface(&joint_command_interface);
@@ -664,6 +668,17 @@ void Robot::forwardKinematics(double dt) {
             l_int[l] = motor_state[l][0];
         }
     }
+    // respect joint limits
+    for(int i=0;i<number_of_joints;i++){
+        if(q[i]<q_min[i]){
+            q[i] = q_min[i];
+            qd[i] = 0;
+        }
+        if(q[i]>q_max[i]){
+            q[i] = q_max[i];
+            qd[i] = 0;
+        }
+    }
 
     integration_time += dt;
     ROS_INFO_THROTTLE(5, "forward kinematics calculated for %lf s", integration_time);
@@ -850,9 +865,12 @@ bool Robot::InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::R
     ik_models[req.endeffector].setRobotState(robotstate.world_H_base, jointPos, robotstate.baseVel,
                                              jointVel, robotstate.gravity);
     ik[req.endeffector].clearProblem();
+    ik[req.endeffector].setMaxCPUTime(30);
     // we constrain the base link to stay where it is
+//    ROS_INFO_STREAM(ik_base_link[req.endeffector] << "\n"<< ik_models[req.endeffector].model().getFrameTransform(
+//            ik_models[req.endeffector].getFrameIndex(ik_base_link[req.endeffector])).toString());
     ik[req.endeffector].addTarget(ik_base_link[req.endeffector], ik_models[req.endeffector].model().getFrameTransform(
-            ik_models[req.endeffector].getFrameIndex(ik_base_link[req.endeffector])));
+            ik_models[req.endeffector].getFrameIndex(ik_base_link[req.endeffector])),100,100);
     switch (req.type) {
         case 0: {
             Eigen::Isometry3d iso;
@@ -929,7 +947,7 @@ void Robot::InteractiveMarkerFeedback( const visualization_msgs::InteractiveMark
         if(InverseKinematicsService(msg2.request,msg2.response)){
             int index = endeffector_index[msg->marker_name];
             for(int i=0;i<msg2.response.joint_names.size();i++){
-                q_target[endeffector_dof_offset[index]+i] = msg2.response.angles[i];
+                q_target[joint_index[msg2.response.joint_names[i]]] = msg2.response.angles[i];
             }
 
         }

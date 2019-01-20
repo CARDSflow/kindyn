@@ -248,6 +248,7 @@ namespace cardsflow {
             MatrixXd M; /// The Mass matrix of the robot
             VectorXd CG; /// The Coriolis+Gravity term of the robot
             VectorXd q, qd, qdd; /// joint positon, velocity, acceleration
+            VectorXd q_min, q_max; /// joint limits
             VectorXd q_target, qd_target, qdd_target; /// joint positon, velocity, acceleration targets
             VectorXd q_target_prev, qd_target_prev, qdd_target_prev; /// joint positon, velocity, acceleration targets
             VectorXd l_int, l, l_target; /// tendon length and length change
