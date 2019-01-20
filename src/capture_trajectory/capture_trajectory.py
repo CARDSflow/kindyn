@@ -8,25 +8,30 @@ import matplotlib.pyplot as plt
 import rospy
 from roboy_middleware_msgs.srv import InverseKinematics, ForwardKinematics
 from roboy_simulation_msgs.msg import JointState
+from roboy_control_msgs.srv import SetControllerParameters
 from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Float32
 
 JSON_FILENAME = "captured_trajectory.json"
 
-JOINT_ANGLE_TOLERANCE_FK = 0.05
+JOINT_ANGLE_TOLERANCE_FK = 0.005
 
 ###############################
 ###   MEASURED PARAMETERS   ###
 ###############################
 
-PEDAL_CENTER_OFFSET_X = 0.20421
-PEDAL_CENTER_OFFSET_Y = -0.00062
-PEDAL_CENTER_OFFSET_Z = 0.2101
+PEDAL_CENTER_OFFSET_X = 0.20394  # 0.20421
+PEDAL_CENTER_OFFSET_Y = 0.03451  # -0.00062
+PEDAL_CENTER_OFFSET_Z = 0.21110  # 0.2101
 
-PEDAL_RADIUS = 0.16924  # [millimeters]
+BIKE_OFFSET_X = 0  # -0.83471
+BIKE_OFFSET_Y = 0  # 0.03437
+BIKE_OFFSET_Z = 0  # 0.037
 
-RIGHT_LEG_OFFSET_Y = 0.2095
-LEFT_LEG_OFFSET_Y = -0.13815
+PEDAL_RADIUS = 0.16924  # [meters]
+
+RIGHT_LEG_OFFSET_Y = 0.194
+LEFT_LEG_OFFSET_Y = -0.15415
 
 
 ############################
@@ -78,6 +83,89 @@ _jointsStatusData = {
 ##############################
 ###   UTILITY FUNCTIONS   ###
 ##############################
+
+def getPositionLeftFoot():
+    fkJointNamesList = [ROS_JOINT_HIP_LEFT, ROS_JOINT_KNEE_LEFT, ROS_JOINT_ANKLE_LEFT]
+    fkJointPositions = [_jointsStatusData[LEFT_HIP_JOINT]["Pos"], _jointsStatusData[LEFT_KNEE_JOINT]["Pos"], _jointsStatusData[LEFT_ANKLE_JOINT]["Pos"]]
+
+    rospy.wait_for_service('fk')
+    try:
+        fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
+        fk_result = fk_srv("left_leg", "foot_left_tip", fkJointNamesList, fkJointPositions)
+        return [fk_result.pose.position.x, fk_result.pose.position.z]
+
+    except rospy.ServiceException, e:
+        print("Service call failed: %s" % (e))
+
+    print("ERROR fk foot_left failed")
+    return [0.0, 0.0]  # [x, z]
+
+
+def getPositionRightFoot():
+    fkJointNamesList = [ROS_JOINT_HIP_RIGHT, ROS_JOINT_KNEE_RIGHT, ROS_JOINT_ANKLE_RIGHT]
+    fkJointPositions = [_jointsStatusData[RIGHT_HIP_JOINT]["Pos"], _jointsStatusData[RIGHT_KNEE_JOINT]["Pos"], _jointsStatusData[RIGHT_ANKLE_JOINT]["Pos"]]
+
+    rospy.wait_for_service('fk')
+    try:
+        fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
+        fk_result = fk_srv("right_leg", "foot_right_tip", fkJointNamesList, fkJointPositions)
+        return [fk_result.pose.position.x, fk_result.pose.position.z]
+
+    except rospy.ServiceException, e:
+        print("Service call failed: %s" % (e))
+
+    print("ERROR fk foot_right failed")
+    return [0.0, 0.0]  # [x, z]
+
+def setJointControllerParameters(proportionalVal, derivativeVal):
+
+    rospy.wait_for_service('joint_foot_left/joint_foot_left/params')
+    try:
+        foot_left_srv = rospy.ServiceProxy('joint_foot_left/joint_foot_left/params', SetControllerParameters)
+        foot_left_srv(proportionalVal, derivativeVal)
+    except rospy.ServiceException, e:
+        print "Service call joint_foot_left failed: %s"%e
+
+    rospy.wait_for_service('joint_foot_right/joint_foot_right/params')
+    try:
+        foot_right_srv = rospy.ServiceProxy('joint_foot_right/joint_foot_right/params', SetControllerParameters)
+        foot_right_srv(proportionalVal, derivativeVal)
+    except rospy.ServiceException, e:
+        print "Service call joint_foot_right failed: %s"%e
+
+    rospy.wait_for_service('joint_knee_left/joint_knee_left/params')
+    try:
+        knee_left_srv = rospy.ServiceProxy('joint_knee_left/joint_knee_left/params', SetControllerParameters)
+        knee_left_srv(proportionalVal, derivativeVal)
+    except rospy.ServiceException, e:
+        print "Service call joint_knee_left failed: %s"%e
+
+    rospy.wait_for_service('joint_knee_right/joint_knee_right/params')
+    try:
+        knee_right_srv = rospy.ServiceProxy('joint_knee_right/joint_knee_right/params', SetControllerParameters)
+        knee_right_srv(proportionalVal, derivativeVal)
+    except rospy.ServiceException, e:
+        print "Service call joint_knee_right failed: %s"%e
+
+    rospy.wait_for_service('joint_hip_left/joint_hip_left/params')
+    try:
+        hip_left_srv = rospy.ServiceProxy('joint_hip_left/joint_hip_left/params', SetControllerParameters)
+        hip_left_srv(proportionalVal, derivativeVal)
+    except rospy.ServiceException, e:
+        print "Service call joint_hip_left failed: %s"%e
+
+    rospy.wait_for_service('joint_hip_right/joint_hip_right/params')
+    try:
+        hip_right_srv = rospy.ServiceProxy('joint_hip_right/joint_hip_right/params', SetControllerParameters)
+        hip_right_srv(proportionalVal, derivativeVal)
+    except rospy.ServiceException, e:
+        print "Service call joint_hip_right failed: %s"%e
+
+    print("Controller paramters updated")
+
+
+
+
 
 def jointStateCallback(joint_data):
     global _jointsStatusData
@@ -150,9 +238,11 @@ def plotEverything(numSamples, jointAngleDict):
     for pointIter in range(jointAngleDict["num_points"]):
         if "point_"+str(pointIter) in jointAngleDict:
             if "Pedal" in jointAngleDict["point_"+str(pointIter)]["Left"]:
-                plt.plot(jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal"][0], jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal"][1], 'rs',label="IK recorded left")
+                plt.plot(jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal"][0], jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal"][1], 'gs',label="IK recorded left")
+                plt.plot(jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal_actual"][0], jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal_actual"][1], 'rs',label="Actual left")
             if "Pedal" in jointAngleDict["point_"+str(pointIter)]["Right"]:
                 plt.plot(jointAngleDict["point_"+str(pointIter)]["Right"]["Pedal"][0], jointAngleDict["point_"+str(pointIter)]["Right"]["Pedal"][1], 'gs',label="IK recorded right")
+                plt.plot(jointAngleDict["point_"+str(pointIter)]["Right"]["Pedal_actual"][0], jointAngleDict["point_"+str(pointIter)]["Right"]["Pedal_actual"][1], 'rs',label="Actual right")
 
 
     plt.figure(2)
@@ -273,14 +363,16 @@ def main():
     ros_left_knee_publisher  = rospy.Publisher('/joint_knee_left/joint_knee_left/target', Float32, queue_size=2)
     ros_left_ankle_publisher = rospy.Publisher('/joint_foot_left/joint_foot_left/target', Float32, queue_size=2)
 
+    setJointControllerParameters(250, 50)
+
     capturedPositions = getPedalPositions(num_requested_points)
 
     endeffector_right = "right_leg"
-    frame_right = "foot_right_tip"
+    frame_right = "foot_right"
     y_offset_right = RIGHT_LEG_OFFSET_Y
 
     endeffector_left = "left_leg"
-    frame_left = "foot_left_tip"
+    frame_left = "foot_left"
     y_offset_left = LEFT_LEG_OFFSET_Y
 
     jointAngleDict = {}
@@ -291,8 +383,8 @@ def main():
         thisX = capturedPositions[pointIter][1]
         thisZ = capturedPositions[pointIter][3]
         thisPedalAngle = capturedPositions[pointIter][0]
-        jointAngleResult_right = inverse_kinematics_client(endeffector_right, frame_right, thisX, y_offset_right, thisZ)
-        jointAngleResult_left = inverse_kinematics_client(endeffector_left, frame_left, thisX, y_offset_left, thisZ)
+        jointAngleResult_right = inverse_kinematics_client(endeffector_right, frame_right, thisX + BIKE_OFFSET_X, y_offset_right + BIKE_OFFSET_Y, thisZ + BIKE_OFFSET_Z)
+        jointAngleResult_left = inverse_kinematics_client(endeffector_left, frame_left, thisX + BIKE_OFFSET_X, y_offset_left + BIKE_OFFSET_Y, thisZ + BIKE_OFFSET_Z)
         if (jointAngleResult_right and jointAngleResult_left):
             jointAngleDict["point_"+str(pointIter)] = {}
             jointAngleDict["point_"+str(pointIter)]["Left"] = {}
@@ -307,34 +399,38 @@ def main():
             jointAngleDict["point_"+str(pointIter)]["Right"]["Hip"] = jointAngleResult_right["joint_hip_right"]
             jointAngleDict["point_"+str(pointIter)]["Right"]["Knee"] = jointAngleResult_right["joint_knee_right"]
             jointAngleDict["point_"+str(pointIter)]["Right"]["Ankle"] = jointAngleResult_right["joint_foot_right"]
+
+            ros_right_hip_publisher.publish(jointAngleResult_right["joint_hip_right"])
+            ros_right_knee_publisher.publish(jointAngleResult_right["joint_knee_right"])
+            ros_right_ankle_publisher.publish(jointAngleResult_right["joint_foot_right"])
+            ros_left_hip_publisher.publish(jointAngleResult_left["joint_hip_left"])
+            ros_left_knee_publisher.publish(jointAngleResult_left["joint_knee_left"])
+            ros_left_ankle_publisher.publish(jointAngleResult_left["joint_foot_left"])
+
+            while ( abs(_jointsStatusData[RIGHT_HIP_JOINT]["Pos"] - jointAngleResult_right["joint_hip_right"]) > JOINT_ANGLE_TOLERANCE_FK):
+                time.sleep(0.1)
+            print("Right hip moved to new position")
+            while ( abs(_jointsStatusData[RIGHT_KNEE_JOINT]["Pos"] - jointAngleResult_right["joint_knee_right"]) > JOINT_ANGLE_TOLERANCE_FK ):
+                time.sleep(0.1)
+            print("Right knee moved to new position")
+            while ( abs(_jointsStatusData[RIGHT_ANKLE_JOINT]["Pos"] - jointAngleResult_right["joint_foot_right"]) > JOINT_ANGLE_TOLERANCE_FK ):
+                time.sleep(0.1)
+            print("Right ankle moved to new position")
+            while ( abs(_jointsStatusData[LEFT_HIP_JOINT]["Pos"] - jointAngleResult_left["joint_hip_left"]) > JOINT_ANGLE_TOLERANCE_FK ):
+                time.sleep(0.1)
+            print("Left hip moved to new position")
+            while ( abs(_jointsStatusData[LEFT_KNEE_JOINT]["Pos"] - jointAngleResult_left["joint_knee_left"]) > JOINT_ANGLE_TOLERANCE_FK ):
+                time.sleep(0.1)
+            print("Left knee moved to new position")
+            while ( abs(_jointsStatusData[LEFT_ANKLE_JOINT]["Pos"] - jointAngleResult_left["joint_foot_left"]) > JOINT_ANGLE_TOLERANCE_FK ):
+                time.sleep(0.1)
+            print("Left ankle moved to new position")
+
+            jointAngleDict["point_"+str(pointIter)]["Right"]["Pedal_actual"] = getPositionRightFoot()
+            jointAngleDict["point_"+str(pointIter)]["Left"]["Pedal_actual"] = getPositionLeftFoot()
+
         else:
             jointAngleDict["num_points"] = jointAngleDict["num_points"] - 1
-
-        ros_right_hip_publisher.publish(jointAngleResult_right["joint_hip_right"])
-        ros_right_knee_publisher.publish(jointAngleResult_right["joint_knee_right"])
-        ros_right_ankle_publisher.publish(jointAngleResult_right["joint_foot_right"])
-        ros_left_hip_publisher.publish(jointAngleResult_left["joint_hip_left"])
-        ros_left_knee_publisher.publish(jointAngleResult_left["joint_knee_left"])
-        ros_left_ankle_publisher.publish(jointAngleResult_left["joint_foot_left"])
-
-        while ( abs(_jointsStatusData[RIGHT_HIP_JOINT]["Pos"] - jointAngleResult_right["joint_hip_right"]) > JOINT_ANGLE_TOLERANCE_FK):
-            time.sleep(0.1)
-        print("Right hip moved to new position")
-        while ( abs(_jointsStatusData[RIGHT_KNEE_JOINT]["Pos"] - jointAngleResult_right["joint_knee_right"]) > JOINT_ANGLE_TOLERANCE_FK ):
-            time.sleep(0.1)
-        print("Right knee moved to new position")
-        while ( abs(_jointsStatusData[RIGHT_ANKLE_JOINT]["Pos"] - jointAngleResult_right["joint_foot_right"]) > JOINT_ANGLE_TOLERANCE_FK ):
-            time.sleep(0.1)
-        print("Right ankle moved to new position")
-        while ( abs(_jointsStatusData[LEFT_HIP_JOINT]["Pos"] - jointAngleResult_left["joint_hip_left"]) > JOINT_ANGLE_TOLERANCE_FK ):
-            time.sleep(0.1)
-        print("Left hip moved to new position")
-        while ( abs(_jointsStatusData[LEFT_KNEE_JOINT]["Pos"] - jointAngleResult_left["joint_knee_left"]) > JOINT_ANGLE_TOLERANCE_FK ):
-            time.sleep(0.1)
-        print("Left knee moved to new position")
-        while ( abs(_jointsStatusData[LEFT_ANKLE_JOINT]["Pos"] - jointAngleResult_left["joint_foot_left"]) > JOINT_ANGLE_TOLERANCE_FK ):
-            time.sleep(0.1)
-        print("Left ankle moved to new position")
 
         print("Finished point ", pointIter)
 
