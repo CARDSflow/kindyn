@@ -403,6 +403,14 @@ def printInterpolatedFunctions():
     plt.plot(_pedalAngleTrajectoryRight, _hipTrajectoryRight, '*')
     plt.plot(highDefPlotRange, _jointsControlData[RIGHT_HIP_JOINT]["pos_function"](highDefPlotRange), '-')
 
+    plt.figure(2)
+    plt.plot(_pedalAngleTrajectoryRight, _kneeTrajectoryRight, '*')
+    plt.plot(highDefPlotRange, _jointsControlData[RIGHT_KNEE_JOINT]["pos_function"](highDefPlotRange), '-')
+
+    plt.figure(3)
+    plt.plot(_pedalAngleTrajectoryRight, _ankleTrajectoryRight, '*')
+    plt.plot(highDefPlotRange, _jointsControlData[RIGHT_ANKLE_JOINT]["pos_function"](highDefPlotRange), '-')
+
     plt.show()
 
 #############################
