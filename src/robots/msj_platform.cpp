@@ -107,6 +107,7 @@ public:
     bool GymGoalService(roboy_simulation_msgs::GymGoal::Request &req,
                         roboy_simulation_msgs::GymGoal::Response &res){
         bool not_feasible = true;
+        float q0= 0.0,q1= 0.0,q2 = 0.0;
         double min[3] = {0,0,-1}, max[3] = {0,0,1};
         for(int i=0;i<limits[0].size();i++){
             if(limits[0][i]<min[0])
@@ -118,17 +119,22 @@ public:
             if(limits[1][i]>max[1])
                 max[1] = limits[1][i];
         }
+        srand(static_cast<unsigned >(time(0)));
         while(not_feasible) {
+            /*
             float q0 = rand() / (float) RAND_MAX * (max[0] - min[0]) + min[0];
             float q1 = rand() / (float) RAND_MAX * (max[1] - min[1]) + min[1];
             float q2 = rand() / (float) RAND_MAX * (max[2] - min[2]) + min[2];
-            if (pnpoly(limits[0], limits[1], q0, q1)) {
-                res.q.push_back(q0);
-                res.q.push_back(q1);
-                res.q.push_back(q1);
+             */
+            q0 = min[0] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[0]-min[0]))));
+            q1 = min[1] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[1]-min[1]))));
+            q2 = min[2] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[2]-min[2]))));
+            if (pnpoly(limits[0], limits[1], q0, q1))
                 not_feasible = false;
-            }
         }
+        res.q.push_back(q0);
+        res.q.push_back(q1);
+        res.q.push_back(q1);
 
     }
 
