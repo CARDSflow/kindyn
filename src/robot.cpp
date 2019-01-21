@@ -865,12 +865,10 @@ bool Robot::InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::R
     ik_models[req.endeffector].setRobotState(robotstate.world_H_base, jointPos, robotstate.baseVel,
                                              jointVel, robotstate.gravity);
     ik[req.endeffector].clearProblem();
-    ik[req.endeffector].setMaxCPUTime(30);
+//    ik[req.endeffector].setMaxCPUTime(60);
     // we constrain the base link to stay where it is
-//    ROS_INFO_STREAM(ik_base_link[req.endeffector] << "\n"<< ik_models[req.endeffector].model().getFrameTransform(
-//            ik_models[req.endeffector].getFrameIndex(ik_base_link[req.endeffector])).toString());
     ik[req.endeffector].addTarget(ik_base_link[req.endeffector], ik_models[req.endeffector].model().getFrameTransform(
-            ik_models[req.endeffector].getFrameIndex(ik_base_link[req.endeffector])),100,100);
+            ik_models[req.endeffector].getFrameIndex(ik_base_link[req.endeffector])));
     switch (req.type) {
         case 0: {
             Eigen::Isometry3d iso;
