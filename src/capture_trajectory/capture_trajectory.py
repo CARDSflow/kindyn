@@ -14,15 +14,15 @@ from std_msgs.msg import Float32
 
 JSON_FILENAME = "captured_trajectory.json"
 
-JOINT_ANGLE_TOLERANCE_FK = 0.005
+JOINT_ANGLE_TOLERANCE_FK = 0.01
 
 ###############################
 ###   MEASURED PARAMETERS   ###
 ###############################
 
-PEDAL_CENTER_OFFSET_X = 0.20394  # 0.20421
-PEDAL_CENTER_OFFSET_Y = 0.03451  # -0.00062
-PEDAL_CENTER_OFFSET_Z = 0.21110  # 0.2101
+PEDAL_CENTER_OFFSET_X = 0.09223  # 0.20421
+PEDAL_CENTER_OFFSET_Y = 0.00013  # -0.00062
+PEDAL_CENTER_OFFSET_Z = 0.00426  # 0.2101
 
 BIKE_OFFSET_X = 0  # -0.83471
 BIKE_OFFSET_Y = 0  # 0.03437
@@ -30,8 +30,8 @@ BIKE_OFFSET_Z = 0  # 0.037
 
 PEDAL_RADIUS = 0.16924  # [meters]
 
-RIGHT_LEG_OFFSET_Y = 0.194
-LEFT_LEG_OFFSET_Y = -0.15415
+RIGHT_LEG_OFFSET_Y = 0.15796
+LEFT_LEG_OFFSET_Y = -0.18736
 
 
 ############################
@@ -91,7 +91,7 @@ def getPositionLeftFoot():
     rospy.wait_for_service('fk')
     try:
         fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
-        fk_result = fk_srv("left_leg", "foot_left_tip", fkJointNamesList, fkJointPositions)
+        fk_result = fk_srv("foot_left_tip", "foot_left_tip", fkJointNamesList, fkJointPositions)
         return [fk_result.pose.position.x, fk_result.pose.position.z]
 
     except rospy.ServiceException, e:
@@ -108,7 +108,7 @@ def getPositionRightFoot():
     rospy.wait_for_service('fk')
     try:
         fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
-        fk_result = fk_srv("right_leg", "foot_right_tip", fkJointNamesList, fkJointPositions)
+        fk_result = fk_srv("foot_right_tip", "foot_right_tip", fkJointNamesList, fkJointPositions)
         return [fk_result.pose.position.x, fk_result.pose.position.z]
 
     except rospy.ServiceException, e:
@@ -363,16 +363,16 @@ def main():
     ros_left_knee_publisher  = rospy.Publisher('/joint_knee_left/joint_knee_left/target', Float32, queue_size=2)
     ros_left_ankle_publisher = rospy.Publisher('/joint_foot_left/joint_foot_left/target', Float32, queue_size=2)
 
-    setJointControllerParameters(250, 50)
+    setJointControllerParameters(1000, 100)
 
     capturedPositions = getPedalPositions(num_requested_points)
 
-    endeffector_right = "right_leg"
-    frame_right = "foot_right"
+    endeffector_right = "foot_right_tip"
+    frame_right = "foot_right_tip"
     y_offset_right = RIGHT_LEG_OFFSET_Y
 
-    endeffector_left = "left_leg"
-    frame_left = "foot_left"
+    endeffector_left = "foot_left_tip"
+    frame_left = "foot_left_tip"
     y_offset_left = LEFT_LEG_OFFSET_Y
 
     jointAngleDict = {}
@@ -384,7 +384,9 @@ def main():
         thisZ = capturedPositions[pointIter][3]
         thisPedalAngle = capturedPositions[pointIter][0]
         jointAngleResult_right = inverse_kinematics_client(endeffector_right, frame_right, thisX + BIKE_OFFSET_X, y_offset_right + BIKE_OFFSET_Y, thisZ + BIKE_OFFSET_Z)
+        print("ik result fetched for foot_right_tip")
         jointAngleResult_left = inverse_kinematics_client(endeffector_left, frame_left, thisX + BIKE_OFFSET_X, y_offset_left + BIKE_OFFSET_Y, thisZ + BIKE_OFFSET_Z)
+        print("ik result fetched for foot_left_tip")
         if (jointAngleResult_right and jointAngleResult_left):
             jointAngleDict["point_"+str(pointIter)] = {}
             jointAngleDict["point_"+str(pointIter)]["Left"] = {}

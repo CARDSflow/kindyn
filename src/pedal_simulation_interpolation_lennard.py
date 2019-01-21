@@ -27,7 +27,7 @@ from std_msgs.msg import Float32
 
 PRINT_DEBUG = True
 
-RECORDED_TRAJECTORY_FILENAME = "captured_trajectory.json"
+RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/old_captured_trajectory.json"
 
 PEDAL_POSITION_ERROR_TOLERANCE = 0.02  # [meters]
 JOINT_TRAJECTORY_ERROR_TOLERANCE = 0.02
@@ -216,6 +216,7 @@ numTrajectoryPoints = -1
 trajectoryStartingPoint = 0
 
 pedalTrajectoryRight = [ ]
+pedalAngleTrajectoryRight = []
 pedalTrajectoryLeft = [ ]
 hipTrajectoryRight = [ ]
 kneeTrajectoryRight = [ ]
@@ -277,6 +278,7 @@ def importJointTrajectoryRecord():
     # Deleting previous trajectory before loading new
     del pedalTrajectoryLeft[ : ]
     del pedalTrajectoryRight[ : ]
+    del pedalAngleTrajectoryRight[ : ]
     del hipTrajectoryRight[ : ]
     del kneeTrajectoryRight[ : ]
     del ankleTrajectoryRight[ : ]
@@ -287,6 +289,7 @@ def importJointTrajectoryRecord():
         if ("point_" + str(pointIterator) in loaded_data):
             pedalTrajectoryLeft.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Pedal" ])
             pedalTrajectoryRight.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Pedal" ])
+            pedalAngleTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Pedal_angle"])
             hipTrajectoryRight.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Hip" ])
             kneeTrajectoryRight.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Knee" ])
             ankleTrajectoryRight.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Ankle" ])
@@ -339,7 +342,7 @@ def getPositionLeftFoot():
     rospy.wait_for_service('fk')
     try:
         fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
-        fk_result = fk_srv("pedal_left", "pedal_left", fkJointNamesList, fkJointPositions)
+        fk_result = fk_srv("foot_left_tip", "foot_left_tip", fkJointNamesList, fkJointPositions)
         return [ fk_result.pose.position.x, fk_result.pose.position.z ]
 
     except rospy.ServiceException, e:
@@ -357,7 +360,7 @@ def getPositionRightFoot():
     rospy.wait_for_service('fk')
     try:
         fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
-        fk_result = fk_srv("pedal_right", "pedal_right", fkJointNamesList, fkJointPositions)
+        fk_result = fk_srv("foot_right_tip", "foot_right_tip", fkJointNamesList, fkJointPositions)
         return [ fk_result.pose.position.x, fk_result.pose.position.z ]
 
     except rospy.ServiceException, e:
@@ -466,6 +469,8 @@ def computeVelocitySetpoint(jointName, next_joint_angle, current_joint_angle, st
 
 
 def get_joint_angle(thisJointName, trajectory_angle):
+    print (trajectory_angle, type(trajectory_angle))
+
     if thisJointName == RIGHT_HIP_JOINT:
         return f_interpolated_hip_right(trajectory_angle)
     elif thisJointName == RIGHT_KNEE_JOINT:
@@ -489,12 +494,12 @@ def interpolate_functions():
     global f_interpolated_ankle_left
     global f_interpolated_pedal_angle
 
-    f_interpolated_hip_right = interpolate.interp1d(pedalTrajectoryRight, hipTrajectoryRight, kind="cubic")
-    f_interpolated_knee_right = interpolate.interp1d(pedalTrajectoryRight, kneeTrajectoryRight, kind="cubic")
-    f_interpolated_ankle_right = interpolate.interp1d(pedalTrajectoryRight, ankleTrajectoryRight, kind="cubic")
-    f_interpolated_hip_left = interpolate.interp1d(pedalTrajectoryLeft, hipTrajectoryLeft, kind="cubic")
-    f_interpolated_hip_left = interpolate.interp1d(pedalTrajectoryLeft, kneeTrajectoryLeft, kind="cubic")
-    f_interpolated_hip_left = interpolate.interp1d(pedalTrajectoryLeft, ankleTrajectoryLeft, kind="cubic")
+    f_interpolated_hip_right = interpolate.interp1d(pedalAngleTrajectoryRight, hipTrajectoryRight, kind="cubic")
+    f_interpolated_knee_right = interpolate.interp1d(pedalAngleTrajectoryRight, kneeTrajectoryRight, kind="cubic")
+    f_interpolated_ankle_right = interpolate.interp1d(pedalAngleTrajectoryRight, ankleTrajectoryRight, kind="cubic")
+    f_interpolated_hip_left = interpolate.interp1d(pedalAngleTrajectoryRight, hipTrajectoryLeft, kind="cubic")
+    f_interpolated_hip_left = interpolate.interp1d(pedalAngleTrajectoryRight, kneeTrajectoryLeft, kind="cubic")
+    f_interpolated_hip_left = interpolate.interp1d(pedalAngleTrajectoryRight, ankleTrajectoryLeft, kind="cubic")
 
 
 def evaluate_current_angle(current_point):
@@ -547,7 +552,7 @@ def publish_velocity(thisJointName, next_joint_angle, current_joint_angle, _star
         factor = velocity_error_factor_ankle
 
     begin_time = rospy.get_rostime()
-    duration = rospy.Time(CONTROLLER_FREQUENCY)
+    duration = rospy.Time(1/CONTROLLER_FREQUENCY)
     end_time = duration + begin_time;
     while (rospy.get_rostime() < end_time):
         publisher.publish(thisJointVelocitySetpoint * factor);
@@ -572,6 +577,13 @@ def FSM():
     global x_pedal_record
     global y_pedal_record
     global pedalTrajectoryRight
+
+    global velocity_error_factor_hip
+    global velocity_error_factor_knee
+    global velocity_error_factor_ankle
+    global velocity_error_factor_hip
+    global velocity_error_factor_knee
+    global velocity_error_factor_ankle
 
     _runFSM = True
 
@@ -651,32 +663,34 @@ def FSM():
                 thread.join()
 
             for joint in _jointsList:
+
+
                 actual_joint_angle = get_joint_angle(joint, evaluate_current_angle(getPositionRightFoot()))
                 error = np.abs(next_joint_angle-actual_joint_angle)
                 print(joint,": angle-error of ", error, " radiants")
 
-                new_factor = (next_joint_angle - current_joint_angle) / (actual_joint_angle - current_joint_angle)
+                new_factor = np.abs(next_joint_angle - current_joint_angle) / np.abs(actual_joint_angle - current_joint_angle)
 
 
                 if np.abs(new_factor-1) <=0.1:
 
                     if thisJointName == RIGHT_HIP_JOINT:
-                        global velocity_error_factor_hip
+
                         velocity_error_factor_hip = new_factor
                     elif thisJointName == RIGHT_KNEE_JOINT:
-                        global velocity_error_factor_knee
+
                         velocity_error_factor_knee = new_factor
                     elif thisJointName == RIGHT_ANKLE_JOINT:
-                        global velocity_error_factor_ankle
+
                         velocity_error_factor_ankle = new_factor
                     elif thisJointName == LEFT_HIP_JOINT:
-                        global velocity_error_factor_hip
+
                         velocity_error_factor_hip = new_factor
                     elif thisJointName == LEFT_KNEE_JOINT:
-                        global velocity_error_factor_knee
+
                         velocity_error_factor_knee = new_factor
                     elif thisJointName == LEFT_ANKLE_JOINT:
-                        global velocity_error_factor_ankle
+
                         velocity_error_factor_ankle = new_factor
 
 
