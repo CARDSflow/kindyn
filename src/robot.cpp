@@ -309,7 +309,15 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         }
         ik[ef].setModel(ik_models[ef].getRobotModel());
         ik[ef].setVerbosity(0);
+
+        auto it = find(link_names.begin(),link_names.end(),ef);
+        int link_index = distance(link_names.begin(),it);
         tf::Vector3 pos(0,0.3*k,0);
+        if(link_index<link_names.size()) {
+            iDynTree::Matrix4x4 pose = kinDynComp.getWorldTransform(link_index).asHomogeneousTransform();
+            pos = tf::Vector3(pose.getVal(0,3),pose.getVal(1,3),pose.getVal(2,3));
+        }
+
         make6DofMarker(false,visualization_msgs::InteractiveMarkerControl::MOVE_3D,pos,false,0.15,"world",ef.c_str());
 
         moveEndEffector_as[ef].reset(
@@ -866,9 +874,11 @@ bool Robot::InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::R
                                              jointVel, robotstate.gravity);
     ik[req.endeffector].clearProblem();
 //    ik[req.endeffector].setMaxCPUTime(60);
+    ik[req.endeffector].setCostTolerance(0.001);
     // we constrain the base link to stay where it is
     ik[req.endeffector].addTarget(ik_base_link[req.endeffector], ik_models[req.endeffector].model().getFrameTransform(
             ik_models[req.endeffector].getFrameIndex(ik_base_link[req.endeffector])));
+
     switch (req.type) {
         case 0: {
             Eigen::Isometry3d iso;
@@ -893,6 +903,18 @@ bool Robot::InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::R
             break;
         }
     }
+
+    static int counter = 6969;
+    counter++;
+    COLOR color(1,1,1,1);
+    color.randColor();
+    if(counter-(rand()/(float)RAND_MAX)*10==0){
+        publishMesh("robots", "common/meshes/visuals","target.stl", req.pose, 0.005,
+                    "world", "ik_target", counter, 10, color);
+    }else{
+        publishCube(req.pose, "world", "ik_target", counter, color, 0.05, 15);
+    }
+
     if (ik[req.endeffector].solve()) {
         iDynTree::Transform base_solution;
         iDynTree::VectorDynSize q_star;
