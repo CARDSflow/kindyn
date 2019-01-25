@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from __future__ import print_function
 
-# roslaunch kindyn robot.launch robot_name:=rikshaw model_name:=rikshaw start_controllers:='joint_hip_right joint_knee_right joint_foot_right joint_hip_left joint_knee_left joint_foot_left joint_pedal'
+#roslaunch kindyn robot.launch robot_name:=rikshaw start_controllers:='joint_hip_left joint_hip_right joint_wheel_right joint_wheel_back joint_pedal spine_joint joint_wheel_left joint_front joint_pedal_right joint_pedal_left elbow_right_rot1 joint_foot_left joint_knee_right joint_knee_left joint_foot_right left_shoulder_axis0 left_shoulder_axis1 left_shoulder_axis2 elbow_left_rot1 elbow_left_rot0 left_wrist_0 left_wrist_1 right_shoulder_axis0 right_shoulder_axis2 right_shoulder_axis1 elbow_right_rot0 right_wrist_0 right_wrist_1 head_axis0 head_axis1 head_axis2'
 
 
 import json
@@ -25,18 +25,23 @@ from std_msgs.msg import Float32
 ###   MODULE PARAMETERS   ###
 #############################
 
-PRINT_DEBUG = True
+PRINT_DEBUG = False
 
 RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/old_captured_trajectory.json"
 
 PEDAL_POSITION_ERROR_TOLERANCE = 0.02  # [meters]
 JOINT_TRAJECTORY_ERROR_TOLERANCE = 0.02
-PEDAL_SINGLE_ROTATION_DURATION = 20  # [seconds]
-TRAJECTORY_POINT_DURATION = 1
+PEDAL_SINGLE_ROTATION_DURATION = 0  # [seconds]
+NUMBER_CIRCULATION_POINTS = 72
+TRAJECTORY_POINT_DURATION = 0
 CONTROLLER_FREQUENCY = 100  # [Hz]
 MIN_JOINT_VEL = -500
 MAX_JOINT_VEL = 500
 JOINT_VELOCITY_FACTOR = 1000
+
+RADIUS_BACK_TIRE = 0.294398  # in m
+RADIUS_GEAR_CLUSTER = 0.06  # in m
+RADIUS_FRONT_CHAIN_RING = 0.075
 
 ############################
 ###   GLOBAL VARIABLES   ###
@@ -212,7 +217,7 @@ _jointsStatusData = {
     }
 }
 
-numTrajectoryPoints = -1
+number_imported_trajectory_points = -1
 trajectoryStartingPoint = 0
 
 pedalTrajectoryRight = [ ]
@@ -256,7 +261,7 @@ def jointStateCallback(joint_data):
 
 
 def importJointTrajectoryRecord():
-    global numTrajectoryPoints
+    global number_imported_trajectory_points
     global pedalTrajectoryLeft
     global pedalTrajectoryRight
     global hipTrajectoryRight
@@ -273,7 +278,7 @@ def importJointTrajectoryRecord():
     if loaded_data[ "num_points" ] is None:
         return 0
     else:
-        numTrajectoryPoints = loaded_data[ "num_points" ]
+        number_imported_trajectory_points = loaded_data[ "num_points" ]
 
     # Deleting previous trajectory before loading new
     del pedalTrajectoryLeft[ : ]
@@ -285,7 +290,7 @@ def importJointTrajectoryRecord():
     del hipTrajectoryLeft[ : ]
     del kneeTrajectoryLeft[ : ]
     del ankleTrajectoryLeft[ : ]
-    for pointIterator in range(numTrajectoryPoints):
+    for pointIterator in range(number_imported_trajectory_points):
         if ("point_" + str(pointIterator) in loaded_data):
             pedalTrajectoryLeft.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Pedal" ])
             pedalTrajectoryRight.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Pedal" ])
@@ -298,11 +303,11 @@ def importJointTrajectoryRecord():
             ankleTrajectoryLeft.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Ankle" ])
         else:
             print("WARNING: No point_%s in trajectory" % (pointIterator))
-            numTrajectoryPoints -= 1
+            number_imported_trajectory_points -= 1
 
     if PRINT_DEBUG:
         print("--------- Num trajectory points:")
-        print(numTrajectoryPoints)
+        print(number_imported_trajectory_points)
 
 
 def getJointPosition(jointName):
@@ -377,25 +382,6 @@ def getDistance(point1, point2):
     return math.sqrt((x_diff * x_diff) + (y_diff * y_diff))
 
 
-def setPedalSingleRotationDuration(new_duration_seconds):
-    global PEDAL_SINGLE_ROTATION_DURATION
-    PEDAL_SINGLE_ROTATION_DURATION = new_duration_seconds
-    setTrajectoryPointDuration()
-    return 1
-
-
-def setTrajectoryPointDuration():
-    global TRAJECTORY_POINT_DURATION
-    global PEDAL_SINGLE_ROTATION_DURATION
-    global numTrajectoryPoints
-    if numTrajectoryPoints != 0:
-        TRAJECTORY_POINT_DURATION = float(PEDAL_SINGLE_ROTATION_DURATION) / numTrajectoryPoints
-    else:
-        TRAJECTORY_POINT_DURATION = 1
-        return 0
-
-    return 1
-
 
 #############################
 ###   CONTROL FUNCTIONS   ###
@@ -469,7 +455,6 @@ def computeVelocitySetpoint(jointName, next_joint_angle, current_joint_angle, st
 
 
 def get_joint_angle(thisJointName, trajectory_angle):
-    print (trajectory_angle, type(trajectory_angle))
 
     if thisJointName == RIGHT_HIP_JOINT:
         return f_interpolated_hip_right(trajectory_angle)
@@ -498,8 +483,8 @@ def interpolate_functions():
     f_interpolated_knee_right = interpolate.interp1d(pedalAngleTrajectoryRight, kneeTrajectoryRight, kind="cubic")
     f_interpolated_ankle_right = interpolate.interp1d(pedalAngleTrajectoryRight, ankleTrajectoryRight, kind="cubic")
     f_interpolated_hip_left = interpolate.interp1d(pedalAngleTrajectoryRight, hipTrajectoryLeft, kind="cubic")
-    f_interpolated_hip_left = interpolate.interp1d(pedalAngleTrajectoryRight, kneeTrajectoryLeft, kind="cubic")
-    f_interpolated_hip_left = interpolate.interp1d(pedalAngleTrajectoryRight, ankleTrajectoryLeft, kind="cubic")
+    f_interpolated_knee_left = interpolate.interp1d(pedalAngleTrajectoryRight, kneeTrajectoryLeft, kind="cubic")
+    f_interpolated_ankle_left = interpolate.interp1d(pedalAngleTrajectoryRight, ankleTrajectoryLeft, kind="cubic")
 
 
 def evaluate_current_angle(current_point):
@@ -552,11 +537,30 @@ def publish_velocity(thisJointName, next_joint_angle, current_joint_angle, _star
         factor = velocity_error_factor_ankle
 
     begin_time = rospy.get_rostime()
-    duration = rospy.Time(1/CONTROLLER_FREQUENCY)
-    end_time = duration + begin_time;
+    duration = rospy.Duration(TRAJECTORY_POINT_DURATION)
+    end_time = duration + begin_time
     while (rospy.get_rostime() < end_time):
-        publisher.publish(thisJointVelocitySetpoint * factor);
-        rospy.Time(0, 1000000).sleep();
+        publisher.publish(thisJointVelocitySetpoint * factor)
+        rospy.sleep(rospy.Duration(0, 1000000))
+
+# used by listener to topic "rickshaw_velocity"
+def update_velocity(velocity):
+    global PEDAL_SINGLE_ROTATION_DURATION
+    global TRAJECTORY_POINT_DURATION
+
+    if velocity == 0:
+        ros_right_hip_publisher.publish(0)
+        ros_right_knee_publisher.publish(0)
+        ros_right_ankle_publisher.publish(0)
+        ros_left_hip_publisher.publish(0)
+        ros_left_knee_publisher.publish(0)
+        ros_left_ankle_publisher.publish(0)
+
+    else:
+        PEDAL_SINGLE_ROTATION_DURATION = 2 * np.pi * (RADIUS_FRONT_CHAIN_RING / RADIUS_GEAR_CLUSTER /
+                                                          (velocity / RADIUS_BACK_TIRE))
+        TRAJECTORY_POINT_DURATION = PEDAL_SINGLE_ROTATION_DURATION / NUMBER_CIRCULATION_POINTS
+
 
 
 #########################
@@ -569,7 +573,7 @@ UPDATE_PARAMETERS = "UPDATE_PARAMETERS"
 
 
 def FSM():
-    global numTrajectoryPoints
+    global NUMBER_CIRCULATION_POINTS
     global _jointsControlData
     global _jointsList
     global PRINT_DEBUG
@@ -590,7 +594,7 @@ def FSM():
     _currState = INIT
     _currTrajectoryPoint = getPositionRightFoot()
     _currTrajectoryAngle = evaluate_current_angle(_currTrajectoryPoint)
-    _nextTrajectoryAngle = None
+    _nextTrajectoryAngle = _currTrajectoryAngle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)
 
     _startTime = 0.0
     _endTime = 0.0
@@ -599,18 +603,34 @@ def FSM():
 
     while _runFSM:
 
+
+        print()
+
         ##############################################
         if _currState == INIT:
             ##############################################
 
             importJointTrajectoryRecord()
             interpolate_functions()
-            setTrajectoryPointDuration()
             _currState = PEDAL
+
+            rospy.init_node('velocity_rickshaw', anonymous=True)
+
+            rospy.Subscriber("/cmd_velocity_rickshaw", Float32, update_velocity)
+            thread_ros = Thread(target=rospy.spin)
+            thread_ros.start()
+
+            while(PEDAL_SINGLE_ROTATION_DURATION == 0):
+                pass
+                # wait for velocity != 0
 
         ##############################################
         if _currState == PEDAL:
             ##############################################
+
+            while (PEDAL_SINGLE_ROTATION_DURATION == 0):
+                pass
+                # wait for velocity != 0
 
             # Initialize state
             if _startTime == 0.0:
@@ -627,17 +647,19 @@ def FSM():
             _currTime = time.time()
             while float(float(_currTime) - float(_prevTime)) < (1 / CONTROLLER_FREQUENCY):
                 time.sleep(1)
-                _currTrajectoryPoint = getPositionRightFoot()
-                _currTrajectoryAngle = evaluate_current_angle(_currTrajectoryPoint)
                 x_pedal_record.append(_currTrajectoryPoint[ 0 ])
                 y_pedal_record.append(_currTrajectoryPoint[ 1 ])
                 _currTime = time.time()
             _prevTime = _currTime
 
+            _currTrajectoryPoint = getPositionRightFoot()
+            _currTrajectoryAngle = evaluate_current_angle(_currTrajectoryPoint)
+
             if PRINT_DEBUG:
                 print("UPDATING TRAJECTORY POINT. NEW POINT: %s" % (_currTrajectoryPoint))
             _startTime = time.time()
             _endTime = _startTime + TRAJECTORY_POINT_DURATION
+            _nextTrajectoryAngle = _currTrajectoryAngle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)
 
             for thisJointName in _jointsList:
                 _jointsControlData[ thisJointName ][ "trajectory_startpoint" ] = getJointPosition(thisJointName)
@@ -645,7 +667,7 @@ def FSM():
                 _jointsControlData[ thisJointName ][ "bool_update_iv" ] = True
 
             # Iterate through joints and update setpoints
-            publisher_threads = [ ]
+            publisher_threads = []
             i = 0
             for thisJointName in _jointsList:
                 current_joint_angle = get_joint_angle(thisJointName, _currTrajectoryAngle)
@@ -653,9 +675,8 @@ def FSM():
 
                 _currTime = time.time()
 
-                publisher_threads[i] = Thread(target=publish_velocity,
-                                                args=(thisJointName, next_joint_angle, current_joint_angle,
-                                                      _startTime, _currTime, _endTime))
+                publisher_threads.append(Thread(target=publish_velocity, args=(thisJointName, next_joint_angle,
+                                                                               current_joint_angle, _startTime, _currTime, _endTime)))
                 publisher_threads[i].start()
                 i += 1
 
