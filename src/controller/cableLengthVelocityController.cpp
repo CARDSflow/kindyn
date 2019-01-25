@@ -96,7 +96,7 @@ public:
      * @param time current time
      */
     void starting(const ros::Time& time) {
-        ROS_WARN("cable length controller started for %s with index %d", joint_name.c_str(), joint_index);
+        ROS_WARN("cable velocity controller started for %s with index %d", joint_name.c_str(), joint_index);
         roboy_simulation_msgs::ControllerType msg;
         msg.joint_name = joint_name;
         msg.type = CARDSflow::ControllerType::cable_length_controller;
@@ -106,7 +106,7 @@ public:
      * Called by controller manager when the controller is about to be stopped
      * @param time current time
      */
-    void stopping(const ros::Time& time) { ROS_WARN("cable length controller stopped for %s", joint_name.c_str());}
+    void stopping(const ros::Time& time) { ROS_WARN("cable velocity controller stopped for %s", joint_name.c_str());}
 
     /**
      * Joint position command callback for this joint
