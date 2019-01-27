@@ -9,16 +9,18 @@ public:
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
-            ros::init(argc, argv, "roboy_upper_body");
+            ros::init(argc, argv, "test_robot");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         vector<string> joint_names;
         nh->getParam("joint_names", joint_names);
         init(urdf,cardsflow_xml,joint_names);
+        nh->getParam("external_robot_state", external_robot_state);
     };
     void read(){
         update();
-        forwardKinematics(0.001);
+        if(!external_robot_state)
+            forwardKinematics(0.00001);
     };
 
     void write(){
@@ -26,6 +28,7 @@ public:
     };
 private:
     ros::NodeHandlePtr nh;
+    bool external_robot_state;
 };
 
 void update(controller_manager::ControllerManager *cm) {

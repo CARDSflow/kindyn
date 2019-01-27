@@ -19,6 +19,7 @@ endif ()
 #==============================================================================
 find_package(catkin REQUIRED COMPONENTS
 		roscpp
+		rospy
 		rosbag
 		std_msgs geometry_msgs
 		message_generation
@@ -28,7 +29,6 @@ find_package(catkin REQUIRED COMPONENTS
 		tf
 		tf_conversions
         robot_state_publisher
-		grid_map_ros
 		controller_interface
 		hardware_interface
 		controller_manager
@@ -137,9 +137,20 @@ target_link_libraries(yatr ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 add_executable( rikshaw src/robots/rikshaw.cpp)
 target_link_libraries(rikshaw ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
+
 # robot_configuration_estimator
 #add_executable( robot_configuration_estimator src/robots/robot_configuration_estimator.cpp)
 #target_link_libraries(robot_configuration_estimator ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+
+# capture_trajectory
+catkin_install_python(PROGRAMS
+  src/capture_trajectory/capture_trajectory.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+#add_executable( capture_trajectory src/capture_trajectory.py)
+#target_link_libraries(capture_trajectory ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+
+
 #==============================================================================
 # Installation
 #==============================================================================

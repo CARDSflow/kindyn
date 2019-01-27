@@ -66,7 +66,6 @@
 #include <tf/transform_listener.h>
 #include <tf_conversions/tf_eigen.h>
 #include <eigen_conversions/eigen_msg.h>
-#include <grid_map_ros/GridMapMsgHelpers.hpp>
 
 #include <qpOASES.hpp>
 
@@ -249,6 +248,7 @@ namespace cardsflow {
             MatrixXd M; /// The Mass matrix of the robot
             VectorXd CG; /// The Coriolis+Gravity term of the robot
             VectorXd q, qd, qdd; /// joint positon, velocity, acceleration
+            VectorXd q_min, q_max; /// joint limits
             VectorXd q_target, qd_target, qdd_target; /// joint positon, velocity, acceleration targets
             VectorXd q_target_prev, qd_target_prev, qdd_target_prev; /// joint positon, velocity, acceleration targets
             VectorXd l_int, l, l_target; /// tendon length and length change
@@ -287,6 +287,7 @@ namespace cardsflow {
             hardware_interface::EffortJointInterface joint_command_interface; /// ros control joint command interface
             hardware_interface::CardsflowStateInterface cardsflow_state_interface; /// cardsflow state interface
             hardware_interface::CardsflowCommandInterface cardsflow_command_interface; /// cardsflow command interface
+            bool first_update = true;
         };
     }
 }

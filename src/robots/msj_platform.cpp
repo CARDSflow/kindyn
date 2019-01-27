@@ -4,6 +4,8 @@
 #include <roboy_simulation_msgs/GymStep.h>
 #include <roboy_simulation_msgs/GymReset.h>
 #include <roboy_simulation_msgs/GymGoal.h>
+#include <common_utilities/CommonDefinitions.h>
+
 
 #define NUMBER_OF_MOTORS 8
 #define SPINDLERADIUS 0.00575
@@ -83,14 +85,24 @@ public:
     void write(){
         roboy_middleware_msgs::MotorCommand msg;
         msg.id = 5;
-        stringstream str;
+//        stringstream str;
+//        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
+//            msg.motors.push_back(i);
+//            double l_change = l[i]-l_offset[i];
+//            msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
+//            str << l_change << "\t";
+//        }
         for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
             msg.motors.push_back(i);
-            double l_change = l[i]-l_offset[i];
-            msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
-            str << l_change << "\t";
+//            double l_change = l_target[i]-l_offset[i];
+            msg.set_points.push_back(l_target[i]); //
+//            str << l_target[i] << "\t";
         }
-		//ROS_INFO_STREAM_THROTTLE(1,str.str());
+//        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
+//                msg.motors.push_back(i);
+//                msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(Ld[0][i]));
+//        }
+//		ROS_INFO_STREAM_THROTTLE(1,str.str());
 
         motor_command.publish(msg);
     };
@@ -256,8 +268,8 @@ int main(int argc, char *argv[]) {
     ROS_INFO("STARTING ROBOT MAIN LOOP...");
 
     while(ros::ok()){
-        //robot.read();
-        //robot.write();
+        robot.read();
+        robot.write();
         ros::spinOnce();
     }
 

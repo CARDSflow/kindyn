@@ -7,18 +7,18 @@
 
 using namespace std;
 
-class Rikshaw: public cardsflow::kindyn::Robot{
+class Rickshaw_pedaling: public cardsflow::kindyn::Robot{
 public:
     /**
      * Constructor
      * @param urdf path to urdf
      * @param cardsflow_xml path to cardsflow xml
      */
-    Rikshaw(string urdf, string cardsflow_xml){
+    Rickshaw_pedaling(string urdf, string cardsflow_xml){
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
-            ros::init(argc, argv, "rikshaw");
+            ros::init(argc, argv, "rickshaw_pedaling");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
@@ -40,7 +40,6 @@ public:
                 ROS_WARN("failed to change control mode to position");
         }
         update();
-
 //        for(auto ef:endeffectors) {
 //            for(int i=0;i<sim_motors[ef].size();i++)
 //                l_offset[ef][i] = l[sim_motors[ef][i]];
@@ -148,7 +147,7 @@ int main(int argc, char *argv[]) {
     }
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
-    Rikshaw robot(urdf, cardsflow_xml);
+    Rickshaw_pedaling robot(urdf, cardsflow_xml);
 
     controller_manager::ControllerManager cm(&robot);
 
@@ -170,3 +169,4 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+
