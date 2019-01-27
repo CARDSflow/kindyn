@@ -118,6 +118,8 @@ public:
     }
     bool GymGoalService(roboy_simulation_msgs::GymGoal::Request &req,
                         roboy_simulation_msgs::GymGoal::Response &res){
+        //ROS_INFO("Gymgoal is called");
+
         bool not_feasible = true;
         float q0= 0.0,q1= 0.0,q2 = 0.0;
         double min[3] = {0,0,-1}, max[3] = {0,0,1};
@@ -133,11 +135,7 @@ public:
         }
         srand(static_cast<unsigned >(time(0)));
         while(not_feasible) {
-            /*
-            float q0 = rand() / (float) RAND_MAX * (max[0] - min[0]) + min[0];
-            float q1 = rand() / (float) RAND_MAX * (max[1] - min[1]) + min[1];
-            float q2 = rand() / (float) RAND_MAX * (max[2] - min[2]) + min[2];
-             */
+            //ROS_INFO("creating random goals");
             q0 = min[0] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[0]-min[0]))));
             q1 = min[1] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[1]-min[1]))));
             q2 = min[2] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[2]-min[2]))));
@@ -268,8 +266,8 @@ int main(int argc, char *argv[]) {
     ROS_INFO("STARTING ROBOT MAIN LOOP...");
 
     while(ros::ok()){
-        robot.read();
-        robot.write();
+        //robot.read();
+        //robot.write();
         ros::spinOnce();
     }
 

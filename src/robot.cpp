@@ -909,7 +909,7 @@ bool Robot::InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::R
     static int counter = 6969;
     counter++;
     COLOR color(1,1,1,1);
-    color.randColor();
+    //color.randColor();
     if(counter-(rand()/(float)RAND_MAX)*10==0){
         publishMesh("robots", "common/meshes/visuals","target.stl", req.pose, 0.005,
                     "world", "ik_target", counter, 10, color);
