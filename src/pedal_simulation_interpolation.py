@@ -56,6 +56,9 @@ LEFT_HIP_JOINT    = "left_hip"
 LEFT_KNEE_JOINT   = "left_knee"
 LEFT_ANKLE_JOINT  = "left_ankle"
 
+_interpolate_x_dummy = [0.0, 0.5, 1.0, 1.5]
+_interpolate_z_dummy = [-0.5, 0.5, -0.5, 0.5]
+
 _jointsList = [RIGHT_HIP_JOINT, RIGHT_KNEE_JOINT, RIGHT_ANKLE_JOINT, LEFT_HIP_JOINT, LEFT_KNEE_JOINT, LEFT_ANKLE_JOINT]
 
 _parametersRightHip = {
@@ -64,13 +67,9 @@ _parametersRightHip = {
     "param_d":               0.0,
     "prev_pos":              0.0,
     "prev_vel":              0.0,
-    "prev_time":             0.0,
     "prev_error":            0.0,
     "pos_error_integral":    0.0,
-    "trajectory_startpoint": 0.0,
-    "trajectory_endpoint":   0.0,
-    "ideal_velocity":        0.0,
-    "bool_update_iv":        True
+    "pos_function":          interpolate.interp1d(_interpolate_x_dummy, _interpolate_z_dummy, kind = "cubic")
 }
 
 _parametersRightKnee = {
@@ -78,14 +77,11 @@ _parametersRightKnee = {
     "param_i":               0.05,
     "param_d":               0.0,
     "prev_pos":              0.0,
+    "prev_pos":              0.0,
     "prev_vel":              0.0,
-    "prev_time":             0.0,
     "prev_error":            0.0,
     "pos_error_integral":    0.0,
-    "trajectory_startpoint": 0.0,
-    "trajectory_endpoint":   0.0,
-    "ideal_velocity":        0.0,
-    "bool_update_iv":        True
+    "pos_function":          interpolate.interp1d(_interpolate_x_dummy, _interpolate_z_dummy, kind = "cubic")
 }
 
 _parametersRightAnkle = {
@@ -94,13 +90,9 @@ _parametersRightAnkle = {
     "param_d":               0.0,
     "prev_pos":              0.0,
     "prev_vel":              0.0,
-    "prev_time":             0.0,
     "prev_error":            0.0,
     "pos_error_integral":    0.0,
-    "trajectory_startpoint": 0.0,
-    "trajectory_endpoint":   0.0,
-    "ideal_velocity":        0.0,
-    "bool_update_iv":        True
+    "pos_function":          interpolate.interp1d(_interpolate_x_dummy, _interpolate_z_dummy, kind = "cubic")
 }
 
 _parametersLeftHip = {
@@ -109,13 +101,9 @@ _parametersLeftHip = {
     "param_d":               0.0,
     "prev_pos":              0.0,
     "prev_vel":              0.0,
-    "prev_time":             0.0,
     "prev_error":            0.0,
     "pos_error_integral":    0.0,
-    "trajectory_startpoint": 0.0,
-    "trajectory_endpoint":   0.0,
-    "ideal_velocity":        0.0,
-    "bool_update_iv":        True
+    "pos_function":          interpolate.interp1d(_interpolate_x_dummy, _interpolate_z_dummy, kind = "cubic")
 }
 
 _parametersLeftKnee = {
@@ -124,13 +112,9 @@ _parametersLeftKnee = {
     "param_d":               0.0,
     "prev_pos":              0.0,
     "prev_vel":              0.0,
-    "prev_time":             0.0,
     "prev_error":            0.0,
     "pos_error_integral":    0.0,
-    "trajectory_startpoint": 0.0,
-    "trajectory_endpoint":   0.0,
-    "ideal_velocity":        0.0,
-    "bool_update_iv":        True
+    "pos_function":          interpolate.interp1d(_interpolate_x_dummy, _interpolate_z_dummy, kind = "cubic")
 }
 
 _parametersLeftAnkle = {
@@ -139,13 +123,9 @@ _parametersLeftAnkle = {
     "param_d":               0.0,
     "prev_pos":              0.0,
     "prev_vel":              0.0,
-    "prev_time":             0.0,
     "prev_error":            0.0,
     "pos_error_integral":    0.0,
-    "trajectory_startpoint": 0.0,
-    "trajectory_endpoint":   0.0,
-    "ideal_velocity":        0.0,
-    "bool_update_iv":        True
+    "pos_function":          interpolate.interp1d(_interpolate_x_dummy, _interpolate_z_dummy, kind = "cubic")
 }
 
 _jointsControlData = {
@@ -187,6 +167,7 @@ _jointsStatusData = {
 _numTrajectoryPoints     = -1
 _trajectoryStartingPoint = 0
 _trajectoryPointDuration = 1.0
+_pedalAngularVelocity    = 0.1
 
 _pedalTrajectoryRight      = []
 _pedalAngleTrajectoryRight = []
@@ -340,6 +321,7 @@ def setPedalSingleRotationDuration(new_duration_seconds):
     global PEDAL_SINGLE_ROTATION_DURATION
     PEDAL_SINGLE_ROTATION_DURATION = new_duration_seconds
     setTrajectoryPointDuration()
+    setPedalAngularVelocity()
     return 1
 
 
@@ -347,24 +329,93 @@ def setTrajectoryPointDuration():
     global _trajectoryPointDuration
     global PEDAL_SINGLE_ROTATION_DURATION
     global _numTrajectoryPoints
-    if _numTrajectoryPoints != 0:
+    if _numTrajectoryPoints > 0:
         _trajectoryPointDuration = float(PEDAL_SINGLE_ROTATION_DURATION) / _numTrajectoryPoints
     else:
-        _trajectoryPointDuration = 1
+        print("ERROR: trajectory point duration can not be calculated without number of points count")
         return 0
+    return 1
+
+
+def setPedalAngularVelocity():
+    global _pedalAngularVelocity
+    global PEDAL_SINGLE_ROTATION_DURATION
+    if PEDAL_SINGLE_ROTATION_DURATION > 0:
+        _pedalAngularVelocity = float(PEDAL_SINGLE_ROTATION_DURATION) / (2 * math.pi)
+    else:
+        print("ERROR: trajectory point duration can not be calculated without number of points count")
+        return 0
+    return 1
+
+
+def interpolateAllJointPositions():
+
+    global _pedalAngleTrajectoryRight
+    global _hipTrajectoryRight
+    global _kneeTrajectoryRight
+    global _ankleTrajectoryRight
+
+    global _pedalAngleTrajectoryLeft
+    global _hipTrajectoryLeft
+    global _kneeTrajectoryLeft
+    global _ankleTrajectoryLeft
+
+    global _jointsControlData
+    global RIGHT_HIP_JOINT
+    global RIGHT_KNEE_JOINT
+    global RIGHT_ANKLE_JOINT
+    global LEFT_HIP_JOINT
+    global LEFT_KNEE_JOINT
+    global LEFT_ANKLE_JOINT
+
+    _jointsControlData[RIGHT_HIP_JOINT]["pos_function"] = interpolate.interp1d(_pedalAngleTrajectoryRight, _hipTrajectoryRight, kind = "cubic")
+    _jointsControlData[RIGHT_KNEE_JOINT]["pos_function"] = interpolate.interp1d(_pedalAngleTrajectoryRight, _kneeTrajectoryRight, kind = "cubic")
+    _jointsControlData[RIGHT_ANKLE_JOINT]["pos_function"] = interpolate.interp1d(_pedalAngleTrajectoryRight, _ankleTrajectoryRight, kind = "cubic")
+    _jointsControlData[LEFT_HIP_JOINT]["pos_function"] = interpolate.interp1d(_pedalAngleTrajectoryRight, _hipTrajectoryLeft, kind = "cubic")
+    _jointsControlData[LEFT_KNEE_JOINT]["pos_function"] = interpolate.interp1d(_pedalAngleTrajectoryRight, _kneeTrajectoryLeft, kind = "cubic")
+    _jointsControlData[LEFT_ANKLE_JOINT]["pos_function"] = interpolate.interp1d(_pedalAngleTrajectoryRight, _ankleTrajectoryLeft, kind = "cubic")
 
     return 1
 
 
+def printInterpolatedFunctions():
+    global _pedalAngleTrajectoryRight
+    global _hipTrajectoryRight
+    global _kneeTrajectoryRight
+    global _ankleTrajectoryRight
+
+    global _pedalAngleTrajectoryLeft
+    global _hipTrajectoryLeft
+    global _kneeTrajectoryLeft
+    global _ankleTrajectoryLeft
+
+    global _jointsControlData
+    global RIGHT_HIP_JOINT
+    global RIGHT_KNEE_JOINT
+    global RIGHT_ANKLE_JOINT
+    global LEFT_HIP_JOINT
+    global LEFT_KNEE_JOINT
+    global LEFT_ANKLE_JOINT
+
+    highDefPlotRange = np.linspace(0, 6, 500)
+
+    plt.figure(1)
+    plt.plot(_pedalAngleTrajectoryRight, _hipTrajectoryRight, '*')
+    plt.plot(highDefPlotRange, _jointsControlData[RIGHT_HIP_JOINT]["pos_function"](highDefPlotRange), '-')
+
+    plt.figure(2)
+    plt.plot(_pedalAngleTrajectoryRight, _kneeTrajectoryRight, '*')
+    plt.plot(highDefPlotRange, _jointsControlData[RIGHT_KNEE_JOINT]["pos_function"](highDefPlotRange), '-')
+
+    plt.figure(3)
+    plt.plot(_pedalAngleTrajectoryRight, _ankleTrajectoryRight, '*')
+    plt.plot(highDefPlotRange, _jointsControlData[RIGHT_ANKLE_JOINT]["pos_function"](highDefPlotRange), '-')
+
+    plt.show()
+
 #############################
 ###   CONTROL FUNCTIONS   ###
 #############################
-
-def interpolateTrajectoryPoints(value1, value2, startTime, currTime, endTime):
-    if currTime > endTime:
-        return value2
-    return value1 + (value2 - value1)*(float(currTime - startTime)/(endTime - startTime))
-
 
 def checkOutputLimits(inputVal):
 
@@ -378,62 +429,9 @@ def checkOutputLimits(inputVal):
     return returnVal
 
 
-def computeVelocitySetpoint(jointName, endPos, startTime, currTime, endTime):
-
-    global _jointsControlData
-    global PRINT_DEBUG
-    global JOINT_TRAJECTORY_ERROR_TOLERANCE
-    global JOINT_VELOCITY_FACTOR
-
-    currPos = getJointPosition(jointName)
-    goalPos = interpolateTrajectoryPoints(_jointsControlData[jointName]["trajectory_startpoint"], endPos, startTime, currTime, endTime)
-    jointError = goalPos - currPos
-
-    if _jointsControlData[jointName]["bool_update_iv"]:
-        if currTime < endTime:
-            jointTravelTime = endTime - currTime
-            jointTravelDistance = endPos - currPos
-            jointIdealVelocity = float(jointTravelDistance) / jointTravelTime
-            _jointsControlData[jointName]["ideal_velocity"] = jointIdealVelocity
-            _jointsControlData[jointName]["bool_update_iv"] = False
-        else:
-            print("ERROR in compute ideal joint velocity: currTime > endTime")
-
-    thisPosErrorDerivative = float(jointError - _jointsControlData[jointName]["prev_error"])/CONTROLLER_FREQUENCY
-
-    #print("COMPUTED %s VELOCITY SETPOINT: %s (jointTravelTime: %s, jointTravelDistance: %s)" % (jointName, jointVelocityReachGoal, jointTravelTime, jointTravelDistance))
-
-    thisReturnVal = _jointsControlData[jointName]["ideal_velocity"]
-    thisReturnVal = thisReturnVal*JOINT_VELOCITY_FACTOR
-    # SWITCH CONTROL MODE IF STATEMENT IS TRUE (FROM IDEAL VELOCITY TO PID POSITION ERROR)
-    if currTime > endTime:  # jointError > JOINT_TRAJECTORY_ERROR_TOLERANCE or
-        if PRINT_DEBUG:
-            print("Switching control to PID for joint %s" % (jointName))
-        _jointsControlData[jointName]["pos_error_integral"] += float(jointError)/CONTROLLER_FREQUENCY
-        _jointsControlData[jointName]["prev_time"] = currTime
-        _jointsControlData[jointName]["prev_pos"] = currPos
-        _jointsControlData[jointName]["prev_error"] = jointError
-        thisReturnVal = _jointsControlData[jointName]["param_p"]*jointError + _jointsControlData[jointName]["param_i"]*_jointsControlData[jointName]["pos_error_integral"] + _jointsControlData[jointName]["param_d"]*thisPosErrorDerivative
-
-    thisReturnVal = checkOutputLimits(thisReturnVal)
-
-    if PRINT_DEBUG:
-        if jointName == RIGHT_HIP_JOINT:
-            print("\t\t\t\t%0.5f\t\t\t\t%0.5f" % (jointError, thisReturnVal), end='\r')
-        elif jointName == RIGHT_KNEE_JOINT:
-            print("\t\t\t\t\t\t\t\t\t\t\t\t%0.5f\t\t\t\t%0.5f" % (jointError, thisReturnVal), end='\r')
-
-    return thisReturnVal
-
-
 #########################
 ###   STATE MACHINE   ###
 #########################
-
-INIT              = "INIT"
-PEDAL             = "PEDAL"
-UPDATE_PARAMETERS = "UPDATE_PARAMETERS"
-
 
 def FSM():
 
@@ -442,12 +440,20 @@ def FSM():
     global _jointsList
     global PRINT_DEBUG
 
+    # Params for inspection of performance (temp)
     global x_pedal_record
     global y_pedal_record
     global _pedalTrajectoryRight
+    initialTrajectoryPoint     = 0
+    pastInitialTrajectoryPoint = False
+
+    global PEDAL_SINGLE_ROTATION_DURATION
+
+    INIT              = "INIT"
+    PEDAL             = "PEDAL"
+    UPDATE_PARAMETERS = "UPDATE_PARAMETERS"
 
     runFSM = True
-
     currState = INIT
     currTrajectoryPoint = -1
 
@@ -455,9 +461,6 @@ def FSM():
     endTime   = 0.0
     currTime  = 0.0
     prevTime  = 0.0
-
-    initialTrajectoryPoint     = 0
-    pastInitialTrajectoryPoint = False
 
     ros_right_hip_publisher   = rospy.Publisher('/joint_hip_right/joint_hip_right/target', Float32, queue_size=2)
     ros_right_knee_publisher  = rospy.Publisher('/joint_knee_right/joint_knee_right/target', Float32, queue_size=2)
@@ -474,7 +477,10 @@ def FSM():
         ##############################################
 
             importJointTrajectoryRecord()
-            setTrajectoryPointDuration()
+            setPedalSingleRotationDuration(PEDAL_SINGLE_ROTATION_DURATION)
+            interpolateAllJointPositions()
+
+            printInterpolatedFunctions()
 
             # Find starting point on the trajectory
 
@@ -533,9 +539,7 @@ def FSM():
                 startTime = time.time()
                 endTime = startTime + _trajectoryPointDuration
                 for thisJointName in _jointsList:
-                    _jointsControlData[thisJointName]["trajectory_startpoint"] = getJointPosition(thisJointName)
                     _jointsControlData[thisJointName]["pos_error_integral"] = 0
-                    _jointsControlData[thisJointName]["bool_update_iv"] = True
 
                 # Iterate through joints and update setpoints
                 for thisJointName in _jointsList:
@@ -556,7 +560,7 @@ def FSM():
 
                     currTime = time.time()
 
-                    thisJointVelocitySetpoint = computeVelocitySetpoint(thisJointName, thisJointPositionGoalpoint, startTime, currTime, endTime)
+                    thisJointVelocitySetpoint = 1  # USE DERIVATIVE OF INTERPOLATED JOINT ANGLE FUNCTION
 
                     if thisJointName == RIGHT_HIP_JOINT:
                         ros_right_hip_publisher.publish(thisJointVelocitySetpoint)
