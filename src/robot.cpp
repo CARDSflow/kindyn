@@ -678,6 +678,7 @@ void Robot::forwardKinematics(double dt) {
             l_int[l] = motor_state[l][0];
         }
     }
+
     // respect joint limits
     for(int i=0;i<number_of_joints;i++){
         if(q[i]<q_min[i]){

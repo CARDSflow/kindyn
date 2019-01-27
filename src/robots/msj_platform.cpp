@@ -163,7 +163,7 @@ public:
 
 	        //ROS_INFO_STREAM_THROTTLE(5, "Ld = " << Ld.format(fmt));
 
-	        ROS_INFO_STREAM_THROTTLE(5, "Ld = \n" << Ld[0].format(fmt));
+	        ROS_INFO_STREAM_THROTTLE(5, "Ld = " << Ld[0].format(fmt));
 
 	        write();
 	        //ROS_INFO("Gymstep is done");
