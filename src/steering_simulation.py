@@ -28,6 +28,7 @@ RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/old_captured_trajectory.json"
 ############################
 
 UPDATE_FREQUENCY = 0.001
+MAX_ANGLE_CHANGE =  np.pi/60
 
 JOINT_SHOULDER_AXIS0_RIGHT = "right_shoulder_axis0"
 JOINT_SHOULDER_AXIS1_RIGHT = "right_shoulder_axis1"
@@ -101,6 +102,7 @@ ros_left_wrist_1_pub = rospy.Publisher('/left_wrist_1/left_wrist_1/target', Floa
 ros_log_error_pub = rospy.Publisher('chatter', String)
 
 requested_steering_angle = 0
+angle_change_successful = True
 
 ##############################
 ###   UTILITY FUNCTIONS   ###
@@ -230,14 +232,64 @@ def check_steering_angle_range(steering_angle):
                                                                                "[", min_angle,";",max_angle,"]")
         return False
 
-def publish_joint_angle(joint_name, steering_angle)
+def publish_joint_angle(joint_name, steering_angle):
     if check_steering_angle_range():
 
+        pub = None
+        f_interpolated = None
+
         if joint_name == JOINT_SHOULDER_AXIS0_LEFT:
+            pub = ros_left_shoulder_axis0_pub
+            f_interpolated = _interpolatedShoulder0Left
+        elif joint_name == JOINT_SHOULDER_AXIS1_LEFT:
+            pub = ros_left_shoulder_axis1_pub
+            f_interpolated = _interpolatedShoulder1Left
+        elif joint_name == JOINT_SHOULDER_AXIS2_LEFT:
+            pub = ros_left_shoulder_axis2_pub
+            f_interpolated = _interpolatedShoulder2Left
+        elif joint_name == JOINT_SHOULDER_AXIS0_RIGHT:
+            pub = ros_right_shoulder_axis0_pub
+            f_interpolated = _interpolatedShoulder0Right
+        elif joint_name == JOINT_SHOULDER_AXIS1_RIGHT:
+            pub = ros_right_shoulder_axis1_pub
+            f_interpolated = _interpolatedShoulder1Right
+        elif joint_name == JOINT_SHOULDER_AXIS2_RIGHT:
+            pub = ros_right_shoulder_axis2_pub
+            f_interpolated = _interpolatedShoulder2Right
+        elif joint_name == JOINT_ELBOW_ROT0_LEFT:
+            pub = ros_elbow_left_rot0_pub
+            f_interpolated = _interpolatedElbow0Left
+        elif joint_name == JOINT_ELBOW_ROT1_LEFT:
+            pub = ros_elbow_left_rot1_pub
+            f_interpolated = _interpolatedElbow1Left
+        elif joint_name == JOINT_ELBOW_ROT0_RIGHT:
+            pub = ros_elbow_right_rot0_pub
+            f_interpolated = _interpolatedElbow0Right
+        elif joint_name == JOINT_ELBOW_ROT1_RIGHT:
+            pub = ros_elbow_right_rot1_pub
+            f_interpolated = _interpolatedElbow1Right
+        elif joint_name == JOINT_WRIST_0_LEFT:
+            pub = ros_left_wrist_0_pub
+            f_interpolated = _interpolatedWrist0Left
+        elif joint_name == JOINT_WRIST_1_LEFT:
+            pub = ros_left_wrist_1_pub
+            f_interpolated = _interpolatedWrist1Left
+        elif joint_name == JOINT_WRIST_0_RIGHT:
+            pub = ros_right_wrist_0_pub
+            f_interpolated = _interpolatedWrist0Right
+        elif joint_name == JOINT_WRIST_1_RIGHT:
+            pub = ros_right_wrist_1_pub
+            f_interpolated = _interpolatedWrist1Right
+        else:
+            ros_log_error_pub.publish("Didn't catch joint_name in publish_joint_angle()")
 
+        target_joint_angle = f_interpolated(steering_angle)
+        pub.publish(target_joint_angle)
 
-            Continue Here
-
+    else:
+        global angle_change_successful
+        angle_change_successful = False
+        pass
 
 
 def steering_control():
@@ -252,20 +304,51 @@ def steering_control():
         while requested_steering_angle == current_steering_angle:
             time.sleep(UPDATE_FREQUENCY)
 
-        publisher_threads = []
-        i = 0
-        for joint in _joints_list:
-            publisher_threads.append(Thread(target=publish_joint_angle, args=(joint, requested_steering_angle)))
-            publisher_threads[i].start()
-            i += 1
 
-        for thread in publisher_threads:
-            thread.join()
+        if get_angle_difference(current_steering_angle, requested_steering_angle) > MAX_ANGLE_CHANGE:
 
-        current_steering_angle = requested_steering_angle
+            target_steering_angle = 0
+
+            if current_steering_angle < requested_steering_angle:
+                target_steering_angle = current_steering_angle + MAX_ANGLE_CHANGE
+            else:
+                target_steering_angle = current_steering_angle - MAX_ANGLE_CHANGE
 
 
+            publisher_threads = []
+            i = 0
+            for joint in _joints_list:
+                publisher_threads.append(Thread(target=publish_joint_angle, args=(joint, target_steering_angle)))
+                publisher_threads[i].start()
+                i += 1
 
+            for thread in publisher_threads:
+                thread.join()
+
+            if angle_change_successful:
+                current_steering_angle = target_steering_angle
+            else:
+                print ("Steering angle out of range: ", target_steering_angle)
+                global angle_change_successful
+                angle_change_successful = True
+
+        else:
+            publisher_threads = [ ]
+            i = 0
+            for joint in _joints_list:
+                publisher_threads.append(Thread(target=publish_joint_angle, args=(joint, requested_steering_angle)))
+                publisher_threads[ i ].start()
+                i += 1
+
+            for thread in publisher_threads:
+                thread.join()
+
+            if angle_change_successful:
+                current_steering_angle = requested_steering_angle
+            else:
+                print ("Steering angle out of range: ", target_steering_angle)
+                global angle_change_successful
+                angle_change_successful = True
 
 
 ################
