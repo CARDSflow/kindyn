@@ -137,14 +137,6 @@ target_link_libraries(yatr ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 add_executable( rikshaw src/robots/rikshaw.cpp)
 target_link_libraries(rikshaw ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
-# capture_trajectory
-catkin_install_python(PROGRAMS
-  src/capture_trajectory/capture_trajectory.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-#add_executable( capture_trajectory src/capture_trajectory.py)
-#target_link_libraries(capture_trajectory ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
-
 #==============================================================================
 # Installation
 #==============================================================================

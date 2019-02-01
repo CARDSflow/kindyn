@@ -57,6 +57,7 @@
 #include <roboy_simulation_msgs/JointState.h>
 #include <roboy_middleware_msgs/ForwardKinematics.h>
 #include <roboy_middleware_msgs/InverseKinematics.h>
+#include <roboy_middleware_msgs/InverseKinematicsTwoFrames.h>
 #include <roboy_middleware_msgs/MotorCommand.h>
 #include <roboy_middleware_msgs/MotorStatus.h>
 #include <roboy_control_msgs/MoveEndEffectorAction.h>
@@ -156,6 +157,9 @@ namespace cardsflow {
              */
             bool InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::Request &req,
                                           roboy_middleware_msgs::InverseKinematics::Response &res);
+
+            bool InverseKinematicsTwoFramesService(roboy_middleware_msgs::InverseKinematicsTwoFrames::Request &req,
+                                          roboy_middleware_msgs::InverseKinematicsTwoFrames::Response &res);
             /**
              * Callback for Interactive Marker Feedback of endeffectors. When the Interactive Marker is released in rviz,
              * the IK routine is called and the solution directly applied to the robot q_target angles
@@ -206,7 +210,7 @@ namespace cardsflow {
             ros::Publisher robot_state_pub, tendon_state_pub, joint_state_pub; /// ROS robot pose and tendon publisher
             ros::Publisher robot_state_target_pub, tendon_state_target_pub, joint_state_target_pub; /// target publisher
             ros::Subscriber controller_type_sub, joint_state_sub, floating_base_sub, interactive_marker_sub; /// ROS subscribers
-            ros::ServiceServer ik_srv, fk_srv;
+            ros::ServiceServer ik_srv, ik_two_frames_srv, fk_srv;
             map<string,boost::shared_ptr<actionlib::SimpleActionServer<roboy_control_msgs::MoveEndEffectorAction>>> moveEndEffector_as;
 
 

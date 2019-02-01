@@ -7,6 +7,7 @@ import time
 
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.polynomial.polynomial as poly
 from scipy import interpolate
 from scipy.misc import derivative
 
@@ -16,7 +17,7 @@ from scipy.misc import derivative
 ###   MODULE PARAMETERS   ###
 #############################
 
-RECORDED_TRAJECTORY_FILENAME = "multiple_steering_trajectory.json"
+RECORDED_TRAJECTORY_FILENAME = "multiple_steering_trajectory_v1_610_points.json"
 PRINT_DEBUG = True
 
 MAX_TURNING_ANGLE = math.pi/15
@@ -59,20 +60,20 @@ _trajectoryWrist1Right     = []
 _trajectoryWrist0Left      = []
 _trajectoryWrist1Left      = []
 
-_interpolatedShoulder0Right  = None
-_interpolatedShoulder1Right  = None
-_interpolatedShoulder2Right  = None
-_interpolatedShoulder0Left   = None
-_interpolatedShoulder1Left   = None
-_interpolatedShoulder2Left   = None
-_interpolatedElbow0Right     = None
-_interpolatedElbow1Right     = None
-_interpolatedElbow0Left      = None
-_interpolatedElbow1Left      = None
-_interpolatedWrist0Right     = None
-_interpolatedWrist1Right     = None
-_interpolatedWrist0Left      = None
-_interpolatedWrist1Left      = None
+_regressedShoulder0Right  = None
+_regressedShoulder1Right  = None
+_regressedShoulder2Right  = None
+_regressedShoulder0Left   = None
+_regressedShoulder1Left   = None
+_regressedShoulder2Left   = None
+_regressedElbow0Right     = None
+_regressedElbow1Right     = None
+_regressedElbow0Left      = None
+_regressedElbow1Left      = None
+_regressedWrist0Right     = None
+_regressedWrist1Right     = None
+_regressedWrist0Left      = None
+_regressedWrist1Left      = None
 
 
 ##############################
@@ -155,7 +156,7 @@ def importJointTrajectoryRecord():
 
 
 
-def interpolateAllJointPositions():
+def regressAllJointPositions():
 
     global _trajectorySteering
     global _trajectoryShoulder0Right
@@ -173,42 +174,41 @@ def interpolateAllJointPositions():
     global _trajectoryWrist0Left
     global _trajectoryWrist1Left
 
-    global _interpolatedShoulder0Right
-    global _interpolatedShoulder1Right
-    global _interpolatedShoulder2Right
-    global _interpolatedShoulder0Left
-    global _interpolatedShoulder1Left
-    global _interpolatedShoulder2Left
-    global _interpolatedElbow0Right
-    global _interpolatedElbow1Right
-    global _interpolatedElbow0Left
-    global _interpolatedElbow1Left
-    global _interpolatedWrist0Right
-    global _interpolatedWrist1Right
-    global _interpolatedWrist0Left
-    global _interpolatedWrist1Left
+    global _regressedShoulder0Right
+    global _regressedShoulder1Right
+    global _regressedShoulder2Right
+    global _regressedShoulder0Left
+    global _regressedShoulder1Left
+    global _regressedShoulder2Left
+    global _regressedElbow0Right
+    global _regressedElbow1Right
+    global _regressedElbow0Left
+    global _regressedElbow1Left
+    global _regressedWrist0Right
+    global _regressedWrist1Right
+    global _regressedWrist0Left
+    global _regressedWrist1Left
 
-    _interpolatedShoulder0Right = interpolate.interp1d(_trajectorySteering, _trajectoryShoulder0Right, kind = "cubic")
-    _interpolatedShoulder1Right = interpolate.interp1d(_trajectorySteering, _trajectoryShoulder1Right, kind = "cubic")
-    _interpolatedShoulder2Right = interpolate.interp1d(_trajectorySteering, _trajectoryShoulder2Right, kind = "cubic")
-    _interpolatedElbow0Right    = interpolate.interp1d(_trajectorySteering, _trajectoryElbow0Right, kind = "cubic")
-    _interpolatedElbow1Right    = interpolate.interp1d(_trajectorySteering, _trajectoryElbow1Right, kind = "cubic")
-    _interpolatedWrist0Right    = interpolate.interp1d(_trajectorySteering, _trajectoryWrist0Right, kind = "cubic")
-    _interpolatedWrist1Right    = interpolate.interp1d(_trajectorySteering, _trajectoryWrist1Right, kind = "cubic")
+    _regressedShoulder0Right = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryShoulder0Right, 4))
+    _regressedShoulder1Right = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryShoulder1Right, 4))
+    _regressedShoulder2Right = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryShoulder2Right, 4))
+    _regressedElbow0Right    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryElbow0Right, 4))
+    _regressedElbow1Right    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryElbow1Right, 4))
+    _regressedWrist0Right    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryWrist0Right, 4))
+    _regressedWrist1Right    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryWrist1Right, 4))
 
-    _interpolatedShoulder0Left = interpolate.interp1d(_trajectorySteering, _trajectoryShoulder0Left, kind = "cubic")
-    _interpolatedShoulder1Left = interpolate.interp1d(_trajectorySteering, _trajectoryShoulder1Left, kind = "cubic")
-    _interpolatedShoulder2Left = interpolate.interp1d(_trajectorySteering, _trajectoryShoulder2Left, kind = "cubic")
-    _interpolatedElbow0Left    = interpolate.interp1d(_trajectorySteering, _trajectoryElbow0Left, kind = "cubic")
-    _interpolatedElbow1Left    = interpolate.interp1d(_trajectorySteering, _trajectoryElbow1Left, kind = "cubic")
-    _interpolatedWrist0Left    = interpolate.interp1d(_trajectorySteering, _trajectoryWrist0Left, kind = "cubic")
-    _interpolatedWrist1Left    = interpolate.interp1d(_trajectorySteering, _trajectoryWrist1Left, kind = "cubic")
-
+    _regressedShoulder0Left = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryShoulder0Left, 4))
+    _regressedShoulder1Left = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryShoulder1Left, 4))
+    _regressedShoulder2Left = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryShoulder2Left, 4))
+    _regressedElbow0Left    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryElbow0Left, 4))
+    _regressedElbow1Left    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryElbow1Left, 4))
+    _regressedWrist0Left    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryWrist0Left, 4))
+    _regressedWrist1Left    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryWrist1Left, 4))
 
     return 1
 
 
-def printInterpolatedFunctions():
+def printRegressedFunctions():
 
     global _trajectorySteering
     global _trajectoryShoulder0Right
@@ -226,78 +226,78 @@ def printInterpolatedFunctions():
     global _trajectoryWrist0Left
     global _trajectoryWrist1Left
 
-    global _interpolatedShoulder0Right
-    global _interpolatedShoulder1Right
-    global _interpolatedShoulder2Right
-    global _interpolatedShoulder0Left
-    global _interpolatedShoulder1Left
-    global _interpolatedShoulder2Left
-    global _interpolatedElbow0Right
-    global _interpolatedElbow1Right
-    global _interpolatedElbow0Left
-    global _interpolatedElbow1Left
-    global _interpolatedWrist0Right
-    global _interpolatedWrist1Right
-    global _interpolatedWrist0Left
-    global _interpolatedWrist1Left
+    global _regressedShoulder0Right
+    global _regressedShoulder1Right
+    global _regressedShoulder2Right
+    global _regressedShoulder0Left
+    global _regressedShoulder1Left
+    global _regressedShoulder2Left
+    global _regressedElbow0Right
+    global _regressedElbow1Right
+    global _regressedElbow0Left
+    global _regressedElbow1Left
+    global _regressedWrist0Right
+    global _regressedWrist1Right
+    global _regressedWrist0Left
+    global _regressedWrist1Left
 
-    highDefPlotRange = np.linspace(_trajectorySteering[0], _trajectorySteering[len(_trajectorySteering)-1], 500)
+    highDefPlotRange = np.linspace(-1 * math.pi / 12, math.pi / 12, 100)
 
     plt.figure(1)
     plt.plot(_trajectorySteering, _trajectoryShoulder0Right, '*')
-    plt.plot(highDefPlotRange, _interpolatedShoulder0Right(highDefPlotRange), '-')
+    plt.plot(highDefPlotRange, _regressedShoulder0Right(highDefPlotRange), '-')
 
     plt.figure(2)
     plt.plot(_trajectorySteering, _trajectoryShoulder1Right, '*')
-    plt.plot(highDefPlotRange, _interpolatedShoulder1Right(highDefPlotRange), '-')
+    plt.plot(highDefPlotRange, _regressedShoulder1Right(highDefPlotRange), '-')
 
     plt.figure(3)
     plt.plot(_trajectorySteering, _trajectoryShoulder2Right, '*')
-    plt.plot(highDefPlotRange, _interpolatedShoulder2Right(highDefPlotRange), '-')
+    plt.plot(highDefPlotRange, _regressedShoulder2Right(highDefPlotRange), '-')
 
     plt.figure(4)
     plt.plot(_trajectorySteering, _trajectoryShoulder0Left, '*')
-    plt.plot(highDefPlotRange, _interpolatedShoulder0Left(highDefPlotRange), '-')
+    plt.plot(highDefPlotRange, _regressedShoulder0Left(highDefPlotRange), '-')
 
     plt.figure(5)
     plt.plot(_trajectorySteering, _trajectoryShoulder1Left, '*')
-    plt.plot(highDefPlotRange, _interpolatedShoulder1Left(highDefPlotRange), '-')
+    plt.plot(highDefPlotRange, _regressedShoulder1Left(highDefPlotRange), '-')
 
     plt.figure(6)
     plt.plot(_trajectorySteering, _trajectoryShoulder2Left, '*')
-    plt.plot(highDefPlotRange, _interpolatedShoulder2Left(highDefPlotRange), '-')
+    plt.plot(highDefPlotRange, _regressedShoulder2Left(highDefPlotRange), '-')
 
     plt.figure(7)
     plt.plot(_trajectorySteering, _trajectoryElbow0Right, '*')
-    plt.plot(highDefPlotRange, _interpolatedElbow0Right(highDefPlotRange), '-')
+    plt.plot(highDefPlotRange, _regressedElbow0Right(highDefPlotRange), '-')
 
     plt.figure(8)
     plt.plot(_trajectorySteering, _trajectoryElbow1Right, '*')
-    plt.plot(highDefPlotRange, _interpolatedElbow1Right(highDefPlotRange), '-')
+    plt.plot(highDefPlotRange, _regressedElbow1Right(highDefPlotRange), '-')
 
     plt.figure(9)
     plt.plot(_trajectorySteering, _trajectoryWrist0Right, '*')
-    plt.plot(highDefPlotRange, _interpolatedWrist0Right(highDefPlotRange), '-')
+    plt.plot(highDefPlotRange, _regressedWrist0Right(highDefPlotRange), '-')
 
     plt.figure(10)
     plt.plot(_trajectorySteering, _trajectoryWrist1Right, '*')
-    plt.plot(highDefPlotRange, _interpolatedWrist1Right(highDefPlotRange), '-')
+    plt.plot(highDefPlotRange, _regressedWrist1Right(highDefPlotRange), '-')
 
     plt.figure(11)
     plt.plot(_trajectorySteering, _trajectoryElbow0Left, '*')
-    plt.plot(highDefPlotRange, _interpolatedElbow0Left(highDefPlotRange), '-')
+    plt.plot(highDefPlotRange, _regressedElbow0Left(highDefPlotRange), '-')
 
     plt.figure(12)
     plt.plot(_trajectorySteering, _trajectoryElbow1Left, '*')
-    plt.plot(highDefPlotRange, _interpolatedElbow1Left(highDefPlotRange), '-')
+    plt.plot(highDefPlotRange, _regressedElbow1Left(highDefPlotRange), '-')
 
     plt.figure(13)
     plt.plot(_trajectorySteering, _trajectoryWrist0Left, '*')
-    plt.plot(highDefPlotRange, _interpolatedWrist0Left(highDefPlotRange), '-')
+    plt.plot(highDefPlotRange, _regressedWrist0Left(highDefPlotRange), '-')
 
     plt.figure(14)
     plt.plot(_trajectorySteering, _trajectoryWrist1Left, '*')
-    plt.plot(highDefPlotRange, _interpolatedWrist1Left(highDefPlotRange), '-')
+    plt.plot(highDefPlotRange, _regressedWrist1Left(highDefPlotRange), '-')
 
     plt.show()
 
@@ -387,9 +387,9 @@ def printAllTrajectories():
 def main():
 
     importJointTrajectoryRecord()
-    printAllTrajectories()
-#    interpolateAllJointPositions()
-#    printInterpolatedFunctions()
+#    printAllTrajectories()
+    regressAllJointPositions()
+    printRegressedFunctions()
 
     return 1
 

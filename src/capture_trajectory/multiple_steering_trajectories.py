@@ -13,6 +13,8 @@ from roboy_control_msgs.srv import SetControllerParameters
 from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Float32
 
+#roslaunch kindyn robot.launch robot_name:=rikshaw start_controllers:='joint_hip_left joint_hip_right joint_wheel_right joint_wheel_back joint_pedal spine_joint joint_wheel_left joint_front joint_pedal_right joint_pedal_left elbow_right_rot1 joint_foot_left joint_knee_right joint_knee_left joint_foot_right left_shoulder_axis0 left_shoulder_axis1 left_shoulder_axis2 elbow_left_rot1 elbow_left_rot0 left_wrist_0 left_wrist_1 right_shoulder_axis0 right_shoulder_axis2 right_shoulder_axis1 elbow_right_rot0 right_wrist_0 right_wrist_1 head_axis0 head_axis1 head_axis2'
+
 # TODO: Fix steering angle orientation (quick fix in call of ik client...)
 
 ###############################
@@ -21,7 +23,7 @@ from std_msgs.msg import Float32
 
 MAX_TURNING_ANGLE   = math.pi/15  # [rad]
 NUM_STEERING_ANGLES = 61  # Should be odd number, symmetric about zero value
-POINT_MULTIPLICITY  = 10
+POINT_MULTIPLICITY  = 50
 
 RIKSHAW_TURN_JOINT_X_OFFSET = 0.7163902600571725+0.23003546879794612  # [m]
 RIKSHAW_TURN_JOINT_Y_OFFSET = -0.010388552466272516+0.010388308199859624  # [m]
@@ -144,6 +146,16 @@ _jointsStatusData = {
 ##############################
 ###   UTILITY FUNCTIONS   ###
 ##############################
+
+def setJointControllerParameters(proportionalVal, derivativeVal):
+
+    for thisJointName in JOINT_LIST:
+        rospy.wait_for_service(thisJointName + '/' + thisJointName + '/params')
+        try:
+            joint_srv = rospy.ServiceProxy(thisJointName + '/' + thisJointName + '/params', SetControllerParameters)
+            joint_srv(proportionalVal, derivativeVal)
+        except rospy.ServiceException, e:
+            print "Service call joint_foot_left failed: %s"%e
 
 
 def computeSteeringAngles():
@@ -295,6 +307,8 @@ def main():
     rospy.init_node('steering_capture', anonymous=True)
     rospy.Subscriber("joint_state", JointState, jointStateCallback)
 
+    setJointControllerParameters(100, 10)
+
     ros_right_shoulder0_publisher = rospy.Publisher('/' + JOINT_SHOULDER_AXIS0_RIGHT + '/' + JOINT_SHOULDER_AXIS0_RIGHT + '/target', Float32, queue_size=2)
     ros_right_shoulder1_publisher = rospy.Publisher('/' + JOINT_SHOULDER_AXIS1_RIGHT + '/' + JOINT_SHOULDER_AXIS1_RIGHT + '/target', Float32, queue_size=2)
     ros_right_shoulder2_publisher = rospy.Publisher('/' + JOINT_SHOULDER_AXIS2_RIGHT + '/' + JOINT_SHOULDER_AXIS2_RIGHT + '/target', Float32, queue_size=2)
@@ -320,13 +334,13 @@ def main():
     for pointMultiplicityIterator in range(1, POINT_MULTIPLICITY + 1):
         for pointIter in range(1, NUM_STEERING_ANGLES + 1):
             print("Capturing point number ", pointIter*pointMultiplicityIterator)
-            thisRightHandX    = _rightHandTrajectory[pointIter][0]
-            thisRightHandY    = _rightHandTrajectory[pointIter][1]
+            thisRightHandX    = _rightHandTrajectory[pointIter-1][0]
+            thisRightHandY    = _rightHandTrajectory[pointIter-1][1]
             thisRightHandZ    = RIKSHAW_TURN_JOINT_Z_OFFSET + HANDLEBAR_Z_OFFSET
-            thisLeftHandX     = _leftHandTrajectory[pointIter][0]
-            thisLeftHandY     = _leftHandTrajectory[pointIter][1]
+            thisLeftHandX     = _leftHandTrajectory[pointIter-1][0]
+            thisLeftHandY     = _leftHandTrajectory[pointIter-1][1]
             thisLeftHandZ     = RIKSHAW_TURN_JOINT_Z_OFFSET + HANDLEBAR_Z_OFFSET
-            thisSteeringAngle = _steeringAngles[pointIter]
+            thisSteeringAngle = _steeringAngles[pointIter-1]
             thisRoll          = 0
             thisPitch         = 0
             thisYaw           = thisSteeringAngle

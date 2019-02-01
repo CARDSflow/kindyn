@@ -6,15 +6,15 @@ import json
 import matplotlib.pyplot as plt
 
 import rospy
-from roboy_middleware_msgs.srv import InverseKinematics, ForwardKinematics
+from roboy_middleware_msgs.srv import InverseKinematicsTwoFrames, ForwardKinematics
 from roboy_simulation_msgs.msg import JointState
 from roboy_control_msgs.srv import SetControllerParameters
 from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Float32
 
-JSON_FILENAME = "captured_trajectory.json"
+JSON_FILENAME = "captured_trajectory_two_frames.json"
 
-JOINT_ANGLE_TOLERANCE_FK = 0.01
+JOINT_ANGLE_TOLERANCE_FK = 0.05
 
 ###############################
 ###   MEASURED PARAMETERS   ###
@@ -322,14 +322,16 @@ def plotEverything(numSamples, jointAngleDict):
 
 
 
-def inverse_kinematics_client(endeffector, frame, x, y, z):
-    rospy.wait_for_service('ik')
+def inverse_kinematics_client(endeffector, frame1, x1, y1, z1, weight1, frame2, x2, y2, z2, weight2):
+    rospy.wait_for_service('ik_two_frames')
     try:
-        ik_srv = rospy.ServiceProxy('ik', InverseKinematics)
-        requested_position = Point(x, y, z)
-        requested_pose = Pose(position=requested_position)
+        ik_srv = rospy.ServiceProxy('ik_two_frames', InverseKinematicsTwoFrames)
+        requested_position_1 = Point(x1, y1, z1)
+        requested_pose_1 = Pose(position=requested_position_1)
+        requested_position_2 = Point(x2, y2, z2)
+        requested_pose_2 = Pose(position=requested_position_2)
         requested_ik_type = 1  #Position only
-        ik_result = ik_srv(endeffector, requested_ik_type, frame, requested_pose)
+        ik_result = ik_srv(endeffector, requested_ik_type, frame1, requested_pose_1, weight1, frame2, requested_pose_2, weight2)
 
         jointDict = {}
         for thisJoint in range(len(ik_result.angles)):
@@ -363,16 +365,28 @@ def main():
     ros_left_knee_publisher  = rospy.Publisher('/joint_knee_left/joint_knee_left/target', Float32, queue_size=2)
     ros_left_ankle_publisher = rospy.Publisher('/joint_foot_left/joint_foot_left/target', Float32, queue_size=2)
 
-    setJointControllerParameters(1000, 100)
+    setJointControllerParameters(2000, 0)
 
     capturedPositions = getPedalPositions(num_requested_points)
 
     endeffector_right = "foot_right_tip"
-    frame_right = "foot_right_tip"
+    frame_right_1 = "foot_right_tip"
+    weight_right_1 = 30
+    frame_right_2 = "thigh_right"
+    weight_right_2 = 1
+    frame_right_2_x_offset = -0.1
+    frame_right_2_y_offset = 0
+    frame_right_2_z_offset = 0.3
     y_offset_right = RIGHT_LEG_OFFSET_Y
 
     endeffector_left = "foot_left_tip"
-    frame_left = "foot_left_tip"
+    frame_left_1 = "foot_left_tip"
+    weight_left_1 = 30
+    frame_left_2 = "thigh_left"
+    weight_left_2 = 1
+    frame_left_2_x_offset = -0.1
+    frame_left_2_y_offset = 0
+    frame_left_2_z_offset = 0.3
     y_offset_left = LEFT_LEG_OFFSET_Y
 
     jointAngleDict = {}
@@ -383,9 +397,9 @@ def main():
         thisX = capturedPositions[pointIter][1]
         thisZ = capturedPositions[pointIter][3]
         thisPedalAngle = capturedPositions[pointIter][0]
-        jointAngleResult_right = inverse_kinematics_client(endeffector_right, frame_right, thisX + BIKE_OFFSET_X, y_offset_right + BIKE_OFFSET_Y, thisZ + BIKE_OFFSET_Z)
+        jointAngleResult_right = inverse_kinematics_client(endeffector_right, frame_right_1, thisX + BIKE_OFFSET_X, y_offset_right + BIKE_OFFSET_Y, thisZ + BIKE_OFFSET_Z, weight_right_1, frame_right_2, thisX + BIKE_OFFSET_X + frame_right_2_x_offset, y_offset_right + BIKE_OFFSET_Y + frame_right_2_y_offset, thisZ + BIKE_OFFSET_Z + frame_right_2_z_offset, weight_right_2)
         print("ik result fetched for foot_right_tip")
-        jointAngleResult_left = inverse_kinematics_client(endeffector_left, frame_left, thisX + BIKE_OFFSET_X, y_offset_left + BIKE_OFFSET_Y, thisZ + BIKE_OFFSET_Z)
+        jointAngleResult_left = inverse_kinematics_client(endeffector_left, frame_left_1, thisX + BIKE_OFFSET_X, y_offset_left + BIKE_OFFSET_Y, thisZ + BIKE_OFFSET_Z, weight_left_1, frame_left_2, thisX + BIKE_OFFSET_X + frame_left_2_x_offset, y_offset_left + BIKE_OFFSET_Y + frame_left_2_y_offset, thisZ + BIKE_OFFSET_Z + frame_left_2_z_offset, weight_left_2)
         print("ik result fetched for foot_left_tip")
         if (jointAngleResult_right and jointAngleResult_left):
             jointAngleDict["point_"+str(pointIter)] = {}

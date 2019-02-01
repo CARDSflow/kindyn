@@ -335,6 +335,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     joint_state_sub = nh->subscribe("/joint_states", 100, &Robot::JointState, this);
     floating_base_sub = nh->subscribe("/floating_base", 100, &Robot::FloatingBase, this);
     ik_srv = nh->advertiseService("/ik", &Robot::InverseKinematicsService, this);
+    ik_two_frames_srv = nh->advertiseService("/ik_two_frames", &Robot::InverseKinematicsTwoFramesService, this);
     fk_srv = nh->advertiseService("/fk", &Robot::ForwardKinematicsService, this);
     interactive_marker_sub = nh->subscribe("/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
 }
@@ -947,6 +948,71 @@ bool Robot::InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::R
                           "target_orientation %.3lf %.3lf %.3lf %.3lf", req.endeffector.c_str(), req.target_frame.c_str(),
                           req.pose.orientation.w, req.pose.orientation.x, req.pose.orientation.y,
                           req.pose.orientation.z);
+                break;
+        }
+
+        return false;
+    }
+}
+
+bool Robot::InverseKinematicsTwoFramesService(roboy_middleware_msgs::InverseKinematicsTwoFrames::Request &req,
+                                     roboy_middleware_msgs::InverseKinematicsTwoFrames::Response &res) {
+    if (ik_models.find(req.endeffector) == ik_models.end()) {
+        ROS_ERROR_STREAM("endeffector " << req.endeffector << " not initialized");
+        return false;
+    }
+    int index = endeffector_index[req.endeffector];
+    iDynTree::VectorDynSize jointPos, jointVel;
+    jointPos.resize(endeffector_number_of_dofs[index]);
+    jointVel.resize(endeffector_number_of_dofs[index]);
+    iDynTree::toEigen(jointPos) = q.segment(endeffector_dof_offset[index], endeffector_number_of_dofs[index]);
+    iDynTree::toEigen(jointVel) = qd.segment(endeffector_dof_offset[index], endeffector_number_of_dofs[index]);
+
+    ik_models[req.endeffector].setRobotState(robotstate.world_H_base, jointPos, robotstate.baseVel,
+                                             jointVel, robotstate.gravity);
+    ik[req.endeffector].clearProblem();
+//    ik[req.endeffector].setMaxCPUTime(60);
+    ik[req.endeffector].setCostTolerance(0.001);
+    // we constrain the base link to stay where it is
+    ik[req.endeffector].addTarget(ik_base_link[req.endeffector], ik_models[req.endeffector].model().getFrameTransform(
+            ik_models[req.endeffector].getFrameIndex(ik_base_link[req.endeffector])), 100, 100);
+
+    switch (req.type) {
+        case 0: {
+            break;
+        }
+        case 1: {
+            iDynTree::Position pos_1(req.pose_1.position.x, req.pose_1.position.y, req.pose_1.position.z);
+            ik[req.endeffector].addPositionTarget(req.target_frame_1, pos_1, req.pos_weight_1);
+            iDynTree::Position pos_2(req.pose_2.position.x, req.pose_2.position.y, req.pose_2.position.z);
+            ik[req.endeffector].addPositionTarget(req.target_frame_2, pos_2, req.pos_weight_2);
+            break;
+        }
+        case 2: {
+            break;
+        }
+    }
+
+    if (ik[req.endeffector].solve()) {
+        iDynTree::Transform base_solution;
+        iDynTree::VectorDynSize q_star;
+        ik[req.endeffector].getFullJointsSolution(base_solution, q_star);
+        ROS_INFO_STREAM("ik solution:\n" << "base solution:" << base_solution.toString() << "\njoint solution: "
+                                         << q_star.toString());
+        for (int i = 0; i < q_star.size(); i++) {
+            res.joint_names.push_back(ik[req.endeffector].reducedModel().getJointName(i));
+            res.angles.push_back(q_star(i));
+        }
+        return true;
+    } else {
+        switch (req.type) {
+            case 0:
+                break;
+            case 1:
+                ROS_ERROR("unable to solve position ik");
+                break;
+
+            case 2:
                 break;
         }
 
