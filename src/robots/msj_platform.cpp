@@ -76,7 +76,7 @@ public:
     void read(){
         update();
         if(!external_robot_state)
-            forwardKinematics(0.0001);
+            forwardKinematics(0.01);
     };
 
     /**
@@ -144,7 +144,7 @@ public:
         }
         res.q.push_back(q0);
         res.q.push_back(q1);
-        res.q.push_back(q1);
+        res.q.push_back(q2);
 
     }
 
@@ -160,8 +160,6 @@ public:
 	        }
 	        if(!external_robot_state)
 	            forwardKinematics(req.step_size);
-
-	        //ROS_INFO_STREAM_THROTTLE(5, "Ld = " << Ld.format(fmt));
 
 	        ROS_INFO_STREAM_THROTTLE(5, "Ld = " << Ld[0].format(fmt));
 
