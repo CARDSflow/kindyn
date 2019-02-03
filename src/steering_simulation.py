@@ -19,16 +19,16 @@ from std_msgs.msg import Float32, String
 ###   MODULE PARAMETERS   ###
 #############################
 
-PRINT_DEBUG = False
+PRINT_DEBUG = True
 
-RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/old_captured_trajectory.json"
+RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/steering_trajectory.json"
 
 ############################
 ###   GLOBAL VARIABLES   ###
 ############################
 
 UPDATE_FREQUENCY = 0.001
-MAX_ANGLE_CHANGE =  np.pi/60
+MAX_ANGLE_CHANGE = np.pi / 60
 
 JOINT_SHOULDER_AXIS0_RIGHT = "right_shoulder_axis0"
 JOINT_SHOULDER_AXIS1_RIGHT = "right_shoulder_axis1"
@@ -45,11 +45,10 @@ JOINT_WRIST_1_RIGHT = "right_wrist_1"
 JOINT_WRIST_0_LEFT = "left_wrist_0"
 JOINT_WRIST_1_LEFT = "left_wrist_1"
 
-_joints_list = [JOINT_SHOULDER_AXIS0_RIGHT, JOINT_SHOULDER_AXIS1_RIGHT, JOINT_SHOULDER_AXIS2_RIGHT,
-                JOINT_SHOULDER_AXIS0_LEFT, JOINT_SHOULDER_AXIS1_LEFT, JOINT_SHOULDER_AXIS2_LEFT,
-                JOINT_ELBOW_ROT0_RIGHT, JOINT_ELBOW_ROT1_RIGHT, JOINT_ELBOW_ROT0_LEFT, JOINT_ELBOW_ROT1_LEFT,
-                JOINT_WRIST_0_RIGHT, JOINT_WRIST_1_RIGHT, JOINT_WRIST_0_LEFT, JOINT_WRIST_1_LEFT]
-
+_joints_list = [ JOINT_SHOULDER_AXIS0_RIGHT, JOINT_SHOULDER_AXIS1_RIGHT, JOINT_SHOULDER_AXIS2_RIGHT,
+                 JOINT_SHOULDER_AXIS0_LEFT, JOINT_SHOULDER_AXIS1_LEFT, JOINT_SHOULDER_AXIS2_LEFT,
+                 JOINT_ELBOW_ROT0_RIGHT, JOINT_ELBOW_ROT1_RIGHT, JOINT_ELBOW_ROT0_LEFT, JOINT_ELBOW_ROT1_LEFT,
+                 JOINT_WRIST_0_RIGHT, JOINT_WRIST_1_RIGHT, JOINT_WRIST_0_LEFT, JOINT_WRIST_1_LEFT ]
 
 _numTrajectoryPoints = 0
 
@@ -84,9 +83,12 @@ _interpolatedWrist1Right = None
 _interpolatedWrist0Left = None
 _interpolatedWrist1Left = None
 
-ros_right_shoulder_axis0_pub = rospy.Publisher('/right_shoulder_axis0/right_shoulder_axis0/target', Float32, queue_size=2)
-ros_right_shoulder_axis1_pub = rospy.Publisher('/right_shoulder_axis1/right_shoulder_axis1/target', Float32, queue_size=2)
-ros_right_shoulder_axis2_pub = rospy.Publisher('/right_shoulder_axis2/right_shoulder_axis2/target', Float32, queue_size=2)
+ros_right_shoulder_axis0_pub = rospy.Publisher('/right_shoulder_axis0/right_shoulder_axis0/target', Float32,
+                                               queue_size=2)
+ros_right_shoulder_axis1_pub = rospy.Publisher('/right_shoulder_axis1/right_shoulder_axis1/target', Float32,
+                                               queue_size=2)
+ros_right_shoulder_axis2_pub = rospy.Publisher('/right_shoulder_axis2/right_shoulder_axis2/target', Float32,
+                                               queue_size=2)
 ros_left_shoulder_axis0_pub = rospy.Publisher('/left_shoulder_axis0/left_shoulder_axis0/target', Float32, queue_size=2)
 ros_left_shoulder_axis1_pub = rospy.Publisher('/left_shoulder_axis1/left_shoulder_axis1/target', Float32, queue_size=2)
 ros_left_shoulder_axis2_pub = rospy.Publisher('/left_shoulder_axis2/left_shoulder_axis2/target', Float32, queue_size=2)
@@ -99,10 +101,11 @@ ros_right_wrist_1_pub = rospy.Publisher('/right_wrist_1/right_wrist_1/target', F
 ros_left_wrist_0_pub = rospy.Publisher('/left_wrist_0/left_wrist_0/target', Float32, queue_size=2)
 ros_left_wrist_1_pub = rospy.Publisher('/left_wrist_1/left_wrist_1/target', Float32, queue_size=2)
 
-ros_log_error_pub = rospy.Publisher('chatter', String)
+ros_log_error_pub = rospy.Publisher('chatter', String, queue_size=10)
 
 requested_steering_angle = 0
 angle_change_successful = True
+
 
 ##############################
 ###   UTILITY FUNCTIONS   ###
@@ -213,13 +216,18 @@ def interpolate_joint_angles():
 def get_angle_difference(angle_1, angle_2):
     return np.pi - np.abs(np.abs(angle_1 - angle_2) - np.pi)
 
+
 #############################
 ###   CONTROL FUNCTIONS   ###
 #############################
 
-def update_steering_angle(steering_angle):
+def update_steering_angle(steering_angle_F32):
     global requested_steering_angle
-    requested_steering_angle = steering_angle
+    requested_steering_angle = steering_angle_F32.data
+
+    if PRINT_DEBUG:
+        log_msg = "updating requested_steering_angle: " + str(requested_steering_angle)
+        print(log_msg)
 
 
 def check_steering_angle_range(steering_angle):
@@ -228,12 +236,14 @@ def check_steering_angle_range(steering_angle):
     if min_angle <= steering_angle <= max_angle:
         return True
     else:
-        ros_log_error_pub.publish("requested steering_angle (", steering_angle,") out of range "
-                                                                               "[", min_angle,";",max_angle,"]")
+        log_msg = "requested steering_angle (" + str(steering_angle) + ") out of range [" \
+                  + str(min_angle) + ";" + str(max_angle) + "]"
+        ros_log_error_pub.publish(log_msg)
         return False
 
+
 def publish_joint_angle(joint_name, steering_angle):
-    if check_steering_angle_range():
+    if check_steering_angle_range(steering_angle):
 
         pub = None
         f_interpolated = None
@@ -286,6 +296,12 @@ def publish_joint_angle(joint_name, steering_angle):
         target_joint_angle = f_interpolated(steering_angle)
         pub.publish(target_joint_angle)
 
+        if PRINT_DEBUG:
+            log_msg = "publishing " + str(target_joint_angle) + " to joint: " + joint_name
+            print(log_msg)
+
+        time.sleep(2)
+
     else:
         global angle_change_successful
         angle_change_successful = False
@@ -294,16 +310,24 @@ def publish_joint_angle(joint_name, steering_angle):
 
 def steering_control():
     rospy.Subscriber("/cmd_steering_angle_rickshaw", Float32, update_steering_angle)
-    thread_ros = Thread(target=rospy.spin)
-    thread_ros.start()
 
     current_steering_angle = 0
 
+    global angle_change_successful
+
     while not rospy.is_shutdown():
 
-        while requested_steering_angle == current_steering_angle:
-            time.sleep(UPDATE_FREQUENCY)
+        if requested_steering_angle == current_steering_angle:
+            if PRINT_DEBUG:
+                log_msg = "\nrequested_steering_angle = current_steering_angle = " + str(requested_steering_angle)
+                print(log_msg)
+                while requested_steering_angle == current_steering_angle:
+                    time.sleep(UPDATE_FREQUENCY)
 
+        if PRINT_DEBUG:
+            log_msg = "\nrequested_steering_angle = " + str(requested_steering_angle)
+            log_msg += "\ncurrent_steering_angle = " + str(current_steering_angle)
+            print(log_msg)
 
         if get_angle_difference(current_steering_angle, requested_steering_angle) > MAX_ANGLE_CHANGE:
 
@@ -314,12 +338,15 @@ def steering_control():
             else:
                 target_steering_angle = current_steering_angle - MAX_ANGLE_CHANGE
 
+            if PRINT_DEBUG:
+                log_msg = "target_steering_angle = " + str(target_steering_angle)
+                print(log_msg)
 
-            publisher_threads = []
+            publisher_threads = [ ]
             i = 0
             for joint in _joints_list:
                 publisher_threads.append(Thread(target=publish_joint_angle, args=(joint, target_steering_angle)))
-                publisher_threads[i].start()
+                publisher_threads[ i ].start()
                 i += 1
 
             for thread in publisher_threads:
@@ -328,8 +355,7 @@ def steering_control():
             if angle_change_successful:
                 current_steering_angle = target_steering_angle
             else:
-                print ("Steering angle out of range: ", target_steering_angle)
-                global angle_change_successful
+                print("Steering angle out of range: ", target_steering_angle)
                 angle_change_successful = True
 
         else:
@@ -346,8 +372,7 @@ def steering_control():
             if angle_change_successful:
                 current_steering_angle = requested_steering_angle
             else:
-                print ("Steering angle out of range: ", target_steering_angle)
-                global angle_change_successful
+                print("Steering angle out of range: ", requested_steering_angle)
                 angle_change_successful = True
 
 

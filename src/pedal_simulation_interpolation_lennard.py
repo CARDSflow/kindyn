@@ -194,7 +194,7 @@ _jointsControlData = {
     LEFT_ANKLE_JOINT: _parametersLeftAnkle
 }
 
-_jointsStatusData = {
+joint_status_data = {
     RIGHT_HIP_JOINT: {
         "Pos": 0.0,
         "Vel": 0.0
@@ -241,27 +241,27 @@ ankleTrajectoryLeft = [ ]
 
 
 def jointStateCallback(joint_data):
-    global _jointsStatusData
+    global joint_status_data
     # Assert order of joints
     for stringIter in range(len(joint_data.names)):
         if joint_data.names[ stringIter ] == ROS_JOINT_HIP_RIGHT:
-            _jointsStatusData[ RIGHT_HIP_JOINT ][ "Pos" ] = joint_data.q[ stringIter ]
-            _jointsStatusData[ RIGHT_HIP_JOINT ][ "Vel" ] = joint_data.qd[ stringIter ]
+            joint_status_data[ RIGHT_HIP_JOINT ][ "Pos" ] = joint_data.q[ stringIter ]
+            joint_status_data[ RIGHT_HIP_JOINT ][ "Vel" ] = joint_data.qd[ stringIter ]
         elif joint_data.names[ stringIter ] == ROS_JOINT_HIP_LEFT:
-            _jointsStatusData[ LEFT_HIP_JOINT ][ "Pos" ] = joint_data.q[ stringIter ]
-            _jointsStatusData[ LEFT_HIP_JOINT ][ "Vel" ] = joint_data.qd[ stringIter ]
+            joint_status_data[ LEFT_HIP_JOINT ][ "Pos" ] = joint_data.q[ stringIter ]
+            joint_status_data[ LEFT_HIP_JOINT ][ "Vel" ] = joint_data.qd[ stringIter ]
         elif joint_data.names[ stringIter ] == ROS_JOINT_KNEE_RIGHT:
-            _jointsStatusData[ RIGHT_KNEE_JOINT ][ "Pos" ] = joint_data.q[ stringIter ]
-            _jointsStatusData[ RIGHT_KNEE_JOINT ][ "Vel" ] = joint_data.qd[ stringIter ]
+            joint_status_data[ RIGHT_KNEE_JOINT ][ "Pos" ] = joint_data.q[ stringIter ]
+            joint_status_data[ RIGHT_KNEE_JOINT ][ "Vel" ] = joint_data.qd[ stringIter ]
         elif joint_data.names[ stringIter ] == ROS_JOINT_KNEE_LEFT:
-            _jointsStatusData[ LEFT_KNEE_JOINT ][ "Pos" ] = joint_data.q[ stringIter ]
-            _jointsStatusData[ LEFT_KNEE_JOINT ][ "Vel" ] = joint_data.qd[ stringIter ]
+            joint_status_data[ LEFT_KNEE_JOINT ][ "Pos" ] = joint_data.q[ stringIter ]
+            joint_status_data[ LEFT_KNEE_JOINT ][ "Vel" ] = joint_data.qd[ stringIter ]
         elif joint_data.names[ stringIter ] == ROS_JOINT_ANKLE_RIGHT:
-            _jointsStatusData[ RIGHT_ANKLE_JOINT ][ "Pos" ] = joint_data.q[ stringIter ]
-            _jointsStatusData[ RIGHT_ANKLE_JOINT ][ "Vel" ] = joint_data.qd[ stringIter ]
+            joint_status_data[ RIGHT_ANKLE_JOINT ][ "Pos" ] = joint_data.q[ stringIter ]
+            joint_status_data[ RIGHT_ANKLE_JOINT ][ "Vel" ] = joint_data.qd[ stringIter ]
         elif joint_data.names[ stringIter ] == ROS_JOINT_ANKLE_LEFT:
-            _jointsStatusData[ LEFT_ANKLE_JOINT ][ "Pos" ] = joint_data.q[ stringIter ]
-            _jointsStatusData[ LEFT_ANKLE_JOINT ][ "Vel" ] = joint_data.qd[ stringIter ]
+            joint_status_data[ LEFT_ANKLE_JOINT ][ "Pos" ] = joint_data.q[ stringIter ]
+            joint_status_data[ LEFT_ANKLE_JOINT ][ "Vel" ] = joint_data.qd[ stringIter ]
 
 
 def importJointTrajectoryRecord():
@@ -315,22 +315,22 @@ def importJointTrajectoryRecord():
 
 
 def getJointPosition(jointName):
-    global _jointsStatusData
-    return _jointsStatusData[ jointName ][ "Pos" ]
+    global joint_status_data
+    return joint_status_data[ jointName ][ "Pos" ]
 
 
 def getJointVelocity(jointName):
-    global _jointsStatusData
-    return _jointsStatusData[ jointName ][ "Vel" ]
+    global joint_status_data
+    return joint_status_data[ jointName ][ "Vel" ]
 
 
 def getPosition(endeffector, frame):
     fkJointNamesList = [ ROS_JOINT_HIP_RIGHT, ROS_JOINT_HIP_LEFT, ROS_JOINT_KNEE_RIGHT, ROS_JOINT_KNEE_LEFT,
                          ROS_JOINT_ANKLE_RIGHT, ROS_JOINT_ANKLE_LEFT ]
-    fkJointPositions = [ _jointsStatusData[ RIGHT_HIP_JOINT ][ "Pos" ], _jointsStatusData[ LEFT_HIP_JOINT ][ "Pos" ],
-                         _jointsStatusData[ RIGHT_KNEE_JOINT ][ "Pos" ], _jointsStatusData[ LEFT_KNEE_JOINT ][ "Pos" ],
-                         _jointsStatusData[ RIGHT_ANKLE_JOINT ][ "Pos" ],
-                         _jointsStatusData[ LEFT_ANKLE_JOINT ][ "Pos" ] ]
+    fkJointPositions = [ joint_status_data[ RIGHT_HIP_JOINT ][ "Pos" ], joint_status_data[ LEFT_HIP_JOINT ][ "Pos" ],
+                         joint_status_data[ RIGHT_KNEE_JOINT ][ "Pos" ], joint_status_data[ LEFT_KNEE_JOINT ][ "Pos" ],
+                         joint_status_data[ RIGHT_ANKLE_JOINT ][ "Pos" ],
+                         joint_status_data[ LEFT_ANKLE_JOINT ][ "Pos" ] ]
 
     rospy.wait_for_service('fk')
     try:
@@ -345,8 +345,8 @@ def getPosition(endeffector, frame):
 
 def getPositionLeftFoot():
     fkJointNamesList = [ ROS_JOINT_HIP_LEFT, ROS_JOINT_KNEE_LEFT, ROS_JOINT_ANKLE_LEFT ]
-    fkJointPositions = [ _jointsStatusData[ LEFT_HIP_JOINT ][ "Pos" ], _jointsStatusData[ LEFT_KNEE_JOINT ][ "Pos" ],
-                         _jointsStatusData[ LEFT_ANKLE_JOINT ][ "Pos" ] ]
+    fkJointPositions = [ joint_status_data[ LEFT_HIP_JOINT ][ "Pos" ], joint_status_data[ LEFT_KNEE_JOINT ][ "Pos" ],
+                         joint_status_data[ LEFT_ANKLE_JOINT ][ "Pos" ] ]
 
     rospy.wait_for_service('fk')
     try:
@@ -363,8 +363,8 @@ def getPositionLeftFoot():
 
 def getPositionRightFoot():
     fkJointNamesList = [ ROS_JOINT_HIP_RIGHT, ROS_JOINT_KNEE_RIGHT, ROS_JOINT_ANKLE_RIGHT ]
-    fkJointPositions = [ _jointsStatusData[ RIGHT_HIP_JOINT ][ "Pos" ], _jointsStatusData[ RIGHT_KNEE_JOINT ][ "Pos" ],
-                         _jointsStatusData[ RIGHT_ANKLE_JOINT ][ "Pos" ] ]
+    fkJointPositions = [ joint_status_data[ RIGHT_HIP_JOINT ][ "Pos" ], joint_status_data[ RIGHT_KNEE_JOINT ][ "Pos" ],
+                         joint_status_data[ RIGHT_ANKLE_JOINT ][ "Pos" ] ]
 
     rospy.wait_for_service('fk')
     try:
@@ -600,9 +600,6 @@ def FSM():
             interpolate_functions()
             _currState = PEDAL
 
-            rospy.Subscriber("/cmd_velocity_rickshaw", Float32, update_velocity)
-            thread_ros = Thread(target=rospy.spin)
-            thread_ros.start()
 
             while(PEDAL_SINGLE_ROTATION_DURATION == 0):
                 pass
@@ -654,7 +651,7 @@ def FSM():
             publisher_threads = []
             i = 0
             for thisJointName in _jointsList:
-                current_joint_angle = _jointsStatusData[thisJointName]["Pos"]
+                current_joint_angle = joint_status_data[thisJointName ][ "Pos" ]
                 next_joint_angle = get_joint_angle(thisJointName, _nextTrajectoryAngle)
 
                 _currTime = time.time()
@@ -711,7 +708,7 @@ def FSM():
 def main():
     rospy.init_node('pedal_simulation', anonymous=True)
     rospy.Subscriber("joint_state", JointState, jointStateCallback)
-
+    rospy.Subscriber("/cmd_velocity_rickshaw", Float32, update_velocity)
     FSM()
 
     return 1
