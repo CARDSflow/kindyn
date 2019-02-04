@@ -17,11 +17,10 @@ from scipy.misc import derivative
 ###   MODULE PARAMETERS   ###
 #############################
 
-RECORDED_TRAJECTORY_FILENAME = "multiple_steering_trajectory_v1_610_points.json"
+RECORDED_TRAJECTORY_FILENAME = "multiple_steering_trajectory_temp.json"
 PRINT_DEBUG = True
 
 MAX_TURNING_ANGLE = math.pi/15
-NUM_TEMP_ANGLES   = 31
 
 ############################
 ###   GLOBAL VARIABLES   ###
@@ -156,7 +155,7 @@ def importJointTrajectoryRecord():
 
 
 
-def regressAllJointPositions():
+def regressAllJointPositions(order):
 
     global _trajectorySteering
     global _trajectoryShoulder0Right
@@ -189,21 +188,21 @@ def regressAllJointPositions():
     global _regressedWrist0Left
     global _regressedWrist1Left
 
-    _regressedShoulder0Right = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryShoulder0Right, 4))
-    _regressedShoulder1Right = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryShoulder1Right, 4))
-    _regressedShoulder2Right = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryShoulder2Right, 4))
-    _regressedElbow0Right    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryElbow0Right, 4))
-    _regressedElbow1Right    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryElbow1Right, 4))
-    _regressedWrist0Right    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryWrist0Right, 4))
-    _regressedWrist1Right    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryWrist1Right, 4))
+    _regressedShoulder0Right = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryShoulder0Right, order))
+    _regressedShoulder1Right = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryShoulder1Right, order))
+    _regressedShoulder2Right = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryShoulder2Right, order))
+    _regressedElbow0Right    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryElbow0Right, order))
+    _regressedElbow1Right    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryElbow1Right, order))
+    _regressedWrist0Right    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryWrist0Right, order))
+    _regressedWrist1Right    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryWrist1Right, order))
 
-    _regressedShoulder0Left = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryShoulder0Left, 4))
-    _regressedShoulder1Left = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryShoulder1Left, 4))
-    _regressedShoulder2Left = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryShoulder2Left, 4))
-    _regressedElbow0Left    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryElbow0Left, 4))
-    _regressedElbow1Left    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryElbow1Left, 4))
-    _regressedWrist0Left    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryWrist0Left, 4))
-    _regressedWrist1Left    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryWrist1Left, 4))
+    _regressedShoulder0Left = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryShoulder0Left, order))
+    _regressedShoulder1Left = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryShoulder1Left, order))
+    _regressedShoulder2Left = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryShoulder2Left, order))
+    _regressedElbow0Left    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryElbow0Left, order))
+    _regressedElbow1Left    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryElbow1Left, order))
+    _regressedWrist0Left    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryWrist0Left, order))
+    _regressedWrist1Left    = poly.Polynomial(poly.polyfit(_trajectorySteering, _trajectoryWrist1Left, order))
 
     return 1
 
@@ -241,63 +240,77 @@ def printRegressedFunctions():
     global _regressedWrist0Left
     global _regressedWrist1Left
 
-    highDefPlotRange = np.linspace(-1 * math.pi / 12, math.pi / 12, 100)
+    highDefPlotRange = np.linspace(-1 * MAX_TURNING_ANGLE, MAX_TURNING_ANGLE, 100)
 
     plt.figure(1)
     plt.plot(_trajectorySteering, _trajectoryShoulder0Right, '*')
     plt.plot(highDefPlotRange, _regressedShoulder0Right(highDefPlotRange), '-')
+    plt.title("Shoulder0Right")
 
     plt.figure(2)
     plt.plot(_trajectorySteering, _trajectoryShoulder1Right, '*')
     plt.plot(highDefPlotRange, _regressedShoulder1Right(highDefPlotRange), '-')
+    plt.title("Shoulder1Right")
 
     plt.figure(3)
     plt.plot(_trajectorySteering, _trajectoryShoulder2Right, '*')
     plt.plot(highDefPlotRange, _regressedShoulder2Right(highDefPlotRange), '-')
+    plt.title("Shoulder2Right")
 
     plt.figure(4)
     plt.plot(_trajectorySteering, _trajectoryShoulder0Left, '*')
     plt.plot(highDefPlotRange, _regressedShoulder0Left(highDefPlotRange), '-')
+    plt.title("Shoulder0Left")
 
     plt.figure(5)
     plt.plot(_trajectorySteering, _trajectoryShoulder1Left, '*')
     plt.plot(highDefPlotRange, _regressedShoulder1Left(highDefPlotRange), '-')
+    plt.title("Shoulder1Left")
 
     plt.figure(6)
     plt.plot(_trajectorySteering, _trajectoryShoulder2Left, '*')
     plt.plot(highDefPlotRange, _regressedShoulder2Left(highDefPlotRange), '-')
+    plt.title("Shoulder2Left")
 
     plt.figure(7)
     plt.plot(_trajectorySteering, _trajectoryElbow0Right, '*')
     plt.plot(highDefPlotRange, _regressedElbow0Right(highDefPlotRange), '-')
+    plt.title("Elbow0Right")
 
     plt.figure(8)
     plt.plot(_trajectorySteering, _trajectoryElbow1Right, '*')
     plt.plot(highDefPlotRange, _regressedElbow1Right(highDefPlotRange), '-')
+    plt.title("Elbow1Right")
 
     plt.figure(9)
     plt.plot(_trajectorySteering, _trajectoryWrist0Right, '*')
     plt.plot(highDefPlotRange, _regressedWrist0Right(highDefPlotRange), '-')
+    plt.title("Wrist0Right")
 
     plt.figure(10)
     plt.plot(_trajectorySteering, _trajectoryWrist1Right, '*')
     plt.plot(highDefPlotRange, _regressedWrist1Right(highDefPlotRange), '-')
+    plt.title("Wrist1Right")
 
     plt.figure(11)
     plt.plot(_trajectorySteering, _trajectoryElbow0Left, '*')
     plt.plot(highDefPlotRange, _regressedElbow0Left(highDefPlotRange), '-')
+    plt.title("Elbow0Left")
 
     plt.figure(12)
     plt.plot(_trajectorySteering, _trajectoryElbow1Left, '*')
     plt.plot(highDefPlotRange, _regressedElbow1Left(highDefPlotRange), '-')
+    plt.title("Elbow1Left")
 
     plt.figure(13)
     plt.plot(_trajectorySteering, _trajectoryWrist0Left, '*')
     plt.plot(highDefPlotRange, _regressedWrist0Left(highDefPlotRange), '-')
+    plt.title("Wrist0Left")
 
     plt.figure(14)
     plt.plot(_trajectorySteering, _trajectoryWrist1Left, '*')
     plt.plot(highDefPlotRange, _regressedWrist1Left(highDefPlotRange), '-')
+    plt.title("Wrist1Left")
 
     plt.show()
 
@@ -379,6 +392,33 @@ def printAllTrajectories():
     plt.show()
 
 
+def saveRegressionToFile(filename, order):
+
+    regressionCoefficientsDict = {
+    JOINT_SHOULDER_AXIS0_RIGHT: poly.polyfit(_trajectorySteering, _trajectoryShoulder0Right, order).tolist(),
+    JOINT_SHOULDER_AXIS1_RIGHT: poly.polyfit(_trajectorySteering, _trajectoryShoulder1Right, order).tolist(),
+    JOINT_SHOULDER_AXIS2_RIGHT: poly.polyfit(_trajectorySteering, _trajectoryShoulder2Right, order).tolist(),
+    JOINT_ELBOW_ROT0_RIGHT:     poly.polyfit(_trajectorySteering, _trajectoryElbow0Right, order).tolist(),
+    JOINT_ELBOW_ROT1_RIGHT:     poly.polyfit(_trajectorySteering, _trajectoryElbow1Right, order).tolist(),
+    JOINT_WRIST_0_RIGHT:        poly.polyfit(_trajectorySteering, _trajectoryWrist0Right, order).tolist(),
+    JOINT_WRIST_1_RIGHT:        poly.polyfit(_trajectorySteering, _trajectoryWrist1Right, order).tolist(),
+
+    JOINT_SHOULDER_AXIS0_LEFT: poly.polyfit(_trajectorySteering, _trajectoryShoulder0Left, order).tolist(),
+    JOINT_SHOULDER_AXIS1_LEFT: poly.polyfit(_trajectorySteering, _trajectoryShoulder1Left, order).tolist(),
+    JOINT_SHOULDER_AXIS2_LEFT: poly.polyfit(_trajectorySteering, _trajectoryShoulder2Left, order).tolist(),
+    JOINT_ELBOW_ROT0_LEFT:     poly.polyfit(_trajectorySteering, _trajectoryElbow0Left, order).tolist(),
+    JOINT_ELBOW_ROT1_LEFT:     poly.polyfit(_trajectorySteering, _trajectoryElbow1Left, order).tolist(),
+    JOINT_WRIST_0_LEFT:        poly.polyfit(_trajectorySteering, _trajectoryWrist0Left, order).tolist(),
+    JOINT_WRIST_1_LEFT:        poly.polyfit(_trajectorySteering, _trajectoryWrist1Left, order).tolist()
+    }
+
+    with open(filename, "w") as write_file:
+        json.dump(regressionCoefficientsDict, write_file, indent=4, sort_keys=True)
+        print("Saved regression coefficients in file ", filename)
+
+
+
+
 ################
 ###   MAIN   ###
 ################
@@ -386,10 +426,16 @@ def printAllTrajectories():
 
 def main():
 
+    order = 4
+    filename_coefficients = "saved_coefficients.json"
+
     importJointTrajectoryRecord()
 #    printAllTrajectories()
-    regressAllJointPositions()
+    regressAllJointPositions(order)
+#    saveRegressionToFile(filename_coefficients, order)
     printRegressedFunctions()
+#    print("Len _trajectoryWrist1Left: ", len(_trajectoryWrist1Left))
+#    print(_trajectoryWrist1Left)
 
     return 1
 
