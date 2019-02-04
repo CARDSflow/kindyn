@@ -37,7 +37,7 @@ HANDLEBAR_Z_OFFSET = 0.719269  # [m]
 
 HAND_Y_OFFSET = 0.2  # [m]
 
-JSON_FILENAME = "multiple_steering_trajectory.json"
+JSON_FILENAME = "multiple_steering_trajectory_temp.json"
 JOINT_ANGLE_TOLERANCE_FK = 0.01
 
 ENDEFFECTOR_RIGHT = "right_hand"
@@ -442,9 +442,9 @@ def main():
 
             print("Finished point ", pointIter*pointMultiplicityIterator)
 
-
-    with open(JSON_FILENAME, "w") as write_file:
-        json.dump(jointAngleDict, write_file, indent=4, sort_keys=True)
+            with open(JSON_FILENAME, "w") as write_file:
+                json.dump(jointAngleDict, write_file, indent=4, sort_keys=True)
+                print("SAVED CURRENT DATA IN JSON FILE")
 
     return 1
 
