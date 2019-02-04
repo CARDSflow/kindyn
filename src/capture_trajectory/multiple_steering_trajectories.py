@@ -25,19 +25,7 @@ MAX_TURNING_ANGLE   = math.pi/15  # [rad]
 NUM_STEERING_ANGLES = 61  # Should be odd number, symmetric about zero value
 POINT_MULTIPLICITY  = 50
 
-RIKSHAW_TURN_JOINT_X_OFFSET = 0.7163902600571725+0.23003546879794612  # [m]
-RIKSHAW_TURN_JOINT_Y_OFFSET = -0.010388552466272516+0.010388308199859624  # [m]
-RIKSHAW_TURN_JOINT_Z_OFFSET = 0.2164376942146126-0.20527069599791542  # [m]
-
-YAW_RIGHT_HAND_OFFSET = math.pi / 2 + math.pi
-YAW_LEFT_HAND_OFFSET  = 3 * math.pi / 2 + math.pi
-
-HANDLEBAR_X_OFFSET = 0.728713  # [m]
-HANDLEBAR_Z_OFFSET = 0.719269  # [m]
-
-HAND_Y_OFFSET = 0.2  # [m]
-
-JSON_FILENAME = "multiple_steering_trajectory.json"
+JSON_FILENAME = "multiple_steering_trajectory_temp.json"
 JOINT_ANGLE_TOLERANCE_FK = 0.01
 
 ENDEFFECTOR_RIGHT = "right_hand"
@@ -53,6 +41,18 @@ FRAME_LEFT        = "left_hand"
 BIKE_OFFSET_X = 0  # -0.83471
 BIKE_OFFSET_Y = 0  # 0.03437
 BIKE_OFFSET_Z = 0  # 0.037
+
+RIKSHAW_TURN_JOINT_X_OFFSET = 0.7163902600571725+0.23003546879794612  # [m]
+RIKSHAW_TURN_JOINT_Y_OFFSET = -0.010388552466272516+0.010388308199859624  # [m]
+RIKSHAW_TURN_JOINT_Z_OFFSET = 0.2164376942146126-0.20527069599791542  # [m]
+
+YAW_RIGHT_HAND_OFFSET = math.pi / 2 + math.pi
+YAW_LEFT_HAND_OFFSET  = 3 * math.pi / 2 + math.pi
+
+HANDLEBAR_X_OFFSET = 0.728713  # [m]
+HANDLEBAR_Z_OFFSET = 0.719269  # [m]
+
+HAND_Y_OFFSET = 0.2  # [m]
 
 
 ############################
@@ -234,18 +234,6 @@ def getPositionRightHand():
 
     print("ERROR fk right_hand failed")
     return [0.0, 0.0, 0.0]  # [x, z]
-
-def setJointControllerParameters(proportionalVal, derivativeVal):
-
-    for thisJointName in JOINT_LIST:
-        rospy.wait_for_service(thisJointName + '/' + thisJointName + '/params')
-        try:
-            param_srv = rospy.ServiceProxy(thisJointName + '/' + thisJointName + '/params', SetControllerParameters)
-            param_srv(proportionalVal, derivativeVal)
-        except rospy.ServiceException, e:
-            print "Service call for " + thisJointName + "failed: %s"%e
-
-    print("Controller paramters updated")
 
 
 def jointStateCallback(joint_data):
@@ -442,9 +430,9 @@ def main():
 
             print("Finished point ", pointIter*pointMultiplicityIterator)
 
-
-    with open(JSON_FILENAME, "w") as write_file:
-        json.dump(jointAngleDict, write_file, indent=4, sort_keys=True)
+            with open(JSON_FILENAME, "w") as write_file:
+                json.dump(jointAngleDict, write_file, indent=4, sort_keys=True)
+                print("SAVED CURRENT DATA IN JSON FILE")
 
     return 1
 
