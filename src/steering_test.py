@@ -17,13 +17,14 @@ from std_msgs.msg import Float32
 
 PRINT_DEBUG = False
 
-STEP_DISTRIBUTIONS_TEST = 6  # steering_range is divided into 2^x steps
-SHOW_AVERAGE = True  # Display only average transition times of step-distributions
+STEPS_DISTRIBUTION_TEST = [16]
+SHOW_AVERAGE = False  # Display only average transition times of step-distributions
 
 UPDATE_FREQUENCY = 0.01
-ERROR_TOLERANCE = np.pi/180
+ERROR_TOLERANCE = np.pi/36
+INITIAL_STARTING_TIME = 10
 
-MAX_TRANSITION_TIME = 1
+MAX_TRANSITION_TIME = 10
 
 JOINT_SHOULDER_AXIS0_RIGHT = "right_shoulder_axis0"
 JOINT_SHOULDER_AXIS1_RIGHT = "right_shoulder_axis1"
@@ -304,23 +305,24 @@ def steering_angle_reached(steering_angle):
 
 
 def steering_test(pub):
-    transition_times_increasing = [[]] * STEP_DISTRIBUTIONS_TEST
-    transition_times_decreasing = [[]] * STEP_DISTRIBUTIONS_TEST
+    transition_times_increasing = [[]] * len(STEPS_DISTRIBUTION_TEST)
+    transition_times_decreasing = [[]] * len(STEPS_DISTRIBUTION_TEST)
 
-    increasing_angles = [[]] * STEP_DISTRIBUTIONS_TEST
-    decreasing_angles = [[]] * STEP_DISTRIBUTIONS_TEST
+    increasing_angles = [[]] * len(STEPS_DISTRIBUTION_TEST)
+    decreasing_angles = [[]] * len(STEPS_DISTRIBUTION_TEST)
 
-    min_angle = min(_trajectorySteering)
-    max_angle = max(_trajectorySteering)
+    min_angle = min(_trajectorySteering)+0.01
+    max_angle = max(_trajectorySteering)-0.01
     d = max_angle - min_angle
+    pub.publish(min_angle)
+    time.sleep(INITIAL_STARTING_TIME)
 
-    for j in range(STEP_DISTRIBUTIONS_TEST):
-        pub.publish(min_angle)
+    for j in range(len(STEPS_DISTRIBUTION_TEST)):
 
-        print("\nStarting with amount of steps from min to max: ", 2 ** j)
-        for i in range(2**j):
+        print("\nStarting with amount of steps from min to max: ", STEPS_DISTRIBUTION_TEST[j])
+        for i in range(STEPS_DISTRIBUTION_TEST[j]):
             start_time = time.time()
-            target_angle = min_angle+(d/(2**j)*i)
+            target_angle = min_angle+(d/STEPS_DISTRIBUTION_TEST[j]*i)
             print("Step ", i, ": target_angle = ", target_angle)
             increasing_angles.append(target_angle)
             pub.publish(target_angle)
@@ -331,9 +333,9 @@ def steering_test(pub):
             transition_times_increasing[j].append(transition_time)
 
         print("\nStarting with amount of steps from max to min: ", 2 ** j)
-        for i in range(2**j):
+        for i in range(STEPS_DISTRIBUTION_TEST[j]):
             start_time = time.time()
-            target_angle = max_angle-(d/(2**j)*i)
+            target_angle = max_angle-(d/STEPS_DISTRIBUTION_TEST[j]*i)
             print("Step ", i, ": target_angle = ", target_angle)
             decreasing_angles.append(target_angle)
             pub.publish(target_angle)
@@ -344,19 +346,19 @@ def steering_test(pub):
             transition_times_decreasing[j].append(transition_time)
 
     if not SHOW_AVERAGE:
-        for i in range(STEP_DISTRIBUTIONS_TEST):
+        for i in range(len(STEPS_DISTRIBUTION_TEST)):
             plt.plot(increasing_angles[i], transition_times_increasing[i],
-                     label="transition times with increasing step-length :"+str(d/(2**i)))
+                     label="transition times with increasing step-length :"+str(d/STEPS_DISTRIBUTION_TEST[i]))
             plt.plot(decreasing_angles[ i ], transition_times_decreasing[ i ],
-                     label="transition times with decreasing step-length :" + str(d / (2 ** i)))
+                     label="transition times with decreasing step-length :" + str(d / STEPS_DISTRIBUTION_TEST[i]))
 
         plt.xlabel("target_angle")
         plt.ylabel("transition time in s")
 
     else:
         step_lengths = []
-        for i in range(STEP_DISTRIBUTIONS_TEST):
-            step_lengths.append(d/(2**i))
+        for i in range(len(STEPS_DISTRIBUTION_TEST)):
+            step_lengths.append(d/STEPS_DISTRIBUTION_TEST[i])
         avg_times_increasing = []
         avg_times_decreasing = []
         for transition_times in transition_times_increasing:
@@ -385,3 +387,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

@@ -13,6 +13,7 @@ import numpy as np
 import rospy
 from roboy_middleware_msgs.srv import InverseKinematics, ForwardKinematics
 from roboy_simulation_msgs.msg import JointState
+from roboy_control_msgs.srv import SetControllerParameters
 from std_msgs.msg import Float32, String
 
 #############################
@@ -28,7 +29,8 @@ RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/steering_trajectory.json"
 ############################
 
 UPDATE_FREQUENCY = 0.001
-MAX_ANGLE_CHANGE = np.pi / 60
+MAX_ANGLE_CHANGE = np.pi / 72
+STEP_TRANSITION_TIME = 0.5
 
 JOINT_SHOULDER_AXIS0_RIGHT = "right_shoulder_axis0"
 JOINT_SHOULDER_AXIS1_RIGHT = "right_shoulder_axis1"
@@ -178,6 +180,8 @@ def import_joint_trajectory_record():
     if PRINT_DEBUG:
         print("--------- Num trajectory points:")
         print(_numTrajectoryPoints)
+        print("max_angle = ", max(_trajectorySteering))
+        print("min_angle = ", min(_trajectorySteering))
 
 
 def interpolate_joint_angles():
@@ -215,6 +219,17 @@ def interpolate_joint_angles():
 
 def get_angle_difference(angle_1, angle_2):
     return np.pi - np.abs(np.abs(angle_1 - angle_2) - np.pi)
+
+
+def set_joint_controller_parameters(proportional_value, derivative_value):
+
+    for thisJointName in _joints_list:
+        rospy.wait_for_service(thisJointName + '/' + thisJointName + '/params')
+        try:
+            joint_srv = rospy.ServiceProxy(thisJointName + '/' + thisJointName + '/params', SetControllerParameters)
+            joint_srv(proportional_value, derivative_value)
+        except rospy.ServiceException, e:
+            print ("Service call joint_foot_left failed: ", e)
 
 
 #############################
@@ -300,7 +315,7 @@ def publish_joint_angle(joint_name, steering_angle):
             log_msg = "publishing " + str(target_joint_angle) + " to joint: " + joint_name
             print(log_msg)
 
-        time.sleep(2)
+        time.sleep(STEP_TRANSITION_TIME)
 
     else:
         global angle_change_successful
@@ -385,9 +400,10 @@ def main():
     rospy.init_node('steering_simulation', anonymous=True)
     import_joint_trajectory_record()
     interpolate_joint_angles()
-
+    set_joint_controller_parameters(1, 0)
     steering_control()
 
 
 if __name__ == '__main__':
     main()
+

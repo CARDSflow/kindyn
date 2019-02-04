@@ -27,10 +27,10 @@ from std_msgs.msg import Float32
 
 PRINT_DEBUG = True
 SIMULATION_FACTOR = 100  # factor to slow down the motion for better simulation
-NUMBER_CIRCULATION_POINTS = 72  # number of points for controlling
+NUMBER_CIRCULATION_POINTS = 30  # number of points for controlling
 
 
-RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/old_captured_trajectory.json"
+RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/captured_trajectory_old.json"
 
 BIKE_VELOCITY = 0
 
@@ -716,3 +716,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
