@@ -591,31 +591,33 @@ def FSM():
     _runFSM = True
 
     _currState = INIT
-    _currTrajectoryPoint = getPositionRightFoot()
-    _currTrajectoryAngle = evaluate_current_angle(_currTrajectoryPoint)
-    _nextTrajectoryAngle = None
+    current_angle_hip = _jointsStatusData[LEFT_HIP_JOINT]["Pos"]
+    current_angle_knee = _jointsStatusData[LEFT_KNEE_JOINT]["Pos"]
+    current_angle_ankle = _jointsStatusData[LEFT_ANKLE_JOINT]["Pos"]
 
     _startTime = 0.0
     _endTime = 0.0
     _currTime = 0.0
     _prevTime = 0.0
 
-    velocity = 1
-    publisher = ros_right_hip_publisher
+    velocity = -5
+    publisher = ros_left_hip_publisher
 
     begin_time = rospy.get_rostime()
-    duration = rospy.Duration(10)
+    duration = rospy.Duration(20)
     end_time = duration + begin_time
+
     while (rospy.get_rostime() < end_time):
-	print(getPositionRightFoot())
-        print(evaluate_current_angle(getPositionRightFoot()))
         publisher.publish(velocity)
-	time.sleep(1)
+        print (_jointsStatusData[LEFT_HIP_JOINT]["Pos"])
+
     publisher.publish(0)
-    _nextTrajectoryPoint = getPositionRightFoot()
-    _nextTrajectoryAngle = evaluate_current_angle(_nextTrajectoryPoint)
-    print ("velocity = ", velocity, "\ntime (s) = ", 1,
-           "\n\nangle 1 = ", _currTrajectoryAngle, "\nangle 2 = ", _nextTrajectoryAngle, "\nd = ", _nextTrajectoryAngle - _currTrajectoryAngle)
+    final_angle_hip = _jointsStatusData[ LEFT_HIP_JOINT ][ "Pos" ]
+    final_angle_knee = _jointsStatusData[ LEFT_KNEE_JOINT ][ "Pos" ]
+    final_angle_ankle = _jointsStatusData[ LEFT_ANKLE_JOINT ][ "Pos" ]
+
+    print ("velocity = ", velocity, "\ntime (s) = ", duration,
+           "\n\nangle 1 = ", current_angle_hip, "\nangle 2 = ", final_angle_hip, "\nd = ", final_angle_hip - current_angle_hip)
 
 
 ################

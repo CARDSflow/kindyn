@@ -7,58 +7,84 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from scipy.misc import derivative
 
-RECORDED_TRAJECTORY_FILENAME = "captured_trajectory_ik.json"
+RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/captured_trajectory.json"
+
+PRINT_DEBUG = False
 
 numTrajectoryPoints = 0
 trajectoryStartingPoint = 0
 
-pedalTrajectory = []
-hipTrajectory   = []
-kneeTrajectory  = []
-ankleTrajectory = []
+pedalTrajectoryRight = [ ]
+pedalAngleTrajectoryRight = []
+pedalTrajectoryLeft = [ ]
+hipTrajectoryRight = [ ]
+kneeTrajectoryRight = [ ]
+ankleTrajectoryRight = [ ]
+hipTrajectoryLeft = [ ]
+kneeTrajectoryLeft = [ ]
+ankleTrajectoryLeft = [ ]
 
 
 
 
 def importJointTrajectoryRecord():
+    global number_imported_trajectory_points
+    global pedalTrajectoryLeft
+    global pedalTrajectoryRight
+    global hipTrajectoryRight
+    global kneeTrajectoryRight
+    global ankleTrajectoryRight
+    global hipTrajectoryLeft
+    global kneeTrajectoryLeft
+    global ankleTrajectoryLeft
+    global PRINT_DEBUG
 
     with open(RECORDED_TRAJECTORY_FILENAME, "r") as read_file:
         loaded_data = json.load(read_file)
 
-    if loaded_data["num_points"] == None:
+    if loaded_data[ "num_points" ] is None:
         return 0
     else:
-        numTrajectoryPoints = loaded_data["num_points"]
+        number_imported_trajectory_points = loaded_data[ "num_points" ]
 
     # Deleting previous trajectory before loading new
-    del pedalTrajectory[:]
-    del hipTrajectory[:]
-    del kneeTrajectory[:]
-    del ankleTrajectory[:]
-    for pointIterator in range (numTrajectoryPoints):
-	if ("point_"+str(pointIterator) in loaded_data):
-		pedalTrajectory.append(loaded_data["point_"+str(pointIterator)]["Pedal"])
-		hipTrajectory.append(loaded_data["point_"+str(pointIterator)]["Hip"])
-		kneeTrajectory.append(loaded_data["point_"+str(pointIterator)]["Knee"])
-		ankleTrajectory.append(loaded_data["point_"+str(pointIterator)]["Ankle"])
-	else:
-		numTrajectoryPoints -= 1
+    del pedalTrajectoryLeft[ : ]
+    del pedalTrajectoryRight[ : ]
+    del pedalAngleTrajectoryRight[ : ]
+    del hipTrajectoryRight[ : ]
+    del kneeTrajectoryRight[ : ]
+    del ankleTrajectoryRight[ : ]
+    del hipTrajectoryLeft[ : ]
+    del kneeTrajectoryLeft[ : ]
+    del ankleTrajectoryLeft[ : ]
+    for pointIterator in range(number_imported_trajectory_points):
+        if ("point_" + str(pointIterator) in loaded_data):
+            pedalTrajectoryLeft.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Pedal" ])
+            pedalTrajectoryRight.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Pedal" ])
+            pedalAngleTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Pedal_angle"])
+            hipTrajectoryRight.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Hip" ])
+            kneeTrajectoryRight.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Knee" ])
+            ankleTrajectoryRight.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Ankle" ])
+            hipTrajectoryLeft.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Hip" ])
+            kneeTrajectoryLeft.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Knee" ])
+            ankleTrajectoryLeft.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Ankle" ])
+        else:
+            print("WARNING: No point_%s in trajectory" % (pointIterator))
+            number_imported_trajectory_points -= 1
 
-    print("--------- Num trajectory points:")
-    print(numTrajectoryPoints)
-    print("--------- Hip trajectory:")
-    print(hipTrajectory)
-    print("--------- Knee trajectory:")
-    print(kneeTrajectory)
-    print("--------- Ankle trajectory:")
-    print(ankleTrajectory)
-
-    return numTrajectoryPoints
+    if PRINT_DEBUG:
+        print("--------- Num trajectory points:")
+        print(number_imported_trajectory_points)
 
 
 if __name__ == '__main__':
+    
 
+    
     importJointTrajectoryRecord()
+    
+    pedalTrajectory = pedalTrajectoryRight
+    hipTrajectory = hipTrajectoryRight	
 
     x = []
     y = []

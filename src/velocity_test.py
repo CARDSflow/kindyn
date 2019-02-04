@@ -11,11 +11,9 @@ from threading import Thread
 import numpy as np
 
 import matplotlib.pyplot as plt
-
+from mpl_toolkits.mplot3d import Axes3D
 import rospy
 from roboy_middleware_msgs.srv import InverseKinematics, ForwardKinematics
-from roboy_simulation_msgs.msg import JointState
-from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Float32
 
 TIME_STEP_SIMULATION = 0.5
@@ -46,7 +44,7 @@ LEFT_HIP_JOINT = "left_hip"
 LEFT_KNEE_JOINT = "left_knee"
 LEFT_ANKLE_JOINT = "left_ankle"
 
-_jointsStatusData = {
+joint_status_data = {
     RIGHT_HIP_JOINT: {
         "Pos": 0.0,
         "Vel": 0.0
@@ -76,8 +74,8 @@ _jointsStatusData = {
 
 def getPositionLeftFoot():
     fkJointNamesList = [ ROS_JOINT_HIP_LEFT, ROS_JOINT_KNEE_LEFT, ROS_JOINT_ANKLE_LEFT ]
-    fkJointPositions = [ _jointsStatusData[ LEFT_HIP_JOINT ][ "Pos" ], _jointsStatusData[ LEFT_KNEE_JOINT ][ "Pos" ],
-                         _jointsStatusData[ LEFT_ANKLE_JOINT ][ "Pos" ] ]
+    fkJointPositions = [ joint_status_data[ LEFT_HIP_JOINT ][ "Pos" ], joint_status_data[ LEFT_KNEE_JOINT ][ "Pos" ],
+                         joint_status_data[ LEFT_ANKLE_JOINT ][ "Pos" ] ]
 
     rospy.wait_for_service('fk')
     try:
@@ -94,9 +92,9 @@ def getPositionLeftFoot():
 
 def getPositionRightFoot():
     fk_joint_names_list = [ ROS_JOINT_HIP_RIGHT, ROS_JOINT_KNEE_RIGHT, ROS_JOINT_ANKLE_RIGHT ]
-    fk_joint_positions = [ _jointsStatusData[ RIGHT_HIP_JOINT ][ "Pos" ],
-                           _jointsStatusData[ RIGHT_KNEE_JOINT ][ "Pos" ],
-                           _jointsStatusData[ RIGHT_ANKLE_JOINT ][ "Pos" ] ]
+    fk_joint_positions = [ joint_status_data[ RIGHT_HIP_JOINT ][ "Pos" ],
+                           joint_status_data[ RIGHT_KNEE_JOINT ][ "Pos" ],
+                           joint_status_data[ RIGHT_ANKLE_JOINT ][ "Pos" ] ]
 
     rospy.wait_for_service('fk')
     try:
