@@ -5,7 +5,7 @@
 #include <roboy_simulation_msgs/GymReset.h>
 #include <roboy_simulation_msgs/GymGoal.h>
 #include <common_utilities/CommonDefinitions.h>
-
+#include <stdlib.h> /* atoi*/
 
 #define NUMBER_OF_MOTORS 8
 #define SPINDLERADIUS 0.00575
@@ -21,26 +21,38 @@ public:
      * @param urdf path to urdf
      * @param cardsflow_xml path to cardsflow xml
      */
-
-    MsjPlatform(string urdf, string cardsflow_xml){
+    MsjPlatform(string urdf, string cardsflow_xml, int id){
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
             ros::init(argc, argv, "msj_platform");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
+        spinner.reset(new ros::AsyncSpinner(0));
+        spinner->start();
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
         // OpenAI gym services
-        gym_step = nh->advertiseService("/gym_step", &MsjPlatform::GymStepService,this);
-        gym_reset = nh->advertiseService("/gym_reset", &MsjPlatform::GymResetService,this);
-        gym_goal = nh->advertiseService("/gym_goal", &MsjPlatform::GymGoalService,this);
-        // first we retrieve the active joint names from the parameter server
-        vector<string> joint_names;
+        string gym_step_topic = "/instance" + to_string(id) + "/gym_step";
+        string gym_reset_topic = "/instance" + to_string(id) + "/gym_reset";
+        string gym_goal_topic = "/instance" + to_string(id) + "/gym_goal";
+        gym_step = nh->advertiseService(gym_step_topic, &MsjPlatform::GymStepService,this);
+        gym_reset = nh->advertiseService(gym_reset_topic, &MsjPlatform::GymResetService,this);
+        gym_goal = nh->advertiseService(gym_goal_topic, &MsjPlatform::GymGoalService,this);
+        readJointLimits();
+
+        vector<string> joint_names; // first we retrieve the active joint names from the parameter server
         nh->getParam("joint_names", joint_names);
-        // then we initialize the robot with the cardsflow xml and the active joints
-        init(urdf,cardsflow_xml,joint_names);
-        // if we do not get the robot state externally, we use the forwardKinematics function to integrate the robot state
-        nh->getParam("external_robot_state", external_robot_state);
+
+        init(urdf,cardsflow_xml,joint_names); // then we initialize the robot with the cardsflow xml and the active joints
+
+        nh->getParam("external_robot_state", external_robot_state); // if we do not get the robot state externally, we use the forwardKinematics function to integrate the robot state
+
+        update();
+        for(int i=0;i<NUMBER_OF_MOTORS;i++)
+            l_offset[i] = l[i];
+
+    };
+    void readJointLimits(){
         // Get the limits of joints
         string path = ros::package::getPath("robots");
         path+="/msj_platform/joint_limits.txt";
@@ -62,13 +74,7 @@ public:
         }else{
             cout << "could not open " << path << endl;
         }
-
-        update();
-        for(int i=0;i<NUMBER_OF_MOTORS;i++)
-            l_offset[i] = l[i];
-
-    };
-
+    }
     /**
      * Updates the robot model and if we do not use gazebo for simulation, we integrate using the forwardKinematics function
      * with a small step length
@@ -151,7 +157,7 @@ public:
     bool GymStepService(roboy_simulation_msgs::GymStep::Request &req,
                         roboy_simulation_msgs::GymStep::Response &res){
         
-        if(req.set_points.size() != 0){ //If no set_point set then jut return observation.
+        if(req.set_points.size() != 0){ //If no set_point set then just return observation.
         	//ROS_INFO("Gymstep is called");
         	update();
 	        for(int i=0; i< number_of_cables; i++){
@@ -217,7 +223,7 @@ public:
     ros::ServiceServer gym_goal; //OpenAI Gym training environment sets new goal function, ros service instance
     vector<double> limits[3];
     double l_offset[NUMBER_OF_MOTORS];
-
+    boost::shared_ptr <ros::AsyncSpinner> spinner;
 };
 
 /**
@@ -253,25 +259,23 @@ int main(int argc, char *argv[]) {
     }
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
-    MsjPlatform robot(urdf, cardsflow_xml);
 
-    controller_manager::ControllerManager cm(&robot);
+    int workers = atoi( argv[1]);
+    cout << "\nNUMBER OF WORKERS " << workers << endl;
 
-    // we need an additional update thread, otherwise the controllers won't switch
-    thread update_thread(update, &cm);
-    update_thread.detach();
+    //for(int i = 0; i< workers; i++) {
+        MsjPlatform robot(urdf, cardsflow_xml, 0);
 
+    //}
     ROS_INFO("STARTING ROBOT MAIN LOOP...");
-
-    while(ros::ok()){
+    //while(ros::ok()){
         //robot.read();
         //robot.write();
-        ros::spinOnce();
-    }
+        //ros::spinOnce();
+    //}
+    ros::waitForShutdown();
 
     ROS_INFO("TERMINATING...");
-
-    update_thread.join();
 
     return 0;
 }
