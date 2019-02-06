@@ -75,6 +75,16 @@ public:
         }else{
             cout << "could not open " << path << endl;
         }
+        for(int i=0;i<limits[0].size();i++){
+            if(limits[0][i]<min[0])
+                min[0] = limits[0][i];
+            if(limits[1][i]<min[1])
+                min[1] = limits[1][i];
+            if(limits[0][i]>max[0])
+                max[0] = limits[0][i];
+            if(limits[1][i]>max[1])
+                max[1] = limits[1][i];
+        }
     }
     /**
      * Updates the robot model and if we do not use gazebo for simulation, we integrate using the forwardKinematics function
@@ -129,17 +139,6 @@ public:
 
         bool not_feasible = true;
         float q0= 0.0,q1= 0.0,q2 = 0.0;
-        double min[3] = {0,0,-1}, max[3] = {0,0,1};
-        for(int i=0;i<limits[0].size();i++){
-            if(limits[0][i]<min[0])
-                min[0] = limits[0][i];
-            if(limits[1][i]<min[1])
-                min[1] = limits[1][i];
-            if(limits[0][i]>max[0])
-                max[0] = limits[0][i];
-            if(limits[1][i]>max[1])
-                max[1] = limits[1][i];
-        }
         srand(static_cast<unsigned >(time(0)));
         while(not_feasible) {
             //ROS_INFO("creating random goals");
@@ -216,15 +215,19 @@ public:
         //ROS_INFO("Gymreset is done");
         return true;
     }
+
+private:
+
     bool external_robot_state; /// indicates if we get the robot state externally
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
-    ros::ServiceServer gym_step; //OpenAI Gym training environment step function, ros service instance
-    ros::ServiceServer gym_reset; //OpenAI Gym training environment reset function, ros service instance
-    ros::ServiceServer gym_goal; //OpenAI Gym training environment sets new goal function, ros service instance
+    ros::ServiceServer gym_step; ///OpenAI Gym training environment step function, ros service instance
+    ros::ServiceServer gym_reset; ///OpenAI Gym training environment reset function, ros service instance
+    ros::ServiceServer gym_goal; ///OpenAI Gym training environment sets new goal function, ros service instance
     vector<double> limits[3];
     double l_offset[NUMBER_OF_MOTORS];
     boost::shared_ptr <ros::AsyncSpinner> spinner;
+    double min[3] = {0,0,-1}, max[3] = {0,0,1};
 };
 
 /**
