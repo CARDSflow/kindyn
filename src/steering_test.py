@@ -18,7 +18,7 @@ from std_msgs.msg import Float32
 PRINT_DEBUG = False
 
 STEPS_DISTRIBUTION_TEST = [16]
-SHOW_AVERAGE = False  # Display only average transition times of step-distributions
+SHOW_AVERAGE = True  # Display only average transition times of step-distributions
 
 UPDATE_FREQUENCY = 0.01
 ERROR_TOLERANCE = np.pi/36
@@ -324,7 +324,7 @@ def steering_test(pub):
             start_time = time.time()
             target_angle = min_angle+(d/STEPS_DISTRIBUTION_TEST[j]*i)
             print("Step ", i, ": target_angle = ", target_angle)
-            increasing_angles.append(target_angle)
+            increasing_angles[j].append(target_angle)
             pub.publish(target_angle)
             steering_angle_reached(target_angle)
             end_time = time.time()
@@ -337,7 +337,7 @@ def steering_test(pub):
             start_time = time.time()
             target_angle = max_angle-(d/STEPS_DISTRIBUTION_TEST[j]*i)
             print("Step ", i, ": target_angle = ", target_angle)
-            decreasing_angles.append(target_angle)
+            decreasing_angles[j].append(target_angle)
             pub.publish(target_angle)
             steering_angle_reached(target_angle)
             end_time = time.time()
