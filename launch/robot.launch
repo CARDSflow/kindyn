@@ -12,6 +12,7 @@
     <arg name="x" default="0"/>
     <arg name="y" default="0"/>
     <arg name="z" default="0"/>
+    <arg name="workers" default="1"/>
 
     <param name="robot_name" type="string" value="$(arg robot_name)"  />
     <param name="model_name" type="string" value="$(arg model_name)"  />
@@ -33,6 +34,7 @@
           type="$(arg robot_name)"
           respawn="false"
           output="screen"
+          args="$(arg workers)"
     />
 
     <group if="$(arg gazebo)">

@@ -22,11 +22,8 @@ public:
      * @param urdf path to urdf
      * @param cardsflow_xml path to cardsflow xml
      */
-<<<<<<< HEAD
     MsjPlatform(string urdf, string cardsflow_xml, int id , int num_workers){
-=======
-    MsjPlatform(string urdf, string cardsflow_xml){
->>>>>>> deepRoboy-feature
+
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
@@ -37,12 +34,9 @@ public:
         spinner->start();
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
 
-<<<<<<< HEAD
-        initService(id, num_workers);
-=======
-        initServices();
 
->>>>>>> deepRoboy-feature
+        initService(id, num_workers);
+
         readJointLimits();
 
         vector<string> joint_names; // first we retrieve the active joint names from the parameter server
@@ -57,7 +51,6 @@ public:
             l_offset[i] = l[i];
 
     };
-<<<<<<< HEAD
     ~MsjPlatform(){
         spinner->stop();
         nh.reset();
@@ -75,21 +68,11 @@ public:
             gym_reset_topic = "/gym_reset";
             gym_goal_topic = "/gym_goal";
         }
-=======
-    void initServices(){
-        // OpenAI gym services
-        string gym_step_topic = "/gym_step";
-        string gym_reset_topic = "/gym_reset";
-        string gym_goal_topic = "/gym_goal";
->>>>>>> deepRoboy-feature
         gym_step = nh->advertiseService(gym_step_topic, &MsjPlatform::GymStepService,this);
         gym_reset = nh->advertiseService(gym_reset_topic, &MsjPlatform::GymResetService,this);
         gym_goal = nh->advertiseService(gym_goal_topic, &MsjPlatform::GymGoalService,this);
     }
-<<<<<<< HEAD
 
-=======
->>>>>>> deepRoboy-feature
     void readJointLimits(){
         // Get the limits of joints
         string path = ros::package::getPath("robots");
@@ -252,18 +235,11 @@ private:
     bool external_robot_state; /// indicates if we get the robot state externally
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
-<<<<<<< HEAD
 
-private:
-    double min[3] = {0,0,-1}, max[3] = {0,0,1};
     ros::ServiceServer gym_step; //OpenAI Gym training environment step function, ros service instance
     ros::ServiceServer gym_reset; //OpenAI Gym training environment reset function, ros service instance
     ros::ServiceServer gym_goal; //OpenAI Gym training environment sets new feasible goal function, ros service instance
-=======
-    ros::ServiceServer gym_step; ///OpenAI Gym training environment step function, ros service instance
-    ros::ServiceServer gym_reset; ///OpenAI Gym training environment reset function, ros service instance
-    ros::ServiceServer gym_goal; ///OpenAI Gym training environment sets new goal function, ros service instance
->>>>>>> deepRoboy-feature
+
     vector<double> limits[3];
     double l_offset[NUMBER_OF_MOTORS];
     boost::shared_ptr <ros::AsyncSpinner> spinner;
@@ -302,8 +278,6 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
-
-    MsjPlatform robot(urdf, cardsflow_xml);
 
     int workers = atoi( argv[1]);
     cout << "\nNUMBER OF WORKERS " << workers << endl;
