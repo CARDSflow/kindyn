@@ -7,7 +7,7 @@ Robot::Robot() {
         int argc = 0;
         char **argv = NULL;
         ros::init(argc, argv, "CARDSflow robot", ros::init_options::NoSigintHandler);
-    }
+    } //namespace stuff work it out here for every instance
     nh = ros::NodeHandlePtr(new ros::NodeHandle);
     spinner.reset(new ros::AsyncSpinner(0));
     spinner->start();
@@ -544,7 +544,7 @@ void Robot::update() {
         }
         { // robot target publisher
             // Target is not changing but the robot_state should be published to visualize
-           // if((q_target-q_target_prev).norm()>0.001 || (qd_target-qd_target_prev).norm()>0.001 || first_update) { // only if target changed // Commented out for visualization of the training of the OpenAI gym.
+            //if((q_target-q_target_prev).norm()>0.001 || (qd_target-qd_target_prev).norm()>0.001 || first_update) { // only if target changed // Commented out for visualization of the training of the OpenAI gym.
                 if(first_update)
                     first_update = false;
                 q_target_prev = q_target;
@@ -690,6 +690,7 @@ void Robot::forwardKinematics(double dt) {
             qd[i] = 0;
         }
     }
+
 
     integration_time += dt;
     ROS_INFO_THROTTLE(5, "forward kinematics calculated for %lf s", integration_time);

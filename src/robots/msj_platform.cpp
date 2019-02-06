@@ -16,6 +16,7 @@ using namespace std;
 
 class MsjPlatform: public cardsflow::kindyn::Robot{
 public:
+
     /**
      * Constructor
      * @param urdf path to urdf
@@ -31,13 +32,8 @@ public:
         spinner.reset(new ros::AsyncSpinner(0));
         spinner->start();
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
-        // OpenAI gym services
-        string gym_step_topic = "/instance" + to_string(id) + "/gym_step";
-        string gym_reset_topic = "/instance" + to_string(id) + "/gym_reset";
-        string gym_goal_topic = "/instance" + to_string(id) + "/gym_goal";
-        gym_step = nh->advertiseService(gym_step_topic, &MsjPlatform::GymStepService,this);
-        gym_reset = nh->advertiseService(gym_reset_topic, &MsjPlatform::GymResetService,this);
-        gym_goal = nh->advertiseService(gym_goal_topic, &MsjPlatform::GymGoalService,this);
+
+        initService(id);
         readJointLimits();
 
         vector<string> joint_names; // first we retrieve the active joint names from the parameter server
@@ -52,6 +48,18 @@ public:
             l_offset[i] = l[i];
 
     };
+    ///Open AI Gym services
+    void initService(int id){
+        // OpenAI gym services
+        string gym_step_topic = "/instance" + to_string(id) + "/gym_step";
+        string gym_reset_topic = "/instance" + to_string(id) + "/gym_reset";
+        string gym_goal_topic = "/instance" + to_string(id) + "/gym_goal";
+
+        gym_step = nh->advertiseService(gym_step_topic, &MsjPlatform::GymStepService,this);
+        gym_reset = nh->advertiseService(gym_reset_topic, &MsjPlatform::GymResetService,this);
+        gym_goal = nh->advertiseService(gym_goal_topic, &MsjPlatform::GymGoalService,this);
+    }
+
     void readJointLimits(){
         // Get the limits of joints
         string path = ros::package::getPath("robots");
@@ -263,18 +271,17 @@ int main(int argc, char *argv[]) {
     int workers = atoi( argv[1]);
     cout << "\nNUMBER OF WORKERS " << workers << endl;
 
-    //for(int i = 0; i< workers; i++) {
-        MsjPlatform robot(urdf, cardsflow_xml, 0);
+    MsjPlatform *ptr = NULL;
+    //ptr = new MsjPlatform[workers];
 
-    //}
+    for(int i = 0; i< workers; i++) {
+        ptr = new MsjPlatform(urdf, cardsflow_xml, i);
+    }
+
     ROS_INFO("STARTING ROBOT MAIN LOOP...");
-    //while(ros::ok()){
-        //robot.read();
-        //robot.write();
-        //ros::spinOnce();
-    //}
-    ros::waitForShutdown();
 
+    ros::waitForShutdown();
+    delete ptr;
     ROS_INFO("TERMINATING...");
 
     return 0;
