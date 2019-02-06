@@ -33,7 +33,7 @@ public:
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
 
         initServices();
-        
+
         readJointLimits();
 
         vector<string> joint_names; // first we retrieve the active joint names from the parameter server
@@ -62,17 +62,13 @@ public:
         string path = ros::package::getPath("robots");
         path+="/msj_platform/joint_limits.txt";
         FILE*       file = fopen(path.c_str(),"r");
-        cout << "file:" << file;
         if (NULL != file) {
-            fscanf(file, "%*[^\n]\n", NULL);
-            cout << "fscanf"  << fscanf(file, "%*[^\n]\n", NULL)<< endl;
+            fscanf(file, "%*[^\n]\n");
             float qx,qy;
             int i =0;
-            cout << "fscanf file qx qy: "<< fscanf(file,"%f %f\n",&qx,&qy) << endl;
             while(fscanf(file,"%f %f\n",&qx,&qy) == 2){
                 limits[0].push_back(qx);
                 limits[1].push_back(qy);
-                cout << qx << "\t" << qy << endl;
                 i++;
             }
             printf("read %d joint limit values\n", i);
