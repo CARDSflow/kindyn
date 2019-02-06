@@ -358,22 +358,22 @@ def main():
 
     rospy.init_node('pedal_simulation', anonymous=True)
     rospy.Subscriber("joint_state", JointState, jointStateCallback)
-    ros_right_hip_publisher   = rospy.Publisher('/joint_hip_right/joint_hip_right/target', Float32, queue_size=2)
-    ros_right_knee_publisher  = rospy.Publisher('/joint_knee_right/joint_knee_right/target', Float32, queue_size=2)
-    ros_right_ankle_publisher = rospy.Publisher('/joint_foot_right/joint_foot_right/target', Float32, queue_size=2)
-    ros_left_hip_publisher   = rospy.Publisher('/joint_hip_left/joint_hip_left/target', Float32, queue_size=2)
-    ros_left_knee_publisher  = rospy.Publisher('/joint_knee_left/joint_knee_left/target', Float32, queue_size=2)
-    ros_left_ankle_publisher = rospy.Publisher('/joint_foot_left/joint_foot_left/target', Float32, queue_size=2)
+    ros_right_hip_publisher   = rospy.Publisher('joint_hip_right/joint_hip_right/target', Float32, queue_size=2)
+    ros_right_knee_publisher  = rospy.Publisher('joint_knee_right/joint_knee_right/target', Float32, queue_size=2)
+    ros_right_ankle_publisher = rospy.Publisher('joint_foot_right/joint_foot_right/target', Float32, queue_size=2)
+    ros_left_hip_publisher   = rospy.Publisher('joint_hip_left/joint_hip_left/target', Float32, queue_size=2)
+    ros_left_knee_publisher  = rospy.Publisher('joint_knee_left/joint_knee_left/target', Float32, queue_size=2)
+    ros_left_ankle_publisher = rospy.Publisher('joint_foot_left/joint_foot_left/target', Float32, queue_size=2)
 
-    setJointControllerParameters(2000, 0)
+    setJointControllerParameters(2500, 0)
 
     capturedPositions = getPedalPositions(num_requested_points)
 
     endeffector_right = "foot_right_tip"
     frame_right_1 = "foot_right_tip"
-    weight_right_1 = 30
+    weight_right_1 = 1
     frame_right_2 = "thigh_right"
-    weight_right_2 = 1
+    weight_right_2 = 0.1
     frame_right_2_x_offset = -0.1
     frame_right_2_y_offset = 0
     frame_right_2_z_offset = 0.3
@@ -381,9 +381,9 @@ def main():
 
     endeffector_left = "foot_left_tip"
     frame_left_1 = "foot_left_tip"
-    weight_left_1 = 30
+    weight_left_1 = 1
     frame_left_2 = "thigh_left"
-    weight_left_2 = 1
+    weight_left_2 = 0.1
     frame_left_2_x_offset = -0.1
     frame_left_2_y_offset = 0
     frame_left_2_z_offset = 0.3

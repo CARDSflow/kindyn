@@ -25,7 +25,7 @@ PRINT_DEBUG = True
 
 RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/steering_trajectory.json"
 
-JOINT_TARGET_ERROR_TOLERANCE = 0.03
+JOINT_TARGET_ERROR_TOLERANCE = 0.01
 
 ############################
 ###   GLOBAL VARIABLES   ###
@@ -33,7 +33,7 @@ JOINT_TARGET_ERROR_TOLERANCE = 0.03
 
 UPDATE_FREQUENCY = 0.001
 MAX_ANGLE_CHANGE = np.pi / 72
-STEP_TRANSITION_TIME = 0.5
+STEP_TRANSITION_TIME = 2.5
 
 JOINT_SHOULDER_AXIS0_RIGHT = "right_shoulder_axis0"
 JOINT_SHOULDER_AXIS1_RIGHT = "right_shoulder_axis1"
@@ -49,11 +49,12 @@ JOINT_WRIST_0_RIGHT = "right_wrist_0"
 JOINT_WRIST_1_RIGHT = "right_wrist_1"
 JOINT_WRIST_0_LEFT = "left_wrist_0"
 JOINT_WRIST_1_LEFT = "left_wrist_1"
+JOINT_BIKE_FRONT = "joint_front"
 
 _joints_list = [ JOINT_SHOULDER_AXIS0_RIGHT, JOINT_SHOULDER_AXIS1_RIGHT, JOINT_SHOULDER_AXIS2_RIGHT,
                  JOINT_SHOULDER_AXIS0_LEFT, JOINT_SHOULDER_AXIS1_LEFT, JOINT_SHOULDER_AXIS2_LEFT,
                  JOINT_ELBOW_ROT0_RIGHT, JOINT_ELBOW_ROT1_RIGHT, JOINT_ELBOW_ROT0_LEFT, JOINT_ELBOW_ROT1_LEFT,
-                 JOINT_WRIST_0_RIGHT, JOINT_WRIST_1_RIGHT, JOINT_WRIST_0_LEFT, JOINT_WRIST_1_LEFT ]
+                 JOINT_WRIST_0_RIGHT, JOINT_WRIST_1_RIGHT, JOINT_WRIST_0_LEFT, JOINT_WRIST_1_LEFT, JOINT_BIKE_FRONT ]
 
 _numTrajectoryPoints = 0
 
@@ -180,6 +181,9 @@ ros_right_wrist_0_pub = rospy.Publisher('/right_wrist_0/right_wrist_0/target', F
 ros_right_wrist_1_pub = rospy.Publisher('/right_wrist_1/right_wrist_1/target', Float32, queue_size=2)
 ros_left_wrist_0_pub = rospy.Publisher('/left_wrist_0/left_wrist_0/target', Float32, queue_size=2)
 ros_left_wrist_1_pub = rospy.Publisher('/left_wrist_1/left_wrist_1/target', Float32, queue_size=2)
+
+ros_bike_front_pub = rospy.Publisher('/joint_front/joint_front/target', Float32, queue_size=2)
+
 
 ros_log_error_pub = rospy.Publisher('chatter', String, queue_size=10)
 
@@ -468,11 +472,17 @@ def publish_joint_angle(joint_name, steering_angle):
             pub = ros_right_wrist_1_pub
             f_interpolated = _interpolatedWrist1Right
             f_regressed = _regressedWrist1Right
+        elif joint_name == JOINT_BIKE_FRONT:
+            pub = ros_bike_front_pub
         else:
             ros_log_error_pub.publish("Didn't catch joint_name in publish_joint_angle()")
 
-        #target_joint_angle = f_interpolated(steering_angle)
-        target_joint_angle = f_regressed(steering_angle)
+        target_joint_angle = None
+        if joint_name == JOINT_BIKE_FRONT:
+            target_joint_angle = steering_angle
+        else:
+            #target_joint_angle = f_interpolated(steering_angle)
+            target_joint_angle = f_regressed(steering_angle)
         pub.publish(target_joint_angle)
 
         if PRINT_DEBUG:
