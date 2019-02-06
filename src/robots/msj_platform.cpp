@@ -65,22 +65,28 @@ public:
         string path = ros::package::getPath("robots");
         path+="/msj_platform/joint_limits.txt";
         FILE*       file = fopen(path.c_str(),"r");
-        cout << "file:" << file;
         if (NULL != file) {
-            fscanf(file, "%*[^\n]\n", NULL);
-            cout << "fscanf"  << fscanf(file, "%*[^\n]\n", NULL)<< endl;
+            fscanf(file, "%*[^\n]\n");
             float qx,qy;
             int i =0;
-            cout << "fscanf file qx qy: "<< fscanf(file,"%f %f\n",&qx,&qy) << endl;
             while(fscanf(file,"%f %f\n",&qx,&qy) == 2){
                 limits[0].push_back(qx);
                 limits[1].push_back(qy);
-                cout << qx << "\t" << qy << endl;
                 i++;
             }
             printf("read %d joint limit values\n", i);
         }else{
             cout << "could not open " << path << endl;
+        }
+        for(int i=0;i<limits[0].size();i++){
+            if(limits[0][i]<min[0])
+                min[0] = limits[0][i];
+            if(limits[1][i]<min[1])
+                min[1] = limits[1][i];
+            if(limits[0][i]>max[0])
+                max[0] = limits[0][i];
+            if(limits[1][i]>max[1])
+                max[1] = limits[1][i];
         }
     }
     /**
@@ -133,23 +139,10 @@ public:
     bool GymGoalService(roboy_simulation_msgs::GymGoal::Request &req,
                         roboy_simulation_msgs::GymGoal::Response &res){
         //ROS_INFO("Gymgoal is called");
-
         bool not_feasible = true;
         float q0= 0.0,q1= 0.0,q2 = 0.0;
-        double min[3] = {0,0,-1}, max[3] = {0,0,1};
-        for(int i=0;i<limits[0].size();i++){
-            if(limits[0][i]<min[0])
-                min[0] = limits[0][i];
-            if(limits[1][i]<min[1])
-                min[1] = limits[1][i];
-            if(limits[0][i]>max[0])
-                max[0] = limits[0][i];
-            if(limits[1][i]>max[1])
-                max[1] = limits[1][i];
-        }
         srand(static_cast<unsigned >(time(0)));
         while(not_feasible) {
-            //ROS_INFO("creating random goals");
             q0 = min[0] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[0]-min[0]))));
             q1 = min[1] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[1]-min[1]))));
             q2 = min[2] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[2]-min[2]))));
@@ -226,9 +219,12 @@ public:
     bool external_robot_state; /// indicates if we get the robot state externally
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
+
+private:
+    double min[3] = {0,0,-1}, max[3] = {0,0,1};
     ros::ServiceServer gym_step; //OpenAI Gym training environment step function, ros service instance
     ros::ServiceServer gym_reset; //OpenAI Gym training environment reset function, ros service instance
-    ros::ServiceServer gym_goal; //OpenAI Gym training environment sets new goal function, ros service instance
+    ros::ServiceServer gym_goal; //OpenAI Gym training environment sets new feasible goal function, ros service instance
     vector<double> limits[3];
     double l_offset[NUMBER_OF_MOTORS];
     boost::shared_ptr <ros::AsyncSpinner> spinner;
