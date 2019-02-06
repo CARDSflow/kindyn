@@ -12,9 +12,11 @@ from roboy_control_msgs.srv import SetControllerParameters
 from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Float32
 
-JSON_FILENAME = "captured_trajectory.json"
+JSON_FILENAME = "captured_pedal_trajectory_06feb.json"
 
-JOINT_ANGLE_TOLERANCE_FK = 0.01
+JOINT_ANGLE_TOLERANCE_FK = 0.1
+JOINT_KP = 500
+JOINT_KD = 0
 
 ###############################
 ###   MEASURED PARAMETERS   ###
@@ -356,14 +358,15 @@ def main():
 
     rospy.init_node('pedal_simulation', anonymous=True)
     rospy.Subscriber("joint_state", JointState, jointStateCallback)
-    ros_right_hip_publisher   = rospy.Publisher('/joint_hip_right/joint_hip_right/target', Float32, queue_size=2)
-    ros_right_knee_publisher  = rospy.Publisher('/joint_knee_right/joint_knee_right/target', Float32, queue_size=2)
-    ros_right_ankle_publisher = rospy.Publisher('/joint_foot_right/joint_foot_right/target', Float32, queue_size=2)
-    ros_left_hip_publisher   = rospy.Publisher('/joint_hip_left/joint_hip_left/target', Float32, queue_size=2)
-    ros_left_knee_publisher  = rospy.Publisher('/joint_knee_left/joint_knee_left/target', Float32, queue_size=2)
-    ros_left_ankle_publisher = rospy.Publisher('/joint_foot_left/joint_foot_left/target', Float32, queue_size=2)
+    ros_right_hip_publisher   = rospy.Publisher('joint_hip_right/joint_hip_right/target', Float32, queue_size=1)
+    ros_right_knee_publisher  = rospy.Publisher('joint_knee_right/joint_knee_right/target', Float32, queue_size=1)
+    ros_right_ankle_publisher = rospy.Publisher('joint_foot_right/joint_foot_right/target', Float32, queue_size=1)
+    ros_left_hip_publisher   = rospy.Publisher('joint_hip_left/joint_hip_left/target', Float32, queue_size=1)
+    ros_left_knee_publisher  = rospy.Publisher('joint_knee_left/joint_knee_left/target', Float32, queue_size=1)
+    ros_left_ankle_publisher = rospy.Publisher('joint_foot_left/joint_foot_left/target', Float32, queue_size=1)
+    time.sleep(2)
 
-    setJointControllerParameters(1000, 100)
+    setJointControllerParameters(JOINT_KP, JOINT_KD)
 
     capturedPositions = getPedalPositions(num_requested_points)
 
@@ -402,12 +405,15 @@ def main():
             jointAngleDict["point_"+str(pointIter)]["Right"]["Knee"] = jointAngleResult_right["joint_knee_right"]
             jointAngleDict["point_"+str(pointIter)]["Right"]["Ankle"] = jointAngleResult_right["joint_foot_right"]
 
+            print("Left: ", jointAngleResult_left)
+            print("Right: ", jointAngleResult_right)
             ros_right_hip_publisher.publish(jointAngleResult_right["joint_hip_right"])
             ros_right_knee_publisher.publish(jointAngleResult_right["joint_knee_right"])
             ros_right_ankle_publisher.publish(jointAngleResult_right["joint_foot_right"])
             ros_left_hip_publisher.publish(jointAngleResult_left["joint_hip_left"])
             ros_left_knee_publisher.publish(jointAngleResult_left["joint_knee_left"])
             ros_left_ankle_publisher.publish(jointAngleResult_left["joint_foot_left"])
+            print("Target angles published")
 
             while ( abs(_jointsStatusData[RIGHT_HIP_JOINT]["Pos"] - jointAngleResult_right["joint_hip_right"]) > JOINT_ANGLE_TOLERANCE_FK):
                 time.sleep(0.1)

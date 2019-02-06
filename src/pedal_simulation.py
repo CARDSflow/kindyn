@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import rospy
 from roboy_middleware_msgs.srv import InverseKinematics, ForwardKinematics
 from roboy_simulation_msgs.msg import JointState
+from roboy_control_msgs.srv import SetControllerParameters
 from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Float32
 
@@ -24,7 +25,7 @@ from std_msgs.msg import Float32
 
 PRINT_DEBUG = True
 
-RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/captured_trajectory.json"
+RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/desember_pedal_trajectory.json"
 
 PEDAL_POSITION_ERROR_TOLERANCE   = 0.02  # [meters]
 JOINT_TRAJECTORY_ERROR_TOLERANCE = 0.02
@@ -57,6 +58,8 @@ LEFT_KNEE_JOINT   = "left_knee"
 LEFT_ANKLE_JOINT  = "left_ankle"
 
 _jointsList = [RIGHT_HIP_JOINT, RIGHT_KNEE_JOINT, RIGHT_ANKLE_JOINT, LEFT_HIP_JOINT, LEFT_KNEE_JOINT, LEFT_ANKLE_JOINT]
+
+_jointsListROS = [ROS_JOINT_HIP_RIGHT, ROS_JOINT_KNEE_RIGHT, ROS_JOINT_ANKLE_RIGHT, ROS_JOINT_HIP_LEFT, ROS_JOINT_KNEE_LEFT, ROS_JOINT_ANKLE_LEFT]
 
 
 _parametersRightHip = {
@@ -224,6 +227,19 @@ def jointStateCallback(joint_data):
         elif joint_data.names[stringIter] == ROS_JOINT_ANKLE_LEFT:
             _jointsStatusData[LEFT_ANKLE_JOINT]["Pos"] = joint_data.q[stringIter]
             _jointsStatusData[LEFT_ANKLE_JOINT]["Vel"] = joint_data.qd[stringIter]
+
+
+def setJointControllerParameters(proportionalVal, derivativeVal):
+
+    for thisJointName in _jointsListROS:
+        rospy.wait_for_service(thisJointName + '/' + thisJointName + '/params')
+        try:
+            param_srv = rospy.ServiceProxy(thisJointName + '/' + thisJointName + '/params', SetControllerParameters)
+            param_srv(proportionalVal, derivativeVal)
+        except rospy.ServiceException, e:
+            print("Service call for " + thisJointName + "failed: " + e)
+
+    print("Controller paramters updated")
 
 
 def importJointTrajectoryRecord():

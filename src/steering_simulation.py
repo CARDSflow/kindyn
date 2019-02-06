@@ -10,6 +10,7 @@ from threading import Thread
 
 from scipy import interpolate
 import numpy as np
+import numpy.polynomial.polynomial as poly
 import rospy
 from roboy_middleware_msgs.srv import InverseKinematics, ForwardKinematics
 from roboy_simulation_msgs.msg import JointState
@@ -23,6 +24,8 @@ from std_msgs.msg import Float32, String
 PRINT_DEBUG = True
 
 RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/steering_trajectory.json"
+
+JOINT_TARGET_ERROR_TOLERANCE = 0.03
 
 ############################
 ###   GLOBAL VARIABLES   ###
@@ -85,6 +88,81 @@ _interpolatedWrist1Right = None
 _interpolatedWrist0Left = None
 _interpolatedWrist1Left = None
 
+_regressedShoulder0Right  = None
+_regressedShoulder1Right  = None
+_regressedShoulder2Right  = None
+_regressedShoulder0Left   = None
+_regressedShoulder1Left   = None
+_regressedShoulder2Left   = None
+_regressedElbow0Right     = None
+_regressedElbow1Right     = None
+_regressedElbow0Left      = None
+_regressedElbow1Left      = None
+_regressedWrist0Right     = None
+_regressedWrist1Right     = None
+_regressedWrist0Left      = None
+_regressedWrist1Left      = None
+
+
+_jointsStatusData = {
+    JOINT_SHOULDER_AXIS0_RIGHT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    },
+    JOINT_SHOULDER_AXIS1_RIGHT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    },
+    JOINT_SHOULDER_AXIS2_RIGHT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    },
+    JOINT_SHOULDER_AXIS0_LEFT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    },
+    JOINT_SHOULDER_AXIS1_LEFT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    },
+    JOINT_SHOULDER_AXIS2_LEFT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    },
+    JOINT_ELBOW_ROT0_RIGHT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    },
+    JOINT_ELBOW_ROT1_RIGHT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    },
+    JOINT_ELBOW_ROT0_LEFT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    },
+    JOINT_ELBOW_ROT1_LEFT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    },
+    JOINT_WRIST_0_RIGHT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    },
+    JOINT_WRIST_1_RIGHT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    },
+    JOINT_WRIST_0_LEFT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    },
+    JOINT_WRIST_1_LEFT: {
+        "Pos": 0.0,
+        "Vel": 0.0
+    }
+}
+
 ros_right_shoulder_axis0_pub = rospy.Publisher('/right_shoulder_axis0/right_shoulder_axis0/target', Float32,
                                                queue_size=2)
 ros_right_shoulder_axis1_pub = rospy.Publisher('/right_shoulder_axis1/right_shoulder_axis1/target', Float32,
@@ -112,6 +190,76 @@ angle_change_successful = True
 ##############################
 ###   UTILITY FUNCTIONS   ###
 ##############################
+
+
+def jointStateCallback(joint_data):
+    global _jointsStatusData
+    # Assert order of joints
+    for stringIter in range(len(joint_data.names)):
+        if joint_data.names[stringIter] in _jointsStatusData:
+            _jointsStatusData[joint_data.names[stringIter]]["Pos"] = joint_data.q[stringIter]
+            _jointsStatusData[joint_data.names[stringIter]]["Vel"] = joint_data.qd[stringIter]
+
+
+def getJointPosition(jointName):
+    global _jointsStatusData
+    return _jointsStatusData[jointName]["Pos"]
+
+
+def regressJointPositionsFromFile(filename):
+
+    global _trajectorySteering
+    global _trajectoryShoulder0Right
+    global _trajectoryShoulder1Right
+    global _trajectoryShoulder2Right
+    global _trajectoryShoulder0Left
+    global _trajectoryShoulder1Left
+    global _trajectoryShoulder2Left
+    global _trajectoryElbow0Right
+    global _trajectoryElbow1Right
+    global _trajectoryElbow0Left
+    global _trajectoryElbow1Left
+    global _trajectoryWrist0Right
+    global _trajectoryWrist1Right
+    global _trajectoryWrist0Left
+    global _trajectoryWrist1Left
+
+    global _regressedShoulder0Right
+    global _regressedShoulder1Right
+    global _regressedShoulder2Right
+    global _regressedShoulder0Left
+    global _regressedShoulder1Left
+    global _regressedShoulder2Left
+    global _regressedElbow0Right
+    global _regressedElbow1Right
+    global _regressedElbow0Left
+    global _regressedElbow1Left
+    global _regressedWrist0Right
+    global _regressedWrist1Right
+    global _regressedWrist0Left
+    global _regressedWrist1Left
+
+    loaded_data = None
+    with open(filename, "r") as read_file:
+        loaded_data = json.load(read_file)
+
+    _regressedShoulder0Right = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS0_RIGHT])
+    _regressedShoulder1Right = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS1_RIGHT])
+    _regressedShoulder2Right = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS2_RIGHT])
+    _regressedElbow0Right    = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT0_RIGHT])
+    _regressedElbow1Right    = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT1_RIGHT])
+    _regressedWrist0Right    = poly.Polynomial(loaded_data[JOINT_WRIST_0_RIGHT])
+    _regressedWrist1Right    = poly.Polynomial(loaded_data[JOINT_WRIST_1_RIGHT])
+
+    _regressedShoulder0Left = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS0_LEFT])
+    _regressedShoulder1Left = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS1_LEFT])
+    _regressedShoulder2Left = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS2_LEFT])
+    _regressedElbow0Left    = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT0_LEFT])
+    _regressedElbow1Left    = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT1_LEFT])
+    _regressedWrist0Left    = poly.Polynomial(loaded_data[JOINT_WRIST_0_LEFT])
+    _regressedWrist1Left    = poly.Polynomial(loaded_data[JOINT_WRIST_1_LEFT])
+
+    return 1
 
 
 def import_joint_trajectory_record():
@@ -262,60 +410,81 @@ def publish_joint_angle(joint_name, steering_angle):
 
         pub = None
         f_interpolated = None
+        f_regressed = None
 
         if joint_name == JOINT_SHOULDER_AXIS0_LEFT:
             pub = ros_left_shoulder_axis0_pub
             f_interpolated = _interpolatedShoulder0Left
+            f_regressed = _regressedShoulder0Left
         elif joint_name == JOINT_SHOULDER_AXIS1_LEFT:
             pub = ros_left_shoulder_axis1_pub
             f_interpolated = _interpolatedShoulder1Left
+            f_regressed = _regressedShoulder1Left
         elif joint_name == JOINT_SHOULDER_AXIS2_LEFT:
             pub = ros_left_shoulder_axis2_pub
             f_interpolated = _interpolatedShoulder2Left
+            f_regressed = _regressedShoulder2Left
         elif joint_name == JOINT_SHOULDER_AXIS0_RIGHT:
             pub = ros_right_shoulder_axis0_pub
             f_interpolated = _interpolatedShoulder0Right
+            f_regressed = _regressedShoulder0Right
         elif joint_name == JOINT_SHOULDER_AXIS1_RIGHT:
             pub = ros_right_shoulder_axis1_pub
             f_interpolated = _interpolatedShoulder1Right
+            f_regressed = _regressedShoulder1Right
         elif joint_name == JOINT_SHOULDER_AXIS2_RIGHT:
             pub = ros_right_shoulder_axis2_pub
             f_interpolated = _interpolatedShoulder2Right
+            f_regressed = _regressedShoulder2Right
         elif joint_name == JOINT_ELBOW_ROT0_LEFT:
             pub = ros_elbow_left_rot0_pub
             f_interpolated = _interpolatedElbow0Left
+            f_regressed = _regressedElbow0Left
         elif joint_name == JOINT_ELBOW_ROT1_LEFT:
             pub = ros_elbow_left_rot1_pub
             f_interpolated = _interpolatedElbow1Left
+            f_regressed = _regressedElbow1Left
         elif joint_name == JOINT_ELBOW_ROT0_RIGHT:
             pub = ros_elbow_right_rot0_pub
             f_interpolated = _interpolatedElbow0Right
+            f_regressed = _regressedElbow0Right
         elif joint_name == JOINT_ELBOW_ROT1_RIGHT:
             pub = ros_elbow_right_rot1_pub
             f_interpolated = _interpolatedElbow1Right
+            f_regressed = _regressedElbow1Right
         elif joint_name == JOINT_WRIST_0_LEFT:
             pub = ros_left_wrist_0_pub
             f_interpolated = _interpolatedWrist0Left
+            f_regressed = _regressedWrist0Left
         elif joint_name == JOINT_WRIST_1_LEFT:
             pub = ros_left_wrist_1_pub
             f_interpolated = _interpolatedWrist1Left
+            f_regressed = _regressedWrist1Left
         elif joint_name == JOINT_WRIST_0_RIGHT:
             pub = ros_right_wrist_0_pub
             f_interpolated = _interpolatedWrist0Right
+            f_regressed = _regressedWrist0Right
         elif joint_name == JOINT_WRIST_1_RIGHT:
             pub = ros_right_wrist_1_pub
             f_interpolated = _interpolatedWrist1Right
+            f_regressed = _regressedWrist1Right
         else:
             ros_log_error_pub.publish("Didn't catch joint_name in publish_joint_angle()")
 
-        target_joint_angle = f_interpolated(steering_angle)
+        #target_joint_angle = f_interpolated(steering_angle)
+        target_joint_angle = f_regressed(steering_angle)
         pub.publish(target_joint_angle)
 
         if PRINT_DEBUG:
             log_msg = "publishing " + str(target_joint_angle) + " to joint: " + joint_name
             print(log_msg)
 
-        time.sleep(STEP_TRANSITION_TIME)
+        #ADDED THIS FOR FEEDBACK CONTROL
+        transition_end_time = time.time() + STEP_TRANSITION_TIME
+        while((time.time() < transition_end_time) and abs(getJointPosition(joint_name) - target_joint_angle) > JOINT_TARGET_ERROR_TOLERANCE):
+            time.sleep(0.001)  # Wait
+
+        #time.sleep(STEP_TRANSITION_TIME)
 
     else:
         global angle_change_successful
@@ -398,12 +567,13 @@ def steering_control():
 
 def main():
     rospy.init_node('steering_simulation', anonymous=True)
+    rospy.Subscriber("joint_state", JointState, jointStateCallback)
     import_joint_trajectory_record()
     interpolate_joint_angles()
-    set_joint_controller_parameters(1, 0)
+    regressJointPositionsFromFile("capture_trajectory/saved_coefficients.json")
+    set_joint_controller_parameters(1000, 0)
     steering_control()
 
 
 if __name__ == '__main__':
     main()
-

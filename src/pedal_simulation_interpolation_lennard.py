@@ -342,6 +342,18 @@ def getPosition(endeffector, frame):
         print("Service call failed: %s" % (e))
     return [ 0.0, 0.0 ]  # [x, z]
 
+def setJointControllerParameters(proportionalVal, derivativeVal):
+
+    for thisJointName in _jointsListROS:
+        rospy.wait_for_service(thisJointName + '/' + thisJointName + '/params')
+        try:
+            param_srv = rospy.ServiceProxy(thisJointName + '/' + thisJointName + '/params', SetControllerParameters)
+            param_srv(proportionalVal, derivativeVal)
+        except rospy.ServiceException, e:
+            print "Service call for " + thisJointName + "failed: %s"%e
+
+    print("Controller paramters updated")
+
 
 def getPositionLeftFoot():
     fkJointNamesList = [ ROS_JOINT_HIP_LEFT, ROS_JOINT_KNEE_LEFT, ROS_JOINT_ANKLE_LEFT ]
@@ -716,4 +728,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
