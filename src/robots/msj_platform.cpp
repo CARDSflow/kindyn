@@ -22,7 +22,7 @@ public:
      * @param urdf path to urdf
      * @param cardsflow_xml path to cardsflow xml
      */
-    MsjPlatform(string urdf, string cardsflow_xml, int id){
+    MsjPlatform(string urdf, string cardsflow_xml, int id , int num_workers){
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
@@ -33,7 +33,7 @@ public:
         spinner->start();
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
 
-        initService(id);
+        initService(id, num_workers);
         readJointLimits();
 
         vector<string> joint_names; // first we retrieve the active joint names from the parameter server
@@ -48,13 +48,23 @@ public:
             l_offset[i] = l[i];
 
     };
+    ~MsjPlatform(){
+        spinner->stop();
+        nh.reset();
+    }
     ///Open AI Gym services
-    void initService(int id){
-        // OpenAI gym services
-        string gym_step_topic = "/instance" + to_string(id) + "/gym_step";
-        string gym_reset_topic = "/instance" + to_string(id) + "/gym_reset";
-        string gym_goal_topic = "/instance" + to_string(id) + "/gym_goal";
-
+    void initService(int id, int num_workers){
+        string gym_step_topic, gym_reset_topic, gym_goal_topic;
+        if (num_workers > 1){
+            gym_step_topic = "/instance" + to_string(id) + "/gym_step";
+            gym_reset_topic = "/instance" + to_string(id) + "/gym_reset";
+            gym_goal_topic = "/instance" + to_string(id) + "/gym_goal";
+        }
+        else{
+            gym_step_topic  = "/gym_step";
+            gym_reset_topic = "/gym_reset";
+            gym_goal_topic = "/gym_goal";
+        }
         gym_step = nh->advertiseService(gym_step_topic, &MsjPlatform::GymStepService,this);
         gym_reset = nh->advertiseService(gym_reset_topic, &MsjPlatform::GymResetService,this);
         gym_goal = nh->advertiseService(gym_goal_topic, &MsjPlatform::GymGoalService,this);
@@ -267,17 +277,21 @@ int main(int argc, char *argv[]) {
     int workers = atoi( argv[1]);
     cout << "\nNUMBER OF WORKERS " << workers << endl;
 
-    MsjPlatform *ptr = NULL;
-    //ptr = new MsjPlatform[workers];
+    ///Multiple instances of workers are created for parallelized training.
+    MsjPlatform **ptr = NULL;
+    ptr = new MsjPlatform *[workers];
 
-    for(int i = 0; i< workers; i++) {
-        ptr = new MsjPlatform(urdf, cardsflow_xml, i);
-    }
+    for(int id = 1; id < workers+1; id++)
+        ptr[id] = new MsjPlatform(urdf, cardsflow_xml, id, workers);
+
 
     ROS_INFO("STARTING ROBOT MAIN LOOP...");
 
     ros::waitForShutdown();
-    delete ptr;
+    for(int id = 1; id < workers+1; id++)
+        delete [] ptr[id];
+    delete [] ptr;
+
     ROS_INFO("TERMINATING...");
 
     return 0;
