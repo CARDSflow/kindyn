@@ -571,9 +571,7 @@ void Robot::update() {
                     msg.header.frame_id = link_names[i];
                     Isometry3d iso(target_poses[i]);
                     tf::poseEigenToMsg(iso, msg.pose);
-                    ROS_INFO("ROBOT STATE PUBLISHING..");
                     robot_state_target_pub.publish(msg);
-                    ROS_INFO("ROBOT STATE PUBLISHED..");
                 }
 
                 int i=0;
