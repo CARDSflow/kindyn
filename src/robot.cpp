@@ -330,13 +330,14 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         Ld[k].setZero();
         k++;
     }
-
+    /*
     controller_type_sub = nh->subscribe("/controller_type", 100, &Robot::controllerType, this);
     joint_state_sub = nh->subscribe("/joint_states", 100, &Robot::JointState, this);
     floating_base_sub = nh->subscribe("/floating_base", 100, &Robot::FloatingBase, this);
     ik_srv = nh->advertiseService("/ik", &Robot::InverseKinematicsService, this);
     fk_srv = nh->advertiseService("/fk", &Robot::ForwardKinematicsService, this);
     interactive_marker_sub = nh->subscribe("/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
+     */
 }
 
 VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max) {
@@ -544,7 +545,7 @@ void Robot::update() {
         }
         { // robot target publisher
             // Target is not changing but the robot_state should be published to visualize
-           // if((q_target-q_target_prev).norm()>0.001 || (qd_target-qd_target_prev).norm()>0.001 || first_update) { // only if target changed // Commented out for visualization of the training of the OpenAI gym.
+            //if((q_target-q_target_prev).norm()>0.001 || (qd_target-qd_target_prev).norm()>0.001 || first_update) { // only if target changed // Commented out for visualization of the training of the OpenAI gym.
                 if(first_update)
                     first_update = false;
                 q_target_prev = q_target;
@@ -592,7 +593,7 @@ void Robot::update() {
                     }
                     i++;
                 }
-           // }
+            //}
 
         }
         { // joint state publisher
