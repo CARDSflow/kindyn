@@ -544,7 +544,7 @@ void Robot::update() {
         }
         { // robot target publisher
             // Target is not changing but the robot_state should be published to visualize
-            //if((q_target-q_target_prev).norm()>0.001 || (qd_target-qd_target_prev).norm()>0.001 || first_update) { // only if target changed // Commented out for visualization of the training of the OpenAI gym.
+            if((q_target-q_target_prev).norm()>0.001 || (qd_target-qd_target_prev).norm()>0.001 || first_update) { // only if target changed // Commented out for visualization of the training of the OpenAI gym.
                 if(first_update)
                     first_update = false;
                 q_target_prev = q_target;
@@ -594,7 +594,7 @@ void Robot::update() {
                     }
                     i++;
                 }
-           // }
+            }
 
         }
         { // joint state publisher

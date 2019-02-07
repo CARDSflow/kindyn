@@ -135,8 +135,7 @@ public:
     }
     bool GymGoalService(roboy_simulation_msgs::GymGoal::Request &req,
                         roboy_simulation_msgs::GymGoal::Response &res){
-        ROS_INFO("Gymgoal is called");
-
+        //ROS_INFO("Gymgoal is called");
         bool not_feasible = true;
         float q0= 0.0,q1= 0.0,q2 = 0.0;
         srand(static_cast<unsigned >(time(0)));
@@ -148,9 +147,9 @@ public:
             if (pnpoly(limits[0], limits[1], q0, q1))
                 not_feasible = false;
         }
-        ROS_INFO("Gymgoal target setting");
+
         q_target << static_cast<double> (q0), static_cast<double> (q1), static_cast<double> (q2);
-        ROS_INFO("Gymgoal target set");
+
         update();
         res.q.push_back(q0);
         res.q.push_back(q1);
