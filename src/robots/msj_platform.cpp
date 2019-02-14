@@ -6,6 +6,7 @@
 #include <roboy_simulation_msgs/GymGoal.h>
 #include <common_utilities/CommonDefinitions.h>
 #include <stdlib.h> /* atoi*/
+#include <limits>
 
 #define NUMBER_OF_MOTORS 8
 #define SPINDLERADIUS 0.00575
@@ -13,6 +14,7 @@
 #define msjEncoderTicksPerMeter(meter) ((meter)*(4096.0)/(2.0*M_PI*SPINDLERADIUS))
 
 using namespace std;
+using namespace Eigen;
 
 class MsjPlatform: public cardsflow::kindyn::Robot{
 public:
@@ -157,6 +159,46 @@ public:
 
     }
 
+    ///find the closest limit when the robot is in infeasible state
+    VectorXd findClosestJointLimit(double q0, double q1){
+        //ROS_INFO("FINDING CLOSEST JOINT LIMIT");
+        VectorXd closestLimit = Vector3d::Zero();
+        //cout << "defined vectors"<< endl;
+        double distance = 0.0, smallestDistance = numeric_limits<double>::max();
+        //cout << "defined distnaces" << endl;
+        //cout << "size of limit " << limits[0].size() << endl;
+        for(int i=0; i < limits[0].size(); i++){
+            //cout << "inside for"<< endl;
+            VectorXd jointAngle = Vector2d::Zero(), jointLimits = Vector2d::Zero();
+            jointAngle << q0, q1;
+            jointLimits << limits[0][i] ,limits[1][i];
+            distance = (jointAngle - jointLimits).norm();
+            if (distance < smallestDistance){
+                smallestDistance = distance;
+                closestLimit[0] = jointLimits[0];
+                closestLimit[1] = jointLimits[1];
+                //cout << "CLOSEST LIMIT " << closestLimit << endl;
+            }
+        }
+        return closestLimit;
+    }
+
+    ///set the given joint angle for each joint
+    void setJointAngle(VectorXd jointAngles){
+        for(int i=0; i< number_of_dofs; i++){
+            joint_state[i][1] = jointAngles(i);		//Position of ith joint
+            q[i] = jointAngles(i);
+        }
+    }
+
+    ///set the gymstep function response
+    bool setResponse(VectorXd jointAngles,VectorXd jointVel,roboy_simulation_msgs::GymStep::Response &res){
+        for(int i=0; i< number_of_dofs; i++ ){
+            res.q.push_back(jointAngles[i]);
+            res.qdot.push_back(jointVel[i]);
+        }
+    }
+
     bool GymStepService(roboy_simulation_msgs::GymStep::Request &req,
                         roboy_simulation_msgs::GymStep::Response &res){
         
@@ -175,17 +217,19 @@ public:
 	        write();
 	        //ROS_INFO("Gymstep is done");
 	    }
-        for(int i=0; i< number_of_dofs; i++ ){
-        	res.q.push_back(q[i]);
-        	res.qdot.push_back(qd[i]);
-        }
         if(pnpoly(limits[0],limits[1],q[0],q[1])){
             //task space is feasible
             res.feasible = true;
+            setResponse(q,qd,res);
         }
         else{
             //task space is not feasible
             res.feasible = false;
+            VectorXd closestLimit = findClosestJointLimit(q[0],q[1]);
+            closestLimit[2] = q[2];
+            VectorXd jointVel = Vector3d::Zero();
+            setJointAngle(closestLimit);
+            setResponse(closestLimit,jointVel,res );
         }
         return true;
     }
