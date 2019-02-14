@@ -159,16 +159,15 @@ public:
 
     }
 
-    ///find the closest limit when the robot is in infeasible state
-    VectorXd findClosestJointLimit(double q0, double q1){
-        //ROS_INFO("FINDING CLOSEST JOINT LIMIT");
-        VectorXd closestLimit = Vector3d::Zero();
-        //cout << "defined vectors"<< endl;
+    ///find the closest limit point when the robot is in infeasible state
+    VectorXd findClosestJointLimit(double q0, double q1, double q3){
+        ROS_INFO("FINDING CLOSEST JOINT LIMIT");
+        VectorXd closestLimit;
+        closestLimit.resize(number_of_dofs);
+        closestLimit.setZero();
         double distance = 0.0, smallestDistance = numeric_limits<double>::max();
-        //cout << "defined distnaces" << endl;
-        //cout << "size of limit " << limits[0].size() << endl;
+
         for(int i=0; i < limits[0].size(); i++){
-            //cout << "inside for"<< endl;
             VectorXd jointAngle = Vector2d::Zero(), jointLimits = Vector2d::Zero();
             jointAngle << q0, q1;
             jointLimits << limits[0][i] ,limits[1][i];
@@ -177,17 +176,19 @@ public:
                 smallestDistance = distance;
                 closestLimit[0] = jointLimits[0];
                 closestLimit[1] = jointLimits[1];
-                //cout << "CLOSEST LIMIT " << closestLimit << endl;
+                closestLimit[2] = q[2];
             }
         }
         return closestLimit;
     }
 
-    ///set the given joint angle for each joint
-    void setJointAngle(VectorXd jointAngles){
+    ///set the given joint angle and veloctiy  for each joint
+    void setJointAngleAndVelocity(VectorXd jointAngles, VectorXd jointVel){
         for(int i=0; i< number_of_dofs; i++){
-            joint_state[i][1] = jointAngles(i);		//Position of ith joint
-            q[i] = jointAngles(i);
+            //joint_state[i][0] = jointVel[i];		//Setting velocity to zero send the robot to origin..
+            joint_state[i][1] = jointAngles[i];		//Position of ith joint
+            q[i] = jointAngles[i];
+            //qd[i] = jointVel[i];
         }
     }
 
@@ -199,11 +200,11 @@ public:
         }
     }
 
+
     bool GymStepService(roboy_simulation_msgs::GymStep::Request &req,
                         roboy_simulation_msgs::GymStep::Response &res){
         
         if(req.set_points.size() != 0){ //If no set_point set then just return observation.
-        	//ROS_INFO("Gymstep is called");
         	update();
 	        for(int i=0; i< number_of_cables; i++){
 	        	//Set the commanded tendon velocity from RL agent to simulation 
@@ -215,7 +216,6 @@ public:
 	        ROS_INFO_STREAM_THROTTLE(5, "Ld = " << Ld[0].format(fmt));
 
 	        write();
-	        //ROS_INFO("Gymstep is done");
 	    }
         if(pnpoly(limits[0],limits[1],q[0],q[1])){
             //task space is feasible
@@ -225,11 +225,15 @@ public:
         else{
             //task space is not feasible
             res.feasible = false;
-            VectorXd closestLimit = findClosestJointLimit(q[0],q[1]);
-            closestLimit[2] = q[2];
-            VectorXd jointVel = Vector3d::Zero();
-            setJointAngle(closestLimit);
-            setResponse(closestLimit,jointVel,res );
+            VectorXd closestLimit = findClosestJointLimit(q[0],q[1],q[2]); //Find closest boundary point where we can teleport
+            VectorXd jointVel;                          //We hit the boundary so zero velocity.
+
+            jointVel.resize(number_of_dofs);
+            jointVel.setZero();
+
+            setJointAngleAndVelocity(closestLimit, jointVel);
+            setResponse(closestLimit, jointVel,res );
+
         }
         return true;
     }
@@ -237,24 +241,17 @@ public:
                         roboy_simulation_msgs::GymReset::Response &res){
     	//ROS_INFO("Gymreset is called");      
     	integration_time = 0.0;
-        for(int i=0; i< number_of_dofs; i++){
-	       	//Set the commanded tendon velocity from RL agent to simulation 
-	       	//Set the joint states to arrange the initial condition or reset it. Not the q and qdot
-			joint_state[i][0] = 0.0;		//Velocity of ith joint
-			joint_state[i][1] = 0.0;		//Position of ith joint
-            q[i] = 0.0;
-            qd[i] = 0.0;
-	    }
-
+    	VectorXd jointAngle= Vector3d::Zero();
+    	VectorXd jointVelocity = Vector3d::Zero();
+    	setJointAngleAndVelocity(jointAngle, jointVelocity);
 	    for(int i=0; i< number_of_cables; i++){
 	        //Set the commanded tendon velocity from RL agent to simulation 
-	        motor_state[i][0] =0.0; 	//Length of the ith cable
+	        motor_state[i][0] = 0.0; 	//Length of the ith cable
 			motor_state[i][1] = 0.0;	//Velocity of the ith cable
 	    }
 
 	 	update();
 
-        //ROS_INFO_STREAM_THROTTLE(5, "q = \n" << q.format(fmt));
         for(int i=0; i< number_of_dofs; i++ ){
         	res.q.push_back(q[i]);
         	res.qdot.push_back(qd[i]);
