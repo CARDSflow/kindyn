@@ -282,19 +282,13 @@ int main(int argc, char *argv[]) {
     int workers = atoi( argv[1]);
     cout << "\nNUMBER OF WORKERS " << workers << endl;
 
-    ///Multiple instances of workers are created for parallelized training.
-    MsjPlatform **ptr = NULL;
-    ptr = new MsjPlatform *[workers];
 
-    for(int id = 0; id < workers; id++)
-        ptr[id] = new MsjPlatform(urdf, cardsflow_xml, id+1, workers);
-
-    ROS_INFO("STARTING ROBOT MAIN LOOP...");
-
+    vector<boost::shared_ptr<MsjPlatform>> platforms;
+    for(int id = 0; id < workers; id++) {
+        boost::shared_ptr<MsjPlatform> platform(new MsjPlatform(urdf, cardsflow_xml, id + 1, workers));
+        platforms.push_back(platform);
+    }
     ros::waitForShutdown();
-    for(int id = 0; id < workers; id++)
-        delete [] ptr[id];
-    delete [] ptr;
 
     ROS_INFO("TERMINATING...");
 
