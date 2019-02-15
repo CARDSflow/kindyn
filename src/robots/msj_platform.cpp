@@ -185,10 +185,10 @@ public:
     ///set the given joint angle and veloctiy  for each joint
     void setJointAngleAndVelocity(VectorXd jointAngles, VectorXd jointVel){
         for(int i=0; i< number_of_dofs; i++){
-            //joint_state[i][0] = jointVel[i];		//Setting velocity to zero send the robot to origin..
-            joint_state[i][1] = jointAngles[i];		//Position of ith joint
+            joint_state[i][1] = jointVel[i];		//Setting velocity to zero send the robot to origin..
+            joint_state[i][0] = jointAngles[i];		//Position of ith joint
             q[i] = jointAngles[i];
-            //qd[i] = jointVel[i];
+            qd[i] = jointVel[i];
         }
     }
 
@@ -241,12 +241,12 @@ public:
                         roboy_simulation_msgs::GymReset::Response &res){
     	//ROS_INFO("Gymreset is called");      
     	integration_time = 0.0;
-        for(int i=0; i< number_of_dofs; i++){
-            joint_state[i][0] = 0.0;
-            joint_state[i][1] = 0.0;		//Position of ith joint
-            q[i] = 0.0;
-            qd[i] = 0.0;
-        }
+        VectorXd jointAngle, jointVel;
+        jointAngle.resize(number_of_dofs);
+        jointAngle.setZero();
+        jointVel.resize(number_of_dofs);
+        jointVel.setZero();
+        setJointAngleAndVelocity(jointAngle, jointVel);
 	    for(int i=0; i< number_of_cables; i++){
 	        //Set the commanded tendon velocity from RL agent to simulation 
 	        motor_state[i][0] = 0.0; 	//Length of the ith cable
