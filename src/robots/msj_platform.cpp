@@ -51,10 +51,7 @@ public:
             l_offset[i] = l[i];
 
     };
-    ~MsjPlatform(){
-        spinner->stop();
-        nh.reset();
-    }
+
     ///Open AI Gym services
     void initService(int id, int num_workers){
         string gym_step_topic, gym_reset_topic, gym_goal_topic;
@@ -282,13 +279,14 @@ int main(int argc, char *argv[]) {
     int workers = atoi( argv[1]);
     cout << "\nNUMBER OF WORKERS " << workers << endl;
 
-
     vector<boost::shared_ptr<MsjPlatform>> platforms;
     for(int id = 0; id < workers; id++) {
         boost::shared_ptr<MsjPlatform> platform(new MsjPlatform(urdf, cardsflow_xml, id + 1, workers));
         platforms.push_back(platform);
     }
+
     ros::waitForShutdown();
+
 
     ROS_INFO("TERMINATING...");
 
