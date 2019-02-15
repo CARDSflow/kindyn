@@ -241,9 +241,12 @@ public:
                         roboy_simulation_msgs::GymReset::Response &res){
     	//ROS_INFO("Gymreset is called");      
     	integration_time = 0.0;
-    	VectorXd jointAngle= Vector3d::Zero();
-    	VectorXd jointVelocity = Vector3d::Zero();
-    	setJointAngleAndVelocity(jointAngle, jointVelocity);
+        for(int i=0; i< number_of_dofs; i++){
+            joint_state[i][0] = 0.0;
+            joint_state[i][1] = 0.0;		//Position of ith joint
+            q[i] = 0.0;
+            qd[i] = 0.0;
+        }
 	    for(int i=0; i< number_of_cables; i++){
 	        //Set the commanded tendon velocity from RL agent to simulation 
 	        motor_state[i][0] = 0.0; 	//Length of the ith cable
