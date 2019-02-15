@@ -12,7 +12,6 @@
 #  that uses precomputed set-points of all joint-angles
 #  according to a certain steering-angle.
 
-
 from __future__ import print_function
 import json
 import time
