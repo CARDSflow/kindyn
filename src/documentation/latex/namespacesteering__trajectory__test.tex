@@ -1,0 +1,546 @@
+\hypertarget{namespacesteering__trajectory__test}{}\section{steering\+\_\+trajectory\+\_\+test Namespace Reference}
+\label{namespacesteering__trajectory__test}\index{steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__test_a7bf4406bcb8f3fedc1533451fcb66279}{regress\+Functions\+From\+File}} (filename\+\_\+coefficients)
+\begin{DoxyCompactList}\small\item\em U\+T\+I\+L\+I\+TY F\+U\+N\+C\+T\+I\+O\+NS \#\#\#. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__test_aedabfc5d58c9056cc66ef74c5a240b90}{set\+Joint\+Controller\+Parameters}} (proportional\+Val, derivative\+Val)
+\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__test_ae6e7f1d8a0658c3dd800f5529104bb8d}{compute\+Steering\+Angles}} ()
+\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__test_a0e80a2f8f36f677d6d69214a4857fe27}{compute\+Hand\+Trajectories}} ()
+\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__test_a07c836b044feb3dc4425ef5da3324cf2}{get\+Position\+Left\+Hand}} ()
+\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__test_a914c0cfe392d15b5831d4c6caf779522}{get\+Position\+Right\+Hand}} ()
+\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__test_a6a6384a302246f447ba5bc5ece007961}{joint\+State\+Callback}} (joint\+\_\+data)
+\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__test_a74f9ef301e8dff3fd088529eca18d365}{record\+Actual\+Hand\+Trajectories}} (ros\+\_\+right\+\_\+shoulder0\+\_\+publisher, ros\+\_\+right\+\_\+shoulder1\+\_\+publisher, ros\+\_\+right\+\_\+shoulder2\+\_\+publisher, ros\+\_\+right\+\_\+elbow0\+\_\+publisher, ros\+\_\+right\+\_\+elbow1\+\_\+publisher, ros\+\_\+right\+\_\+wrist0\+\_\+publisher, ros\+\_\+right\+\_\+wrist1\+\_\+publisher, ros\+\_\+left\+\_\+shoulder0\+\_\+publisher, ros\+\_\+left\+\_\+shoulder1\+\_\+publisher, ros\+\_\+left\+\_\+shoulder2\+\_\+publisher, ros\+\_\+left\+\_\+elbow0\+\_\+publisher, ros\+\_\+left\+\_\+elbow1\+\_\+publisher, ros\+\_\+left\+\_\+wrist0\+\_\+publisher, ros\+\_\+left\+\_\+wrist1\+\_\+publisher)
+\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__test_a36fcd1aaba1e9d7984b7ee65898361a4}{print\+Planned\+Actual\+Hand\+Trajectories}} ()
+\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__test_af0fed4d5ecef01f311c4aead2181fcf2}{main}} ()
+\begin{DoxyCompactList}\small\item\em M\+A\+IN \#\#\#. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{namespacesteering__trajectory__test_a15339bd4593dec06f6e4b1312e130171}{M\+A\+X\+\_\+\+T\+U\+R\+N\+I\+N\+G\+\_\+\+A\+N\+G\+LE}} = math.\+pi/15
+\begin{DoxyCompactList}\small\item\em M\+O\+D\+U\+LE P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{namespacesteering__trajectory__test_a8d15e6ab173748f6fa4674a3749fba83}{N\+U\+M\+\_\+\+S\+T\+E\+E\+R\+I\+N\+G\+\_\+\+A\+N\+G\+L\+ES}} = 61
+\item 
+float \mbox{\hyperlink{namespacesteering__trajectory__test_abf7b61ddeadab963abd68ea173adfc8f}{J\+O\+I\+N\+T\+\_\+\+A\+N\+G\+L\+E\+\_\+\+T\+O\+L\+E\+R\+A\+N\+C\+E\+\_\+\+FK}} = 0.\+01
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__test_aa8d69f8490ac61125847d4f39de4c1b2}{E\+N\+D\+E\+F\+F\+E\+C\+T\+O\+R\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+hand\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__test_aa1875faae3fd33c715ad408d7a953dc2}{F\+R\+A\+M\+E\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+hand\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__test_a7d9b4ec2e88b17ef0e48b865a2d3ef9d}{E\+N\+D\+E\+F\+F\+E\+C\+T\+O\+R\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+hand\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__test_a9ece9f7cb8c6a1cef2199776861322fe}{F\+R\+A\+M\+E\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+hand\char`\"{}
+\item 
+int \mbox{\hyperlink{namespacesteering__trajectory__test_a980b24651c8baeee17f5190d42d857f7}{B\+I\+K\+E\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+X}} = 0
+\begin{DoxyCompactList}\small\item\em M\+E\+A\+S\+U\+R\+ED P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{namespacesteering__trajectory__test_a76e572c61cb2ab9e42f629279fc411f7}{B\+I\+K\+E\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Y}} = 0
+\item 
+int \mbox{\hyperlink{namespacesteering__trajectory__test_a43afae8674b206e4307128be52bc3413}{B\+I\+K\+E\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Z}} = 0
+\item 
+float \mbox{\hyperlink{namespacesteering__trajectory__test_acb792436582351e8afcbc1c2a80f665e}{R\+I\+K\+S\+H\+A\+W\+\_\+\+T\+U\+R\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+X\+\_\+\+O\+F\+F\+S\+ET}} = 0.\+7163902600571725+0.\+23003546879794612
+\item 
+float \mbox{\hyperlink{namespacesteering__trajectory__test_ad1fd68e391bd33260caefd91e3598aef}{R\+I\+K\+S\+H\+A\+W\+\_\+\+T\+U\+R\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+Y\+\_\+\+O\+F\+F\+S\+ET}} = -\/0.\+010388552466272516+0.\+010388308199859624
+\item 
+float \mbox{\hyperlink{namespacesteering__trajectory__test_aa3e59ede4bbf59e311cf2f5af97a3051}{R\+I\+K\+S\+H\+A\+W\+\_\+\+T\+U\+R\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+Z\+\_\+\+O\+F\+F\+S\+ET}} = 0.\+2164376942146126-\/0.\+20527069599791542
+\item 
+int \mbox{\hyperlink{namespacesteering__trajectory__test_a1e9d052ea83a9b066657437bbdd92b81}{Y\+A\+W\+\_\+\+R\+I\+G\+H\+T\+\_\+\+H\+A\+N\+D\+\_\+\+O\+F\+F\+S\+ET}} = math.\+pi / 2 + math.\+pi
+\item 
+int \mbox{\hyperlink{namespacesteering__trajectory__test_a2e3bb44f47ba04a893958cd3fa2d1764}{Y\+A\+W\+\_\+\+L\+E\+F\+T\+\_\+\+H\+A\+N\+D\+\_\+\+O\+F\+F\+S\+ET}} = 3 $\ast$ math.\+pi / 2 + math.\+pi
+\item 
+float \mbox{\hyperlink{namespacesteering__trajectory__test_a9d2c71bfe19d81c3f21c2aa9206795a2}{H\+A\+N\+D\+L\+E\+B\+A\+R\+\_\+\+X\+\_\+\+O\+F\+F\+S\+ET}} = 0.\+728713
+\item 
+float \mbox{\hyperlink{namespacesteering__trajectory__test_a6d423923cfe7feb2e9c8ea6163e73bb0}{H\+A\+N\+D\+L\+E\+B\+A\+R\+\_\+\+Z\+\_\+\+O\+F\+F\+S\+ET}} = 0.\+719269
+\item 
+float \mbox{\hyperlink{namespacesteering__trajectory__test_ad3595707da19a9e4be5276b90589b46d}{H\+A\+N\+D\+\_\+\+Y\+\_\+\+O\+F\+F\+S\+ET}} = 0.\+2
+\item 
+list \mbox{\hyperlink{namespacesteering__trajectory__test_a7ff6efb26259954a3c22719158d5a8d2}{\+\_\+steering\+Angles}} = \mbox{[}$\,$\mbox{]}
+\begin{DoxyCompactList}\small\item\em G\+L\+O\+B\+AL V\+A\+R\+I\+A\+B\+L\+ES \#\#\#. \end{DoxyCompactList}\item 
+list \mbox{\hyperlink{namespacesteering__trajectory__test_a5b0c1e7de78bda1444cdc6bfe62df695}{\+\_\+right\+Hand\+Trajectory\+Planned}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__trajectory__test_a5044d4656d9486bd4b92af8ab8d10757}{\+\_\+left\+Hand\+Trajectory\+Planned}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__trajectory__test_a7d2ff7d6f92c82fde933946482475d35}{\+\_\+center\+Handlebar\+Trajectory\+Planned}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__trajectory__test_ac3612e922a7c68b289b887c971e2ebd1}{\+\_\+right\+Hand\+Trajectory\+Actual}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__trajectory__test_a6ecfabbaa895fd9054610dd229a0f435}{\+\_\+left\+Hand\+Trajectory\+Actual}} = \mbox{[}$\,$\mbox{]}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__test_ad63535534760c5560867d572985fe280}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+shoulder\+\_\+axis0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__test_a52d86b34e76d3e673fadee11dd28eb93}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+shoulder\+\_\+axis1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__test_a6faffd4b15d38616399204d833144b1f}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+shoulder\+\_\+axis2\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__test_af189b69e3081121d8719343bf54cd679}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+shoulder\+\_\+axis0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__test_a705a717a63fe50e91e7e0e99ebd3b287}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+shoulder\+\_\+axis1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__test_aa9cfdc8e1e99fc16ad7ba54711223bde}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+shoulder\+\_\+axis2\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__test_abb189cf49da2ca7444211055fce8edd0}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+R\+I\+G\+HT}} = \char`\"{}elbow\+\_\+right\+\_\+rot0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__test_ab511e0faa8c9f2c1a6511c7efbb528e0}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+R\+I\+G\+HT}} = \char`\"{}elbow\+\_\+right\+\_\+rot1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__test_a27e4f3f6a2628a532863b0c6ce64127b}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+L\+E\+FT}} = \char`\"{}elbow\+\_\+left\+\_\+rot0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__test_aec6cc059672d80d99d6ad4501ae5ad05}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+L\+E\+FT}} = \char`\"{}elbow\+\_\+left\+\_\+rot1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__test_ad89d903f545e6828b9b56ffb9b179ade}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+wrist\+\_\+0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__test_adc8e2b5ada42f3f13048e5c1a809e374}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+wrist\+\_\+1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__test_a733ace260ab22f39fef902c7f16da974}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+wrist\+\_\+0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__test_ac92f853b9227fafe6c2beeb1748c10ca}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+wrist\+\_\+1\char`\"{}
+\item 
+list \mbox{\hyperlink{namespacesteering__trajectory__test_a3afe9348bb3a3f59f0338514e664bcc1}{J\+O\+I\+N\+T\+\_\+\+L\+I\+ST}} = \mbox{[}\mbox{\hyperlink{namespacesteering__trajectory__test_ad63535534760c5560867d572985fe280}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_a52d86b34e76d3e673fadee11dd28eb93}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_a6faffd4b15d38616399204d833144b1f}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_af189b69e3081121d8719343bf54cd679}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_a705a717a63fe50e91e7e0e99ebd3b287}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_aa9cfdc8e1e99fc16ad7ba54711223bde}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_abb189cf49da2ca7444211055fce8edd0}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_ab511e0faa8c9f2c1a6511c7efbb528e0}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_a27e4f3f6a2628a532863b0c6ce64127b}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_aec6cc059672d80d99d6ad4501ae5ad05}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_ad89d903f545e6828b9b56ffb9b179ade}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_adc8e2b5ada42f3f13048e5c1a809e374}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_a733ace260ab22f39fef902c7f16da974}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_ac92f853b9227fafe6c2beeb1748c10ca}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+L\+E\+FT}}\mbox{]}
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__test_a8d8d35efea0aec89038f322e9f2421d3}{\+\_\+regressed\+Shoulder0\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__test_a21afcec7a504e6cf3bab34c418a9c51b}{\+\_\+regressed\+Shoulder1\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__test_a96a3ab6b80583f8f176f9e5dabebea58}{\+\_\+regressed\+Shoulder2\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__test_ab5ad5fd50cfc5a873796b155f655eee8}{\+\_\+regressed\+Shoulder0\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__test_a69d61537b419b03eecc3ac206558881f}{\+\_\+regressed\+Shoulder1\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__test_ac2973dada24408e24f73d1ac6208bc1a}{\+\_\+regressed\+Shoulder2\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__test_a1f19110d850f2dfcc7035c8c2dcd54cb}{\+\_\+regressed\+Elbow0\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__test_a8b04671fef427724794561f65088a428}{\+\_\+regressed\+Elbow1\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__test_ab85b21eb7cd455cd1f78710802a9b7d1}{\+\_\+regressed\+Elbow0\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__test_a466f3a65d8a593ab4e26c21135e02d5e}{\+\_\+regressed\+Elbow1\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__test_a93825f131482bb4613e8085c1dd8ef57}{\+\_\+regressed\+Wrist0\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__test_a3af3eb5238a8040dc8ea9bab570069df}{\+\_\+regressed\+Wrist1\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__test_ad78e63f31901346311fcdb4ddb97190f}{\+\_\+regressed\+Wrist0\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__test_a5f2944452c794cd41a810ab546f6a343}{\+\_\+regressed\+Wrist1\+Left}} = None
+\item 
+dictionary \mbox{\hyperlink{namespacesteering__trajectory__test_a5db9b7010905532e175537e1aced8823}{\+\_\+joints\+Status\+Data}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a0e80a2f8f36f677d6d69214a4857fe27}\label{namespacesteering__trajectory__test_a0e80a2f8f36f677d6d69214a4857fe27}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!computeHandTrajectories@{computeHandTrajectories}}
+\index{computeHandTrajectories@{computeHandTrajectories}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{computeHandTrajectories()}{computeHandTrajectories()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+test.\+compute\+Hand\+Trajectories (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_ae6e7f1d8a0658c3dd800f5529104bb8d}\label{namespacesteering__trajectory__test_ae6e7f1d8a0658c3dd800f5529104bb8d}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!computeSteeringAngles@{computeSteeringAngles}}
+\index{computeSteeringAngles@{computeSteeringAngles}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{computeSteeringAngles()}{computeSteeringAngles()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+test.\+compute\+Steering\+Angles (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a07c836b044feb3dc4425ef5da3324cf2}\label{namespacesteering__trajectory__test_a07c836b044feb3dc4425ef5da3324cf2}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!getPositionLeftHand@{getPositionLeftHand}}
+\index{getPositionLeftHand@{getPositionLeftHand}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{getPositionLeftHand()}{getPositionLeftHand()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+test.\+get\+Position\+Left\+Hand (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a914c0cfe392d15b5831d4c6caf779522}\label{namespacesteering__trajectory__test_a914c0cfe392d15b5831d4c6caf779522}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!getPositionRightHand@{getPositionRightHand}}
+\index{getPositionRightHand@{getPositionRightHand}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{getPositionRightHand()}{getPositionRightHand()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+test.\+get\+Position\+Right\+Hand (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a6a6384a302246f447ba5bc5ece007961}\label{namespacesteering__trajectory__test_a6a6384a302246f447ba5bc5ece007961}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!jointStateCallback@{jointStateCallback}}
+\index{jointStateCallback@{jointStateCallback}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{jointStateCallback()}{jointStateCallback()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+test.\+joint\+State\+Callback (\begin{DoxyParamCaption}\item[{}]{joint\+\_\+data }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_af0fed4d5ecef01f311c4aead2181fcf2}\label{namespacesteering__trajectory__test_af0fed4d5ecef01f311c4aead2181fcf2}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!main@{main}}
+\index{main@{main}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+test.\+main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+M\+A\+IN \#\#\#. 
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a36fcd1aaba1e9d7984b7ee65898361a4}\label{namespacesteering__trajectory__test_a36fcd1aaba1e9d7984b7ee65898361a4}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!printPlannedActualHandTrajectories@{printPlannedActualHandTrajectories}}
+\index{printPlannedActualHandTrajectories@{printPlannedActualHandTrajectories}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{printPlannedActualHandTrajectories()}{printPlannedActualHandTrajectories()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+test.\+print\+Planned\+Actual\+Hand\+Trajectories (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a74f9ef301e8dff3fd088529eca18d365}\label{namespacesteering__trajectory__test_a74f9ef301e8dff3fd088529eca18d365}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!recordActualHandTrajectories@{recordActualHandTrajectories}}
+\index{recordActualHandTrajectories@{recordActualHandTrajectories}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{recordActualHandTrajectories()}{recordActualHandTrajectories()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+test.\+record\+Actual\+Hand\+Trajectories (\begin{DoxyParamCaption}\item[{}]{ros\+\_\+right\+\_\+shoulder0\+\_\+publisher,  }\item[{}]{ros\+\_\+right\+\_\+shoulder1\+\_\+publisher,  }\item[{}]{ros\+\_\+right\+\_\+shoulder2\+\_\+publisher,  }\item[{}]{ros\+\_\+right\+\_\+elbow0\+\_\+publisher,  }\item[{}]{ros\+\_\+right\+\_\+elbow1\+\_\+publisher,  }\item[{}]{ros\+\_\+right\+\_\+wrist0\+\_\+publisher,  }\item[{}]{ros\+\_\+right\+\_\+wrist1\+\_\+publisher,  }\item[{}]{ros\+\_\+left\+\_\+shoulder0\+\_\+publisher,  }\item[{}]{ros\+\_\+left\+\_\+shoulder1\+\_\+publisher,  }\item[{}]{ros\+\_\+left\+\_\+shoulder2\+\_\+publisher,  }\item[{}]{ros\+\_\+left\+\_\+elbow0\+\_\+publisher,  }\item[{}]{ros\+\_\+left\+\_\+elbow1\+\_\+publisher,  }\item[{}]{ros\+\_\+left\+\_\+wrist0\+\_\+publisher,  }\item[{}]{ros\+\_\+left\+\_\+wrist1\+\_\+publisher }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a7bf4406bcb8f3fedc1533451fcb66279}\label{namespacesteering__trajectory__test_a7bf4406bcb8f3fedc1533451fcb66279}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!regressFunctionsFromFile@{regressFunctionsFromFile}}
+\index{regressFunctionsFromFile@{regressFunctionsFromFile}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{regressFunctionsFromFile()}{regressFunctionsFromFile()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+test.\+regress\+Functions\+From\+File (\begin{DoxyParamCaption}\item[{}]{filename\+\_\+coefficients }\end{DoxyParamCaption})}
+
+
+
+U\+T\+I\+L\+I\+TY F\+U\+N\+C\+T\+I\+O\+NS \#\#\#. 
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_aedabfc5d58c9056cc66ef74c5a240b90}\label{namespacesteering__trajectory__test_aedabfc5d58c9056cc66ef74c5a240b90}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!setJointControllerParameters@{setJointControllerParameters}}
+\index{setJointControllerParameters@{setJointControllerParameters}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{setJointControllerParameters()}{setJointControllerParameters()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+test.\+set\+Joint\+Controller\+Parameters (\begin{DoxyParamCaption}\item[{}]{proportional\+Val,  }\item[{}]{derivative\+Val }\end{DoxyParamCaption})}
+
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a7d2ff7d6f92c82fde933946482475d35}\label{namespacesteering__trajectory__test_a7d2ff7d6f92c82fde933946482475d35}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_centerHandlebarTrajectoryPlanned@{\_centerHandlebarTrajectoryPlanned}}
+\index{\_centerHandlebarTrajectoryPlanned@{\_centerHandlebarTrajectoryPlanned}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_centerHandlebarTrajectoryPlanned}{\_centerHandlebarTrajectoryPlanned}}
+{\footnotesize\ttfamily list steering\+\_\+trajectory\+\_\+test.\+\_\+center\+Handlebar\+Trajectory\+Planned = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a5db9b7010905532e175537e1aced8823}\label{namespacesteering__trajectory__test_a5db9b7010905532e175537e1aced8823}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_jointsStatusData@{\_jointsStatusData}}
+\index{\_jointsStatusData@{\_jointsStatusData}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_jointsStatusData}{\_jointsStatusData}}
+{\footnotesize\ttfamily dictionary steering\+\_\+trajectory\+\_\+test.\+\_\+joints\+Status\+Data\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a6ecfabbaa895fd9054610dd229a0f435}\label{namespacesteering__trajectory__test_a6ecfabbaa895fd9054610dd229a0f435}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_leftHandTrajectoryActual@{\_leftHandTrajectoryActual}}
+\index{\_leftHandTrajectoryActual@{\_leftHandTrajectoryActual}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_leftHandTrajectoryActual}{\_leftHandTrajectoryActual}}
+{\footnotesize\ttfamily list steering\+\_\+trajectory\+\_\+test.\+\_\+left\+Hand\+Trajectory\+Actual = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a5044d4656d9486bd4b92af8ab8d10757}\label{namespacesteering__trajectory__test_a5044d4656d9486bd4b92af8ab8d10757}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_leftHandTrajectoryPlanned@{\_leftHandTrajectoryPlanned}}
+\index{\_leftHandTrajectoryPlanned@{\_leftHandTrajectoryPlanned}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_leftHandTrajectoryPlanned}{\_leftHandTrajectoryPlanned}}
+{\footnotesize\ttfamily list steering\+\_\+trajectory\+\_\+test.\+\_\+left\+Hand\+Trajectory\+Planned = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_ab85b21eb7cd455cd1f78710802a9b7d1}\label{namespacesteering__trajectory__test_ab85b21eb7cd455cd1f78710802a9b7d1}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_regressedElbow0Left@{\_regressedElbow0Left}}
+\index{\_regressedElbow0Left@{\_regressedElbow0Left}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_regressedElbow0Left}{\_regressedElbow0Left}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+test.\+\_\+regressed\+Elbow0\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a1f19110d850f2dfcc7035c8c2dcd54cb}\label{namespacesteering__trajectory__test_a1f19110d850f2dfcc7035c8c2dcd54cb}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_regressedElbow0Right@{\_regressedElbow0Right}}
+\index{\_regressedElbow0Right@{\_regressedElbow0Right}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_regressedElbow0Right}{\_regressedElbow0Right}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+test.\+\_\+regressed\+Elbow0\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a466f3a65d8a593ab4e26c21135e02d5e}\label{namespacesteering__trajectory__test_a466f3a65d8a593ab4e26c21135e02d5e}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_regressedElbow1Left@{\_regressedElbow1Left}}
+\index{\_regressedElbow1Left@{\_regressedElbow1Left}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_regressedElbow1Left}{\_regressedElbow1Left}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+test.\+\_\+regressed\+Elbow1\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a8b04671fef427724794561f65088a428}\label{namespacesteering__trajectory__test_a8b04671fef427724794561f65088a428}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_regressedElbow1Right@{\_regressedElbow1Right}}
+\index{\_regressedElbow1Right@{\_regressedElbow1Right}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_regressedElbow1Right}{\_regressedElbow1Right}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+test.\+\_\+regressed\+Elbow1\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_ab5ad5fd50cfc5a873796b155f655eee8}\label{namespacesteering__trajectory__test_ab5ad5fd50cfc5a873796b155f655eee8}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_regressedShoulder0Left@{\_regressedShoulder0Left}}
+\index{\_regressedShoulder0Left@{\_regressedShoulder0Left}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_regressedShoulder0Left}{\_regressedShoulder0Left}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+test.\+\_\+regressed\+Shoulder0\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a8d8d35efea0aec89038f322e9f2421d3}\label{namespacesteering__trajectory__test_a8d8d35efea0aec89038f322e9f2421d3}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_regressedShoulder0Right@{\_regressedShoulder0Right}}
+\index{\_regressedShoulder0Right@{\_regressedShoulder0Right}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_regressedShoulder0Right}{\_regressedShoulder0Right}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+test.\+\_\+regressed\+Shoulder0\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a69d61537b419b03eecc3ac206558881f}\label{namespacesteering__trajectory__test_a69d61537b419b03eecc3ac206558881f}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_regressedShoulder1Left@{\_regressedShoulder1Left}}
+\index{\_regressedShoulder1Left@{\_regressedShoulder1Left}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_regressedShoulder1Left}{\_regressedShoulder1Left}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+test.\+\_\+regressed\+Shoulder1\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a21afcec7a504e6cf3bab34c418a9c51b}\label{namespacesteering__trajectory__test_a21afcec7a504e6cf3bab34c418a9c51b}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_regressedShoulder1Right@{\_regressedShoulder1Right}}
+\index{\_regressedShoulder1Right@{\_regressedShoulder1Right}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_regressedShoulder1Right}{\_regressedShoulder1Right}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+test.\+\_\+regressed\+Shoulder1\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_ac2973dada24408e24f73d1ac6208bc1a}\label{namespacesteering__trajectory__test_ac2973dada24408e24f73d1ac6208bc1a}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_regressedShoulder2Left@{\_regressedShoulder2Left}}
+\index{\_regressedShoulder2Left@{\_regressedShoulder2Left}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_regressedShoulder2Left}{\_regressedShoulder2Left}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+test.\+\_\+regressed\+Shoulder2\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a96a3ab6b80583f8f176f9e5dabebea58}\label{namespacesteering__trajectory__test_a96a3ab6b80583f8f176f9e5dabebea58}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_regressedShoulder2Right@{\_regressedShoulder2Right}}
+\index{\_regressedShoulder2Right@{\_regressedShoulder2Right}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_regressedShoulder2Right}{\_regressedShoulder2Right}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+test.\+\_\+regressed\+Shoulder2\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_ad78e63f31901346311fcdb4ddb97190f}\label{namespacesteering__trajectory__test_ad78e63f31901346311fcdb4ddb97190f}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_regressedWrist0Left@{\_regressedWrist0Left}}
+\index{\_regressedWrist0Left@{\_regressedWrist0Left}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_regressedWrist0Left}{\_regressedWrist0Left}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+test.\+\_\+regressed\+Wrist0\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a93825f131482bb4613e8085c1dd8ef57}\label{namespacesteering__trajectory__test_a93825f131482bb4613e8085c1dd8ef57}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_regressedWrist0Right@{\_regressedWrist0Right}}
+\index{\_regressedWrist0Right@{\_regressedWrist0Right}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_regressedWrist0Right}{\_regressedWrist0Right}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+test.\+\_\+regressed\+Wrist0\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a5f2944452c794cd41a810ab546f6a343}\label{namespacesteering__trajectory__test_a5f2944452c794cd41a810ab546f6a343}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_regressedWrist1Left@{\_regressedWrist1Left}}
+\index{\_regressedWrist1Left@{\_regressedWrist1Left}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_regressedWrist1Left}{\_regressedWrist1Left}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+test.\+\_\+regressed\+Wrist1\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a3af3eb5238a8040dc8ea9bab570069df}\label{namespacesteering__trajectory__test_a3af3eb5238a8040dc8ea9bab570069df}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_regressedWrist1Right@{\_regressedWrist1Right}}
+\index{\_regressedWrist1Right@{\_regressedWrist1Right}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_regressedWrist1Right}{\_regressedWrist1Right}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+test.\+\_\+regressed\+Wrist1\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_ac3612e922a7c68b289b887c971e2ebd1}\label{namespacesteering__trajectory__test_ac3612e922a7c68b289b887c971e2ebd1}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_rightHandTrajectoryActual@{\_rightHandTrajectoryActual}}
+\index{\_rightHandTrajectoryActual@{\_rightHandTrajectoryActual}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_rightHandTrajectoryActual}{\_rightHandTrajectoryActual}}
+{\footnotesize\ttfamily list steering\+\_\+trajectory\+\_\+test.\+\_\+right\+Hand\+Trajectory\+Actual = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a5b0c1e7de78bda1444cdc6bfe62df695}\label{namespacesteering__trajectory__test_a5b0c1e7de78bda1444cdc6bfe62df695}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_rightHandTrajectoryPlanned@{\_rightHandTrajectoryPlanned}}
+\index{\_rightHandTrajectoryPlanned@{\_rightHandTrajectoryPlanned}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_rightHandTrajectoryPlanned}{\_rightHandTrajectoryPlanned}}
+{\footnotesize\ttfamily list steering\+\_\+trajectory\+\_\+test.\+\_\+right\+Hand\+Trajectory\+Planned = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a7ff6efb26259954a3c22719158d5a8d2}\label{namespacesteering__trajectory__test_a7ff6efb26259954a3c22719158d5a8d2}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!\_steeringAngles@{\_steeringAngles}}
+\index{\_steeringAngles@{\_steeringAngles}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{\_steeringAngles}{\_steeringAngles}}
+{\footnotesize\ttfamily list steering\+\_\+trajectory\+\_\+test.\+\_\+steering\+Angles = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+G\+L\+O\+B\+AL V\+A\+R\+I\+A\+B\+L\+ES \#\#\#. 
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a980b24651c8baeee17f5190d42d857f7}\label{namespacesteering__trajectory__test_a980b24651c8baeee17f5190d42d857f7}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!BIKE\_OFFSET\_X@{BIKE\_OFFSET\_X}}
+\index{BIKE\_OFFSET\_X@{BIKE\_OFFSET\_X}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{BIKE\_OFFSET\_X}{BIKE\_OFFSET\_X}}
+{\footnotesize\ttfamily int steering\+\_\+trajectory\+\_\+test.\+B\+I\+K\+E\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+X = 0}
+
+
+
+M\+E\+A\+S\+U\+R\+ED P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#. 
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a76e572c61cb2ab9e42f629279fc411f7}\label{namespacesteering__trajectory__test_a76e572c61cb2ab9e42f629279fc411f7}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!BIKE\_OFFSET\_Y@{BIKE\_OFFSET\_Y}}
+\index{BIKE\_OFFSET\_Y@{BIKE\_OFFSET\_Y}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{BIKE\_OFFSET\_Y}{BIKE\_OFFSET\_Y}}
+{\footnotesize\ttfamily int steering\+\_\+trajectory\+\_\+test.\+B\+I\+K\+E\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Y = 0}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a43afae8674b206e4307128be52bc3413}\label{namespacesteering__trajectory__test_a43afae8674b206e4307128be52bc3413}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!BIKE\_OFFSET\_Z@{BIKE\_OFFSET\_Z}}
+\index{BIKE\_OFFSET\_Z@{BIKE\_OFFSET\_Z}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{BIKE\_OFFSET\_Z}{BIKE\_OFFSET\_Z}}
+{\footnotesize\ttfamily int steering\+\_\+trajectory\+\_\+test.\+B\+I\+K\+E\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Z = 0}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a7d9b4ec2e88b17ef0e48b865a2d3ef9d}\label{namespacesteering__trajectory__test_a7d9b4ec2e88b17ef0e48b865a2d3ef9d}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!ENDEFFECTOR\_LEFT@{ENDEFFECTOR\_LEFT}}
+\index{ENDEFFECTOR\_LEFT@{ENDEFFECTOR\_LEFT}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{ENDEFFECTOR\_LEFT}{ENDEFFECTOR\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+test.\+E\+N\+D\+E\+F\+F\+E\+C\+T\+O\+R\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+hand\char`\"{}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_aa8d69f8490ac61125847d4f39de4c1b2}\label{namespacesteering__trajectory__test_aa8d69f8490ac61125847d4f39de4c1b2}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!ENDEFFECTOR\_RIGHT@{ENDEFFECTOR\_RIGHT}}
+\index{ENDEFFECTOR\_RIGHT@{ENDEFFECTOR\_RIGHT}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{ENDEFFECTOR\_RIGHT}{ENDEFFECTOR\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+test.\+E\+N\+D\+E\+F\+F\+E\+C\+T\+O\+R\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+hand\char`\"{}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a9ece9f7cb8c6a1cef2199776861322fe}\label{namespacesteering__trajectory__test_a9ece9f7cb8c6a1cef2199776861322fe}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!FRAME\_LEFT@{FRAME\_LEFT}}
+\index{FRAME\_LEFT@{FRAME\_LEFT}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{FRAME\_LEFT}{FRAME\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+test.\+F\+R\+A\+M\+E\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+hand\char`\"{}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_aa1875faae3fd33c715ad408d7a953dc2}\label{namespacesteering__trajectory__test_aa1875faae3fd33c715ad408d7a953dc2}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!FRAME\_RIGHT@{FRAME\_RIGHT}}
+\index{FRAME\_RIGHT@{FRAME\_RIGHT}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{FRAME\_RIGHT}{FRAME\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+test.\+F\+R\+A\+M\+E\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+hand\char`\"{}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_ad3595707da19a9e4be5276b90589b46d}\label{namespacesteering__trajectory__test_ad3595707da19a9e4be5276b90589b46d}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!HAND\_Y\_OFFSET@{HAND\_Y\_OFFSET}}
+\index{HAND\_Y\_OFFSET@{HAND\_Y\_OFFSET}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{HAND\_Y\_OFFSET}{HAND\_Y\_OFFSET}}
+{\footnotesize\ttfamily float steering\+\_\+trajectory\+\_\+test.\+H\+A\+N\+D\+\_\+\+Y\+\_\+\+O\+F\+F\+S\+ET = 0.\+2}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a9d2c71bfe19d81c3f21c2aa9206795a2}\label{namespacesteering__trajectory__test_a9d2c71bfe19d81c3f21c2aa9206795a2}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!HANDLEBAR\_X\_OFFSET@{HANDLEBAR\_X\_OFFSET}}
+\index{HANDLEBAR\_X\_OFFSET@{HANDLEBAR\_X\_OFFSET}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{HANDLEBAR\_X\_OFFSET}{HANDLEBAR\_X\_OFFSET}}
+{\footnotesize\ttfamily float steering\+\_\+trajectory\+\_\+test.\+H\+A\+N\+D\+L\+E\+B\+A\+R\+\_\+\+X\+\_\+\+O\+F\+F\+S\+ET = 0.\+728713}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a6d423923cfe7feb2e9c8ea6163e73bb0}\label{namespacesteering__trajectory__test_a6d423923cfe7feb2e9c8ea6163e73bb0}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!HANDLEBAR\_Z\_OFFSET@{HANDLEBAR\_Z\_OFFSET}}
+\index{HANDLEBAR\_Z\_OFFSET@{HANDLEBAR\_Z\_OFFSET}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{HANDLEBAR\_Z\_OFFSET}{HANDLEBAR\_Z\_OFFSET}}
+{\footnotesize\ttfamily float steering\+\_\+trajectory\+\_\+test.\+H\+A\+N\+D\+L\+E\+B\+A\+R\+\_\+\+Z\+\_\+\+O\+F\+F\+S\+ET = 0.\+719269}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_abf7b61ddeadab963abd68ea173adfc8f}\label{namespacesteering__trajectory__test_abf7b61ddeadab963abd68ea173adfc8f}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!JOINT\_ANGLE\_TOLERANCE\_FK@{JOINT\_ANGLE\_TOLERANCE\_FK}}
+\index{JOINT\_ANGLE\_TOLERANCE\_FK@{JOINT\_ANGLE\_TOLERANCE\_FK}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{JOINT\_ANGLE\_TOLERANCE\_FK}{JOINT\_ANGLE\_TOLERANCE\_FK}}
+{\footnotesize\ttfamily float steering\+\_\+trajectory\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+A\+N\+G\+L\+E\+\_\+\+T\+O\+L\+E\+R\+A\+N\+C\+E\+\_\+\+FK = 0.\+01}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a27e4f3f6a2628a532863b0c6ce64127b}\label{namespacesteering__trajectory__test_a27e4f3f6a2628a532863b0c6ce64127b}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!JOINT\_ELBOW\_ROT0\_LEFT@{JOINT\_ELBOW\_ROT0\_LEFT}}
+\index{JOINT\_ELBOW\_ROT0\_LEFT@{JOINT\_ELBOW\_ROT0\_LEFT}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{JOINT\_ELBOW\_ROT0\_LEFT}{JOINT\_ELBOW\_ROT0\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+L\+E\+FT = \char`\"{}elbow\+\_\+left\+\_\+rot0\char`\"{}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_abb189cf49da2ca7444211055fce8edd0}\label{namespacesteering__trajectory__test_abb189cf49da2ca7444211055fce8edd0}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!JOINT\_ELBOW\_ROT0\_RIGHT@{JOINT\_ELBOW\_ROT0\_RIGHT}}
+\index{JOINT\_ELBOW\_ROT0\_RIGHT@{JOINT\_ELBOW\_ROT0\_RIGHT}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{JOINT\_ELBOW\_ROT0\_RIGHT}{JOINT\_ELBOW\_ROT0\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+R\+I\+G\+HT = \char`\"{}elbow\+\_\+right\+\_\+rot0\char`\"{}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_aec6cc059672d80d99d6ad4501ae5ad05}\label{namespacesteering__trajectory__test_aec6cc059672d80d99d6ad4501ae5ad05}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!JOINT\_ELBOW\_ROT1\_LEFT@{JOINT\_ELBOW\_ROT1\_LEFT}}
+\index{JOINT\_ELBOW\_ROT1\_LEFT@{JOINT\_ELBOW\_ROT1\_LEFT}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{JOINT\_ELBOW\_ROT1\_LEFT}{JOINT\_ELBOW\_ROT1\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+L\+E\+FT = \char`\"{}elbow\+\_\+left\+\_\+rot1\char`\"{}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_ab511e0faa8c9f2c1a6511c7efbb528e0}\label{namespacesteering__trajectory__test_ab511e0faa8c9f2c1a6511c7efbb528e0}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!JOINT\_ELBOW\_ROT1\_RIGHT@{JOINT\_ELBOW\_ROT1\_RIGHT}}
+\index{JOINT\_ELBOW\_ROT1\_RIGHT@{JOINT\_ELBOW\_ROT1\_RIGHT}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{JOINT\_ELBOW\_ROT1\_RIGHT}{JOINT\_ELBOW\_ROT1\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+R\+I\+G\+HT = \char`\"{}elbow\+\_\+right\+\_\+rot1\char`\"{}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a3afe9348bb3a3f59f0338514e664bcc1}\label{namespacesteering__trajectory__test_a3afe9348bb3a3f59f0338514e664bcc1}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!JOINT\_LIST@{JOINT\_LIST}}
+\index{JOINT\_LIST@{JOINT\_LIST}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{JOINT\_LIST}{JOINT\_LIST}}
+{\footnotesize\ttfamily list steering\+\_\+trajectory\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+L\+I\+ST = \mbox{[}\mbox{\hyperlink{namespacesteering__trajectory__test_ad63535534760c5560867d572985fe280}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_a52d86b34e76d3e673fadee11dd28eb93}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_a6faffd4b15d38616399204d833144b1f}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_af189b69e3081121d8719343bf54cd679}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_a705a717a63fe50e91e7e0e99ebd3b287}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_aa9cfdc8e1e99fc16ad7ba54711223bde}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_abb189cf49da2ca7444211055fce8edd0}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_ab511e0faa8c9f2c1a6511c7efbb528e0}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_a27e4f3f6a2628a532863b0c6ce64127b}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_aec6cc059672d80d99d6ad4501ae5ad05}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_ad89d903f545e6828b9b56ffb9b179ade}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_adc8e2b5ada42f3f13048e5c1a809e374}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_a733ace260ab22f39fef902c7f16da974}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__test_ac92f853b9227fafe6c2beeb1748c10ca}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+L\+E\+FT}}\mbox{]}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_af189b69e3081121d8719343bf54cd679}\label{namespacesteering__trajectory__test_af189b69e3081121d8719343bf54cd679}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!JOINT\_SHOULDER\_AXIS0\_LEFT@{JOINT\_SHOULDER\_AXIS0\_LEFT}}
+\index{JOINT\_SHOULDER\_AXIS0\_LEFT@{JOINT\_SHOULDER\_AXIS0\_LEFT}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS0\_LEFT}{JOINT\_SHOULDER\_AXIS0\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+shoulder\+\_\+axis0\char`\"{}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_ad63535534760c5560867d572985fe280}\label{namespacesteering__trajectory__test_ad63535534760c5560867d572985fe280}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!JOINT\_SHOULDER\_AXIS0\_RIGHT@{JOINT\_SHOULDER\_AXIS0\_RIGHT}}
+\index{JOINT\_SHOULDER\_AXIS0\_RIGHT@{JOINT\_SHOULDER\_AXIS0\_RIGHT}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS0\_RIGHT}{JOINT\_SHOULDER\_AXIS0\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+shoulder\+\_\+axis0\char`\"{}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a705a717a63fe50e91e7e0e99ebd3b287}\label{namespacesteering__trajectory__test_a705a717a63fe50e91e7e0e99ebd3b287}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!JOINT\_SHOULDER\_AXIS1\_LEFT@{JOINT\_SHOULDER\_AXIS1\_LEFT}}
+\index{JOINT\_SHOULDER\_AXIS1\_LEFT@{JOINT\_SHOULDER\_AXIS1\_LEFT}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS1\_LEFT}{JOINT\_SHOULDER\_AXIS1\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+shoulder\+\_\+axis1\char`\"{}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a52d86b34e76d3e673fadee11dd28eb93}\label{namespacesteering__trajectory__test_a52d86b34e76d3e673fadee11dd28eb93}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!JOINT\_SHOULDER\_AXIS1\_RIGHT@{JOINT\_SHOULDER\_AXIS1\_RIGHT}}
+\index{JOINT\_SHOULDER\_AXIS1\_RIGHT@{JOINT\_SHOULDER\_AXIS1\_RIGHT}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS1\_RIGHT}{JOINT\_SHOULDER\_AXIS1\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+shoulder\+\_\+axis1\char`\"{}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_aa9cfdc8e1e99fc16ad7ba54711223bde}\label{namespacesteering__trajectory__test_aa9cfdc8e1e99fc16ad7ba54711223bde}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!JOINT\_SHOULDER\_AXIS2\_LEFT@{JOINT\_SHOULDER\_AXIS2\_LEFT}}
+\index{JOINT\_SHOULDER\_AXIS2\_LEFT@{JOINT\_SHOULDER\_AXIS2\_LEFT}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS2\_LEFT}{JOINT\_SHOULDER\_AXIS2\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+shoulder\+\_\+axis2\char`\"{}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a6faffd4b15d38616399204d833144b1f}\label{namespacesteering__trajectory__test_a6faffd4b15d38616399204d833144b1f}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!JOINT\_SHOULDER\_AXIS2\_RIGHT@{JOINT\_SHOULDER\_AXIS2\_RIGHT}}
+\index{JOINT\_SHOULDER\_AXIS2\_RIGHT@{JOINT\_SHOULDER\_AXIS2\_RIGHT}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS2\_RIGHT}{JOINT\_SHOULDER\_AXIS2\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+shoulder\+\_\+axis2\char`\"{}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a733ace260ab22f39fef902c7f16da974}\label{namespacesteering__trajectory__test_a733ace260ab22f39fef902c7f16da974}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!JOINT\_WRIST\_0\_LEFT@{JOINT\_WRIST\_0\_LEFT}}
+\index{JOINT\_WRIST\_0\_LEFT@{JOINT\_WRIST\_0\_LEFT}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{JOINT\_WRIST\_0\_LEFT}{JOINT\_WRIST\_0\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+wrist\+\_\+0\char`\"{}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_ad89d903f545e6828b9b56ffb9b179ade}\label{namespacesteering__trajectory__test_ad89d903f545e6828b9b56ffb9b179ade}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!JOINT\_WRIST\_0\_RIGHT@{JOINT\_WRIST\_0\_RIGHT}}
+\index{JOINT\_WRIST\_0\_RIGHT@{JOINT\_WRIST\_0\_RIGHT}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{JOINT\_WRIST\_0\_RIGHT}{JOINT\_WRIST\_0\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+wrist\+\_\+0\char`\"{}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_ac92f853b9227fafe6c2beeb1748c10ca}\label{namespacesteering__trajectory__test_ac92f853b9227fafe6c2beeb1748c10ca}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!JOINT\_WRIST\_1\_LEFT@{JOINT\_WRIST\_1\_LEFT}}
+\index{JOINT\_WRIST\_1\_LEFT@{JOINT\_WRIST\_1\_LEFT}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{JOINT\_WRIST\_1\_LEFT}{JOINT\_WRIST\_1\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+wrist\+\_\+1\char`\"{}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_adc8e2b5ada42f3f13048e5c1a809e374}\label{namespacesteering__trajectory__test_adc8e2b5ada42f3f13048e5c1a809e374}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!JOINT\_WRIST\_1\_RIGHT@{JOINT\_WRIST\_1\_RIGHT}}
+\index{JOINT\_WRIST\_1\_RIGHT@{JOINT\_WRIST\_1\_RIGHT}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{JOINT\_WRIST\_1\_RIGHT}{JOINT\_WRIST\_1\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+wrist\+\_\+1\char`\"{}}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a15339bd4593dec06f6e4b1312e130171}\label{namespacesteering__trajectory__test_a15339bd4593dec06f6e4b1312e130171}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!MAX\_TURNING\_ANGLE@{MAX\_TURNING\_ANGLE}}
+\index{MAX\_TURNING\_ANGLE@{MAX\_TURNING\_ANGLE}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{MAX\_TURNING\_ANGLE}{MAX\_TURNING\_ANGLE}}
+{\footnotesize\ttfamily int steering\+\_\+trajectory\+\_\+test.\+M\+A\+X\+\_\+\+T\+U\+R\+N\+I\+N\+G\+\_\+\+A\+N\+G\+LE = math.\+pi/15}
+
+
+
+M\+O\+D\+U\+LE P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#. 
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a8d15e6ab173748f6fa4674a3749fba83}\label{namespacesteering__trajectory__test_a8d15e6ab173748f6fa4674a3749fba83}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!NUM\_STEERING\_ANGLES@{NUM\_STEERING\_ANGLES}}
+\index{NUM\_STEERING\_ANGLES@{NUM\_STEERING\_ANGLES}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{NUM\_STEERING\_ANGLES}{NUM\_STEERING\_ANGLES}}
+{\footnotesize\ttfamily int steering\+\_\+trajectory\+\_\+test.\+N\+U\+M\+\_\+\+S\+T\+E\+E\+R\+I\+N\+G\+\_\+\+A\+N\+G\+L\+ES = 61}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_acb792436582351e8afcbc1c2a80f665e}\label{namespacesteering__trajectory__test_acb792436582351e8afcbc1c2a80f665e}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!RIKSHAW\_TURN\_JOINT\_X\_OFFSET@{RIKSHAW\_TURN\_JOINT\_X\_OFFSET}}
+\index{RIKSHAW\_TURN\_JOINT\_X\_OFFSET@{RIKSHAW\_TURN\_JOINT\_X\_OFFSET}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{RIKSHAW\_TURN\_JOINT\_X\_OFFSET}{RIKSHAW\_TURN\_JOINT\_X\_OFFSET}}
+{\footnotesize\ttfamily float steering\+\_\+trajectory\+\_\+test.\+R\+I\+K\+S\+H\+A\+W\+\_\+\+T\+U\+R\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+X\+\_\+\+O\+F\+F\+S\+ET = 0.\+7163902600571725+0.\+23003546879794612}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_ad1fd68e391bd33260caefd91e3598aef}\label{namespacesteering__trajectory__test_ad1fd68e391bd33260caefd91e3598aef}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!RIKSHAW\_TURN\_JOINT\_Y\_OFFSET@{RIKSHAW\_TURN\_JOINT\_Y\_OFFSET}}
+\index{RIKSHAW\_TURN\_JOINT\_Y\_OFFSET@{RIKSHAW\_TURN\_JOINT\_Y\_OFFSET}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{RIKSHAW\_TURN\_JOINT\_Y\_OFFSET}{RIKSHAW\_TURN\_JOINT\_Y\_OFFSET}}
+{\footnotesize\ttfamily float steering\+\_\+trajectory\+\_\+test.\+R\+I\+K\+S\+H\+A\+W\+\_\+\+T\+U\+R\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+Y\+\_\+\+O\+F\+F\+S\+ET = -\/0.\+010388552466272516+0.\+010388308199859624}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_aa3e59ede4bbf59e311cf2f5af97a3051}\label{namespacesteering__trajectory__test_aa3e59ede4bbf59e311cf2f5af97a3051}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!RIKSHAW\_TURN\_JOINT\_Z\_OFFSET@{RIKSHAW\_TURN\_JOINT\_Z\_OFFSET}}
+\index{RIKSHAW\_TURN\_JOINT\_Z\_OFFSET@{RIKSHAW\_TURN\_JOINT\_Z\_OFFSET}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{RIKSHAW\_TURN\_JOINT\_Z\_OFFSET}{RIKSHAW\_TURN\_JOINT\_Z\_OFFSET}}
+{\footnotesize\ttfamily float steering\+\_\+trajectory\+\_\+test.\+R\+I\+K\+S\+H\+A\+W\+\_\+\+T\+U\+R\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+Z\+\_\+\+O\+F\+F\+S\+ET = 0.\+2164376942146126-\/0.\+20527069599791542}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a2e3bb44f47ba04a893958cd3fa2d1764}\label{namespacesteering__trajectory__test_a2e3bb44f47ba04a893958cd3fa2d1764}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!YAW\_LEFT\_HAND\_OFFSET@{YAW\_LEFT\_HAND\_OFFSET}}
+\index{YAW\_LEFT\_HAND\_OFFSET@{YAW\_LEFT\_HAND\_OFFSET}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{YAW\_LEFT\_HAND\_OFFSET}{YAW\_LEFT\_HAND\_OFFSET}}
+{\footnotesize\ttfamily int steering\+\_\+trajectory\+\_\+test.\+Y\+A\+W\+\_\+\+L\+E\+F\+T\+\_\+\+H\+A\+N\+D\+\_\+\+O\+F\+F\+S\+ET = 3 $\ast$ math.\+pi / 2 + math.\+pi}
+
+\mbox{\Hypertarget{namespacesteering__trajectory__test_a1e9d052ea83a9b066657437bbdd92b81}\label{namespacesteering__trajectory__test_a1e9d052ea83a9b066657437bbdd92b81}} 
+\index{steering\_trajectory\_test@{steering\_trajectory\_test}!YAW\_RIGHT\_HAND\_OFFSET@{YAW\_RIGHT\_HAND\_OFFSET}}
+\index{YAW\_RIGHT\_HAND\_OFFSET@{YAW\_RIGHT\_HAND\_OFFSET}!steering\_trajectory\_test@{steering\_trajectory\_test}}
+\subsubsection{\texorpdfstring{YAW\_RIGHT\_HAND\_OFFSET}{YAW\_RIGHT\_HAND\_OFFSET}}
+{\footnotesize\ttfamily int steering\+\_\+trajectory\+\_\+test.\+Y\+A\+W\+\_\+\+R\+I\+G\+H\+T\+\_\+\+H\+A\+N\+D\+\_\+\+O\+F\+F\+S\+ET = math.\+pi / 2 + math.\+pi}
+

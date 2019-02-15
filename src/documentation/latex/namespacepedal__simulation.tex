@@ -1,0 +1,692 @@
+\hypertarget{namespacepedal__simulation}{}\section{pedal\+\_\+simulation Namespace Reference}
+\label{namespacepedal__simulation}\index{pedal\_simulation@{pedal\_simulation}}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation_a9410b0fd1bb79787c8581efa83364a49}{joint\+State\+Callback}} (joint\+\_\+data)
+\begin{DoxyCompactList}\small\item\em U\+T\+I\+L\+I\+TY F\+U\+N\+C\+T\+I\+O\+NS \#\#\#. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacepedal__simulation_a5a971c07811066312d34f83f16eb4d99}{set\+Joint\+Controller\+Parameters}} (proportional\+Val, derivative\+Val)
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation_aff64c4ebd701ea36fbee83eb632b57a7}{import\+Joint\+Trajectory\+Record}} ()
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation_abb0ade1db3ccf525077ca1f2c59bc558}{get\+Joint\+Position}} (joint\+Name)
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation_a0ee75e78af6b0ac572720f7d805c8627}{get\+Joint\+Velocity}} (joint\+Name)
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation_a95f712bb817f4aa1a6c75e18db6fd705}{get\+Position}} (endeffector, frame)
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation_ad388c8b092cbc564fdca15fbcbeeb0fe}{get\+Position\+Left\+Foot}} ()
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation_a665cd2117a5d8902d25ca0ecc5cf5a6f}{get\+Position\+Right\+Foot}} ()
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation_a84cf351a6c446cfb26f97b6c5aeaeb59}{get\+Distance}} (point1, point2)
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation_a6b7af85f1db951c2eb0e86b1ab233610}{set\+Pedal\+Single\+Rotation\+Duration}} (new\+\_\+duration\+\_\+seconds)
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation_af7572cfe2f9ff9c469bb6293e15185a5}{set\+Trajectory\+Point\+Duration}} ()
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation_a931cf3b3417734fed291dd2882f88842}{interpolate\+Trajectory\+Points}} (value1, value2, start\+Time, curr\+Time, end\+Time)
+\begin{DoxyCompactList}\small\item\em C\+O\+N\+T\+R\+OL F\+U\+N\+C\+T\+I\+O\+NS \#\#\#. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacepedal__simulation_a880354a926adb358b5ef68766f42639b}{check\+Output\+Limits}} (input\+Val)
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation_a882041c9627d3986d4a997a1d4aac41a}{compute\+Velocity\+Setpoint}} (joint\+Name, end\+Pos, start\+Time, curr\+Time, end\+Time)
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation_a53867c33184116716ccf5ffc62619a39}{F\+SM}} ()
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation_a727e35b81726e63028964cefc65d48c5}{main}} ()
+\begin{DoxyCompactList}\small\item\em M\+A\+IN \#\#\#. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{namespacepedal__simulation_ac01ec3a6a2b3bfa546ca8317b4064fd7}{P\+R\+I\+N\+T\+\_\+\+D\+E\+B\+UG}} = True
+\begin{DoxyCompactList}\small\item\em M\+O\+D\+U\+LE P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{namespacepedal__simulation_a8090f9acb65db197227394489b01e764}{R\+E\+C\+O\+R\+D\+E\+D\+\_\+\+T\+R\+A\+J\+E\+C\+T\+O\+R\+Y\+\_\+\+F\+I\+L\+E\+N\+A\+ME}} = \char`\"{}capture\+\_\+trajectory/desember\+\_\+pedal\+\_\+trajectory.\+json\char`\"{}
+\item 
+float \mbox{\hyperlink{namespacepedal__simulation_aec7366c58850a21df44793bed8baf7a7}{P\+E\+D\+A\+L\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+\_\+\+E\+R\+R\+O\+R\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE}} = 0.\+02
+\item 
+float \mbox{\hyperlink{namespacepedal__simulation_a4cd59087b814eb188e34704ca32b3551}{J\+O\+I\+N\+T\+\_\+\+T\+R\+A\+J\+E\+C\+T\+O\+R\+Y\+\_\+\+E\+R\+R\+O\+R\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE}} = 0.\+02
+\item 
+int \mbox{\hyperlink{namespacepedal__simulation_a022ae99e41a08e94aedea21ff43734cc}{P\+E\+D\+A\+L\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+R\+O\+T\+A\+T\+I\+O\+N\+\_\+\+D\+U\+R\+A\+T\+I\+ON}} = 20
+\item 
+int \mbox{\hyperlink{namespacepedal__simulation_ad6251b69f5c7d2a8f1a3d765bb1ce37b}{T\+R\+A\+J\+E\+C\+T\+O\+R\+Y\+\_\+\+P\+O\+I\+N\+T\+\_\+\+D\+U\+R\+A\+T\+I\+ON}} = 1
+\item 
+int \mbox{\hyperlink{namespacepedal__simulation_a3a4de9c574500f2527349752b61fd818}{C\+O\+N\+T\+R\+O\+L\+L\+E\+R\+\_\+\+F\+R\+E\+Q\+U\+E\+N\+CY}} = 100
+\item 
+int \mbox{\hyperlink{namespacepedal__simulation_a5624f376e95c012680219818f9b76cd5}{M\+I\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+V\+EL}} = -\/500
+\item 
+int \mbox{\hyperlink{namespacepedal__simulation_a6dc3554f4d28fc17e85b0186c18e1aed}{M\+A\+X\+\_\+\+J\+O\+I\+N\+T\+\_\+\+V\+EL}} = 500
+\item 
+int \mbox{\hyperlink{namespacepedal__simulation_af59bc3c310f46fbe45dc3772c0ad1a9c}{J\+O\+I\+N\+T\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y\+\_\+\+F\+A\+C\+T\+OR}} = 1000
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation_a85aede234b0b86c615af4f9d73a3d148}{x\+\_\+pedal\+\_\+record}} = \mbox{[}$\,$\mbox{]}
+\begin{DoxyCompactList}\small\item\em G\+L\+O\+B\+AL V\+A\+R\+I\+A\+B\+L\+ES \#\#\#. \end{DoxyCompactList}\item 
+list \mbox{\hyperlink{namespacepedal__simulation_ad56ea447f391114ab2b382becbe2bc59}{y\+\_\+pedal\+\_\+record}} = \mbox{[}$\,$\mbox{]}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation_aa2d21a54aac1c1e059d8a17050ddfed4}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+H\+I\+P\+\_\+\+R\+I\+G\+HT}} = \char`\"{}joint\+\_\+hip\+\_\+right\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation_ad8c24ef49f1c476e1ad8be5bc4d1c710}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+K\+N\+E\+E\+\_\+\+R\+I\+G\+HT}} = \char`\"{}joint\+\_\+knee\+\_\+right\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation_a091f63fe58d9a41b150f5029e548f08f}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+R\+I\+G\+HT}} = \char`\"{}joint\+\_\+foot\+\_\+right\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation_a6caf046a25da8884a3feed405121b7db}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+H\+I\+P\+\_\+\+L\+E\+FT}} = \char`\"{}joint\+\_\+hip\+\_\+left\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation_ada493a22ef9aa6120fb10a58db55e10d}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+K\+N\+E\+E\+\_\+\+L\+E\+FT}} = \char`\"{}joint\+\_\+knee\+\_\+left\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation_a402a36b90d4ebf203bc19976ec7d52c6}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+L\+E\+FT}} = \char`\"{}joint\+\_\+foot\+\_\+left\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation_a90d2f00ff0e334bc02f23bcd4b540d8c}{R\+I\+G\+H\+T\+\_\+\+H\+I\+P\+\_\+\+J\+O\+I\+NT}} = \char`\"{}right\+\_\+hip\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation_a28d4609f3a19f8e565ae3548ef73f990}{R\+I\+G\+H\+T\+\_\+\+K\+N\+E\+E\+\_\+\+J\+O\+I\+NT}} = \char`\"{}right\+\_\+knee\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation_a277daee547841cc41def2598a8beb6f1}{R\+I\+G\+H\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+J\+O\+I\+NT}} = \char`\"{}right\+\_\+ankle\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation_a5ff646330c3b18de13c02db035719f48}{L\+E\+F\+T\+\_\+\+H\+I\+P\+\_\+\+J\+O\+I\+NT}} = \char`\"{}left\+\_\+hip\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation_a2e12c9299a343186db2633fc43b777c8}{L\+E\+F\+T\+\_\+\+K\+N\+E\+E\+\_\+\+J\+O\+I\+NT}} = \char`\"{}left\+\_\+knee\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation_ab65f757e695ae70c2659ce5fe3eeef5d}{L\+E\+F\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+J\+O\+I\+NT}} = \char`\"{}left\+\_\+ankle\char`\"{}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation_a90eaa4eedceada2483c18daf6837b72c}{\+\_\+joints\+List}} = \mbox{[}\mbox{\hyperlink{namespacepedal__simulation_a90d2f00ff0e334bc02f23bcd4b540d8c}{R\+I\+G\+H\+T\+\_\+\+H\+I\+P\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation_a28d4609f3a19f8e565ae3548ef73f990}{R\+I\+G\+H\+T\+\_\+\+K\+N\+E\+E\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation_a277daee547841cc41def2598a8beb6f1}{R\+I\+G\+H\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation_a5ff646330c3b18de13c02db035719f48}{L\+E\+F\+T\+\_\+\+H\+I\+P\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation_a2e12c9299a343186db2633fc43b777c8}{L\+E\+F\+T\+\_\+\+K\+N\+E\+E\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation_ab65f757e695ae70c2659ce5fe3eeef5d}{L\+E\+F\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+J\+O\+I\+NT}}\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation_ae58c6872ed54574661bf60918ac4107e}{\+\_\+joints\+List\+R\+OS}} = \mbox{[}\mbox{\hyperlink{namespacepedal__simulation_aa2d21a54aac1c1e059d8a17050ddfed4}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+H\+I\+P\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacepedal__simulation_ad8c24ef49f1c476e1ad8be5bc4d1c710}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+K\+N\+E\+E\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacepedal__simulation_a091f63fe58d9a41b150f5029e548f08f}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacepedal__simulation_a6caf046a25da8884a3feed405121b7db}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+H\+I\+P\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacepedal__simulation_ada493a22ef9aa6120fb10a58db55e10d}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+K\+N\+E\+E\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacepedal__simulation_a402a36b90d4ebf203bc19976ec7d52c6}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+L\+E\+FT}}\mbox{]}
+\item 
+dictionary \mbox{\hyperlink{namespacepedal__simulation_a5e2a6f340430b2f768cccd2ee8799462}{\+\_\+parameters\+Right\+Hip}}
+\item 
+dictionary \mbox{\hyperlink{namespacepedal__simulation_aa82056fb0a0641314c28a1e8a73325d5}{\+\_\+parameters\+Right\+Knee}}
+\item 
+dictionary \mbox{\hyperlink{namespacepedal__simulation_a60241d4aea32187367516779d5e0e72a}{\+\_\+parameters\+Right\+Ankle}}
+\item 
+dictionary \mbox{\hyperlink{namespacepedal__simulation_a5708d5a0da5e620e11e2b72890447d25}{\+\_\+parameters\+Left\+Hip}}
+\item 
+dictionary \mbox{\hyperlink{namespacepedal__simulation_a0a86addbabf6534ae56e5c2967886a67}{\+\_\+parameters\+Left\+Knee}}
+\item 
+dictionary \mbox{\hyperlink{namespacepedal__simulation_a6058204fc868715a30e0368a9c4ebc57}{\+\_\+parameters\+Left\+Ankle}}
+\item 
+dictionary \mbox{\hyperlink{namespacepedal__simulation_a85a4d895189d151657b0867797bf1a09}{\+\_\+joints\+Control\+Data}}
+\item 
+dictionary \mbox{\hyperlink{namespacepedal__simulation_a60fc1e2941ecbd76f24d5190414a13b8}{\+\_\+joints\+Status\+Data}}
+\item 
+int \mbox{\hyperlink{namespacepedal__simulation_a1ece2e2b30d10ccc34c2f26508791e20}{num\+Trajectory\+Points}} = -\/1
+\item 
+int \mbox{\hyperlink{namespacepedal__simulation_ad7731301036c8b6b468b20d1b5aaed21}{trajectory\+Starting\+Point}} = 0
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation_ac6c7d66bbded17d43bfbac519fd74972}{pedal\+Trajectory\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation_a12e73e8d9659f2c2cc7a34402adc9698}{pedal\+Trajectory\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation_a8203cc4243bfe20af84c0116c8cda802}{hip\+Trajectory\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation_a917db9bbb8bc8e0577bf0a84ab41f58a}{knee\+Trajectory\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation_a1ad9055051bf67d8eb766574be88d5f9}{ankle\+Trajectory\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation_abe8e07684ed66f9eb97c465a534b3100}{hip\+Trajectory\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation_a70a2d946d5cdbbc879ebdfa02ae32ba7}{knee\+Trajectory\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation_a3f5a09536c7fd1d22868f6b4f0d4b463}{ankle\+Trajectory\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation_adb56d67efb49b0725d77e8d179881ef7}{I\+N\+IT}} = \char`\"{}I\+N\+IT\char`\"{}
+\begin{DoxyCompactList}\small\item\em S\+T\+A\+TE M\+A\+C\+H\+I\+NE \#\#\#. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{namespacepedal__simulation_a30639c182756f273383e09a638279670}{P\+E\+D\+AL}} = \char`\"{}P\+E\+D\+AL\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation_aad3596794738ffb413aee3addc42fa95}{U\+P\+D\+A\+T\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+RS}} = \char`\"{}U\+P\+D\+A\+T\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+RS\char`\"{}
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacepedal__simulation_a880354a926adb358b5ef68766f42639b}\label{namespacepedal__simulation_a880354a926adb358b5ef68766f42639b}} 
+\index{pedal\_simulation@{pedal\_simulation}!checkOutputLimits@{checkOutputLimits}}
+\index{checkOutputLimits@{checkOutputLimits}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{checkOutputLimits()}{checkOutputLimits()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation.\+check\+Output\+Limits (\begin{DoxyParamCaption}\item[{}]{input\+Val }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a882041c9627d3986d4a997a1d4aac41a}\label{namespacepedal__simulation_a882041c9627d3986d4a997a1d4aac41a}} 
+\index{pedal\_simulation@{pedal\_simulation}!computeVelocitySetpoint@{computeVelocitySetpoint}}
+\index{computeVelocitySetpoint@{computeVelocitySetpoint}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{computeVelocitySetpoint()}{computeVelocitySetpoint()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation.\+compute\+Velocity\+Setpoint (\begin{DoxyParamCaption}\item[{}]{joint\+Name,  }\item[{}]{end\+Pos,  }\item[{}]{start\+Time,  }\item[{}]{curr\+Time,  }\item[{}]{end\+Time }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a53867c33184116716ccf5ffc62619a39}\label{namespacepedal__simulation_a53867c33184116716ccf5ffc62619a39}} 
+\index{pedal\_simulation@{pedal\_simulation}!FSM@{FSM}}
+\index{FSM@{FSM}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{FSM()}{FSM()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation.\+F\+SM (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a84cf351a6c446cfb26f97b6c5aeaeb59}\label{namespacepedal__simulation_a84cf351a6c446cfb26f97b6c5aeaeb59}} 
+\index{pedal\_simulation@{pedal\_simulation}!getDistance@{getDistance}}
+\index{getDistance@{getDistance}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{getDistance()}{getDistance()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation.\+get\+Distance (\begin{DoxyParamCaption}\item[{}]{point1,  }\item[{}]{point2 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacepedal__simulation_abb0ade1db3ccf525077ca1f2c59bc558}\label{namespacepedal__simulation_abb0ade1db3ccf525077ca1f2c59bc558}} 
+\index{pedal\_simulation@{pedal\_simulation}!getJointPosition@{getJointPosition}}
+\index{getJointPosition@{getJointPosition}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{getJointPosition()}{getJointPosition()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation.\+get\+Joint\+Position (\begin{DoxyParamCaption}\item[{}]{joint\+Name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a0ee75e78af6b0ac572720f7d805c8627}\label{namespacepedal__simulation_a0ee75e78af6b0ac572720f7d805c8627}} 
+\index{pedal\_simulation@{pedal\_simulation}!getJointVelocity@{getJointVelocity}}
+\index{getJointVelocity@{getJointVelocity}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{getJointVelocity()}{getJointVelocity()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation.\+get\+Joint\+Velocity (\begin{DoxyParamCaption}\item[{}]{joint\+Name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a95f712bb817f4aa1a6c75e18db6fd705}\label{namespacepedal__simulation_a95f712bb817f4aa1a6c75e18db6fd705}} 
+\index{pedal\_simulation@{pedal\_simulation}!getPosition@{getPosition}}
+\index{getPosition@{getPosition}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{getPosition()}{getPosition()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation.\+get\+Position (\begin{DoxyParamCaption}\item[{}]{endeffector,  }\item[{}]{frame }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacepedal__simulation_ad388c8b092cbc564fdca15fbcbeeb0fe}\label{namespacepedal__simulation_ad388c8b092cbc564fdca15fbcbeeb0fe}} 
+\index{pedal\_simulation@{pedal\_simulation}!getPositionLeftFoot@{getPositionLeftFoot}}
+\index{getPositionLeftFoot@{getPositionLeftFoot}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{getPositionLeftFoot()}{getPositionLeftFoot()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation.\+get\+Position\+Left\+Foot (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a665cd2117a5d8902d25ca0ecc5cf5a6f}\label{namespacepedal__simulation_a665cd2117a5d8902d25ca0ecc5cf5a6f}} 
+\index{pedal\_simulation@{pedal\_simulation}!getPositionRightFoot@{getPositionRightFoot}}
+\index{getPositionRightFoot@{getPositionRightFoot}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{getPositionRightFoot()}{getPositionRightFoot()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation.\+get\+Position\+Right\+Foot (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacepedal__simulation_aff64c4ebd701ea36fbee83eb632b57a7}\label{namespacepedal__simulation_aff64c4ebd701ea36fbee83eb632b57a7}} 
+\index{pedal\_simulation@{pedal\_simulation}!importJointTrajectoryRecord@{importJointTrajectoryRecord}}
+\index{importJointTrajectoryRecord@{importJointTrajectoryRecord}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{importJointTrajectoryRecord()}{importJointTrajectoryRecord()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation.\+import\+Joint\+Trajectory\+Record (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a931cf3b3417734fed291dd2882f88842}\label{namespacepedal__simulation_a931cf3b3417734fed291dd2882f88842}} 
+\index{pedal\_simulation@{pedal\_simulation}!interpolateTrajectoryPoints@{interpolateTrajectoryPoints}}
+\index{interpolateTrajectoryPoints@{interpolateTrajectoryPoints}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{interpolateTrajectoryPoints()}{interpolateTrajectoryPoints()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation.\+interpolate\+Trajectory\+Points (\begin{DoxyParamCaption}\item[{}]{value1,  }\item[{}]{value2,  }\item[{}]{start\+Time,  }\item[{}]{curr\+Time,  }\item[{}]{end\+Time }\end{DoxyParamCaption})}
+
+
+
+C\+O\+N\+T\+R\+OL F\+U\+N\+C\+T\+I\+O\+NS \#\#\#. 
+
+\mbox{\Hypertarget{namespacepedal__simulation_a9410b0fd1bb79787c8581efa83364a49}\label{namespacepedal__simulation_a9410b0fd1bb79787c8581efa83364a49}} 
+\index{pedal\_simulation@{pedal\_simulation}!jointStateCallback@{jointStateCallback}}
+\index{jointStateCallback@{jointStateCallback}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{jointStateCallback()}{jointStateCallback()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation.\+joint\+State\+Callback (\begin{DoxyParamCaption}\item[{}]{joint\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+U\+T\+I\+L\+I\+TY F\+U\+N\+C\+T\+I\+O\+NS \#\#\#. 
+
+\mbox{\Hypertarget{namespacepedal__simulation_a727e35b81726e63028964cefc65d48c5}\label{namespacepedal__simulation_a727e35b81726e63028964cefc65d48c5}} 
+\index{pedal\_simulation@{pedal\_simulation}!main@{main}}
+\index{main@{main}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation.\+main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+M\+A\+IN \#\#\#. 
+
+\mbox{\Hypertarget{namespacepedal__simulation_a5a971c07811066312d34f83f16eb4d99}\label{namespacepedal__simulation_a5a971c07811066312d34f83f16eb4d99}} 
+\index{pedal\_simulation@{pedal\_simulation}!setJointControllerParameters@{setJointControllerParameters}}
+\index{setJointControllerParameters@{setJointControllerParameters}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{setJointControllerParameters()}{setJointControllerParameters()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation.\+set\+Joint\+Controller\+Parameters (\begin{DoxyParamCaption}\item[{}]{proportional\+Val,  }\item[{}]{derivative\+Val }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a6b7af85f1db951c2eb0e86b1ab233610}\label{namespacepedal__simulation_a6b7af85f1db951c2eb0e86b1ab233610}} 
+\index{pedal\_simulation@{pedal\_simulation}!setPedalSingleRotationDuration@{setPedalSingleRotationDuration}}
+\index{setPedalSingleRotationDuration@{setPedalSingleRotationDuration}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{setPedalSingleRotationDuration()}{setPedalSingleRotationDuration()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation.\+set\+Pedal\+Single\+Rotation\+Duration (\begin{DoxyParamCaption}\item[{}]{new\+\_\+duration\+\_\+seconds }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacepedal__simulation_af7572cfe2f9ff9c469bb6293e15185a5}\label{namespacepedal__simulation_af7572cfe2f9ff9c469bb6293e15185a5}} 
+\index{pedal\_simulation@{pedal\_simulation}!setTrajectoryPointDuration@{setTrajectoryPointDuration}}
+\index{setTrajectoryPointDuration@{setTrajectoryPointDuration}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{setTrajectoryPointDuration()}{setTrajectoryPointDuration()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation.\+set\+Trajectory\+Point\+Duration (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{namespacepedal__simulation_a85a4d895189d151657b0867797bf1a09}\label{namespacepedal__simulation_a85a4d895189d151657b0867797bf1a09}} 
+\index{pedal\_simulation@{pedal\_simulation}!\_jointsControlData@{\_jointsControlData}}
+\index{\_jointsControlData@{\_jointsControlData}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{\_jointsControlData}{\_jointsControlData}}
+{\footnotesize\ttfamily dictionary pedal\+\_\+simulation.\+\_\+joints\+Control\+Data\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     RIGHT\_HIP\_JOINT:    \_parametersRightHip,}
+\DoxyCodeLine{3     RIGHT\_KNEE\_JOINT:   \_parametersRightKnee,}
+\DoxyCodeLine{4     RIGHT\_ANKLE\_JOINT:  \_parametersRightAnkle,}
+\DoxyCodeLine{5     LEFT\_HIP\_JOINT:     \_parametersLeftHip,}
+\DoxyCodeLine{6     LEFT\_KNEE\_JOINT:    \_parametersLeftKnee,}
+\DoxyCodeLine{7     LEFT\_ANKLE\_JOINT:   \_parametersLeftAnkle}
+\DoxyCodeLine{8 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacepedal__simulation_a90eaa4eedceada2483c18daf6837b72c}\label{namespacepedal__simulation_a90eaa4eedceada2483c18daf6837b72c}} 
+\index{pedal\_simulation@{pedal\_simulation}!\_jointsList@{\_jointsList}}
+\index{\_jointsList@{\_jointsList}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{\_jointsList}{\_jointsList}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation.\+\_\+joints\+List = \mbox{[}\mbox{\hyperlink{namespacepedal__simulation_a90d2f00ff0e334bc02f23bcd4b540d8c}{R\+I\+G\+H\+T\+\_\+\+H\+I\+P\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation_a28d4609f3a19f8e565ae3548ef73f990}{R\+I\+G\+H\+T\+\_\+\+K\+N\+E\+E\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation_a277daee547841cc41def2598a8beb6f1}{R\+I\+G\+H\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation_a5ff646330c3b18de13c02db035719f48}{L\+E\+F\+T\+\_\+\+H\+I\+P\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation_a2e12c9299a343186db2633fc43b777c8}{L\+E\+F\+T\+\_\+\+K\+N\+E\+E\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation_ab65f757e695ae70c2659ce5fe3eeef5d}{L\+E\+F\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+J\+O\+I\+NT}}\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_ae58c6872ed54574661bf60918ac4107e}\label{namespacepedal__simulation_ae58c6872ed54574661bf60918ac4107e}} 
+\index{pedal\_simulation@{pedal\_simulation}!\_jointsListROS@{\_jointsListROS}}
+\index{\_jointsListROS@{\_jointsListROS}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{\_jointsListROS}{\_jointsListROS}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation.\+\_\+joints\+List\+R\+OS = \mbox{[}\mbox{\hyperlink{namespacepedal__simulation_aa2d21a54aac1c1e059d8a17050ddfed4}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+H\+I\+P\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacepedal__simulation_ad8c24ef49f1c476e1ad8be5bc4d1c710}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+K\+N\+E\+E\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacepedal__simulation_a091f63fe58d9a41b150f5029e548f08f}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacepedal__simulation_a6caf046a25da8884a3feed405121b7db}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+H\+I\+P\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacepedal__simulation_ada493a22ef9aa6120fb10a58db55e10d}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+K\+N\+E\+E\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacepedal__simulation_a402a36b90d4ebf203bc19976ec7d52c6}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+L\+E\+FT}}\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a60fc1e2941ecbd76f24d5190414a13b8}\label{namespacepedal__simulation_a60fc1e2941ecbd76f24d5190414a13b8}} 
+\index{pedal\_simulation@{pedal\_simulation}!\_jointsStatusData@{\_jointsStatusData}}
+\index{\_jointsStatusData@{\_jointsStatusData}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{\_jointsStatusData}{\_jointsStatusData}}
+{\footnotesize\ttfamily dictionary pedal\+\_\+simulation.\+\_\+joints\+Status\+Data\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     RIGHT\_HIP\_JOINT: \{}
+\DoxyCodeLine{3         \textcolor{stringliteral}{"Pos"}: 0.0,}
+\DoxyCodeLine{4         \textcolor{stringliteral}{"Vel"}: 0.0}
+\DoxyCodeLine{5     \},}
+\DoxyCodeLine{6     LEFT\_HIP\_JOINT: \{}
+\DoxyCodeLine{7         \textcolor{stringliteral}{"Pos"}: 0.0,}
+\DoxyCodeLine{8         \textcolor{stringliteral}{"Vel"}: 0.0}
+\DoxyCodeLine{9     \},}
+\DoxyCodeLine{10     RIGHT\_KNEE\_JOINT: \{}
+\DoxyCodeLine{11         \textcolor{stringliteral}{"Pos"}: 0.0,}
+\DoxyCodeLine{12         \textcolor{stringliteral}{"Vel"}: 0.0}
+\DoxyCodeLine{13     \},}
+\DoxyCodeLine{14     LEFT\_KNEE\_JOINT: \{}
+\DoxyCodeLine{15         \textcolor{stringliteral}{"Pos"}: 0.0,}
+\DoxyCodeLine{16         \textcolor{stringliteral}{"Vel"}: 0.0}
+\DoxyCodeLine{17     \},}
+\DoxyCodeLine{18     RIGHT\_ANKLE\_JOINT: \{}
+\DoxyCodeLine{19         \textcolor{stringliteral}{"Pos"}: 0.0,}
+\DoxyCodeLine{20         \textcolor{stringliteral}{"Vel"}: 0.0}
+\DoxyCodeLine{21     \},}
+\DoxyCodeLine{22     LEFT\_ANKLE\_JOINT: \{}
+\DoxyCodeLine{23         \textcolor{stringliteral}{"Pos"}: 0.0,}
+\DoxyCodeLine{24         \textcolor{stringliteral}{"Vel"}: 0.0}
+\DoxyCodeLine{25     \}}
+\DoxyCodeLine{26 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacepedal__simulation_a6058204fc868715a30e0368a9c4ebc57}\label{namespacepedal__simulation_a6058204fc868715a30e0368a9c4ebc57}} 
+\index{pedal\_simulation@{pedal\_simulation}!\_parametersLeftAnkle@{\_parametersLeftAnkle}}
+\index{\_parametersLeftAnkle@{\_parametersLeftAnkle}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{\_parametersLeftAnkle}{\_parametersLeftAnkle}}
+{\footnotesize\ttfamily dictionary pedal\+\_\+simulation.\+\_\+parameters\+Left\+Ankle\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     \textcolor{stringliteral}{"param\_p"}:               1000.0,}
+\DoxyCodeLine{3     \textcolor{stringliteral}{"param\_i"}:               0.0,}
+\DoxyCodeLine{4     \textcolor{stringliteral}{"param\_d"}:               0.0,}
+\DoxyCodeLine{5     \textcolor{stringliteral}{"prev\_pos"}:              0.0,}
+\DoxyCodeLine{6     \textcolor{stringliteral}{"prev\_vel"}:              0.0,}
+\DoxyCodeLine{7     \textcolor{stringliteral}{"prev\_time"}:             0.0,}
+\DoxyCodeLine{8     \textcolor{stringliteral}{"prev\_error"}:            0.0,}
+\DoxyCodeLine{9     \textcolor{stringliteral}{"pos\_error\_integral"}:    0.0,}
+\DoxyCodeLine{10     \textcolor{stringliteral}{"trajectory\_startpoint"}: 0.0,}
+\DoxyCodeLine{11     \textcolor{stringliteral}{"trajectory\_endpoint"}:   0.0,}
+\DoxyCodeLine{12     \textcolor{stringliteral}{"ideal\_velocity"}:        0.0,}
+\DoxyCodeLine{13     \textcolor{stringliteral}{"bool\_update\_iv"}:        \textcolor{keyword}{True}}
+\DoxyCodeLine{14 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacepedal__simulation_a5708d5a0da5e620e11e2b72890447d25}\label{namespacepedal__simulation_a5708d5a0da5e620e11e2b72890447d25}} 
+\index{pedal\_simulation@{pedal\_simulation}!\_parametersLeftHip@{\_parametersLeftHip}}
+\index{\_parametersLeftHip@{\_parametersLeftHip}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{\_parametersLeftHip}{\_parametersLeftHip}}
+{\footnotesize\ttfamily dictionary pedal\+\_\+simulation.\+\_\+parameters\+Left\+Hip\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     \textcolor{stringliteral}{"param\_p"}:               1500.0,}
+\DoxyCodeLine{3     \textcolor{stringliteral}{"param\_i"}:               0.05,}
+\DoxyCodeLine{4     \textcolor{stringliteral}{"param\_d"}:               0.0,}
+\DoxyCodeLine{5     \textcolor{stringliteral}{"prev\_pos"}:              0.0,}
+\DoxyCodeLine{6     \textcolor{stringliteral}{"prev\_vel"}:              0.0,}
+\DoxyCodeLine{7     \textcolor{stringliteral}{"prev\_time"}:             0.0,}
+\DoxyCodeLine{8     \textcolor{stringliteral}{"prev\_error"}:            0.0,}
+\DoxyCodeLine{9     \textcolor{stringliteral}{"pos\_error\_integral"}:    0.0,}
+\DoxyCodeLine{10     \textcolor{stringliteral}{"trajectory\_startpoint"}: 0.0,}
+\DoxyCodeLine{11     \textcolor{stringliteral}{"trajectory\_endpoint"}:   0.0,}
+\DoxyCodeLine{12     \textcolor{stringliteral}{"ideal\_velocity"}:        0.0,}
+\DoxyCodeLine{13     \textcolor{stringliteral}{"bool\_update\_iv"}:        \textcolor{keyword}{True}}
+\DoxyCodeLine{14 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacepedal__simulation_a0a86addbabf6534ae56e5c2967886a67}\label{namespacepedal__simulation_a0a86addbabf6534ae56e5c2967886a67}} 
+\index{pedal\_simulation@{pedal\_simulation}!\_parametersLeftKnee@{\_parametersLeftKnee}}
+\index{\_parametersLeftKnee@{\_parametersLeftKnee}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{\_parametersLeftKnee}{\_parametersLeftKnee}}
+{\footnotesize\ttfamily dictionary pedal\+\_\+simulation.\+\_\+parameters\+Left\+Knee\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     \textcolor{stringliteral}{"param\_p"}:               2000.0,}
+\DoxyCodeLine{3     \textcolor{stringliteral}{"param\_i"}:               0.05,}
+\DoxyCodeLine{4     \textcolor{stringliteral}{"param\_d"}:               0.0,}
+\DoxyCodeLine{5     \textcolor{stringliteral}{"prev\_pos"}:              0.0,}
+\DoxyCodeLine{6     \textcolor{stringliteral}{"prev\_vel"}:              0.0,}
+\DoxyCodeLine{7     \textcolor{stringliteral}{"prev\_time"}:             0.0,}
+\DoxyCodeLine{8     \textcolor{stringliteral}{"prev\_error"}:            0.0,}
+\DoxyCodeLine{9     \textcolor{stringliteral}{"pos\_error\_integral"}:    0.0,}
+\DoxyCodeLine{10     \textcolor{stringliteral}{"trajectory\_startpoint"}: 0.0,}
+\DoxyCodeLine{11     \textcolor{stringliteral}{"trajectory\_endpoint"}:   0.0,}
+\DoxyCodeLine{12     \textcolor{stringliteral}{"ideal\_velocity"}:        0.0,}
+\DoxyCodeLine{13     \textcolor{stringliteral}{"bool\_update\_iv"}:        \textcolor{keyword}{True}}
+\DoxyCodeLine{14 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacepedal__simulation_a60241d4aea32187367516779d5e0e72a}\label{namespacepedal__simulation_a60241d4aea32187367516779d5e0e72a}} 
+\index{pedal\_simulation@{pedal\_simulation}!\_parametersRightAnkle@{\_parametersRightAnkle}}
+\index{\_parametersRightAnkle@{\_parametersRightAnkle}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{\_parametersRightAnkle}{\_parametersRightAnkle}}
+{\footnotesize\ttfamily dictionary pedal\+\_\+simulation.\+\_\+parameters\+Right\+Ankle\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     \textcolor{stringliteral}{"param\_p"}:               1000.0,}
+\DoxyCodeLine{3     \textcolor{stringliteral}{"param\_i"}:               0.0,}
+\DoxyCodeLine{4     \textcolor{stringliteral}{"param\_d"}:               0.0,}
+\DoxyCodeLine{5     \textcolor{stringliteral}{"prev\_pos"}:              0.0,}
+\DoxyCodeLine{6     \textcolor{stringliteral}{"prev\_vel"}:              0.0,}
+\DoxyCodeLine{7     \textcolor{stringliteral}{"prev\_time"}:             0.0,}
+\DoxyCodeLine{8     \textcolor{stringliteral}{"prev\_error"}:            0.0,}
+\DoxyCodeLine{9     \textcolor{stringliteral}{"pos\_error\_integral"}:    0.0,}
+\DoxyCodeLine{10     \textcolor{stringliteral}{"trajectory\_startpoint"}: 0.0,}
+\DoxyCodeLine{11     \textcolor{stringliteral}{"trajectory\_endpoint"}:   0.0,}
+\DoxyCodeLine{12     \textcolor{stringliteral}{"ideal\_velocity"}:        0.0,}
+\DoxyCodeLine{13     \textcolor{stringliteral}{"bool\_update\_iv"}:        \textcolor{keyword}{True}}
+\DoxyCodeLine{14 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacepedal__simulation_a5e2a6f340430b2f768cccd2ee8799462}\label{namespacepedal__simulation_a5e2a6f340430b2f768cccd2ee8799462}} 
+\index{pedal\_simulation@{pedal\_simulation}!\_parametersRightHip@{\_parametersRightHip}}
+\index{\_parametersRightHip@{\_parametersRightHip}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{\_parametersRightHip}{\_parametersRightHip}}
+{\footnotesize\ttfamily dictionary pedal\+\_\+simulation.\+\_\+parameters\+Right\+Hip\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     \textcolor{stringliteral}{"param\_p"}:               1500.0,}
+\DoxyCodeLine{3     \textcolor{stringliteral}{"param\_i"}:               0.05,}
+\DoxyCodeLine{4     \textcolor{stringliteral}{"param\_d"}:               0.0,}
+\DoxyCodeLine{5     \textcolor{stringliteral}{"prev\_pos"}:              0.0,}
+\DoxyCodeLine{6     \textcolor{stringliteral}{"prev\_vel"}:              0.0,}
+\DoxyCodeLine{7     \textcolor{stringliteral}{"prev\_time"}:             0.0,}
+\DoxyCodeLine{8     \textcolor{stringliteral}{"prev\_error"}:            0.0,}
+\DoxyCodeLine{9     \textcolor{stringliteral}{"pos\_error\_integral"}:    0.0,}
+\DoxyCodeLine{10     \textcolor{stringliteral}{"trajectory\_startpoint"}: 0.0,}
+\DoxyCodeLine{11     \textcolor{stringliteral}{"trajectory\_endpoint"}:   0.0,}
+\DoxyCodeLine{12     \textcolor{stringliteral}{"ideal\_velocity"}:        0.0,}
+\DoxyCodeLine{13     \textcolor{stringliteral}{"bool\_update\_iv"}:        \textcolor{keyword}{True}}
+\DoxyCodeLine{14 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacepedal__simulation_aa82056fb0a0641314c28a1e8a73325d5}\label{namespacepedal__simulation_aa82056fb0a0641314c28a1e8a73325d5}} 
+\index{pedal\_simulation@{pedal\_simulation}!\_parametersRightKnee@{\_parametersRightKnee}}
+\index{\_parametersRightKnee@{\_parametersRightKnee}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{\_parametersRightKnee}{\_parametersRightKnee}}
+{\footnotesize\ttfamily dictionary pedal\+\_\+simulation.\+\_\+parameters\+Right\+Knee\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     \textcolor{stringliteral}{"param\_p"}:               2000.0,}
+\DoxyCodeLine{3     \textcolor{stringliteral}{"param\_i"}:               0.05,}
+\DoxyCodeLine{4     \textcolor{stringliteral}{"param\_d"}:               0.0,}
+\DoxyCodeLine{5     \textcolor{stringliteral}{"prev\_pos"}:              0.0,}
+\DoxyCodeLine{6     \textcolor{stringliteral}{"prev\_vel"}:              0.0,}
+\DoxyCodeLine{7     \textcolor{stringliteral}{"prev\_time"}:             0.0,}
+\DoxyCodeLine{8     \textcolor{stringliteral}{"prev\_error"}:            0.0,}
+\DoxyCodeLine{9     \textcolor{stringliteral}{"pos\_error\_integral"}:    0.0,}
+\DoxyCodeLine{10     \textcolor{stringliteral}{"trajectory\_startpoint"}: 0.0,}
+\DoxyCodeLine{11     \textcolor{stringliteral}{"trajectory\_endpoint"}:   0.0,}
+\DoxyCodeLine{12     \textcolor{stringliteral}{"ideal\_velocity"}:        0.0,}
+\DoxyCodeLine{13     \textcolor{stringliteral}{"bool\_update\_iv"}:        \textcolor{keyword}{True}}
+\DoxyCodeLine{14 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacepedal__simulation_a3f5a09536c7fd1d22868f6b4f0d4b463}\label{namespacepedal__simulation_a3f5a09536c7fd1d22868f6b4f0d4b463}} 
+\index{pedal\_simulation@{pedal\_simulation}!ankleTrajectoryLeft@{ankleTrajectoryLeft}}
+\index{ankleTrajectoryLeft@{ankleTrajectoryLeft}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{ankleTrajectoryLeft}{ankleTrajectoryLeft}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation.\+ankle\+Trajectory\+Left = \mbox{[}$\,$\mbox{]}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a1ad9055051bf67d8eb766574be88d5f9}\label{namespacepedal__simulation_a1ad9055051bf67d8eb766574be88d5f9}} 
+\index{pedal\_simulation@{pedal\_simulation}!ankleTrajectoryRight@{ankleTrajectoryRight}}
+\index{ankleTrajectoryRight@{ankleTrajectoryRight}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{ankleTrajectoryRight}{ankleTrajectoryRight}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation.\+ankle\+Trajectory\+Right = \mbox{[}$\,$\mbox{]}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a3a4de9c574500f2527349752b61fd818}\label{namespacepedal__simulation_a3a4de9c574500f2527349752b61fd818}} 
+\index{pedal\_simulation@{pedal\_simulation}!CONTROLLER\_FREQUENCY@{CONTROLLER\_FREQUENCY}}
+\index{CONTROLLER\_FREQUENCY@{CONTROLLER\_FREQUENCY}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{CONTROLLER\_FREQUENCY}{CONTROLLER\_FREQUENCY}}
+{\footnotesize\ttfamily int pedal\+\_\+simulation.\+C\+O\+N\+T\+R\+O\+L\+L\+E\+R\+\_\+\+F\+R\+E\+Q\+U\+E\+N\+CY = 100}
+
+\mbox{\Hypertarget{namespacepedal__simulation_abe8e07684ed66f9eb97c465a534b3100}\label{namespacepedal__simulation_abe8e07684ed66f9eb97c465a534b3100}} 
+\index{pedal\_simulation@{pedal\_simulation}!hipTrajectoryLeft@{hipTrajectoryLeft}}
+\index{hipTrajectoryLeft@{hipTrajectoryLeft}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{hipTrajectoryLeft}{hipTrajectoryLeft}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation.\+hip\+Trajectory\+Left = \mbox{[}$\,$\mbox{]}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a8203cc4243bfe20af84c0116c8cda802}\label{namespacepedal__simulation_a8203cc4243bfe20af84c0116c8cda802}} 
+\index{pedal\_simulation@{pedal\_simulation}!hipTrajectoryRight@{hipTrajectoryRight}}
+\index{hipTrajectoryRight@{hipTrajectoryRight}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{hipTrajectoryRight}{hipTrajectoryRight}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation.\+hip\+Trajectory\+Right = \mbox{[}$\,$\mbox{]}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_adb56d67efb49b0725d77e8d179881ef7}\label{namespacepedal__simulation_adb56d67efb49b0725d77e8d179881ef7}} 
+\index{pedal\_simulation@{pedal\_simulation}!INIT@{INIT}}
+\index{INIT@{INIT}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{INIT}{INIT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation.\+I\+N\+IT = \char`\"{}I\+N\+IT\char`\"{}}
+
+
+
+S\+T\+A\+TE M\+A\+C\+H\+I\+NE \#\#\#. 
+
+\mbox{\Hypertarget{namespacepedal__simulation_a4cd59087b814eb188e34704ca32b3551}\label{namespacepedal__simulation_a4cd59087b814eb188e34704ca32b3551}} 
+\index{pedal\_simulation@{pedal\_simulation}!JOINT\_TRAJECTORY\_ERROR\_TOLERANCE@{JOINT\_TRAJECTORY\_ERROR\_TOLERANCE}}
+\index{JOINT\_TRAJECTORY\_ERROR\_TOLERANCE@{JOINT\_TRAJECTORY\_ERROR\_TOLERANCE}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{JOINT\_TRAJECTORY\_ERROR\_TOLERANCE}{JOINT\_TRAJECTORY\_ERROR\_TOLERANCE}}
+{\footnotesize\ttfamily float pedal\+\_\+simulation.\+J\+O\+I\+N\+T\+\_\+\+T\+R\+A\+J\+E\+C\+T\+O\+R\+Y\+\_\+\+E\+R\+R\+O\+R\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE = 0.\+02}
+
+\mbox{\Hypertarget{namespacepedal__simulation_af59bc3c310f46fbe45dc3772c0ad1a9c}\label{namespacepedal__simulation_af59bc3c310f46fbe45dc3772c0ad1a9c}} 
+\index{pedal\_simulation@{pedal\_simulation}!JOINT\_VELOCITY\_FACTOR@{JOINT\_VELOCITY\_FACTOR}}
+\index{JOINT\_VELOCITY\_FACTOR@{JOINT\_VELOCITY\_FACTOR}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{JOINT\_VELOCITY\_FACTOR}{JOINT\_VELOCITY\_FACTOR}}
+{\footnotesize\ttfamily int pedal\+\_\+simulation.\+J\+O\+I\+N\+T\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y\+\_\+\+F\+A\+C\+T\+OR = 1000}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a70a2d946d5cdbbc879ebdfa02ae32ba7}\label{namespacepedal__simulation_a70a2d946d5cdbbc879ebdfa02ae32ba7}} 
+\index{pedal\_simulation@{pedal\_simulation}!kneeTrajectoryLeft@{kneeTrajectoryLeft}}
+\index{kneeTrajectoryLeft@{kneeTrajectoryLeft}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{kneeTrajectoryLeft}{kneeTrajectoryLeft}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation.\+knee\+Trajectory\+Left = \mbox{[}$\,$\mbox{]}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a917db9bbb8bc8e0577bf0a84ab41f58a}\label{namespacepedal__simulation_a917db9bbb8bc8e0577bf0a84ab41f58a}} 
+\index{pedal\_simulation@{pedal\_simulation}!kneeTrajectoryRight@{kneeTrajectoryRight}}
+\index{kneeTrajectoryRight@{kneeTrajectoryRight}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{kneeTrajectoryRight}{kneeTrajectoryRight}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation.\+knee\+Trajectory\+Right = \mbox{[}$\,$\mbox{]}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_ab65f757e695ae70c2659ce5fe3eeef5d}\label{namespacepedal__simulation_ab65f757e695ae70c2659ce5fe3eeef5d}} 
+\index{pedal\_simulation@{pedal\_simulation}!LEFT\_ANKLE\_JOINT@{LEFT\_ANKLE\_JOINT}}
+\index{LEFT\_ANKLE\_JOINT@{LEFT\_ANKLE\_JOINT}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{LEFT\_ANKLE\_JOINT}{LEFT\_ANKLE\_JOINT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation.\+L\+E\+F\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+J\+O\+I\+NT = \char`\"{}left\+\_\+ankle\char`\"{}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a5ff646330c3b18de13c02db035719f48}\label{namespacepedal__simulation_a5ff646330c3b18de13c02db035719f48}} 
+\index{pedal\_simulation@{pedal\_simulation}!LEFT\_HIP\_JOINT@{LEFT\_HIP\_JOINT}}
+\index{LEFT\_HIP\_JOINT@{LEFT\_HIP\_JOINT}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{LEFT\_HIP\_JOINT}{LEFT\_HIP\_JOINT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation.\+L\+E\+F\+T\+\_\+\+H\+I\+P\+\_\+\+J\+O\+I\+NT = \char`\"{}left\+\_\+hip\char`\"{}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a2e12c9299a343186db2633fc43b777c8}\label{namespacepedal__simulation_a2e12c9299a343186db2633fc43b777c8}} 
+\index{pedal\_simulation@{pedal\_simulation}!LEFT\_KNEE\_JOINT@{LEFT\_KNEE\_JOINT}}
+\index{LEFT\_KNEE\_JOINT@{LEFT\_KNEE\_JOINT}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{LEFT\_KNEE\_JOINT}{LEFT\_KNEE\_JOINT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation.\+L\+E\+F\+T\+\_\+\+K\+N\+E\+E\+\_\+\+J\+O\+I\+NT = \char`\"{}left\+\_\+knee\char`\"{}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a6dc3554f4d28fc17e85b0186c18e1aed}\label{namespacepedal__simulation_a6dc3554f4d28fc17e85b0186c18e1aed}} 
+\index{pedal\_simulation@{pedal\_simulation}!MAX\_JOINT\_VEL@{MAX\_JOINT\_VEL}}
+\index{MAX\_JOINT\_VEL@{MAX\_JOINT\_VEL}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{MAX\_JOINT\_VEL}{MAX\_JOINT\_VEL}}
+{\footnotesize\ttfamily int pedal\+\_\+simulation.\+M\+A\+X\+\_\+\+J\+O\+I\+N\+T\+\_\+\+V\+EL = 500}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a5624f376e95c012680219818f9b76cd5}\label{namespacepedal__simulation_a5624f376e95c012680219818f9b76cd5}} 
+\index{pedal\_simulation@{pedal\_simulation}!MIN\_JOINT\_VEL@{MIN\_JOINT\_VEL}}
+\index{MIN\_JOINT\_VEL@{MIN\_JOINT\_VEL}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{MIN\_JOINT\_VEL}{MIN\_JOINT\_VEL}}
+{\footnotesize\ttfamily int pedal\+\_\+simulation.\+M\+I\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+V\+EL = -\/500}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a1ece2e2b30d10ccc34c2f26508791e20}\label{namespacepedal__simulation_a1ece2e2b30d10ccc34c2f26508791e20}} 
+\index{pedal\_simulation@{pedal\_simulation}!numTrajectoryPoints@{numTrajectoryPoints}}
+\index{numTrajectoryPoints@{numTrajectoryPoints}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{numTrajectoryPoints}{numTrajectoryPoints}}
+{\footnotesize\ttfamily int pedal\+\_\+simulation.\+num\+Trajectory\+Points = -\/1}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a30639c182756f273383e09a638279670}\label{namespacepedal__simulation_a30639c182756f273383e09a638279670}} 
+\index{pedal\_simulation@{pedal\_simulation}!PEDAL@{PEDAL}}
+\index{PEDAL@{PEDAL}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{PEDAL}{PEDAL}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation.\+P\+E\+D\+AL = \char`\"{}P\+E\+D\+AL\char`\"{}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_aec7366c58850a21df44793bed8baf7a7}\label{namespacepedal__simulation_aec7366c58850a21df44793bed8baf7a7}} 
+\index{pedal\_simulation@{pedal\_simulation}!PEDAL\_POSITION\_ERROR\_TOLERANCE@{PEDAL\_POSITION\_ERROR\_TOLERANCE}}
+\index{PEDAL\_POSITION\_ERROR\_TOLERANCE@{PEDAL\_POSITION\_ERROR\_TOLERANCE}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{PEDAL\_POSITION\_ERROR\_TOLERANCE}{PEDAL\_POSITION\_ERROR\_TOLERANCE}}
+{\footnotesize\ttfamily float pedal\+\_\+simulation.\+P\+E\+D\+A\+L\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+\_\+\+E\+R\+R\+O\+R\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE = 0.\+02}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a022ae99e41a08e94aedea21ff43734cc}\label{namespacepedal__simulation_a022ae99e41a08e94aedea21ff43734cc}} 
+\index{pedal\_simulation@{pedal\_simulation}!PEDAL\_SINGLE\_ROTATION\_DURATION@{PEDAL\_SINGLE\_ROTATION\_DURATION}}
+\index{PEDAL\_SINGLE\_ROTATION\_DURATION@{PEDAL\_SINGLE\_ROTATION\_DURATION}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{PEDAL\_SINGLE\_ROTATION\_DURATION}{PEDAL\_SINGLE\_ROTATION\_DURATION}}
+{\footnotesize\ttfamily int pedal\+\_\+simulation.\+P\+E\+D\+A\+L\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+R\+O\+T\+A\+T\+I\+O\+N\+\_\+\+D\+U\+R\+A\+T\+I\+ON = 20}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a12e73e8d9659f2c2cc7a34402adc9698}\label{namespacepedal__simulation_a12e73e8d9659f2c2cc7a34402adc9698}} 
+\index{pedal\_simulation@{pedal\_simulation}!pedalTrajectoryLeft@{pedalTrajectoryLeft}}
+\index{pedalTrajectoryLeft@{pedalTrajectoryLeft}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{pedalTrajectoryLeft}{pedalTrajectoryLeft}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation.\+pedal\+Trajectory\+Left = \mbox{[}$\,$\mbox{]}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_ac6c7d66bbded17d43bfbac519fd74972}\label{namespacepedal__simulation_ac6c7d66bbded17d43bfbac519fd74972}} 
+\index{pedal\_simulation@{pedal\_simulation}!pedalTrajectoryRight@{pedalTrajectoryRight}}
+\index{pedalTrajectoryRight@{pedalTrajectoryRight}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{pedalTrajectoryRight}{pedalTrajectoryRight}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation.\+pedal\+Trajectory\+Right = \mbox{[}$\,$\mbox{]}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_ac01ec3a6a2b3bfa546ca8317b4064fd7}\label{namespacepedal__simulation_ac01ec3a6a2b3bfa546ca8317b4064fd7}} 
+\index{pedal\_simulation@{pedal\_simulation}!PRINT\_DEBUG@{PRINT\_DEBUG}}
+\index{PRINT\_DEBUG@{PRINT\_DEBUG}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{PRINT\_DEBUG}{PRINT\_DEBUG}}
+{\footnotesize\ttfamily bool pedal\+\_\+simulation.\+P\+R\+I\+N\+T\+\_\+\+D\+E\+B\+UG = True}
+
+
+
+M\+O\+D\+U\+LE P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#. 
+
+\mbox{\Hypertarget{namespacepedal__simulation_a8090f9acb65db197227394489b01e764}\label{namespacepedal__simulation_a8090f9acb65db197227394489b01e764}} 
+\index{pedal\_simulation@{pedal\_simulation}!RECORDED\_TRAJECTORY\_FILENAME@{RECORDED\_TRAJECTORY\_FILENAME}}
+\index{RECORDED\_TRAJECTORY\_FILENAME@{RECORDED\_TRAJECTORY\_FILENAME}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{RECORDED\_TRAJECTORY\_FILENAME}{RECORDED\_TRAJECTORY\_FILENAME}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation.\+R\+E\+C\+O\+R\+D\+E\+D\+\_\+\+T\+R\+A\+J\+E\+C\+T\+O\+R\+Y\+\_\+\+F\+I\+L\+E\+N\+A\+ME = \char`\"{}capture\+\_\+trajectory/desember\+\_\+pedal\+\_\+trajectory.\+json\char`\"{}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a277daee547841cc41def2598a8beb6f1}\label{namespacepedal__simulation_a277daee547841cc41def2598a8beb6f1}} 
+\index{pedal\_simulation@{pedal\_simulation}!RIGHT\_ANKLE\_JOINT@{RIGHT\_ANKLE\_JOINT}}
+\index{RIGHT\_ANKLE\_JOINT@{RIGHT\_ANKLE\_JOINT}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{RIGHT\_ANKLE\_JOINT}{RIGHT\_ANKLE\_JOINT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation.\+R\+I\+G\+H\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+J\+O\+I\+NT = \char`\"{}right\+\_\+ankle\char`\"{}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a90d2f00ff0e334bc02f23bcd4b540d8c}\label{namespacepedal__simulation_a90d2f00ff0e334bc02f23bcd4b540d8c}} 
+\index{pedal\_simulation@{pedal\_simulation}!RIGHT\_HIP\_JOINT@{RIGHT\_HIP\_JOINT}}
+\index{RIGHT\_HIP\_JOINT@{RIGHT\_HIP\_JOINT}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{RIGHT\_HIP\_JOINT}{RIGHT\_HIP\_JOINT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation.\+R\+I\+G\+H\+T\+\_\+\+H\+I\+P\+\_\+\+J\+O\+I\+NT = \char`\"{}right\+\_\+hip\char`\"{}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a28d4609f3a19f8e565ae3548ef73f990}\label{namespacepedal__simulation_a28d4609f3a19f8e565ae3548ef73f990}} 
+\index{pedal\_simulation@{pedal\_simulation}!RIGHT\_KNEE\_JOINT@{RIGHT\_KNEE\_JOINT}}
+\index{RIGHT\_KNEE\_JOINT@{RIGHT\_KNEE\_JOINT}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{RIGHT\_KNEE\_JOINT}{RIGHT\_KNEE\_JOINT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation.\+R\+I\+G\+H\+T\+\_\+\+K\+N\+E\+E\+\_\+\+J\+O\+I\+NT = \char`\"{}right\+\_\+knee\char`\"{}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a402a36b90d4ebf203bc19976ec7d52c6}\label{namespacepedal__simulation_a402a36b90d4ebf203bc19976ec7d52c6}} 
+\index{pedal\_simulation@{pedal\_simulation}!ROS\_JOINT\_ANKLE\_LEFT@{ROS\_JOINT\_ANKLE\_LEFT}}
+\index{ROS\_JOINT\_ANKLE\_LEFT@{ROS\_JOINT\_ANKLE\_LEFT}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{ROS\_JOINT\_ANKLE\_LEFT}{ROS\_JOINT\_ANKLE\_LEFT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation.\+R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+L\+E\+FT = \char`\"{}joint\+\_\+foot\+\_\+left\char`\"{}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a091f63fe58d9a41b150f5029e548f08f}\label{namespacepedal__simulation_a091f63fe58d9a41b150f5029e548f08f}} 
+\index{pedal\_simulation@{pedal\_simulation}!ROS\_JOINT\_ANKLE\_RIGHT@{ROS\_JOINT\_ANKLE\_RIGHT}}
+\index{ROS\_JOINT\_ANKLE\_RIGHT@{ROS\_JOINT\_ANKLE\_RIGHT}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{ROS\_JOINT\_ANKLE\_RIGHT}{ROS\_JOINT\_ANKLE\_RIGHT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation.\+R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+R\+I\+G\+HT = \char`\"{}joint\+\_\+foot\+\_\+right\char`\"{}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a6caf046a25da8884a3feed405121b7db}\label{namespacepedal__simulation_a6caf046a25da8884a3feed405121b7db}} 
+\index{pedal\_simulation@{pedal\_simulation}!ROS\_JOINT\_HIP\_LEFT@{ROS\_JOINT\_HIP\_LEFT}}
+\index{ROS\_JOINT\_HIP\_LEFT@{ROS\_JOINT\_HIP\_LEFT}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{ROS\_JOINT\_HIP\_LEFT}{ROS\_JOINT\_HIP\_LEFT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation.\+R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+H\+I\+P\+\_\+\+L\+E\+FT = \char`\"{}joint\+\_\+hip\+\_\+left\char`\"{}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_aa2d21a54aac1c1e059d8a17050ddfed4}\label{namespacepedal__simulation_aa2d21a54aac1c1e059d8a17050ddfed4}} 
+\index{pedal\_simulation@{pedal\_simulation}!ROS\_JOINT\_HIP\_RIGHT@{ROS\_JOINT\_HIP\_RIGHT}}
+\index{ROS\_JOINT\_HIP\_RIGHT@{ROS\_JOINT\_HIP\_RIGHT}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{ROS\_JOINT\_HIP\_RIGHT}{ROS\_JOINT\_HIP\_RIGHT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation.\+R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+H\+I\+P\+\_\+\+R\+I\+G\+HT = \char`\"{}joint\+\_\+hip\+\_\+right\char`\"{}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_ada493a22ef9aa6120fb10a58db55e10d}\label{namespacepedal__simulation_ada493a22ef9aa6120fb10a58db55e10d}} 
+\index{pedal\_simulation@{pedal\_simulation}!ROS\_JOINT\_KNEE\_LEFT@{ROS\_JOINT\_KNEE\_LEFT}}
+\index{ROS\_JOINT\_KNEE\_LEFT@{ROS\_JOINT\_KNEE\_LEFT}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{ROS\_JOINT\_KNEE\_LEFT}{ROS\_JOINT\_KNEE\_LEFT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation.\+R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+K\+N\+E\+E\+\_\+\+L\+E\+FT = \char`\"{}joint\+\_\+knee\+\_\+left\char`\"{}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_ad8c24ef49f1c476e1ad8be5bc4d1c710}\label{namespacepedal__simulation_ad8c24ef49f1c476e1ad8be5bc4d1c710}} 
+\index{pedal\_simulation@{pedal\_simulation}!ROS\_JOINT\_KNEE\_RIGHT@{ROS\_JOINT\_KNEE\_RIGHT}}
+\index{ROS\_JOINT\_KNEE\_RIGHT@{ROS\_JOINT\_KNEE\_RIGHT}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{ROS\_JOINT\_KNEE\_RIGHT}{ROS\_JOINT\_KNEE\_RIGHT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation.\+R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+K\+N\+E\+E\+\_\+\+R\+I\+G\+HT = \char`\"{}joint\+\_\+knee\+\_\+right\char`\"{}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_ad6251b69f5c7d2a8f1a3d765bb1ce37b}\label{namespacepedal__simulation_ad6251b69f5c7d2a8f1a3d765bb1ce37b}} 
+\index{pedal\_simulation@{pedal\_simulation}!TRAJECTORY\_POINT\_DURATION@{TRAJECTORY\_POINT\_DURATION}}
+\index{TRAJECTORY\_POINT\_DURATION@{TRAJECTORY\_POINT\_DURATION}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{TRAJECTORY\_POINT\_DURATION}{TRAJECTORY\_POINT\_DURATION}}
+{\footnotesize\ttfamily int pedal\+\_\+simulation.\+T\+R\+A\+J\+E\+C\+T\+O\+R\+Y\+\_\+\+P\+O\+I\+N\+T\+\_\+\+D\+U\+R\+A\+T\+I\+ON = 1}
+
+\mbox{\Hypertarget{namespacepedal__simulation_ad7731301036c8b6b468b20d1b5aaed21}\label{namespacepedal__simulation_ad7731301036c8b6b468b20d1b5aaed21}} 
+\index{pedal\_simulation@{pedal\_simulation}!trajectoryStartingPoint@{trajectoryStartingPoint}}
+\index{trajectoryStartingPoint@{trajectoryStartingPoint}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{trajectoryStartingPoint}{trajectoryStartingPoint}}
+{\footnotesize\ttfamily int pedal\+\_\+simulation.\+trajectory\+Starting\+Point = 0}
+
+\mbox{\Hypertarget{namespacepedal__simulation_aad3596794738ffb413aee3addc42fa95}\label{namespacepedal__simulation_aad3596794738ffb413aee3addc42fa95}} 
+\index{pedal\_simulation@{pedal\_simulation}!UPDATE\_PARAMETERS@{UPDATE\_PARAMETERS}}
+\index{UPDATE\_PARAMETERS@{UPDATE\_PARAMETERS}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{UPDATE\_PARAMETERS}{UPDATE\_PARAMETERS}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation.\+U\+P\+D\+A\+T\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+RS = \char`\"{}U\+P\+D\+A\+T\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+RS\char`\"{}}
+
+\mbox{\Hypertarget{namespacepedal__simulation_a85aede234b0b86c615af4f9d73a3d148}\label{namespacepedal__simulation_a85aede234b0b86c615af4f9d73a3d148}} 
+\index{pedal\_simulation@{pedal\_simulation}!x\_pedal\_record@{x\_pedal\_record}}
+\index{x\_pedal\_record@{x\_pedal\_record}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{x\_pedal\_record}{x\_pedal\_record}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation.\+x\+\_\+pedal\+\_\+record = \mbox{[}$\,$\mbox{]}}
+
+
+
+G\+L\+O\+B\+AL V\+A\+R\+I\+A\+B\+L\+ES \#\#\#. 
+
+\mbox{\Hypertarget{namespacepedal__simulation_ad56ea447f391114ab2b382becbe2bc59}\label{namespacepedal__simulation_ad56ea447f391114ab2b382becbe2bc59}} 
+\index{pedal\_simulation@{pedal\_simulation}!y\_pedal\_record@{y\_pedal\_record}}
+\index{y\_pedal\_record@{y\_pedal\_record}!pedal\_simulation@{pedal\_simulation}}
+\subsubsection{\texorpdfstring{y\_pedal\_record}{y\_pedal\_record}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation.\+y\+\_\+pedal\+\_\+record = \mbox{[}$\,$\mbox{]}}
+
