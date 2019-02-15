@@ -286,13 +286,13 @@ int main(int argc, char *argv[]) {
     MsjPlatform **ptr = NULL;
     ptr = new MsjPlatform *[workers];
 
-    for(int id = 1; id < workers+1; id++)
-        ptr[id] = new MsjPlatform(urdf, cardsflow_xml, id, workers);
+    for(int id = 0; id < workers; id++)
+        ptr[id] = new MsjPlatform(urdf, cardsflow_xml, id+1, workers);
 
     ROS_INFO("STARTING ROBOT MAIN LOOP...");
 
     ros::waitForShutdown();
-    for(int id = 1; id < workers+1; id++)
+    for(int id = 0; id < workers; id++)
         delete [] ptr[id];
     delete [] ptr;
 
