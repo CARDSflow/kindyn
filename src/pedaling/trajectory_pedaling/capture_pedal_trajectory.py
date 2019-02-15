@@ -97,7 +97,7 @@ def getPositionLeftFoot():
         return [fk_result.pose.position.x, fk_result.pose.position.z]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
 
     print("ERROR fk foot_left failed")
     return [0.0, 0.0]  # [x, z]
@@ -114,7 +114,7 @@ def getPositionRightFoot():
         return [fk_result.pose.position.x, fk_result.pose.position.z]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
 
     print("ERROR fk foot_right failed")
     return [0.0, 0.0]  # [x, z]
@@ -390,7 +390,7 @@ def main():
         print("ik result fetched for foot_right_tip")
         jointAngleResult_left = inverse_kinematics_client(endeffector_left, frame_left, thisX + BIKE_OFFSET_X, y_offset_left + BIKE_OFFSET_Y, thisZ + BIKE_OFFSET_Z)
         print("ik result fetched for foot_left_tip")
-        if (jointAngleResult_right and jointAngleResult_left):
+        if jointAngleResult_right and jointAngleResult_left:
             jointAngleDict["point_"+str(pointIter)] = {}
             jointAngleDict["point_"+str(pointIter)]["Left"] = {}
             jointAngleDict["point_"+str(pointIter)]["Right"] = {}
@@ -415,22 +415,22 @@ def main():
             ros_left_ankle_publisher.publish(jointAngleResult_left["joint_foot_left"])
             print("Target angles published")
 
-            while ( abs(_jointsStatusData[RIGHT_HIP_JOINT]["Pos"] - jointAngleResult_right["joint_hip_right"]) > JOINT_ANGLE_TOLERANCE_FK):
+            while abs(_jointsStatusData[RIGHT_HIP_JOINT]["Pos"] - jointAngleResult_right["joint_hip_right"]) > JOINT_ANGLE_TOLERANCE_FK:
                 time.sleep(0.1)
             print("Right hip moved to new position")
-            while ( abs(_jointsStatusData[RIGHT_KNEE_JOINT]["Pos"] - jointAngleResult_right["joint_knee_right"]) > JOINT_ANGLE_TOLERANCE_FK ):
+            while abs(_jointsStatusData[RIGHT_KNEE_JOINT]["Pos"] - jointAngleResult_right["joint_knee_right"]) > JOINT_ANGLE_TOLERANCE_FK:
                 time.sleep(0.1)
             print("Right knee moved to new position")
-            while ( abs(_jointsStatusData[RIGHT_ANKLE_JOINT]["Pos"] - jointAngleResult_right["joint_foot_right"]) > JOINT_ANGLE_TOLERANCE_FK ):
+            while abs(_jointsStatusData[RIGHT_ANKLE_JOINT]["Pos"] - jointAngleResult_right["joint_foot_right"]) > JOINT_ANGLE_TOLERANCE_FK:
                 time.sleep(0.1)
             print("Right ankle moved to new position")
-            while ( abs(_jointsStatusData[LEFT_HIP_JOINT]["Pos"] - jointAngleResult_left["joint_hip_left"]) > JOINT_ANGLE_TOLERANCE_FK ):
+            while abs(_jointsStatusData[LEFT_HIP_JOINT]["Pos"] - jointAngleResult_left["joint_hip_left"]) > JOINT_ANGLE_TOLERANCE_FK:
                 time.sleep(0.1)
             print("Left hip moved to new position")
-            while ( abs(_jointsStatusData[LEFT_KNEE_JOINT]["Pos"] - jointAngleResult_left["joint_knee_left"]) > JOINT_ANGLE_TOLERANCE_FK ):
+            while abs(_jointsStatusData[LEFT_KNEE_JOINT]["Pos"] - jointAngleResult_left["joint_knee_left"]) > JOINT_ANGLE_TOLERANCE_FK:
                 time.sleep(0.1)
             print("Left knee moved to new position")
-            while ( abs(_jointsStatusData[LEFT_ANKLE_JOINT]["Pos"] - jointAngleResult_left["joint_foot_left"]) > JOINT_ANGLE_TOLERANCE_FK ):
+            while abs(_jointsStatusData[LEFT_ANKLE_JOINT]["Pos"] - jointAngleResult_left["joint_foot_left"]) > JOINT_ANGLE_TOLERANCE_FK:
                 time.sleep(0.1)
             print("Left ankle moved to new position")
 

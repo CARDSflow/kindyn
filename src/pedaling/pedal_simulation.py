@@ -273,7 +273,7 @@ def importJointTrajectoryRecord():
     del kneeTrajectoryLeft[:]
     del ankleTrajectoryLeft[:]
     for pointIterator in range(numTrajectoryPoints):
-        if ("point_"+str(pointIterator) in loaded_data):
+        if "point_"+str(pointIterator) in loaded_data:
             pedalTrajectoryLeft.append(loaded_data["point_"+str(pointIterator)]["Left"]["Pedal"])
             pedalTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Pedal"])
             hipTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Hip"])
@@ -283,7 +283,7 @@ def importJointTrajectoryRecord():
             kneeTrajectoryLeft.append(loaded_data["point_"+str(pointIterator)]["Left"]["Knee"])
             ankleTrajectoryLeft.append(loaded_data["point_"+str(pointIterator)]["Left"]["Ankle"])
         else:
-            print("WARNING: No point_%s in trajectory" % (pointIterator))
+            print("WARNING: No point_%s in trajectory" % pointIterator)
             numTrajectoryPoints -= 1
 
     if PRINT_DEBUG:
@@ -312,7 +312,7 @@ def getPosition(endeffector, frame):
         return [fk_result.pose.position.x, fk_result.pose.position.z]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
     return [0.0, 0.0]  # [x, z]
 
 
@@ -327,7 +327,7 @@ def getPositionLeftFoot():
         return [fk_result.pose.position.x, fk_result.pose.position.z]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
 
     print("ERROR fk foot_left failed")
     return [0.0, 0.0]  # [x, z]
@@ -344,7 +344,7 @@ def getPositionRightFoot():
         return [fk_result.pose.position.x, fk_result.pose.position.z]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
 
     print("ERROR fk foot_right failed")
     return [0.0, 0.0]  # [x, z]
@@ -430,7 +430,7 @@ def computeVelocitySetpoint(jointName, endPos, startTime, currTime, endTime):
     # SWITCH CONTROL MODE IF STATEMENT IS TRUE (FROM IDEAL VELOCITY TO PID POSITION ERROR)
     if currTime > endTime:  # jointError > JOINT_TRAJECTORY_ERROR_TOLERANCE or
         if PRINT_DEBUG:
-            print("Switching control to PID for joint %s" % (jointName))
+            print("Switching control to PID for joint %s" % jointName)
         _jointsControlData[jointName]["pos_error_integral"] += float(jointError)/CONTROLLER_FREQUENCY
         _jointsControlData[jointName]["prev_time"] = currTime
         _jointsControlData[jointName]["prev_pos"] = currPos
@@ -547,12 +547,12 @@ def FSM():
             if getDistance(getPositionRightFoot(), pedalTrajectoryRight[_currTrajectoryPoint]) <= PEDAL_POSITION_ERROR_TOLERANCE:  # and _currTime >= _endTime
                 # getDistance(getPositionLeftFoot(), pedalTrajectoryLeft[_currTrajectoryPoint]) <= PEDAL_POSITION_ERROR_TOLERANCE and
                 past_initial_trajectory_point = True
-                if (_currTrajectoryPoint < (numTrajectoryPoints-1)):
+                if _currTrajectoryPoint < (numTrajectoryPoints - 1):
                     _currTrajectoryPoint += 1
-                elif (_currTrajectoryPoint >= (numTrajectoryPoints-1)):
+                elif _currTrajectoryPoint >= (numTrajectoryPoints - 1):
                     _currTrajectoryPoint = 0
                 if PRINT_DEBUG:
-                    print("UPDATING TRAJECTORY POINT. NEW POINT: %s" % (_currTrajectoryPoint))
+                    print("UPDATING TRAJECTORY POINT. NEW POINT: %s" % _currTrajectoryPoint)
                 _startTime = time.time()
                 _endTime = _startTime + TRAJECTORY_POINT_DURATION
                 for thisJointName in _jointsList:

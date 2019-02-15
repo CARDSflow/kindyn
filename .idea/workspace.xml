@@ -2,8 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="795ba161-a500-4cad-8415-72852ddd5039" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/kindyn.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/kindyn.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pedaling/pedal_simulation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/pedaling/pedal_simulation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pedaling/pedal_simulation_interpolation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/pedaling/pedal_simulation_interpolation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pedaling/pedal_simulation_interpolation_lennard.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/pedaling/pedal_simulation_interpolation_lennard.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pedaling/pedal_simulation_old_trajectory.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/pedaling/pedal_simulation_old_trajectory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pedaling/tests_pedaling/joint_angle_velocity_factor_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/pedaling/tests_pedaling/joint_angle_velocity_factor_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pedaling/tests_pedaling/velocity_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/pedaling/tests_pedaling/velocity_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pedaling/trajectory_pedaling/capture_pedal_trajectory.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/pedaling/trajectory_pedaling/capture_pedal_trajectory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pedaling/trajectory_pedaling/capture_pedal_trajectory_two_frames.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/pedaling/trajectory_pedaling/capture_pedal_trajectory_two_frames.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/steering/steering_simulation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/steering/steering_simulation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/steering/tests_steering/steering_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/steering/tests_steering/steering_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/steering/trajectory_steering/capture_steering_trajectory.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/steering/trajectory_steering/capture_steering_trajectory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/steering/trajectory_steering/interpolate_multiple_steering.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/steering/trajectory_steering/interpolate_multiple_steering.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/steering/trajectory_steering/interpolate_steering.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/steering/trajectory_steering/interpolate_steering.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/steering/trajectory_steering/multiple_steering_trajectories.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/steering/trajectory_steering/multiple_steering_trajectories.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/steering/trajectory_steering/steering_trajectory_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/steering/trajectory_steering/steering_trajectory_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utilities/interpolation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utilities/interpolation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utilities/state_machine.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utilities/state_machine.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,21 +40,25 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="md" value="1" />
+          <entry key="py" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="Markdown" value="1" />
+          <entry key="Python" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="md" value="853" />
+          <entry key="txt" value="19" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Markdown" value="853" />
+          <entry key="PLAIN_TEXT" value="19" />
         </counts>
       </usages-collector>
     </session>
@@ -44,13 +66,12 @@
   <component name="FileEditorManager">
     <leaf>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/README.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="375">
-                <caret line="25" column="23" lean-forward="true" selection-start-line="25" selection-start-column="23" selection-end-line="25" selection-end-column="23" />
-              </first_editor>
-              <second_editor />
+        <entry file="file://$PROJECT_DIR$/src/pedaling/pedal_simulation_old_trajectory.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-10000">
+              <folding>
+                <element signature="e#22#59#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -64,6 +85,7 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/README.md" />
+        <option value="$PROJECT_DIR$/src/pedaling/pedal_simulation_old_trajectory.py" />
       </list>
     </option>
   </component>
@@ -76,6 +98,23 @@
   <component name="ProjectFrameBounds" fullScreen="true">
     <option name="width" value="1280" />
     <option name="height" value="800" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State />
+          <State>
+            <id>Python</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>PyMandatoryEncodingInspection</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -122,9 +161,16 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.stylelint" value="true" />
+    <property name="node.js.path.for.package.stylelint" value="project" />
+    <property name="node.js.selected.package.stylelint" value="" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Python" />
+  </component>
+  <component name="PyDebuggerOptionsProvider">
+    <option name="mySaveCallSignatures" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -144,6 +190,30 @@
       </list>
     </option>
   </component>
+  <component name="RunManager">
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="kindyn" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -155,19 +225,27 @@
       <option name="presentableId" value="Default" />
       <updated>1550232878193</updated>
     </task>
+    <task id="LOCAL-00001" summary="changed readme">
+      <created>1550234372013</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1550234372013</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24959612" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.31421646" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Python Console" />
+      <window_info active="true" anchor="bottom" id="Inspection Results" visible="true" weight="0.34657535" />
+      <window_info anchor="bottom" id="Python Console" weight="0.32876712" />
       <window_info anchor="bottom" id="Terminal" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -177,6 +255,7 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" x="0" y="0" width="270" height="600" id="Documentation" side_tool="true" visible="true" weight="0.15266559" />
       <window_info anchor="right" id="SciView" />
       <window_info anchor="right" id="Database" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -190,14 +269,27 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="changed readme" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed readme" />
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="375">
-            <caret line="25" column="23" lean-forward="true" selection-start-line="25" selection-start-column="23" selection-end-line="25" selection-end-column="23" />
+            <caret line="25" column="23" selection-start-line="25" selection-start-column="23" selection-end-line="25" selection-end-column="23" />
           </first_editor>
           <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pedaling/pedal_simulation_old_trajectory.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-10000">
+          <folding>
+            <element signature="e#22#59#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

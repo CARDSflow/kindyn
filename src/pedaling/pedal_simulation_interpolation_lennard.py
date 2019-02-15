@@ -295,7 +295,7 @@ def importJointTrajectoryRecord():
     del kneeTrajectoryLeft[ : ]
     del ankleTrajectoryLeft[ : ]
     for pointIterator in range(number_imported_trajectory_points):
-        if ("point_" + str(pointIterator) in loaded_data):
+        if "point_" + str(pointIterator) in loaded_data:
             pedalTrajectoryLeft.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Pedal" ])
             pedalTrajectoryRight.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Pedal" ])
             pedalAngleTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Pedal_angle"])
@@ -306,7 +306,7 @@ def importJointTrajectoryRecord():
             kneeTrajectoryLeft.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Knee" ])
             ankleTrajectoryLeft.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Ankle" ])
         else:
-            print("WARNING: No point_%s in trajectory" % (pointIterator))
+            print("WARNING: No point_%s in trajectory" % pointIterator)
             number_imported_trajectory_points -= 1
 
     if PRINT_DEBUG:
@@ -339,7 +339,7 @@ def getPosition(endeffector, frame):
         return [ fk_result.pose.position.x, fk_result.pose.position.z ]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
     return [ 0.0, 0.0 ]  # [x, z]
 
 def setJointControllerParameters(proportionalVal, derivativeVal):
@@ -367,7 +367,7 @@ def getPositionLeftFoot():
         return [ fk_result.pose.position.x, fk_result.pose.position.z ]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
 
     print("ERROR fk foot_left failed")
     return [ 0.0, 0.0 ]  # [x, z]
@@ -385,7 +385,7 @@ def getPositionRightFoot():
         return [ fk_result.pose.position.x, fk_result.pose.position.z ]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
 
     print("ERROR fk foot_right failed")
     return [ 0.0, 0.0 ]  # [x, z]
@@ -474,22 +474,22 @@ def evaluate_current_angle(current_point):
     current_x = current_point[ 0 ] - PEDAL_CENTER_OFFSET_X
     current_y = current_point[ 1 ] - PEDAL_CENTER_OFFSET_Y
 
-    if (current_x > 0 and current_y > 0):
+    if current_x > 0 and current_y > 0:
         return np.arctan(current_y / current_x)
-    elif (current_x < 0 and current_y > 0):
+    elif current_x < 0 and current_y > 0:
         return np.arctan(current_y / current_x) + np.pi
-    elif (current_x < 0 and current_y < 0):
+    elif current_x < 0 and current_y < 0:
         return np.arctan(current_y / current_x) + np.pi
-    elif (current_x > 0 and current_y < 0):
+    elif current_x > 0 and current_y < 0:
         return np.arctan(current_y / current_x) + 2 * np.pi
 
-    elif (current_x == 0 and current_y > 0):
+    elif current_x == 0 and current_y > 0:
         return np.pi / 2
-    elif (current_x == 0 and current_y < 0):
+    elif current_x == 0 and current_y < 0:
         return np.pi * 3 / 2
-    elif (current_x > 0 and current_y == 0):
+    elif current_x > 0 and current_y == 0:
         return 0
-    elif (current_x < 0 and current_y == 0):
+    elif current_x < 0 and current_y == 0:
         return np.pi
 
 
@@ -613,7 +613,7 @@ def FSM():
             _currState = PEDAL
 
 
-            while(PEDAL_SINGLE_ROTATION_DURATION == 0):
+            while PEDAL_SINGLE_ROTATION_DURATION == 0:
                 pass
                 # wait for velocity != 0
 
@@ -621,7 +621,7 @@ def FSM():
         if _currState == PEDAL:
             ##############################################
 
-            while (PEDAL_SINGLE_ROTATION_DURATION == 0):
+            while PEDAL_SINGLE_ROTATION_DURATION == 0:
                 pass
                 # wait for velocity != 0
 

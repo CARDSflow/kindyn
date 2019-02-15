@@ -222,7 +222,7 @@ def computeSteeringAngles():
     global _steeringAngles
     global NUM_STEERING_ANGLES
 
-    if (NUM_STEERING_ANGLES % 2 == 0):
+    if NUM_STEERING_ANGLES % 2 == 0:
         print("ERROR: NUM_STEERING_ANGLES must be odd number")
         return
 
@@ -272,7 +272,7 @@ def getPositionLeftHand():
         return [fk_result.pose.position.x, fk_result.pose.position.y, fk_result.pose.position.z]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
 
     print("ERROR fk left_hand failed")
     return [0.0, 0.0, 0.0]  # [x, z]
@@ -289,7 +289,7 @@ def getPositionRightHand():
         return [fk_result.pose.position.x, fk_result.pose.position.y, fk_result.pose.position.z]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
 
     print("ERROR fk right_hand failed")
     return [0.0, 0.0, 0.0]  # [x, z]
@@ -343,51 +343,51 @@ def recordActualHandTrajectories(ros_right_shoulder0_publisher, ros_right_should
         ros_right_wrist0_publisher.publish(_regressedWrist0Right(thisSteeringAngle).astype(float))
         ros_right_wrist1_publisher.publish(_regressedWrist1Right(thisSteeringAngle).astype(float))
 
-        while ( abs(_jointsStatusData[JOINT_SHOULDER_AXIS0_LEFT]["Pos"] - _regressedShoulder0Left(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK):
+        while abs(_jointsStatusData[JOINT_SHOULDER_AXIS0_LEFT]["Pos"] - _regressedShoulder0Left(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK:
             time.sleep(0.1)
         print("JOINT_SHOULDER_AXIS0_LEFT moved to new position")
-        while ( abs(_jointsStatusData[JOINT_SHOULDER_AXIS1_LEFT]["Pos"] - _regressedShoulder1Left(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK):
+        while abs(_jointsStatusData[JOINT_SHOULDER_AXIS1_LEFT]["Pos"] - _regressedShoulder1Left(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK:
             time.sleep(0.1)
         print("JOINT_SHOULDER_AXIS1_LEFT moved to new position")
-        while ( abs(_jointsStatusData[JOINT_SHOULDER_AXIS2_LEFT]["Pos"] - _regressedShoulder2Left(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK):
+        while abs(_jointsStatusData[JOINT_SHOULDER_AXIS2_LEFT]["Pos"] - _regressedShoulder2Left(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK:
             time.sleep(0.1)
         print("JOINT_SHOULDER_AXIS2_LEFT moved to new position")
 
-        while ( abs(_jointsStatusData[JOINT_SHOULDER_AXIS0_RIGHT]["Pos"] - _regressedShoulder0Right(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK):
+        while abs(_jointsStatusData[JOINT_SHOULDER_AXIS0_RIGHT]["Pos"] - _regressedShoulder0Right(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK:
             time.sleep(0.1)
         print("JOINT_SHOULDER_AXIS0_RIGHT moved to new position")
-        while ( abs(_jointsStatusData[JOINT_SHOULDER_AXIS1_RIGHT]["Pos"] - _regressedShoulder1Right(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK):
+        while abs(_jointsStatusData[JOINT_SHOULDER_AXIS1_RIGHT]["Pos"] - _regressedShoulder1Right(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK:
             time.sleep(0.1)
         print("JOINT_SHOULDER_AXIS1_RIGHT moved to new position")
-        while ( abs(_jointsStatusData[JOINT_SHOULDER_AXIS2_RIGHT]["Pos"] - _regressedShoulder2Right(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK):
+        while abs(_jointsStatusData[JOINT_SHOULDER_AXIS2_RIGHT]["Pos"] - _regressedShoulder2Right(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK:
             time.sleep(0.1)
         print("JOINT_SHOULDER_AXIS2_RIGHT moved to new position")
 
-        while ( abs(_jointsStatusData[JOINT_ELBOW_ROT0_LEFT]["Pos"] - _regressedElbow0Left(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK):
+        while abs(_jointsStatusData[JOINT_ELBOW_ROT0_LEFT]["Pos"] - _regressedElbow0Left(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK:
             time.sleep(0.1)
         print("JOINT_ELBOW_ROT0_LEFT moved to new position")
-        while ( abs(_jointsStatusData[JOINT_ELBOW_ROT1_LEFT]["Pos"] - _regressedElbow1Left(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK):
+        while abs(_jointsStatusData[JOINT_ELBOW_ROT1_LEFT]["Pos"] - _regressedElbow1Left(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK:
             time.sleep(0.1)
         print("JOINT_ELBOW_ROT1_LEFT moved to new position")
 
-        while ( abs(_jointsStatusData[JOINT_ELBOW_ROT0_RIGHT]["Pos"] - _regressedElbow0Right(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK):
+        while abs(_jointsStatusData[JOINT_ELBOW_ROT0_RIGHT]["Pos"] - _regressedElbow0Right(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK:
             time.sleep(0.1)
         print("JOINT_ELBOW_ROT0_RIGHT moved to new position")
-        while ( abs(_jointsStatusData[JOINT_ELBOW_ROT1_RIGHT]["Pos"] - _regressedElbow1Right(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK):
+        while abs(_jointsStatusData[JOINT_ELBOW_ROT1_RIGHT]["Pos"] - _regressedElbow1Right(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK:
             time.sleep(0.1)
         print("JOINT_ELBOW_ROT1_RIGHT moved to new position")
 
-        while ( abs(_jointsStatusData[JOINT_WRIST_0_LEFT]["Pos"] - _regressedWrist0Left(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK):
+        while abs(_jointsStatusData[JOINT_WRIST_0_LEFT]["Pos"] - _regressedWrist0Left(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK:
             time.sleep(0.1)
         print("JOINT_WRIST_0_LEFT moved to new position")
-        while ( abs(_jointsStatusData[JOINT_WRIST_1_LEFT]["Pos"] - _regressedWrist1Left(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK):
+        while abs(_jointsStatusData[JOINT_WRIST_1_LEFT]["Pos"] - _regressedWrist1Left(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK:
             time.sleep(0.1)
         print("JOINT_WRIST_1_LEFT moved to new position")
 
-        while ( abs(_jointsStatusData[JOINT_WRIST_0_RIGHT]["Pos"] - _regressedWrist0Right(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK):
+        while abs(_jointsStatusData[JOINT_WRIST_0_RIGHT]["Pos"] - _regressedWrist0Right(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK:
             time.sleep(0.1)
         print("JOINT_WRIST_0_RIGHT moved to new position")
-        while ( abs(_jointsStatusData[JOINT_WRIST_1_RIGHT]["Pos"] - _regressedWrist1Right(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK):
+        while abs(_jointsStatusData[JOINT_WRIST_1_RIGHT]["Pos"] - _regressedWrist1Right(thisSteeringAngle).astype(float)) > JOINT_ANGLE_TOLERANCE_FK:
             time.sleep(0.1)
         print("JOINT_WRIST_1_RIGHT moved to new position")
 

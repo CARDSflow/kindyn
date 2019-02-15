@@ -58,7 +58,7 @@ def importJointTrajectoryRecord():
     del kneeTrajectoryLeft[ : ]
     del ankleTrajectoryLeft[ : ]
     for pointIterator in range(number_imported_trajectory_points):
-        if ("point_" + str(pointIterator) in loaded_data):
+        if "point_" + str(pointIterator) in loaded_data:
             pedalTrajectoryLeft.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Pedal" ])
             pedalTrajectoryRight.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Pedal" ])
             pedalAngleTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Pedal_angle"])
@@ -69,7 +69,7 @@ def importJointTrajectoryRecord():
             kneeTrajectoryLeft.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Knee" ])
             ankleTrajectoryLeft.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Ankle" ])
         else:
-            print("WARNING: No point_%s in trajectory" % (pointIterator))
+            print("WARNING: No point_%s in trajectory" % pointIterator)
             number_imported_trajectory_points -= 1
 
     if PRINT_DEBUG:

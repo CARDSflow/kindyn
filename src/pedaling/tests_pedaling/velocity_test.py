@@ -84,7 +84,7 @@ def getPositionLeftFoot():
         return [ fk_result.pose.position.x, fk_result.pose.position.z ]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
 
     print("ERROR fk foot_left failed")
     return [ 0.0, 0.0 ]  # [x, z]
@@ -103,7 +103,7 @@ def getPositionRightFoot():
         return [ fk_result.pose.position.x, fk_result.pose.position.z ]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
 
     print("ERROR fk foot_right failed")
     return [ 0.0, 0.0 ]  # [x, z]
@@ -113,22 +113,22 @@ def evaluate_current_angle(current_point):
     current_x = current_point[ 0 ] - PEDAL_CENTER_OFFSET_X
     current_y = current_point[ 1 ] - PEDAL_CENTER_OFFSET_Y
 
-    if (current_x > 0 and current_y > 0):
+    if current_x > 0 and current_y > 0:
         return np.arctan(current_y / current_x)
-    elif (current_x < 0 and current_y > 0):
+    elif current_x < 0 and current_y > 0:
         return np.arctan(current_y / current_x) + np.pi
-    elif (current_x < 0 and current_y < 0):
+    elif current_x < 0 and current_y < 0:
         return np.arctan(current_y / current_x) + np.pi
-    elif (current_x > 0 and current_y < 0):
+    elif current_x > 0 and current_y < 0:
         return np.arctan(current_y / current_x) + 2 * np.pi
 
-    elif (current_x == 0 and current_y > 0):
+    elif current_x == 0 and current_y > 0:
         return np.pi / 2
-    elif (current_x == 0 and current_y < 0):
+    elif current_x == 0 and current_y < 0:
         return np.pi * 3 / 2
-    elif (current_x > 0 and current_y == 0):
+    elif current_x > 0 and current_y == 0:
         return 0
-    elif (current_x < 0 and current_y == 0):
+    elif current_x < 0 and current_y == 0:
         return np.pi
 
 

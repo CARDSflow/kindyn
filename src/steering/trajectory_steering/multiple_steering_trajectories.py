@@ -163,7 +163,7 @@ def computeSteeringAngles():
     global _steeringAngles
     global NUM_STEERING_ANGLES
 
-    if (NUM_STEERING_ANGLES % 2 == 0):
+    if NUM_STEERING_ANGLES % 2 == 0:
         print("ERROR: NUM_STEERING_ANGLES must be odd number")
         return
 
@@ -213,7 +213,7 @@ def getPositionLeftHand():
         return [fk_result.pose.position.x, fk_result.pose.position.y, fk_result.pose.position.z]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
 
     print("ERROR fk left_hand failed")
     return [0.0, 0.0, 0.0]  # [x, z]
@@ -230,7 +230,7 @@ def getPositionRightHand():
         return [fk_result.pose.position.x, fk_result.pose.position.y, fk_result.pose.position.z]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
 
     print("ERROR fk right_hand failed")
     return [0.0, 0.0, 0.0]  # [x, z]
@@ -336,7 +336,7 @@ def main():
             print("ik result fetched for right hand")
             jointAngleResult_left = inverse_kinematics_client(ENDEFFECTOR_LEFT, FRAME_LEFT, thisLeftHandX, thisLeftHandY, thisLeftHandZ, thisRoll, thisPitch, thisYaw - YAW_LEFT_HAND_OFFSET)
             print("ik result fetched for left hand")
-            if (jointAngleResult_right and jointAngleResult_left):
+            if jointAngleResult_right and jointAngleResult_left:
                 jointAngleDict["point_"+str(pointIter*pointMultiplicityIterator)] = {}
                 jointAngleDict["point_"+str(pointIter*pointMultiplicityIterator)]["Left"]  = {}
                 jointAngleDict["point_"+str(pointIter*pointMultiplicityIterator)]["Right"] = {}
@@ -372,51 +372,51 @@ def main():
                 ros_right_wrist0_publisher.publish(jointAngleResult_right[JOINT_WRIST_0_RIGHT])
                 ros_right_wrist1_publisher.publish(jointAngleResult_right[JOINT_WRIST_1_RIGHT])
 
-                while ( abs(_jointsStatusData[JOINT_SHOULDER_AXIS0_LEFT]["Pos"] - jointAngleResult_left[JOINT_SHOULDER_AXIS0_LEFT]) > JOINT_ANGLE_TOLERANCE_FK):
+                while abs(_jointsStatusData[JOINT_SHOULDER_AXIS0_LEFT]["Pos"] - jointAngleResult_left[JOINT_SHOULDER_AXIS0_LEFT]) > JOINT_ANGLE_TOLERANCE_FK:
                     time.sleep(0.1)
                 print("JOINT_SHOULDER_AXIS0_LEFT moved to new position")
-                while ( abs(_jointsStatusData[JOINT_SHOULDER_AXIS1_LEFT]["Pos"] - jointAngleResult_left[JOINT_SHOULDER_AXIS1_LEFT]) > JOINT_ANGLE_TOLERANCE_FK):
+                while abs(_jointsStatusData[JOINT_SHOULDER_AXIS1_LEFT]["Pos"] - jointAngleResult_left[JOINT_SHOULDER_AXIS1_LEFT]) > JOINT_ANGLE_TOLERANCE_FK:
                     time.sleep(0.1)
                 print("JOINT_SHOULDER_AXIS1_LEFT moved to new position")
-                while ( abs(_jointsStatusData[JOINT_SHOULDER_AXIS2_LEFT]["Pos"] - jointAngleResult_left[JOINT_SHOULDER_AXIS2_LEFT]) > JOINT_ANGLE_TOLERANCE_FK):
+                while abs(_jointsStatusData[JOINT_SHOULDER_AXIS2_LEFT]["Pos"] - jointAngleResult_left[JOINT_SHOULDER_AXIS2_LEFT]) > JOINT_ANGLE_TOLERANCE_FK:
                     time.sleep(0.1)
                 print("JOINT_SHOULDER_AXIS2_LEFT moved to new position")
 
-                while ( abs(_jointsStatusData[JOINT_SHOULDER_AXIS0_RIGHT]["Pos"] - jointAngleResult_right[JOINT_SHOULDER_AXIS0_RIGHT]) > JOINT_ANGLE_TOLERANCE_FK):
+                while abs(_jointsStatusData[JOINT_SHOULDER_AXIS0_RIGHT]["Pos"] - jointAngleResult_right[JOINT_SHOULDER_AXIS0_RIGHT]) > JOINT_ANGLE_TOLERANCE_FK:
                     time.sleep(0.1)
                 print("JOINT_SHOULDER_AXIS0_RIGHT moved to new position")
-                while ( abs(_jointsStatusData[JOINT_SHOULDER_AXIS1_RIGHT]["Pos"] - jointAngleResult_right[JOINT_SHOULDER_AXIS1_RIGHT]) > JOINT_ANGLE_TOLERANCE_FK):
+                while abs(_jointsStatusData[JOINT_SHOULDER_AXIS1_RIGHT]["Pos"] - jointAngleResult_right[JOINT_SHOULDER_AXIS1_RIGHT]) > JOINT_ANGLE_TOLERANCE_FK:
                     time.sleep(0.1)
                 print("JOINT_SHOULDER_AXIS1_RIGHT moved to new position")
-                while ( abs(_jointsStatusData[JOINT_SHOULDER_AXIS2_RIGHT]["Pos"] - jointAngleResult_right[JOINT_SHOULDER_AXIS2_RIGHT]) > JOINT_ANGLE_TOLERANCE_FK):
+                while abs(_jointsStatusData[JOINT_SHOULDER_AXIS2_RIGHT]["Pos"] - jointAngleResult_right[JOINT_SHOULDER_AXIS2_RIGHT]) > JOINT_ANGLE_TOLERANCE_FK:
                     time.sleep(0.1)
                 print("JOINT_SHOULDER_AXIS2_RIGHT moved to new position")
 
-                while ( abs(_jointsStatusData[JOINT_ELBOW_ROT0_LEFT]["Pos"] - jointAngleResult_left[JOINT_ELBOW_ROT0_LEFT]) > JOINT_ANGLE_TOLERANCE_FK):
+                while abs(_jointsStatusData[JOINT_ELBOW_ROT0_LEFT]["Pos"] - jointAngleResult_left[JOINT_ELBOW_ROT0_LEFT]) > JOINT_ANGLE_TOLERANCE_FK:
                     time.sleep(0.1)
                 print("JOINT_ELBOW_ROT0_LEFT moved to new position")
-                while ( abs(_jointsStatusData[JOINT_ELBOW_ROT1_LEFT]["Pos"] - jointAngleResult_left[JOINT_ELBOW_ROT1_LEFT]) > JOINT_ANGLE_TOLERANCE_FK):
+                while abs(_jointsStatusData[JOINT_ELBOW_ROT1_LEFT]["Pos"] - jointAngleResult_left[JOINT_ELBOW_ROT1_LEFT]) > JOINT_ANGLE_TOLERANCE_FK:
                     time.sleep(0.1)
                 print("JOINT_ELBOW_ROT1_LEFT moved to new position")
 
-                while ( abs(_jointsStatusData[JOINT_ELBOW_ROT0_RIGHT]["Pos"] - jointAngleResult_right[JOINT_ELBOW_ROT0_RIGHT]) > JOINT_ANGLE_TOLERANCE_FK):
+                while abs(_jointsStatusData[JOINT_ELBOW_ROT0_RIGHT]["Pos"] - jointAngleResult_right[JOINT_ELBOW_ROT0_RIGHT]) > JOINT_ANGLE_TOLERANCE_FK:
                     time.sleep(0.1)
                 print("JOINT_ELBOW_ROT0_RIGHT moved to new position")
-                while ( abs(_jointsStatusData[JOINT_ELBOW_ROT1_RIGHT]["Pos"] - jointAngleResult_right[JOINT_ELBOW_ROT1_RIGHT]) > JOINT_ANGLE_TOLERANCE_FK):
+                while abs(_jointsStatusData[JOINT_ELBOW_ROT1_RIGHT]["Pos"] - jointAngleResult_right[JOINT_ELBOW_ROT1_RIGHT]) > JOINT_ANGLE_TOLERANCE_FK:
                     time.sleep(0.1)
                 print("JOINT_ELBOW_ROT1_RIGHT moved to new position")
 
-                while ( abs(_jointsStatusData[JOINT_WRIST_0_LEFT]["Pos"] - jointAngleResult_left[JOINT_WRIST_0_LEFT]) > JOINT_ANGLE_TOLERANCE_FK):
+                while abs(_jointsStatusData[JOINT_WRIST_0_LEFT]["Pos"] - jointAngleResult_left[JOINT_WRIST_0_LEFT]) > JOINT_ANGLE_TOLERANCE_FK:
                     time.sleep(0.1)
                 print("JOINT_WRIST_0_LEFT moved to new position")
-                while ( abs(_jointsStatusData[JOINT_WRIST_1_LEFT]["Pos"] - jointAngleResult_left[JOINT_WRIST_1_LEFT]) > JOINT_ANGLE_TOLERANCE_FK):
+                while abs(_jointsStatusData[JOINT_WRIST_1_LEFT]["Pos"] - jointAngleResult_left[JOINT_WRIST_1_LEFT]) > JOINT_ANGLE_TOLERANCE_FK:
                     time.sleep(0.1)
                 print("JOINT_WRIST_1_LEFT moved to new position")
 
-                while ( abs(_jointsStatusData[JOINT_WRIST_0_RIGHT]["Pos"] - jointAngleResult_right[JOINT_WRIST_0_RIGHT]) > JOINT_ANGLE_TOLERANCE_FK):
+                while abs(_jointsStatusData[JOINT_WRIST_0_RIGHT]["Pos"] - jointAngleResult_right[JOINT_WRIST_0_RIGHT]) > JOINT_ANGLE_TOLERANCE_FK:
                     time.sleep(0.1)
                 print("JOINT_WRIST_0_RIGHT moved to new position")
-                while ( abs(_jointsStatusData[JOINT_WRIST_1_RIGHT]["Pos"] - jointAngleResult_right[JOINT_WRIST_1_RIGHT]) > JOINT_ANGLE_TOLERANCE_FK):
+                while abs(_jointsStatusData[JOINT_WRIST_1_RIGHT]["Pos"] - jointAngleResult_right[JOINT_WRIST_1_RIGHT]) > JOINT_ANGLE_TOLERANCE_FK:
                     time.sleep(0.1)
                 print("JOINT_WRIST_1_RIGHT moved to new position")
 

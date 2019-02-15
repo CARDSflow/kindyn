@@ -274,11 +274,11 @@ def FSM():
                 thisJointPos = getJointPosition(thisJointName)
 
                 thisJointPositionGoalpoint = None
-                if ((thisJointName == RIGHT_HIP_JOINT) || (thisJointName == LEFT_HIP_JOINT)):
+                if (thisJointName == RIGHT_HIP_JOINT) || (thisJointName == LEFT_HIP_JOINT):
                     thisJointPositionGoalpoint = _hipTrajectory[_currTrajectoryPoint]
                 else if ((thisJointName == RIGHT_KNEE_JOINT) || (thisJointName == LEFT_KNEE_JOINT)):
                     thisJointPositionGoalpoint = _kneeTrajectory[_currTrajectoryPoint]
-                else if ((thisJointName == RIGHT_ANKLE_JOINT) || (thisJointName == LEFT_ANKLE_JOINT)):
+                else if (thisJointName == RIGHT_ANKLE_JOINT) || (thisJointName == LEFT_ANKLE_JOINT):
                     thisJointPositionGoalpoint = _ankleTrajectory[_currTrajectoryPoint]
 
                 currTime = time.time()

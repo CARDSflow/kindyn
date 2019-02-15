@@ -294,7 +294,7 @@ def import_joint_trajectory_record():
         _numTrajectoryPoints = loaded_data[ "num_points" ]
 
     for pointIterator in range(_numTrajectoryPoints):
-        if ("point_" + str(pointIterator) in loaded_data):
+        if "point_" + str(pointIterator) in loaded_data:
             _trajectorySteering.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Steering_angle" ])
 
             _trajectoryShoulder0Right.append(
@@ -326,7 +326,7 @@ def import_joint_trajectory_record():
             _trajectoryWrist1Left.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ JOINT_WRIST_1_LEFT ])
 
         else:
-            print("WARNING: No point_%s in trajectory" % (pointIterator))
+            print("WARNING: No point_%s in trajectory" % pointIterator)
             _numTrajectoryPoints -= 1
 
     if PRINT_DEBUG:
@@ -491,7 +491,7 @@ def publish_joint_angle(joint_name, steering_angle):
 
         #ADDED THIS FOR FEEDBACK CONTROL
         transition_end_time = time.time() + STEP_TRANSITION_TIME
-        while((time.time() < transition_end_time) and abs(getJointPosition(joint_name) - target_joint_angle) > JOINT_TARGET_ERROR_TOLERANCE):
+        while (time.time() < transition_end_time) and abs(getJointPosition(joint_name) - target_joint_angle) > JOINT_TARGET_ERROR_TOLERANCE:
             time.sleep(0.001)  # Wait
 
         #time.sleep(STEP_TRANSITION_TIME)

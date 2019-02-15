@@ -287,7 +287,7 @@ def importJointTrajectoryRecord():
     del kneeTrajectoryLeft[ : ]
     del ankleTrajectoryLeft[ : ]
     for pointIterator in range(number_imported_trajectory_points):
-        if ("point_" + str(pointIterator) in loaded_data):
+        if "point_" + str(pointIterator) in loaded_data:
             pedalTrajectoryLeft.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Pedal" ])
             pedalTrajectoryRight.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Pedal" ])
             pedalAngleTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Pedal_angle"])
@@ -298,7 +298,7 @@ def importJointTrajectoryRecord():
             kneeTrajectoryLeft.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Knee" ])
             ankleTrajectoryLeft.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Ankle" ])
         else:
-            print("WARNING: No point_%s in trajectory" % (pointIterator))
+            print("WARNING: No point_%s in trajectory" % pointIterator)
             number_imported_trajectory_points -= 1
 
     if PRINT_DEBUG:
@@ -331,7 +331,7 @@ def getPosition(endeffector, frame):
         return [ fk_result.pose.position.x, fk_result.pose.position.z ]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
     return [ 0.0, 0.0 ]  # [x, z]
 
 
@@ -347,7 +347,7 @@ def getPositionLeftFoot():
         return [ fk_result.pose.position.x, fk_result.pose.position.z ]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
 
     print("ERROR fk foot_left failed")
     return [ 0.0, 0.0 ]  # [x, z]
@@ -365,7 +365,7 @@ def getPositionRightFoot():
         return [ fk_result.pose.position.x, fk_result.pose.position.z ]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
 
     print("ERROR fk foot_right failed")
     return [ 0.0, 0.0 ]  # [x, z]
@@ -448,7 +448,7 @@ def computeVelocitySetpoint(jointName, next_joint_angle, current_joint_angle, st
     # SWITCH CONTROL MODE IF STATEMENT IS TRUE (FROM IDEAL VELOCITY TO PID POSITION ERROR)
     if currTime > endTime:  # jointError > JOINT_TRAJECTORY_ERROR_TOLERANCE or
         if PRINT_DEBUG:
-            print("Switching control to PID for joint %s" % (jointName))
+            print("Switching control to PID for joint %s" % jointName)
         _jointsControlData[ jointName ][ "pos_error_integral" ] += float(joint_difference) / CONTROLLER_FREQUENCY
         _jointsControlData[ jointName ][ "prev_time" ] = currTime
         _jointsControlData[ jointName ][ "prev_pos" ] = current_point
@@ -509,22 +509,22 @@ def evaluate_current_angle(current_point):
     print(current_x)
     print(current_y)
 
-    if (current_x > 0 and current_y > 0):
+    if current_x > 0 and current_y > 0:
         return np.arctan(current_y / current_x)
-    elif (current_x < 0 and current_y > 0):
+    elif current_x < 0 and current_y > 0:
         return np.arctan(current_y / current_x) + np.pi
-    elif (current_x < 0 and current_y < 0):
+    elif current_x < 0 and current_y < 0:
         return np.arctan(current_y / current_x) + np.pi
-    elif (current_x > 0 and current_y < 0):
+    elif current_x > 0 and current_y < 0:
         return np.arctan(current_y / current_x) + 2 * np.pi
 
-    elif (current_x == 0 and current_y > 0):
+    elif current_x == 0 and current_y > 0:
         return np.pi / 2
-    elif (current_x == 0 and current_y < 0):
+    elif current_x == 0 and current_y < 0:
         return np.pi * 3 / 2
-    elif (current_x > 0 and current_y == 0):
+    elif current_x > 0 and current_y == 0:
         return 0
-    elif (current_x < 0 and current_y == 0):
+    elif current_x < 0 and current_y == 0:
         return np.pi
 
 
@@ -557,7 +557,7 @@ def publish_velocity(thisJointName, next_joint_angle, current_joint_angle, _star
     begin_time = rospy.get_rostime()
     duration = rospy.Duration(TRAJECTORY_POINT_DURATION)
     end_time = duration + begin_time
-    while (rospy.get_rostime() < end_time):
+    while rospy.get_rostime() < end_time:
         publisher.publish(thisJointVelocitySetpoint * factor)
         rospy.sleep(rospy.Duration(0, 1000000))
 
@@ -607,7 +607,7 @@ def FSM():
     duration = rospy.Duration(20)
     end_time = duration + begin_time
 
-    while (rospy.get_rostime() < end_time):
+    while rospy.get_rostime() < end_time:
         publisher.publish(velocity)
         print (_jointsStatusData[LEFT_HIP_JOINT]["Pos"])
 

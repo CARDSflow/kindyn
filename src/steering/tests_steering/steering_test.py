@@ -141,7 +141,7 @@ def import_joint_trajectory_record():
         _numTrajectoryPoints = loaded_data[ "num_points" ]
 
     for pointIterator in range(_numTrajectoryPoints):
-        if ("point_" + str(pointIterator) in loaded_data):
+        if "point_" + str(pointIterator) in loaded_data:
             _trajectorySteering.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Steering_angle" ])
 
             _trajectoryShoulder0Right.append(
@@ -173,7 +173,7 @@ def import_joint_trajectory_record():
             _trajectoryWrist1Left.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ JOINT_WRIST_1_LEFT ])
 
         else:
-            print("WARNING: No point_%s in trajectory" % (pointIterator))
+            print("WARNING: No point_%s in trajectory" % pointIterator)
             _numTrajectoryPoints -= 1
 
     if PRINT_DEBUG:

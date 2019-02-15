@@ -76,8 +76,6 @@ _parametersRightKnee = {
     "param_p":               2000.0,
     "param_i":               0.05,
     "param_d":               0.0,
-    "prev_pos":              0.0,
-    "prev_pos":              0.0,
     "prev_vel":              0.0,
     "prev_error":            0.0,
     "pos_error_integral":    0.0,
@@ -245,7 +243,7 @@ def importJointTrajectoryRecord():
     del _ankleTrajectoryLeft[:]
 
     for pointIterator in range(_numTrajectoryPoints):
-        if ("point_"+str(pointIterator) in loaded_data):
+        if "point_"+str(pointIterator) in loaded_data:
             _pedalTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Pedal"])
             _pedalAngleTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Pedal_angle"])
             _hipTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Hip"])
@@ -257,7 +255,7 @@ def importJointTrajectoryRecord():
             _kneeTrajectoryLeft.append(loaded_data["point_"+str(pointIterator)]["Left"]["Knee"])
             _ankleTrajectoryLeft.append(loaded_data["point_"+str(pointIterator)]["Left"]["Ankle"])
         else:
-            print("WARNING: No point_%s in trajectory" % (pointIterator))
+            print("WARNING: No point_%s in trajectory" % pointIterator)
             _numTrajectoryPoints -= 1
 
     if PRINT_DEBUG:
@@ -286,7 +284,7 @@ def getPositionLeftFoot():
         return [fk_result.pose.position.x, fk_result.pose.position.z]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
 
     print("ERROR fk foot_left failed")
     return [0.0, 0.0]  # [x, z]
@@ -303,7 +301,7 @@ def getPositionRightFoot():
         return [fk_result.pose.position.x, fk_result.pose.position.z]
 
     except rospy.ServiceException, e:
-        print("Service call failed: %s" % (e))
+        print("Service call failed: %s" % e)
 
     print("ERROR fk foot_right failed")
     return [0.0, 0.0]  # [x, z]
@@ -530,12 +528,12 @@ def FSM():
 
             if getDistance(getPositionRightFoot(), _pedalTrajectoryRight[currTrajectoryPoint]) <= PEDAL_POSITION_ERROR_TOLERANCE and getDistance(getPositionLeftFoot(), _pedalTrajectoryLeft[currTrajectoryPoint]) <= PEDAL_POSITION_ERROR_TOLERANCE and currTime >= endTime:
                 pastInitialTrajectoryPoint = True
-                if (currTrajectoryPoint < (_numTrajectoryPoints-1)):
+                if currTrajectoryPoint < (_numTrajectoryPoints - 1):
                     currTrajectoryPoint += 1
-                elif (currTrajectoryPoint >= (_numTrajectoryPoints-1)):
+                elif currTrajectoryPoint >= (_numTrajectoryPoints - 1):
                     currTrajectoryPoint = 0
                 if PRINT_DEBUG:
-                    print("UPDATING TRAJECTORY POINT. NEW POINT: %s" % (currTrajectoryPoint))
+                    print("UPDATING TRAJECTORY POINT. NEW POINT: %s" % currTrajectoryPoint)
                 startTime = time.time()
                 endTime = startTime + _trajectoryPointDuration
                 for thisJointName in _jointsList:
