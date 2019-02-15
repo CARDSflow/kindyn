@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 ## @package steering
 #  Documentation for this module.
@@ -26,11 +25,6 @@ from roboy_simulation_msgs.msg import JointState
 from scipy import interpolate
 from std_msgs.msg import Float32, String
 
-# roslaunch kindyn robot.launch robot_name:=rikshaw start_controllers:='joint_hip_left joint_hip_right joint_wheel_right joint_wheel_back joint_pedal spine_joint joint_wheel_left joint_front joint_pedal_right joint_pedal_left elbow_right_rot1 joint_foot_left joint_knee_right joint_knee_left joint_foot_right left_shoulder_axis0 left_shoulder_axis1 left_shoulder_axis2 elbow_left_rot1 elbow_left_rot0 left_wrist_0 left_wrist_1 right_shoulder_axis0 right_shoulder_axis2 right_shoulder_axis1 elbow_right_rot0 right_wrist_0 right_wrist_1 head_axis0 head_axis1 head_axis2'
-
-#############################
-###   MODULE PARAMETERS   ###
-#############################
 
 PRINT_DEBUG = True
 RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/steering_trajectory.json"
@@ -39,9 +33,6 @@ UPDATE_FREQUENCY = 0.001
 MAX_ANGLE_CHANGE = np.pi / 72
 STEP_TRANSITION_TIME = 2.5
 
-############################
-###   GLOBAL VARIABLES   ###
-############################
 
 JOINT_SHOULDER_AXIS0_RIGHT = "right_shoulder_axis0"
 JOINT_SHOULDER_AXIS1_RIGHT = "right_shoulder_axis1"
@@ -196,10 +187,6 @@ ros_log_error_pub = rospy.Publisher('chatter', String, queue_size=10)
 requested_steering_angle = 0
 angle_change_successful = True
 
-
-##############################
-###   UTILITY FUNCTIONS   ###
-##############################
 
 ## Documentation for a function.
 #
@@ -422,11 +409,6 @@ def set_joint_controller_parameters(proportional_value, derivative_value):
             print("Service call joint_foot_left failed: ", e)
 
 
-#############################
-###   CONTROL FUNCTIONS   ###
-#############################
-
-
 ## Documentation for a function
 #
 #  Updates the global variable @requested_steering_angle when another node publishes a new
@@ -560,6 +542,26 @@ def publish_joint_angle(joint_name, steering_angle):
         pass
 
 
+## Documentation for a function.
+#
+#   Controls the whole steering-process.
+#   Evaluates the target_steering_angles between requested_steering_angle
+#   and current_steering_angle and creates a Thread for every joint-angle
+#   with which is responsible to apply correspondent joint-angle given
+#   current target_steering_angle.
+#
+#   Simplified Pseudo-code:
+#   while requested_steering_angle = current_steering_angle:
+#       sleep()
+#   if angle_difference(requested_steering_angle, current_steering_angle) > max_angle_change
+#       target_steering_angle = current_steering_angle + max_angle_change
+#   else:
+#       target_steering_angle = requested_steering_angle
+#   for joint in joint_list:
+#       Thread.publish_joint_angle(joint_name, target_joint_angle)
+#   for Thread in created_threads:
+#           Thread.join
+#   current_steering_angle = target_steering_angle
 def steering_control():
     rospy.Subscriber("/cmd_steering_angle_rickshaw", Float32, update_steering_angle)
 
@@ -628,11 +630,9 @@ def steering_control():
                 angle_change_successful = True
 
 
-################
-###   MAIN   ###
-################
-
-
+## Documentation for a function
+#
+#  Initializes the Control-Node for Steering and starts Steering-Algorithm.
 def main():
     rospy.init_node('steering_simulation', anonymous=True)
     rospy.Subscriber("joint_state", JointState, jointStateCallback)
