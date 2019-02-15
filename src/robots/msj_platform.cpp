@@ -165,18 +165,19 @@ public:
         VectorXd closestLimit;
         closestLimit.resize(number_of_dofs);
         closestLimit.setZero();
-        double distance = 0.0, smallestDistance = numeric_limits<double>::max();
+
+        double smallestDistance = numeric_limits<double>::max();
 
         for(int i=0; i < limits[0].size(); i++){
             VectorXd jointAngle = Vector2d::Zero(), jointLimits = Vector2d::Zero();
             jointAngle << q0, q1;
             jointLimits << limits[0][i] ,limits[1][i];
-            distance = (jointAngle - jointLimits).norm();
+            double distance = (jointAngle - jointLimits).norm();
             if (distance < smallestDistance){
                 smallestDistance = distance;
                 closestLimit[0] = jointLimits[0];
                 closestLimit[1] = jointLimits[1];
-                closestLimit[2] = q[2];
+                closestLimit[2] = q3;
             }
         }
         return closestLimit;
@@ -241,6 +242,7 @@ public:
                         roboy_simulation_msgs::GymReset::Response &res){
     	//ROS_INFO("Gymreset is called");      
     	integration_time = 0.0;
+
         VectorXd jointAngle, jointVel;
         jointAngle.resize(number_of_dofs);
         jointAngle.setZero();
