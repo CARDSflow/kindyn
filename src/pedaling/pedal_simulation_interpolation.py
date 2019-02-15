@@ -10,12 +10,10 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import interpolate
-from scipy.misc import derivative
 
 import rospy
-from roboy_middleware_msgs.srv import InverseKinematics, ForwardKinematics
+from roboy_middleware_msgs.srv import ForwardKinematics
 from roboy_simulation_msgs.msg import JointState
-from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Float32
 
 

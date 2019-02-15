@@ -1,6 +1,5 @@
 import math
-import sys
-import json
+
 import matplotlib.pyplot as plt
 
 # Program tham computes [x, y, z] coordinates of left and right endeffector for steering movements
@@ -10,7 +9,7 @@ import matplotlib.pyplot as plt
 ###   FUNCTION PARAMETERS   ###
 ###############################
 
-MAX_TURNING_ANGLE = math.pi/6  # [rad]
+MAX_TURNING_ANGLE = math.pi / 6  # [rad]
 NUM_STEERING_ANGLES = 61  # Should be odd number, symmetric about zero value
 
 RIKSHAW_TURN_JOINT_X_OFFSET = 0  # [m]
@@ -32,12 +31,12 @@ _rightHandTrajectory = []
 _leftHandTrajectory = []
 _centerHandlebarTrajectory = []
 
+
 ##############################
 ###   UTILITY FUNCTIONS   ###
 ##############################
 
 def computeSteeringAngles():
-
     global _steeringAngles
 
     numSymmetricSteeringAngles = (NUM_STEERING_ANGLES - 1) / 2
@@ -53,22 +52,26 @@ def computeSteeringAngles():
 
 
 def computeHandTrajectories():
-
     global _steeringAngles
     global _rightHandTrajectory
     global _leftHandTrajectory
     global _centerHandlebarTrajectory
 
     for steeringAngleIterator in range(len(_steeringAngles)):
+        thisCenterPointX = RIKSHAW_TURN_JOINT_X_OFFSET + (
+                HANDLEBAR_X_OFFSET * math.cos(_steeringAngles[steeringAngleIterator]))
+        thisCenterPointY = RIKSHAW_TURN_JOINT_Y_OFFSET + (
+                HANDLEBAR_X_OFFSET * math.sin(_steeringAngles[steeringAngleIterator]))
 
-        thisCenterPointX = RIKSHAW_TURN_JOINT_X_OFFSET + (HANDLEBAR_X_OFFSET * math.cos(_steeringAngles[steeringAngleIterator]))
-        thisCenterPointY = RIKSHAW_TURN_JOINT_Y_OFFSET + (HANDLEBAR_X_OFFSET * math.sin(_steeringAngles[steeringAngleIterator]))
+        thisRightHandPointX = thisCenterPointX + (
+                HAND_Y_OFFSET * math.cos(_steeringAngles[steeringAngleIterator] + (math.pi / 2)))
+        thisRightHandPointY = thisCenterPointY + (
+                HAND_Y_OFFSET * math.sin(_steeringAngles[steeringAngleIterator] + (math.pi / 2)))
 
-        thisRightHandPointX = thisCenterPointX + (HAND_Y_OFFSET * math.cos(_steeringAngles[steeringAngleIterator] + (math.pi / 2)))
-        thisRightHandPointY = thisCenterPointY + (HAND_Y_OFFSET * math.sin(_steeringAngles[steeringAngleIterator] + (math.pi / 2)))
-
-        thisLeftHandPointX = thisCenterPointX + (HAND_Y_OFFSET * math.cos(_steeringAngles[steeringAngleIterator] - (math.pi / 2)))
-        thisLeftHandPointY = thisCenterPointY + (HAND_Y_OFFSET * math.sin(_steeringAngles[steeringAngleIterator] - (math.pi / 2)))
+        thisLeftHandPointX = thisCenterPointX + (
+                HAND_Y_OFFSET * math.cos(_steeringAngles[steeringAngleIterator] - (math.pi / 2)))
+        thisLeftHandPointY = thisCenterPointY + (
+                HAND_Y_OFFSET * math.sin(_steeringAngles[steeringAngleIterator] - (math.pi / 2)))
 
         _centerHandlebarTrajectory.append([thisCenterPointX, thisCenterPointY])
         _rightHandTrajectory.append([thisRightHandPointX, thisRightHandPointY])
@@ -80,7 +83,6 @@ def computeHandTrajectories():
 ################
 
 def main():
-
     global _steeringAngles
     global _rightHandTrajectory
     global _leftHandTrajectory
@@ -91,9 +93,12 @@ def main():
 
     plt.figure(1)
     for steeringAngleIterator in range(len(_steeringAngles)):
-        plt.plot([RIKSHAW_TURN_JOINT_X_OFFSET, _centerHandlebarTrajectory[steeringAngleIterator][0]], [RIKSHAW_TURN_JOINT_Y_OFFSET, _centerHandlebarTrajectory[steeringAngleIterator][1]])
-        plt.plot([_rightHandTrajectory[steeringAngleIterator][0], _leftHandTrajectory[steeringAngleIterator][0]], [_rightHandTrajectory[steeringAngleIterator][1], _leftHandTrajectory[steeringAngleIterator][1]])
-        plt.plot([_rightHandTrajectory[steeringAngleIterator][0], _leftHandTrajectory[steeringAngleIterator][0]], [_rightHandTrajectory[steeringAngleIterator][1], _leftHandTrajectory[steeringAngleIterator][1]], '*')
+        plt.plot([RIKSHAW_TURN_JOINT_X_OFFSET, _centerHandlebarTrajectory[steeringAngleIterator][0]],
+                 [RIKSHAW_TURN_JOINT_Y_OFFSET, _centerHandlebarTrajectory[steeringAngleIterator][1]])
+        plt.plot([_rightHandTrajectory[steeringAngleIterator][0], _leftHandTrajectory[steeringAngleIterator][0]],
+                 [_rightHandTrajectory[steeringAngleIterator][1], _leftHandTrajectory[steeringAngleIterator][1]])
+        plt.plot([_rightHandTrajectory[steeringAngleIterator][0], _leftHandTrajectory[steeringAngleIterator][0]],
+                 [_rightHandTrajectory[steeringAngleIterator][1], _leftHandTrajectory[steeringAngleIterator][1]], '*')
     plt.show()
 
     return 1

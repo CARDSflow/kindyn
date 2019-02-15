@@ -16,7 +16,6 @@ import rospy
 from roboy_middleware_msgs.srv import InverseKinematics, ForwardKinematics
 from roboy_simulation_msgs.msg import JointState
 from roboy_control_msgs.srv import SetControllerParameters
-from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Float32
 
 #############################
@@ -580,8 +579,8 @@ def FSM():
             # Check if trajectory point reached and act accordingly
             if PRINT_DEBUG:
                 print("Distance to target: Right foot %0.5f, left foot %0.5f" % (
-                getDistance(getPositionRightFoot(), _pedalTrajectoryRight[currTrajectoryPoint]),
-                getDistance(getPositionLeftFoot(), _pedalTrajectoryLeft[currTrajectoryPoint])), end='\r')
+                    getDistance(getPositionRightFoot(), _pedalTrajectoryRight[currTrajectoryPoint]),
+                    getDistance(getPositionLeftFoot(), _pedalTrajectoryLeft[currTrajectoryPoint])), end='\r')
 
             if (getDistance(getPositionRightFoot(), _pedalTrajectoryRight[
                 currTrajectoryPoint]) <= PEDAL_POSITION_ERROR_TOLERANCE and getDistance(getPositionLeftFoot(),

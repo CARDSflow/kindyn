@@ -15,7 +15,6 @@ import rospy
 from roboy_middleware_msgs.srv import InverseKinematics, ForwardKinematics
 from roboy_simulation_msgs.msg import JointState
 from roboy_control_msgs.srv import SetControllerParameters
-from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Float32
 
 

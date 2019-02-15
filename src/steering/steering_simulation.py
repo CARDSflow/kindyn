@@ -1,21 +1,19 @@
 #!/usr/bin/env python
 from __future__ import print_function
 
-# roslaunch kindyn robot.launch robot_name:=rikshaw start_controllers:='joint_hip_left joint_hip_right joint_wheel_right joint_wheel_back joint_pedal spine_joint joint_wheel_left joint_front joint_pedal_right joint_pedal_left elbow_right_rot1 joint_foot_left joint_knee_right joint_knee_left joint_foot_right left_shoulder_axis0 left_shoulder_axis1 left_shoulder_axis2 elbow_left_rot1 elbow_left_rot0 left_wrist_0 left_wrist_1 right_shoulder_axis0 right_shoulder_axis2 right_shoulder_axis1 elbow_right_rot0 right_wrist_0 right_wrist_1 head_axis0 head_axis1 head_axis2'
-
-
 import json
 import time
 from threading import Thread
 
-from scipy import interpolate
 import numpy as np
 import numpy.polynomial.polynomial as poly
 import rospy
-from roboy_middleware_msgs.srv import InverseKinematics, ForwardKinematics
-from roboy_simulation_msgs.msg import JointState
 from roboy_control_msgs.srv import SetControllerParameters
+from roboy_simulation_msgs.msg import JointState
+from scipy import interpolate
 from std_msgs.msg import Float32, String
+
+# roslaunch kindyn robot.launch robot_name:=rikshaw start_controllers:='joint_hip_left joint_hip_right joint_wheel_right joint_wheel_back joint_pedal spine_joint joint_wheel_left joint_front joint_pedal_right joint_pedal_left elbow_right_rot1 joint_foot_left joint_knee_right joint_knee_left joint_foot_right left_shoulder_axis0 left_shoulder_axis1 left_shoulder_axis2 elbow_left_rot1 elbow_left_rot0 left_wrist_0 left_wrist_1 right_shoulder_axis0 right_shoulder_axis2 right_shoulder_axis1 elbow_right_rot0 right_wrist_0 right_wrist_1 head_axis0 head_axis1 head_axis2'
 
 #############################
 ###   MODULE PARAMETERS   ###
@@ -51,28 +49,28 @@ JOINT_WRIST_0_LEFT = "left_wrist_0"
 JOINT_WRIST_1_LEFT = "left_wrist_1"
 JOINT_BIKE_FRONT = "joint_front"
 
-_joints_list = [ JOINT_SHOULDER_AXIS0_RIGHT, JOINT_SHOULDER_AXIS1_RIGHT, JOINT_SHOULDER_AXIS2_RIGHT,
-                 JOINT_SHOULDER_AXIS0_LEFT, JOINT_SHOULDER_AXIS1_LEFT, JOINT_SHOULDER_AXIS2_LEFT,
-                 JOINT_ELBOW_ROT0_RIGHT, JOINT_ELBOW_ROT1_RIGHT, JOINT_ELBOW_ROT0_LEFT, JOINT_ELBOW_ROT1_LEFT,
-                 JOINT_WRIST_0_RIGHT, JOINT_WRIST_1_RIGHT, JOINT_WRIST_0_LEFT, JOINT_WRIST_1_LEFT, JOINT_BIKE_FRONT ]
+_joints_list = [JOINT_SHOULDER_AXIS0_RIGHT, JOINT_SHOULDER_AXIS1_RIGHT, JOINT_SHOULDER_AXIS2_RIGHT,
+                JOINT_SHOULDER_AXIS0_LEFT, JOINT_SHOULDER_AXIS1_LEFT, JOINT_SHOULDER_AXIS2_LEFT,
+                JOINT_ELBOW_ROT0_RIGHT, JOINT_ELBOW_ROT1_RIGHT, JOINT_ELBOW_ROT0_LEFT, JOINT_ELBOW_ROT1_LEFT,
+                JOINT_WRIST_0_RIGHT, JOINT_WRIST_1_RIGHT, JOINT_WRIST_0_LEFT, JOINT_WRIST_1_LEFT, JOINT_BIKE_FRONT]
 
 _numTrajectoryPoints = 0
 
-_trajectorySteering = [ ]
-_trajectoryShoulder0Right = [ ]
-_trajectoryShoulder1Right = [ ]
-_trajectoryShoulder2Right = [ ]
-_trajectoryShoulder0Left = [ ]
-_trajectoryShoulder1Left = [ ]
-_trajectoryShoulder2Left = [ ]
-_trajectoryElbow0Right = [ ]
-_trajectoryElbow1Right = [ ]
-_trajectoryElbow0Left = [ ]
-_trajectoryElbow1Left = [ ]
-_trajectoryWrist0Right = [ ]
-_trajectoryWrist1Right = [ ]
-_trajectoryWrist0Left = [ ]
-_trajectoryWrist1Left = [ ]
+_trajectorySteering = []
+_trajectoryShoulder0Right = []
+_trajectoryShoulder1Right = []
+_trajectoryShoulder2Right = []
+_trajectoryShoulder0Left = []
+_trajectoryShoulder1Left = []
+_trajectoryShoulder2Left = []
+_trajectoryElbow0Right = []
+_trajectoryElbow1Right = []
+_trajectoryElbow0Left = []
+_trajectoryElbow1Left = []
+_trajectoryWrist0Right = []
+_trajectoryWrist1Right = []
+_trajectoryWrist0Left = []
+_trajectoryWrist1Left = []
 
 _interpolatedShoulder0Right = None
 _interpolatedShoulder1Right = None
@@ -89,21 +87,20 @@ _interpolatedWrist1Right = None
 _interpolatedWrist0Left = None
 _interpolatedWrist1Left = None
 
-_regressedShoulder0Right  = None
-_regressedShoulder1Right  = None
-_regressedShoulder2Right  = None
-_regressedShoulder0Left   = None
-_regressedShoulder1Left   = None
-_regressedShoulder2Left   = None
-_regressedElbow0Right     = None
-_regressedElbow1Right     = None
-_regressedElbow0Left      = None
-_regressedElbow1Left      = None
-_regressedWrist0Right     = None
-_regressedWrist1Right     = None
-_regressedWrist0Left      = None
-_regressedWrist1Left      = None
-
+_regressedShoulder0Right = None
+_regressedShoulder1Right = None
+_regressedShoulder2Right = None
+_regressedShoulder0Left = None
+_regressedShoulder1Left = None
+_regressedShoulder2Left = None
+_regressedElbow0Right = None
+_regressedElbow1Right = None
+_regressedElbow0Left = None
+_regressedElbow1Left = None
+_regressedWrist0Right = None
+_regressedWrist1Right = None
+_regressedWrist0Left = None
+_regressedWrist1Left = None
 
 _jointsStatusData = {
     JOINT_SHOULDER_AXIS0_RIGHT: {
@@ -184,7 +181,6 @@ ros_left_wrist_1_pub = rospy.Publisher('/left_wrist_1/left_wrist_1/target', Floa
 
 ros_bike_front_pub = rospy.Publisher('/joint_front/joint_front/target', Float32, queue_size=2)
 
-
 ros_log_error_pub = rospy.Publisher('chatter', String, queue_size=10)
 
 requested_steering_angle = 0
@@ -211,7 +207,6 @@ def getJointPosition(jointName):
 
 
 def regressJointPositionsFromFile(filename):
-
     global _trajectorySteering
     global _trajectoryShoulder0Right
     global _trajectoryShoulder1Right
@@ -250,18 +245,18 @@ def regressJointPositionsFromFile(filename):
     _regressedShoulder0Right = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS0_RIGHT])
     _regressedShoulder1Right = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS1_RIGHT])
     _regressedShoulder2Right = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS2_RIGHT])
-    _regressedElbow0Right    = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT0_RIGHT])
-    _regressedElbow1Right    = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT1_RIGHT])
-    _regressedWrist0Right    = poly.Polynomial(loaded_data[JOINT_WRIST_0_RIGHT])
-    _regressedWrist1Right    = poly.Polynomial(loaded_data[JOINT_WRIST_1_RIGHT])
+    _regressedElbow0Right = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT0_RIGHT])
+    _regressedElbow1Right = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT1_RIGHT])
+    _regressedWrist0Right = poly.Polynomial(loaded_data[JOINT_WRIST_0_RIGHT])
+    _regressedWrist1Right = poly.Polynomial(loaded_data[JOINT_WRIST_1_RIGHT])
 
     _regressedShoulder0Left = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS0_LEFT])
     _regressedShoulder1Left = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS1_LEFT])
     _regressedShoulder2Left = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS2_LEFT])
-    _regressedElbow0Left    = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT0_LEFT])
-    _regressedElbow1Left    = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT1_LEFT])
-    _regressedWrist0Left    = poly.Polynomial(loaded_data[JOINT_WRIST_0_LEFT])
-    _regressedWrist1Left    = poly.Polynomial(loaded_data[JOINT_WRIST_1_LEFT])
+    _regressedElbow0Left = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT0_LEFT])
+    _regressedElbow1Left = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT1_LEFT])
+    _regressedWrist0Left = poly.Polynomial(loaded_data[JOINT_WRIST_0_LEFT])
+    _regressedWrist1Left = poly.Polynomial(loaded_data[JOINT_WRIST_1_LEFT])
 
     return 1
 
@@ -288,42 +283,42 @@ def import_joint_trajectory_record():
     with open(RECORDED_TRAJECTORY_FILENAME, "r") as read_file:
         loaded_data = json.load(read_file)
 
-    if loaded_data[ "num_points" ] is None:
+    if loaded_data["num_points"] is None:
         return 0
     else:
-        _numTrajectoryPoints = loaded_data[ "num_points" ]
+        _numTrajectoryPoints = loaded_data["num_points"]
 
     for pointIterator in range(_numTrajectoryPoints):
         if "point_" + str(pointIterator) in loaded_data:
-            _trajectorySteering.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Steering_angle" ])
+            _trajectorySteering.append(loaded_data["point_" + str(pointIterator)]["Right"]["Steering_angle"])
 
             _trajectoryShoulder0Right.append(
-                loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ JOINT_SHOULDER_AXIS0_RIGHT ])
+                loaded_data["point_" + str(pointIterator)]["Right"][JOINT_SHOULDER_AXIS0_RIGHT])
             _trajectoryShoulder1Right.append(
-                loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ JOINT_SHOULDER_AXIS1_RIGHT ])
+                loaded_data["point_" + str(pointIterator)]["Right"][JOINT_SHOULDER_AXIS1_RIGHT])
             _trajectoryShoulder2Right.append(
-                loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ JOINT_SHOULDER_AXIS2_RIGHT ])
+                loaded_data["point_" + str(pointIterator)]["Right"][JOINT_SHOULDER_AXIS2_RIGHT])
             _trajectoryElbow0Right.append(
-                loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ JOINT_ELBOW_ROT0_RIGHT ])
+                loaded_data["point_" + str(pointIterator)]["Right"][JOINT_ELBOW_ROT0_RIGHT])
             _trajectoryElbow1Right.append(
-                loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ JOINT_ELBOW_ROT1_RIGHT ])
+                loaded_data["point_" + str(pointIterator)]["Right"][JOINT_ELBOW_ROT1_RIGHT])
             _trajectoryWrist0Right.append(
-                loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ JOINT_WRIST_0_RIGHT ])
+                loaded_data["point_" + str(pointIterator)]["Right"][JOINT_WRIST_0_RIGHT])
             _trajectoryWrist1Right.append(
-                loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ JOINT_WRIST_1_RIGHT ])
+                loaded_data["point_" + str(pointIterator)]["Right"][JOINT_WRIST_1_RIGHT])
 
             _trajectoryShoulder0Left.append(
-                loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ JOINT_SHOULDER_AXIS0_LEFT ])
+                loaded_data["point_" + str(pointIterator)]["Left"][JOINT_SHOULDER_AXIS0_LEFT])
             _trajectoryShoulder1Left.append(
-                loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ JOINT_SHOULDER_AXIS1_LEFT ])
+                loaded_data["point_" + str(pointIterator)]["Left"][JOINT_SHOULDER_AXIS1_LEFT])
             _trajectoryShoulder2Left.append(
-                loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ JOINT_SHOULDER_AXIS2_LEFT ])
+                loaded_data["point_" + str(pointIterator)]["Left"][JOINT_SHOULDER_AXIS2_LEFT])
             _trajectoryElbow0Left.append(
-                loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ JOINT_ELBOW_ROT0_LEFT ])
+                loaded_data["point_" + str(pointIterator)]["Left"][JOINT_ELBOW_ROT0_LEFT])
             _trajectoryElbow1Left.append(
-                loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ JOINT_ELBOW_ROT1_LEFT ])
-            _trajectoryWrist0Left.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ JOINT_WRIST_0_LEFT ])
-            _trajectoryWrist1Left.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ JOINT_WRIST_1_LEFT ])
+                loaded_data["point_" + str(pointIterator)]["Left"][JOINT_ELBOW_ROT1_LEFT])
+            _trajectoryWrist0Left.append(loaded_data["point_" + str(pointIterator)]["Left"][JOINT_WRIST_0_LEFT])
+            _trajectoryWrist1Left.append(loaded_data["point_" + str(pointIterator)]["Left"][JOINT_WRIST_1_LEFT])
 
         else:
             print("WARNING: No point_%s in trajectory" % pointIterator)
@@ -374,14 +369,13 @@ def get_angle_difference(angle_1, angle_2):
 
 
 def set_joint_controller_parameters(proportional_value, derivative_value):
-
     for thisJointName in _joints_list:
         rospy.wait_for_service(thisJointName + '/' + thisJointName + '/params')
         try:
             joint_srv = rospy.ServiceProxy(thisJointName + '/' + thisJointName + '/params', SetControllerParameters)
             joint_srv(proportional_value, derivative_value)
         except rospy.ServiceException, e:
-            print ("Service call joint_foot_left failed: ", e)
+            print("Service call joint_foot_left failed: ", e)
 
 
 #############################
@@ -481,7 +475,7 @@ def publish_joint_angle(joint_name, steering_angle):
         if joint_name == JOINT_BIKE_FRONT:
             target_joint_angle = steering_angle
         else:
-            #target_joint_angle = f_interpolated(steering_angle)
+            # target_joint_angle = f_interpolated(steering_angle)
             target_joint_angle = f_regressed(steering_angle)
         pub.publish(target_joint_angle)
 
@@ -489,12 +483,13 @@ def publish_joint_angle(joint_name, steering_angle):
             log_msg = "publishing " + str(target_joint_angle) + " to joint: " + joint_name
             print(log_msg)
 
-        #ADDED THIS FOR FEEDBACK CONTROL
+        # ADDED THIS FOR FEEDBACK CONTROL
         transition_end_time = time.time() + STEP_TRANSITION_TIME
-        while (time.time() < transition_end_time) and abs(getJointPosition(joint_name) - target_joint_angle) > JOINT_TARGET_ERROR_TOLERANCE:
+        while (time.time() < transition_end_time) and abs(
+                getJointPosition(joint_name) - target_joint_angle) > JOINT_TARGET_ERROR_TOLERANCE:
             time.sleep(0.001)  # Wait
 
-        #time.sleep(STEP_TRANSITION_TIME)
+        # time.sleep(STEP_TRANSITION_TIME)
 
     else:
         global angle_change_successful
@@ -536,11 +531,11 @@ def steering_control():
                 log_msg = "target_steering_angle = " + str(target_steering_angle)
                 print(log_msg)
 
-            publisher_threads = [ ]
+            publisher_threads = []
             i = 0
             for joint in _joints_list:
                 publisher_threads.append(Thread(target=publish_joint_angle, args=(joint, target_steering_angle)))
-                publisher_threads[ i ].start()
+                publisher_threads[i].start()
                 i += 1
 
             for thread in publisher_threads:
@@ -553,11 +548,11 @@ def steering_control():
                 angle_change_successful = True
 
         else:
-            publisher_threads = [ ]
+            publisher_threads = []
             i = 0
             for joint in _joints_list:
                 publisher_threads.append(Thread(target=publish_joint_angle, args=(joint, requested_steering_angle)))
-                publisher_threads[ i ].start()
+                publisher_threads[i].start()
                 i += 1
 
             for thread in publisher_threads:
