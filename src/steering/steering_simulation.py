@@ -2,7 +2,7 @@
 ## @package steering
 #  Documentation for this module.
 #
-#  Control of Roboys' shoulders, elbows and wrists.
+#  Control of Roboys' shoulders, elbows and wrists for steering.
 #  In order to reach the requested steering-angle we target intermediate points
 #  between the current and the requested steering-angle to ensure Roboys' hands
 #  are following the captured steering-trajectory.
@@ -191,7 +191,7 @@ angle_change_successful = True
 #
 #  This function collects the current status of the joint-angles and saves
 #  them in the global dictionary "_jointStatusData".
-def jointStateCallback(joint_data):
+def joint_state_callback(joint_data):
     global _jointsStatusData
     # Assert order of joints
     for stringIter in range(len(joint_data.names)):
@@ -203,20 +203,20 @@ def jointStateCallback(joint_data):
 ## Documentation for a function.
 #
 #  Returns current position of joint-angle @jointName.     .
-def getJointPosition(jointName):
+def get_joint_position(joint_name):
     global _jointsStatusData
-    return _jointsStatusData[jointName]["Pos"]
+    return _jointsStatusData[joint_name ][ "Pos" ]
 
 
 ## Documentation for a function.
 #
 #  Initializes the interpolation-functions for every joint-angle using regression.
 #  The input value of the function is a steering angle and the output value of the function
-#  the correspondent joint angle.
+#  is the correspondent joint angle.
 #
 #  The functions can be used by calling "<function_name>(<steering_angle>)"
 #  ==> returns <joint_angle>
-def regressJointPositionsFromFile(filename):
+def regress_joint_positions_from_file(filename):
     global _trajectorySteering
     global _trajectoryShoulder0Right
     global _trajectoryShoulder1Right
@@ -530,7 +530,7 @@ def publish_joint_angle(joint_name, steering_angle):
         # ADDED THIS FOR FEEDBACK CONTROL
         transition_end_time = time.time() + STEP_TRANSITION_TIME
         while (time.time() < transition_end_time) and abs(
-                getJointPosition(joint_name) - target_joint_angle) > JOINT_TARGET_ERROR_TOLERANCE:
+                get_joint_position(joint_name) - target_joint_angle) > JOINT_TARGET_ERROR_TOLERANCE:
             time.sleep(0.001)  # Wait
 
         # time.sleep(STEP_TRANSITION_TIME)
@@ -550,16 +550,27 @@ def publish_joint_angle(joint_name, steering_angle):
 #   current target_steering_angle.
 #
 #   Simplified Pseudo-code:
+#
 #   while requested_steering_angle = current_steering_angle:
+#
 #       sleep()
+#
 #   if angle_difference(requested_steering_angle, current_steering_angle) > max_angle_change
+#
 #       target_steering_angle = current_steering_angle + max_angle_change
+#
 #   else:
+#
 #       target_steering_angle = requested_steering_angle
+#
 #   for joint in joint_list:
+#
 #       Thread.publish_joint_angle(joint_name, target_joint_angle)
+#
 #   for Thread in created_threads:
+#
 #           Thread.join
+#
 #   current_steering_angle = target_steering_angle
 def steering_control():
     rospy.Subscriber("/cmd_steering_angle_rickshaw", Float32, update_steering_angle)
@@ -634,13 +645,14 @@ def steering_control():
 #  Initializes the Control-Node for Steering and starts Steering-Algorithm.
 def main():
     rospy.init_node('steering_simulation', anonymous=True)
-    rospy.Subscriber("joint_state", JointState, jointStateCallback)
+    rospy.Subscriber("joint_state", JointState, joint_state_callback)
     import_joint_trajectory_record()
     interpolate_joint_angles()
-    regressJointPositionsFromFile("capture_trajectory/saved_coefficients.json")
+    regress_joint_positions_from_file("capture_trajectory/saved_coefficients.json")
     set_joint_controller_parameters(1000, 0)
     steering_control()
 
 
 if __name__ == '__main__':
     main()
+

@@ -3,11 +3,11 @@
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-def \mbox{\hyperlink{namespacesteering__simulation_a49d8e64bcd7d1221d6de01b9b22bb799}{joint\+State\+Callback}} (joint\+\_\+data)
+def \mbox{\hyperlink{namespacesteering__simulation_a04ebcaad2fa2cbdb0fd13fdb179d0f50}{joint\+\_\+state\+\_\+callback}} (joint\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Documentation for a function. \end{DoxyCompactList}\item 
-def \mbox{\hyperlink{namespacesteering__simulation_a058dbff61afc8af058769267605ffc5a}{get\+Joint\+Position}} (joint\+Name)
+def \mbox{\hyperlink{namespacesteering__simulation_af5611a9446037e0aee0542ebe1c111fc}{get\+\_\+joint\+\_\+position}} (joint\+\_\+name)
 \begin{DoxyCompactList}\small\item\em Documentation for a function. \end{DoxyCompactList}\item 
-def \mbox{\hyperlink{namespacesteering__simulation_a3bdf7d63620ec8e0a63d41324b1cdaa4}{regress\+Joint\+Positions\+From\+File}} (filename)
+def \mbox{\hyperlink{namespacesteering__simulation_af85ca971fcf35d30c3647fb0c3732195}{regress\+\_\+joint\+\_\+positions\+\_\+from\+\_\+file}} (filename)
 \begin{DoxyCompactList}\small\item\em Documentation for a function. \end{DoxyCompactList}\item 
 def \mbox{\hyperlink{namespacesteering__simulation_a628f6027d970db8d4071e5846de522fc}{import\+\_\+joint\+\_\+trajectory\+\_\+record}} ()
 \begin{DoxyCompactList}\small\item\em Documentation for a function. \end{DoxyCompactList}\item 
@@ -223,11 +223,11 @@ Checks if the parameter @steering\+\_\+angle is within the range of reachable st
 
 Documentation for a function. 
 
-Returns the absolute difference of two angles within the interval \mbox{[}0;2pi\mbox{]} \mbox{\Hypertarget{namespacesteering__simulation_a058dbff61afc8af058769267605ffc5a}\label{namespacesteering__simulation_a058dbff61afc8af058769267605ffc5a}} 
-\index{steering\_simulation@{steering\_simulation}!getJointPosition@{getJointPosition}}
-\index{getJointPosition@{getJointPosition}!steering\_simulation@{steering\_simulation}}
-\subsubsection{\texorpdfstring{getJointPosition()}{getJointPosition()}}
-{\footnotesize\ttfamily def steering\+\_\+simulation.\+get\+Joint\+Position (\begin{DoxyParamCaption}\item[{}]{joint\+Name }\end{DoxyParamCaption})}
+Returns the absolute difference of two angles within the interval \mbox{[}0;2pi\mbox{]} \mbox{\Hypertarget{namespacesteering__simulation_af5611a9446037e0aee0542ebe1c111fc}\label{namespacesteering__simulation_af5611a9446037e0aee0542ebe1c111fc}} 
+\index{steering\_simulation@{steering\_simulation}!get\_joint\_position@{get\_joint\_position}}
+\index{get\_joint\_position@{get\_joint\_position}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{get\_joint\_position()}{get\_joint\_position()}}
+{\footnotesize\ttfamily def steering\+\_\+simulation.\+get\+\_\+joint\+\_\+position (\begin{DoxyParamCaption}\item[{}]{joint\+\_\+name }\end{DoxyParamCaption})}
 
 
 
@@ -255,11 +255,11 @@ Documentation for a function.
 
 Initializes the interpolation-\/functions for every joint-\/angle using cubic spline interpolation. The input value of the function is a steering angle and the output value of the function the correspondent joint angle.
 
-The functions can be used by calling \char`\"{}$<$function\+\_\+name$>$($<$steering\+\_\+angle$>$)\char`\"{} ==$>$ returns $<$joint\+\_\+angle$>$ \mbox{\Hypertarget{namespacesteering__simulation_a49d8e64bcd7d1221d6de01b9b22bb799}\label{namespacesteering__simulation_a49d8e64bcd7d1221d6de01b9b22bb799}} 
-\index{steering\_simulation@{steering\_simulation}!jointStateCallback@{jointStateCallback}}
-\index{jointStateCallback@{jointStateCallback}!steering\_simulation@{steering\_simulation}}
-\subsubsection{\texorpdfstring{jointStateCallback()}{jointStateCallback()}}
-{\footnotesize\ttfamily def steering\+\_\+simulation.\+joint\+State\+Callback (\begin{DoxyParamCaption}\item[{}]{joint\+\_\+data }\end{DoxyParamCaption})}
+The functions can be used by calling \char`\"{}$<$function\+\_\+name$>$($<$steering\+\_\+angle$>$)\char`\"{} ==$>$ returns $<$joint\+\_\+angle$>$ \mbox{\Hypertarget{namespacesteering__simulation_a04ebcaad2fa2cbdb0fd13fdb179d0f50}\label{namespacesteering__simulation_a04ebcaad2fa2cbdb0fd13fdb179d0f50}} 
+\index{steering\_simulation@{steering\_simulation}!joint\_state\_callback@{joint\_state\_callback}}
+\index{joint\_state\_callback@{joint\_state\_callback}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{joint\_state\_callback()}{joint\_state\_callback()}}
+{\footnotesize\ttfamily def steering\+\_\+simulation.\+joint\+\_\+state\+\_\+callback (\begin{DoxyParamCaption}\item[{}]{joint\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -289,17 +289,17 @@ Evaluates the correspondent joint-\/angle of @joint\+\_\+name to given @steering
 
 Publishes the computed value to the correspondent ros-\/topic of @joint\+\_\+name to apply position control.
 
-Waits until the joint\+\_\+angle has reached requested joint\+\_\+angle within error tolerance. \mbox{\Hypertarget{namespacesteering__simulation_a3bdf7d63620ec8e0a63d41324b1cdaa4}\label{namespacesteering__simulation_a3bdf7d63620ec8e0a63d41324b1cdaa4}} 
-\index{steering\_simulation@{steering\_simulation}!regressJointPositionsFromFile@{regressJointPositionsFromFile}}
-\index{regressJointPositionsFromFile@{regressJointPositionsFromFile}!steering\_simulation@{steering\_simulation}}
-\subsubsection{\texorpdfstring{regressJointPositionsFromFile()}{regressJointPositionsFromFile()}}
-{\footnotesize\ttfamily def steering\+\_\+simulation.\+regress\+Joint\+Positions\+From\+File (\begin{DoxyParamCaption}\item[{}]{filename }\end{DoxyParamCaption})}
+Waits until the joint\+\_\+angle has reached requested joint\+\_\+angle within error tolerance. \mbox{\Hypertarget{namespacesteering__simulation_af85ca971fcf35d30c3647fb0c3732195}\label{namespacesteering__simulation_af85ca971fcf35d30c3647fb0c3732195}} 
+\index{steering\_simulation@{steering\_simulation}!regress\_joint\_positions\_from\_file@{regress\_joint\_positions\_from\_file}}
+\index{regress\_joint\_positions\_from\_file@{regress\_joint\_positions\_from\_file}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{regress\_joint\_positions\_from\_file()}{regress\_joint\_positions\_from\_file()}}
+{\footnotesize\ttfamily def steering\+\_\+simulation.\+regress\+\_\+joint\+\_\+positions\+\_\+from\+\_\+file (\begin{DoxyParamCaption}\item[{}]{filename }\end{DoxyParamCaption})}
 
 
 
 Documentation for a function. 
 
-Initializes the interpolation-\/functions for every joint-\/angle using regression. The input value of the function is a steering angle and the output value of the function the correspondent joint angle.
+Initializes the interpolation-\/functions for every joint-\/angle using regression. The input value of the function is a steering angle and the output value of the function is the correspondent joint angle.
 
 The functions can be used by calling \char`\"{}$<$function\+\_\+name$>$($<$steering\+\_\+angle$>$)\char`\"{} ==$>$ returns $<$joint\+\_\+angle$>$ \mbox{\Hypertarget{namespacesteering__simulation_a787fcfa65451a11a9f94afaea6a6e809}\label{namespacesteering__simulation_a787fcfa65451a11a9f94afaea6a6e809}} 
 \index{steering\_simulation@{steering\_simulation}!set\_joint\_controller\_parameters@{set\_joint\_controller\_parameters}}
@@ -323,7 +323,29 @@ Documentation for a function.
 
 Controls the whole steering-\/process. Evaluates the target\+\_\+steering\+\_\+angles between requested\+\_\+steering\+\_\+angle and current\+\_\+steering\+\_\+angle and creates a Thread for every joint-\/angle with which is responsible to apply correspondent joint-\/angle given current target\+\_\+steering\+\_\+angle.
 
-Simplified Pseudo-\/code\+: while requested\+\_\+steering\+\_\+angle = current\+\_\+steering\+\_\+angle\+: sleep() if angle\+\_\+difference(requested\+\_\+steering\+\_\+angle, current\+\_\+steering\+\_\+angle) $>$ max\+\_\+angle\+\_\+change target\+\_\+steering\+\_\+angle = current\+\_\+steering\+\_\+angle + max\+\_\+angle\+\_\+change else\+: target\+\_\+steering\+\_\+angle = requested\+\_\+steering\+\_\+angle for joint in joint\+\_\+list\+: Thread.\+publish\+\_\+joint\+\_\+angle(joint\+\_\+name, target\+\_\+joint\+\_\+angle) for Thread in created\+\_\+threads\+: Thread.\+join current\+\_\+steering\+\_\+angle = target\+\_\+steering\+\_\+angle \mbox{\Hypertarget{namespacesteering__simulation_ade71f08294031e29a94a9be5cc1f0961}\label{namespacesteering__simulation_ade71f08294031e29a94a9be5cc1f0961}} 
+Simplified Pseudo-\/code\+:
+
+while requested\+\_\+steering\+\_\+angle = current\+\_\+steering\+\_\+angle\+: \begin{DoxyVerb}sleep()
+\end{DoxyVerb}
+
+
+if angle\+\_\+difference(requested\+\_\+steering\+\_\+angle, current\+\_\+steering\+\_\+angle) $>$ max\+\_\+angle\+\_\+change \begin{DoxyVerb}target_steering_angle = current_steering_angle + max_angle_change
+\end{DoxyVerb}
+
+
+else\+: \begin{DoxyVerb}target_steering_angle = requested_steering_angle
+\end{DoxyVerb}
+
+
+for joint in joint\+\_\+list\+: \begin{DoxyVerb}Thread.publish_joint_angle(joint_name, target_joint_angle)
+\end{DoxyVerb}
+
+
+for Thread in created\+\_\+threads\+: \begin{DoxyVerb}    Thread.join
+\end{DoxyVerb}
+
+
+current\+\_\+steering\+\_\+angle = target\+\_\+steering\+\_\+angle \mbox{\Hypertarget{namespacesteering__simulation_ade71f08294031e29a94a9be5cc1f0961}\label{namespacesteering__simulation_ade71f08294031e29a94a9be5cc1f0961}} 
 \index{steering\_simulation@{steering\_simulation}!update\_steering\_angle@{update\_steering\_angle}}
 \index{update\_steering\_angle@{update\_steering\_angle}!steering\_simulation@{steering\_simulation}}
 \subsubsection{\texorpdfstring{update\_steering\_angle()}{update\_steering\_angle()}}

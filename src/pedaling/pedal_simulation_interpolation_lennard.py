@@ -1,55 +1,61 @@
-#!/usr/bin/env python
-from __future__ import print_function
 
-# roslaunch kindyn robot.launch robot_name:=rikshaw start_controllers:='joint_hip_left joint_hip_right joint_wheel_right joint_wheel_back joint_pedal spine_joint joint_wheel_left joint_front joint_pedal_right joint_pedal_left elbow_right_rot1 joint_foot_left joint_knee_right joint_knee_left joint_foot_right left_shoulder_axis0 left_shoulder_axis1 left_shoulder_axis2 elbow_left_rot1 elbow_left_rot0 left_wrist_0 left_wrist_1 right_shoulder_axis0 right_shoulder_axis2 right_shoulder_axis1 elbow_right_rot0 right_wrist_0 right_wrist_1 head_axis0 head_axis1 head_axis2'
+## @package pedaling
+#  Documentation for this module.
 #
+#  Control of Roboys' hip, knees and feet for pedaling.
+#  In order to reach the requested bike-velocity, we compute correspondent angular-velocity for the
+#  pedals. The circulation is ideally divided into @NUMBER_CIRCULATION_POINTS trajectory points represented by angles
+#  within the circulation circle (pedal-angle). With angle-difference between two points and angular-velocity we use
+#  the correspondent transition time to control the joints in order to create a pedaling motion for Roboy.
+#
+#  For every joint, we use cubic spline interpolation of pre-captured set points with pedal_angle as input to receive
+#  continuous function to be able to get the corresponding joint-angle for every pedal-angle.
+#  This enables to use joint-angle-difference between two trajectory-points and transition time to compute and apply
+#  velocity-control to the joint-angles to create pedaling-motion
+#
+#  In order to decrease and hopefully erase velocity-error, we multiply the computed (ideal) velocity with an
+#  error-factor which is computed and dependent on the velocity-error of previous transitions and measured
+#  by pedal-angle-error
 
+
+from __future__ import print_function
 import json
 import math
 import time
 from threading import Thread
-
 from scipy import interpolate
 from scipy.misc import derivative
 import numpy as np
-
 import matplotlib.pyplot as plt
-
 import rospy
 from roboy_middleware_msgs.srv import InverseKinematics, ForwardKinematics
 from roboy_simulation_msgs.msg import JointState
+from roboy_control_msgs.srv import SetControllerParameters
 from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Float32
 
-#############################
-###   MODULE PARAMETERS   ###
-#############################
 
 PRINT_DEBUG = True
-SIMULATION_FACTOR = 100  # factor to slow down the motion for better simulation
+SIMULATION_FACTOR = 100.0  # factor to slow down the motion for better simulation
 NUMBER_CIRCULATION_POINTS = 30  # number of points for controlling
-
-
 RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/captured_trajectory_old.json"
+JOINT_VELOCITY_FACTOR_SIMULATION = 0.01  # publish 1 => velocity = 0.01 rad/s  for Kp = 0.1 and simulation-step-length = 0.01
 
-BIKE_VELOCITY = 0
 
 PEDAL_POSITION_ERROR_TOLERANCE = 0.02  # [meters]
 JOINT_TRAJECTORY_ERROR_TOLERANCE = 0.02
-PEDAL_SINGLE_ROTATION_DURATION = 0  # [seconds]
-TRAJECTORY_POINT_DURATION = 0
 CONTROLLER_FREQUENCY = 100  # [Hz]
-MIN_JOINT_VEL = -500
-MAX_JOINT_VEL = 500
-JOINT_VELOCITY_FACTOR_SIMULATION = 0.01  # publish 1 => velocity = 0.01 rad/s  for Kp = 0.1 and simulation-step-length = 0.01
+
+MIN_JOINT_VEL = -500.0
+MAX_JOINT_VEL = 500.0
 
 RADIUS_BACK_TIRE = 0.294398  # in m
 RADIUS_GEAR_CLUSTER = 0.06  # in m
 RADIUS_FRONT_CHAIN_RING = 0.075
 
-############################
-###   GLOBAL VARIABLES   ###
-############################
+BIKE_VELOCITY = 0.0
+PEDAL_SINGLE_ROTATION_DURATION = 0.0  # [seconds]
+TRAJECTORY_POINT_DURATION = 0.0
 
 x_pedal_record = [ ]
 y_pedal_record = [ ]
@@ -235,12 +241,11 @@ kneeTrajectoryLeft = [ ]
 ankleTrajectoryLeft = [ ]
 
 
-##############################
-###   UTILITY FUNCTIONS   ###
-##############################
-
-
-def jointStateCallback(joint_data):
+## Documentation for a function.
+#
+#  This function collects the current status of the joint-angles and saves
+#  them in the global dictionary "joint_status_data".
+def joint_state_callback(joint_data):
     global joint_status_data
     # Assert order of joints
     for stringIter in range(len(joint_data.names)):
@@ -264,7 +269,11 @@ def jointStateCallback(joint_data):
             joint_status_data[ LEFT_ANKLE_JOINT ][ "Vel" ] = joint_data.qd[ stringIter ]
 
 
-def importJointTrajectoryRecord():
+## Documentation for a function.
+#
+#  Collects and saves all joint- and pedal-angles from the pre-captured
+#  trajectory from the @read_file (global variable).
+def import_joint_trajectory_record():
     global number_imported_trajectory_points
     global pedalTrajectoryLeft
     global pedalTrajectoryRight
@@ -314,17 +323,26 @@ def importJointTrajectoryRecord():
         print(number_imported_trajectory_points)
 
 
-def getJointPosition(jointName):
+## Documentation for a function.
+#
+#  Return current joint-angle of @jointName.
+def get_joint_position(jointName):
     global joint_status_data
     return joint_status_data[ jointName ][ "Pos" ]
 
 
-def getJointVelocity(jointName):
+## Documentation for a function.
+#
+#  Return current joint-velocity of @jointName.
+def get_joint_velocity(jointName):
     global joint_status_data
     return joint_status_data[ jointName ][ "Vel" ]
 
 
-def getPosition(endeffector, frame):
+## Documentation for a function.
+#
+#  Return the postion of the @frame of the correspondent @endeffector.
+def get_position(endeffector, frame):
     fkJointNamesList = [ ROS_JOINT_HIP_RIGHT, ROS_JOINT_HIP_LEFT, ROS_JOINT_KNEE_RIGHT, ROS_JOINT_KNEE_LEFT,
                          ROS_JOINT_ANKLE_RIGHT, ROS_JOINT_ANKLE_LEFT ]
     fkJointPositions = [ joint_status_data[ RIGHT_HIP_JOINT ][ "Pos" ], joint_status_data[ LEFT_HIP_JOINT ][ "Pos" ],
@@ -342,20 +360,28 @@ def getPosition(endeffector, frame):
         print("Service call failed: %s" % e)
     return [ 0.0, 0.0 ]  # [x, z]
 
-def setJointControllerParameters(proportionalVal, derivativeVal):
 
-    for thisJointName in _jointsListROS:
+## Documentation for a function
+#
+#  Sets Kp of joint-controller to  @proportional_value
+#  Sets Kd of joint-controller to  @derivative_value
+def set_joint_controller_parameters(proportionalVal, derivativeVal):
+
+    for thisJointName in _jointsList:
         rospy.wait_for_service(thisJointName + '/' + thisJointName + '/params')
         try:
             param_srv = rospy.ServiceProxy(thisJointName + '/' + thisJointName + '/params', SetControllerParameters)
             param_srv(proportionalVal, derivativeVal)
         except rospy.ServiceException, e:
-            print "Service call for " + thisJointName + "failed: %s"%e
+            print ("Service call for " + thisJointName + "failed: %s"%e)
 
-    print("Controller paramters updated")
+    print("Controller parameters updated")
 
 
-def getPositionLeftFoot():
+## Documentation for a function
+#
+#  Return the position of the left foot of Roboy.
+def get_position_left_foot():
     fkJointNamesList = [ ROS_JOINT_HIP_LEFT, ROS_JOINT_KNEE_LEFT, ROS_JOINT_ANKLE_LEFT ]
     fkJointPositions = [ joint_status_data[ LEFT_HIP_JOINT ][ "Pos" ], joint_status_data[ LEFT_KNEE_JOINT ][ "Pos" ],
                          joint_status_data[ LEFT_ANKLE_JOINT ][ "Pos" ] ]
@@ -373,7 +399,10 @@ def getPositionLeftFoot():
     return [ 0.0, 0.0 ]  # [x, z]
 
 
-def getPositionRightFoot():
+## Documentation for a function
+#
+#  Return the position of the right foot of Roboy.
+def get_position_right_foot():
     fkJointNamesList = [ ROS_JOINT_HIP_RIGHT, ROS_JOINT_KNEE_RIGHT, ROS_JOINT_ANKLE_RIGHT ]
     fkJointPositions = [ joint_status_data[ RIGHT_HIP_JOINT ][ "Pos" ], joint_status_data[ RIGHT_KNEE_JOINT ][ "Pos" ],
                          joint_status_data[ RIGHT_ANKLE_JOINT ][ "Pos" ] ]
@@ -391,19 +420,21 @@ def getPositionRightFoot():
     return [ 0.0, 0.0 ]  # [x, z]
 
 
-def getDistance(point1, point2):
+## Documentation for a function
+#
+#  Return the distance between two points where points are a list of two coordinates.
+def get_distance(point1, point2):
     x_diff = point2[ 0 ] - point1[ 0 ]
     y_diff = point2[ 1 ] - point1[ 1 ]
 
     return math.sqrt((x_diff * x_diff) + (y_diff * y_diff))
 
 
-
-#############################
-###   CONTROL FUNCTIONS   ###
-#############################
-
-def checkOutputLimits(inputVal):
+## Documentation for a function
+#
+#  Checks if @inputVal is inside possible range of joint-angle velocities.
+#  If not, returns max-velocity if @inputVal too high or min-velocity if @inputVal to low instead of @inputVal.
+def check_output_limits(inputVal):
     returnVal = inputVal
 
     if inputVal > MAX_JOINT_VEL:
@@ -414,6 +445,12 @@ def checkOutputLimits(inputVal):
     return returnVal
 
 
+## Documentation for a function
+#
+#  Returns ideal joint-velocity for @joint_name according to @end_time and joint-angle-difference
+#  between @current_joint_angle and @next_joint_angle:
+#
+#  ideal_velocity = joint_angle_difference / (end_time - current_time)
 def compute_velocity(joint_name, next_joint_angle, current_joint_angle, end_time):
 
     joint_angle_difference = next_joint_angle - current_joint_angle
@@ -436,23 +473,35 @@ def compute_velocity(joint_name, next_joint_angle, current_joint_angle, end_time
     return ideal_velocity
 
 
+## Documentation for a function
+#
+#  Evaluate and return joint-angle of @joint_name correspondent to @trajectory_angle using the interpolated function:
+#
+#  The functions can be used by calling "<function_name>(<pedal_angle>)"
+#  ==> returns <joint_angle>
+def get_joint_angle(joint_name, pedal_angle):
 
-def get_joint_angle(thisJointName, trajectory_angle):
-
-    if thisJointName == RIGHT_HIP_JOINT:
-        return f_interpolated_hip_right(trajectory_angle)
-    elif thisJointName == RIGHT_KNEE_JOINT:
-        return f_interpolated_knee_right(trajectory_angle)
-    elif thisJointName == RIGHT_ANKLE_JOINT:
-        return f_interpolated_ankle_right(trajectory_angle)
-    elif thisJointName == LEFT_HIP_JOINT:
-        return f_interpolated_hip_left(trajectory_angle)
-    elif thisJointName == LEFT_KNEE_JOINT:
-        return f_interpolated_knee_left(trajectory_angle)
-    elif thisJointName == LEFT_ANKLE_JOINT:
-        return f_interpolated_ankle_left(trajectory_angle)
+    if joint_name == RIGHT_HIP_JOINT:
+        return f_interpolated_hip_right(pedal_angle)
+    elif joint_name == RIGHT_KNEE_JOINT:
+        return f_interpolated_knee_right(pedal_angle)
+    elif joint_name == RIGHT_ANKLE_JOINT:
+        return f_interpolated_ankle_right(pedal_angle)
+    elif joint_name == LEFT_HIP_JOINT:
+        return f_interpolated_hip_left(pedal_angle)
+    elif joint_name == LEFT_KNEE_JOINT:
+        return f_interpolated_knee_left(pedal_angle)
+    elif joint_name == LEFT_ANKLE_JOINT:
+        return f_interpolated_ankle_left(pedal_angle)
 
 
+## Documentation for a function
+#
+#  Initializing interpolated functions for joint-angles using pre-captured set points with pedal-angle as input and
+#  joint-angle as output:
+#
+#  The functions can be used by calling "<function_name>(<pedal_angle>)"
+#  ==> returns <joint_angle>
 def interpolate_functions():
     global f_interpolated_hip_right
     global f_interpolated_hip_left
@@ -470,7 +519,11 @@ def interpolate_functions():
     f_interpolated_ankle_left = interpolate.interp1d(pedalAngleTrajectoryRight, ankleTrajectoryLeft, kind="cubic")
 
 
-def evaluate_current_angle(current_point):
+## Documentation for a function
+#
+#  Evaluating the current pedal-angle according to the current position of the left foot @current_point.
+#  Using trigonometric functions for the evaluation of the angle.
+def evaluate_current_pedal_angle(current_point):
     current_x = current_point[ 0 ] - PEDAL_CENTER_OFFSET_X
     current_y = current_point[ 1 ] - PEDAL_CENTER_OFFSET_Y
 
@@ -493,6 +546,15 @@ def evaluate_current_angle(current_point):
         return np.pi
 
 
+## Documentation for a function
+#
+#  For joint @joint_name:
+#
+#  - Evaluate ideal velocity in rad/s according to joint-angle-difference and end-time of transition
+#  - Multiply value with @JOINT_VELOCITY_FACTOR_SIMULATION (global variable) to receive velocity in rad/s
+#  - Multiply value with @SIMULATION_FACTOR (global variable) to slow down simulation time.
+#  - Multiply value with @error_factor (global variable) of correspondent joint to erase joint-error
+#  - Publish velocity to joint-controller and sleep until end-time of transition
 def publish_velocity(joint_name, next_joint_angle, current_joint_angle, end_time):
 
     ideal_velocity = compute_velocity(joint_name, next_joint_angle, current_joint_angle, end_time)
@@ -532,7 +594,11 @@ def publish_velocity(joint_name, next_joint_angle, current_joint_angle, end_time
     publisher.publish(published_velocity)
     time.sleep(duration*SIMULATION_FACTOR)
 
-# used by listener to topic "rickshaw_velocity"
+
+## Documentation for a function
+#
+#  Updates the global variables @BIKE_VELOCITY, @PEDAL_SINGLE_ROTATION_DURATION and TRAJECTORY_POINT_DURATION
+#  when a bike-velocity gets published to the topic "cmd_velocity_rickshaw".
 def update_velocity(velocity_F32):
     global PEDAL_SINGLE_ROTATION_DURATION
     global TRAJECTORY_POINT_DURATION
@@ -556,20 +622,59 @@ def update_velocity(velocity_F32):
         TRAJECTORY_POINT_DURATION = PEDAL_SINGLE_ROTATION_DURATION / NUMBER_CIRCULATION_POINTS
 
 
+## Documentation for a function
+#
+#  Returns the absolute difference of two angles within the interval [0;2pi]
 def get_angle_difference(angle_1, angle_2):
     return np.pi - np.abs(np.abs(angle_1 - angle_2) - np.pi)
 
-
-#########################
-###   STATE MACHINE   ###
-#########################
 
 INIT = "INIT"
 PEDAL = "PEDAL"
 UPDATE_PARAMETERS = "UPDATE_PARAMETERS"
 
 
-def FSM():
+## Documentation for a function.
+#
+#  Controls the whole pedaling-process.
+#
+#  Evaluates next pedal-angle according to current pedal-angle and @NUMBER_CIRCULATION_POINTS (global variable).
+#  Uses @BIKE_VELOCITY to compute joint-velocities for every joint-angle for every transition between two.
+#  trajectory points.
+#
+#  Use Threads to simultaneously publish and control joint-angles.
+#
+#  Computes joint-angle-error and adjusts error-factors for every joint to optimize ideal
+#  joint-velocity for further transitions.
+#
+#  Simplified Pseudo-Code:
+#
+#   while bike_velocity = 0:
+#
+#       for joint in joints:
+#
+#           publish(0)
+#
+#       sleep()
+#
+#   current_pedal_angle = get_current_pedal_angle(left_foot_position)
+#
+#   next_pedal_angle = current_pedal_angle + (2pi / number_circulation_points)
+#
+#   for joint in joints:
+#
+#       next_joint_angle = interpolation_function(next_pedal_angle)
+#
+#       Thread.publish_velocity(joint_name, current_joint_angle, next_joint_angle, end_time)
+#
+#   for Thread in created_threads:
+#
+#       Thread.join
+#
+#   for joint in joints:
+#
+#       update_error_factor()
+def control_pedaling():
     global NUMBER_CIRCULATION_POINTS
     global _jointsControlData
     global _jointsList
@@ -588,10 +693,9 @@ def FSM():
     _runFSM = True
 
     _currState = INIT
-    _currTrajectoryPoint = getPositionLeftFoot()
-    _currTrajectoryAngle = evaluate_current_angle(_currTrajectoryPoint)
-    _nextTrajectoryAngle = (_currTrajectoryAngle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)) % (np.pi*2)
-
+    _currTrajectoryPoint = get_position_left_foot()
+    current_pedal_angle = evaluate_current_pedal_angle(_currTrajectoryPoint)
+    next_pedal_angle = (current_pedal_angle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)) % (np.pi*2)
 
     _startTime = 0.0
     _endTime = 0.0
@@ -600,26 +704,19 @@ def FSM():
 
     trajectory_points = 0
 
-
     while _runFSM:
 
-
-        ##############################################
         if _currState == INIT:
-            ##############################################
 
-            importJointTrajectoryRecord()
+            import_joint_trajectory_record()
             interpolate_functions()
             _currState = PEDAL
-
 
             while PEDAL_SINGLE_ROTATION_DURATION == 0:
                 pass
                 # wait for velocity != 0
 
-        ##############################################
         if _currState == PEDAL:
-            ##############################################
 
             while PEDAL_SINGLE_ROTATION_DURATION == 0:
                 pass
@@ -641,12 +738,12 @@ def FSM():
                 _currTime = time.time()
             _prevTime = _currTime
 
-            _currTrajectoryPoint = getPositionLeftFoot()
-            _currTrajectoryAngle = evaluate_current_angle(_currTrajectoryPoint)
+            _currTrajectoryPoint = get_position_left_foot()
+            current_pedal_angle = evaluate_current_pedal_angle(_currTrajectoryPoint)
 
             _startTime = time.time()
             _endTime = _startTime + TRAJECTORY_POINT_DURATION
-            _nextTrajectoryAngle = (_currTrajectoryAngle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)) % (2*np.pi)
+            next_pedal_angle = (current_pedal_angle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)) % (2*np.pi)
 
             trajectory_points += 1
 
@@ -655,16 +752,16 @@ def FSM():
                 print("bike_velocity = ", BIKE_VELOCITY)
                 print("rotation_duration = ", PEDAL_SINGLE_ROTATION_DURATION)
                 print("trajectory_point_duration = ", TRAJECTORY_POINT_DURATION)
-                print("current_pedal_angle = ", _currTrajectoryAngle)
-                print("next_pedal_angle = ", _nextTrajectoryAngle)
-                print("d = ", get_angle_difference(_currTrajectoryAngle, _nextTrajectoryAngle))
+                print("current_pedal_angle = ", current_pedal_angle)
+                print("next_pedal_angle = ", next_pedal_angle)
+                print("d = ", get_angle_difference(current_pedal_angle, next_pedal_angle))
 
             # Iterate through joints and update setpoints
             publisher_threads = []
             i = 0
             for thisJointName in _jointsList:
                 current_joint_angle = joint_status_data[thisJointName ][ "Pos" ]
-                next_joint_angle = get_joint_angle(thisJointName, _nextTrajectoryAngle)
+                next_joint_angle = get_joint_angle(thisJointName, next_pedal_angle)
 
                 _currTime = time.time()
 
@@ -679,7 +776,7 @@ def FSM():
             for joint in _jointsList:
 
 
-                actual_joint_angle = get_joint_angle(joint, evaluate_current_angle(getPositionLeftFoot()))
+                actual_joint_angle = get_joint_angle(joint, evaluate_current_pedal_angle(get_position_left_foot()))
                 error = get_angle_difference(actual_joint_angle, next_joint_angle)
 
                 new_factor = get_angle_difference(current_joint_angle, next_joint_angle) \
@@ -708,20 +805,14 @@ def FSM():
                         velocity_error_factor_ankle = new_factor
 
 
-
-
-
-
-################
-###   MAIN   ###
-################
-
-
+## Documentation for a function.
+#
+#  Initializes the Control-Node for Pedaling and starts Pedaling-Algorithm.
 def main():
     rospy.init_node('pedal_simulation', anonymous=True)
-    rospy.Subscriber("joint_state", JointState, jointStateCallback)
+    rospy.Subscriber("joint_state", JointState, joint_state_callback)
     rospy.Subscriber("/cmd_velocity_rickshaw", Float32, update_velocity)
-    FSM()
+    control_pedaling()
 
     return 1
 
