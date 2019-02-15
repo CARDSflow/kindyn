@@ -1,10 +1,23 @@
 #!/usr/bin/env python
-from __future__ import print_function
 
+## @package steering
+#  Documentation for this module.
+#
+#  Control of Roboys' shoulders, elbows and wrists.
+#  In order to reach the requested steering-angle we target intermediate points
+#  between the current and the requested steering-angle to ensure Roboys' hands
+#  are following the captured steering-trajectory.
+#
+#  In order to target a point on the steering-trajectory for the hands,
+#  we use an interpolation-function for the joint angles with steering-angle as input
+#  that uses precomputed set-points of all joint-angles
+#  according to a certain steering-angle.
+
+
+from __future__ import print_function
 import json
 import time
 from threading import Thread
-
 import numpy as np
 import numpy.polynomial.polynomial as poly
 import rospy
@@ -20,18 +33,15 @@ from std_msgs.msg import Float32, String
 #############################
 
 PRINT_DEBUG = True
-
 RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/steering_trajectory.json"
-
 JOINT_TARGET_ERROR_TOLERANCE = 0.01
+UPDATE_FREQUENCY = 0.001
+MAX_ANGLE_CHANGE = np.pi / 72
+STEP_TRANSITION_TIME = 2.5
 
 ############################
 ###   GLOBAL VARIABLES   ###
 ############################
-
-UPDATE_FREQUENCY = 0.001
-MAX_ANGLE_CHANGE = np.pi / 72
-STEP_TRANSITION_TIME = 2.5
 
 JOINT_SHOULDER_AXIS0_RIGHT = "right_shoulder_axis0"
 JOINT_SHOULDER_AXIS1_RIGHT = "right_shoulder_axis1"
@@ -191,7 +201,10 @@ angle_change_successful = True
 ###   UTILITY FUNCTIONS   ###
 ##############################
 
-
+## Documentation for a function.
+#
+#  This function collects the current status of the joint-angles and saves
+#  them in the global dictionary "_jointStatusData".
 def jointStateCallback(joint_data):
     global _jointsStatusData
     # Assert order of joints
@@ -201,11 +214,22 @@ def jointStateCallback(joint_data):
             _jointsStatusData[joint_data.names[stringIter]]["Vel"] = joint_data.qd[stringIter]
 
 
+## Documentation for a function.
+#
+#  Returns current position of joint-angle @jointName.     .
 def getJointPosition(jointName):
     global _jointsStatusData
     return _jointsStatusData[jointName]["Pos"]
 
 
+## Documentation for a function.
+#
+#  Initializes the interpolation-functions for every joint-angle using regression.
+#  The input value of the function is a steering angle and the output value of the function
+#  the correspondent joint angle.
+#
+#  The functions can be used by calling "<function_name>(<steering_angle>)"
+#  ==> returns <joint_angle>
 def regressJointPositionsFromFile(filename):
     global _trajectorySteering
     global _trajectoryShoulder0Right
@@ -261,6 +285,10 @@ def regressJointPositionsFromFile(filename):
     return 1
 
 
+## Documentation for a function.
+#
+#  Collects and saves all joint- and steering-angles from the pre-captured
+#  trajectory from the @read_file (global variable).
 def import_joint_trajectory_record():
     global _trajectorySteering
     global _trajectoryShoulder0Right
@@ -331,6 +359,15 @@ def import_joint_trajectory_record():
         print("min_angle = ", min(_trajectorySteering))
 
 
+## Documentation for a function.
+#
+#  Initializes the interpolation-functions for every joint-angle using
+#  cubic spline interpolation.
+#  The input value of the function is a steering angle and the output value of the function
+#  the correspondent joint angle.
+#
+#  The functions can be used by calling "<function_name>(<steering_angle>)"
+#  ==> returns <joint_angle>
 def interpolate_joint_angles():
     global _interpolatedShoulder0Right
     global _interpolatedShoulder1Right
@@ -364,10 +401,17 @@ def interpolate_joint_angles():
     _interpolatedWrist1Left = interpolate.interp1d(_trajectorySteering, _trajectoryWrist1Left, kind="cubic")
 
 
+## Documentation for a function
+#
+#  Returns the absolute difference of two angles within the interval [0;2pi]
 def get_angle_difference(angle_1, angle_2):
     return np.pi - np.abs(np.abs(angle_1 - angle_2) - np.pi)
 
 
+## Documentation for a function
+#
+#  Sets Kp of joint-controller to  @proportional_value
+#  Sets Kd of joint-controller to  @derivative_value
 def set_joint_controller_parameters(proportional_value, derivative_value):
     for thisJointName in _joints_list:
         rospy.wait_for_service(thisJointName + '/' + thisJointName + '/params')
@@ -382,6 +426,11 @@ def set_joint_controller_parameters(proportional_value, derivative_value):
 ###   CONTROL FUNCTIONS   ###
 #############################
 
+
+## Documentation for a function
+#
+#  Updates the global variable @requested_steering_angle when another node publishes a new
+#  requested steering_angle to the topic "cmd_steering_angle_rickshaw".
 def update_steering_angle(steering_angle_F32):
     global requested_steering_angle
     requested_steering_angle = steering_angle_F32.data
@@ -391,6 +440,10 @@ def update_steering_angle(steering_angle_F32):
         print(log_msg)
 
 
+## Documentation for a function.
+#
+#  Checks if the parameter @steering_angle is within the range of
+#  reachable steering-angles of Roboy.
 def check_steering_angle_range(steering_angle):
     min_angle = min(_trajectorySteering)
     max_angle = max(_trajectorySteering)
@@ -403,6 +456,16 @@ def check_steering_angle_range(steering_angle):
         return False
 
 
+## Documentation for a function.
+#
+#  Evaluates the correspondent joint-angle of @joint_name to given @steering_angle
+#  using the interpolation-function of @joint_name
+#
+#  Publishes the computed value to the correspondent ros-topic of @joint_name
+#  to apply position control.
+#
+#  Waits until the joint_angle has reached requested joint_angle within
+#  error tolerance.
 def publish_joint_angle(joint_name, steering_angle):
     if check_steering_angle_range(steering_angle):
 
