@@ -140,7 +140,7 @@ public:
         //ROS_INFO("Gymgoal is called");
         bool not_feasible = true;
         float q0= 0.0,q1= 0.0,q2 = 0.0;
-        srand(static_cast<unsigned >(time(0)));
+        srand(static_cast<unsigned int>(clock()));
         while(not_feasible) {
             //ROS_INFO("creating random goals");
             q0 = min[0] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[0]-min[0]))));
