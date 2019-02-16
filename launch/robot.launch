@@ -12,6 +12,7 @@
     <arg name="x" default="0"/>
     <arg name="y" default="0"/>
     <arg name="z" default="0"/>
+    <arg name="workers" default="1"/>
 
     <param name="robot_name" type="string" value="$(arg robot_name)"  />
     <param name="model_name" type="string" value="$(arg model_name)"  />
@@ -27,16 +28,13 @@
     <param name="max_force" type="double" value="100000"  />
     <param name="controller" type="int" value="2"  />
     <param name="external_robot_state" type="bool" value="$(arg external_robot_state)"/>
-    <!--<node name="controller_manager"
-          pkg="controller_manager"
-          type="spawner"
-          args="$(arg start_controllers)" />-->
 
     <node name="robot_controller"
           pkg="kindyn"
           type="$(arg robot_name)"
           respawn="false"
           output="screen"
+          args="$(arg workers)"
     />
 
     <group if="$(arg gazebo)">

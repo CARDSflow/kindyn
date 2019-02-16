@@ -18,12 +18,14 @@ using namespace Eigen;
 
 class MsjPlatform: public cardsflow::kindyn::Robot{
 public:
+
     /**
      * Constructor
      * @param urdf path to urdf
      * @param cardsflow_xml path to cardsflow xml
      */
-    MsjPlatform(string urdf, string cardsflow_xml){
+    MsjPlatform(string urdf, string cardsflow_xml, int id , int num_workers){
+
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
@@ -34,7 +36,8 @@ public:
         spinner->start();
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
 
-        initServices();
+
+        initService(id, num_workers);
 
         readJointLimits();
 
@@ -50,15 +53,25 @@ public:
             l_offset[i] = l[i];
 
     };
-    void initServices(){
-        // OpenAI gym services
-        string gym_step_topic = "/gym_step";
-        string gym_reset_topic = "/gym_reset";
-        string gym_goal_topic = "/gym_goal";
+
+    ///Open AI Gym services
+    void initService(int id, int num_workers){
+        string gym_step_topic, gym_reset_topic, gym_goal_topic;
+        if (num_workers > 1){
+            gym_step_topic = "/instance" + to_string(id) + "/gym_step";
+            gym_reset_topic = "/instance" + to_string(id) + "/gym_reset";
+            gym_goal_topic = "/instance" + to_string(id) + "/gym_goal";
+        }
+        else{
+            gym_step_topic  = "/gym_step";
+            gym_reset_topic = "/gym_reset";
+            gym_goal_topic = "/gym_goal";
+        }
         gym_step = nh->advertiseService(gym_step_topic, &MsjPlatform::GymStepService,this);
         gym_reset = nh->advertiseService(gym_reset_topic, &MsjPlatform::GymResetService,this);
         gym_goal = nh->advertiseService(gym_goal_topic, &MsjPlatform::GymGoalService,this);
     }
+
     void readJointLimits(){
         // Get the limits of joints
         string path = ros::package::getPath("robots");
@@ -142,7 +155,6 @@ public:
         float q0= 0.0,q1= 0.0,q2 = 0.0;
         srand(static_cast<unsigned int>(clock()));
         while(not_feasible) {
-            //ROS_INFO("creating random goals");
             q0 = min[0] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[0]-min[0]))));
             q1 = min[1] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[1]-min[1]))));
             q2 = min[2] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[2]-min[2]))));
@@ -156,6 +168,8 @@ public:
         res.q.push_back(q0);
         res.q.push_back(q1);
         res.q.push_back(q2);
+
+        return true;
 
     }
 
@@ -194,7 +208,7 @@ public:
     }
 
     ///set the gymstep function response
-    bool setResponse(VectorXd jointAngles,VectorXd jointVel,roboy_simulation_msgs::GymStep::Response &res){
+    void setResponse(VectorXd jointAngles,VectorXd jointVel,roboy_simulation_msgs::GymStep::Response &res){
         for(int i=0; i< number_of_dofs; i++ ){
             res.q.push_back(jointAngles[i]);
             res.qdot.push_back(jointVel[i]);
@@ -242,6 +256,14 @@ public:
                         roboy_simulation_msgs::GymReset::Response &res){
     	//ROS_INFO("Gymreset is called");      
     	integration_time = 0.0;
+        VectorXd jointAngle, jointVel;
+        jointAngle.resize(number_of_dofs);
+        jointVel.resize(number_of_dofs);
+
+        jointAngle.setZero();
+        jointVel.setZero();
+
+        setJointAngleAndVelocity(jointAngle, jointVel);
 
         VectorXd jointAngle, jointVel;
         jointAngle.resize(number_of_dofs);
@@ -270,9 +292,11 @@ private:
     bool external_robot_state; /// indicates if we get the robot state externally
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
-    ros::ServiceServer gym_step; ///OpenAI Gym training environment step function, ros service instance
-    ros::ServiceServer gym_reset; ///OpenAI Gym training environment reset function, ros service instance
-    ros::ServiceServer gym_goal; ///OpenAI Gym training environment sets new goal function, ros service instance
+
+    ros::ServiceServer gym_step; //OpenAI Gym training environment step function, ros service instance
+    ros::ServiceServer gym_reset; //OpenAI Gym training environment reset function, ros service instance
+    ros::ServiceServer gym_goal; //OpenAI Gym training environment sets new feasible goal function, ros service instance
+
     vector<double> limits[3];
     double l_offset[NUMBER_OF_MOTORS];
     boost::shared_ptr <ros::AsyncSpinner> spinner;
@@ -312,11 +336,17 @@ int main(int argc, char *argv[]) {
     }
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
-    MsjPlatform robot(urdf, cardsflow_xml);
+    int workers = atoi( argv[1]);
+    cout << "\nNUMBER OF WORKERS " << workers << endl;
 
-    ROS_INFO("STARTING ROBOT MAIN LOOP...");
+    vector<boost::shared_ptr<MsjPlatform>> platforms;
+    for(int id = 0; id < workers; id++) {
+        boost::shared_ptr<MsjPlatform> platform(new MsjPlatform(urdf, cardsflow_xml, id + 1, workers));
+        platforms.push_back(platform);
+    }
 
     ros::waitForShutdown();
+
 
     ROS_INFO("TERMINATING...");
 

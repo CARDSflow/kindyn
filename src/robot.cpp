@@ -7,7 +7,7 @@ Robot::Robot() {
         int argc = 0;
         char **argv = NULL;
         ros::init(argc, argv, "CARDSflow robot", ros::init_options::NoSigintHandler);
-    }
+    } //namespace stuff work it out here for every instance
     nh = ros::NodeHandlePtr(new ros::NodeHandle);
     spinner.reset(new ros::AsyncSpinner(0));
     spinner->start();
@@ -330,6 +330,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         Ld[k].setZero();
         k++;
     }
+
     /*
     controller_type_sub = nh->subscribe("/controller_type", 100, &Robot::controllerType, this);
     joint_state_sub = nh->subscribe("/joint_states", 100, &Robot::JointState, this);
@@ -691,6 +692,7 @@ void Robot::forwardKinematics(double dt) {
             qd[i] = 0;
         }
     }
+
 
     integration_time += dt;
     ROS_INFO_THROTTLE(5, "forward kinematics calculated for %lf s", integration_time);
