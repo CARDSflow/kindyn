@@ -126,8 +126,6 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     l.resize(number_of_cables);
     l_int.resize(number_of_cables);
     l_target.resize(number_of_cables);
-    Ld.resize(number_of_cables);
-    Ld.setZero();
     ld.resize(number_of_dofs);
     l.setZero();
     l_int.setZero();
@@ -266,6 +264,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     int k=0;
     nh->getParam("endeffectors", endeffectors);
     endeffector_dof_offset.push_back(0);
+    Ld.resize(endeffectors.size());
     for (string ef:endeffectors) {
         ROS_INFO_STREAM("configuring endeffector " << ef);
         vector<string> ik_joints;
@@ -310,13 +309,16 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         ik[ef].setVerbosity(0);
         tf::Vector3 pos(0,0.3*k,0);
         make6DofMarker(false,visualization_msgs::InteractiveMarkerControl::MOVE_3D,pos,false,0.15,"world",ef.c_str());
-        k++;
 
         moveEndEffector_as[ef].reset(
                 new actionlib::SimpleActionServer<roboy_control_msgs::MoveEndEffectorAction>(
                         *(nh.get()), ("CARDSflow/MoveEndEffector/"+ef).c_str(),
                         boost::bind(&Robot::MoveEndEffector, this, _1), false));
         moveEndEffector_as[ef]->start();
+
+        Ld[k].resize(number_of_cables);
+        Ld[k].setZero();
+        k++;
     }
 
     controller_type_sub = nh->subscribe("/controller_type", 100, &Robot::controllerType, this);
@@ -477,15 +479,24 @@ void Robot::update() {
                 break;
         }
     }
+    for(int i = 0; i<endeffectors.size();i++) {
+        Ld[i].setZero();
+        int dof_offset = endeffector_dof_offset[i];
+        for (int j = dof_offset; j < endeffector_number_of_dofs[i] + dof_offset; j++) {
+            Ld[i] -= ld[j];
+        }
+    }
 
+    /*
     ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "qdd " << qdd.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "qd " << qd.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "q " << q.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "l " << l.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "ld " << Ld.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "ld " << Ld[0].transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "torques " << torques.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "cable_forces " << cable_forces.transpose().format(fmt));
+    */
 
     // for the cable force controller with do a centralized update
     if(force_position_controller_active){
@@ -499,7 +510,7 @@ void Robot::update() {
                 msg.name.push_back(cables[i].name);
                 msg.force.push_back(cable_forces[i]);
                 msg.l.push_back(l[i]);
-                msg.ld.push_back(Ld[i]);
+                msg.ld.push_back(Ld[0][i]); // TODO: only first endeffector Ld is send here
                 msg.number_of_viapoints.push_back(cables[i].viaPoints.size());
                 for (auto vp:cables[i].viaPoints) {
                     geometry_msgs::Vector3 VP;
@@ -561,11 +572,21 @@ void Robot::update() {
                 msg.origin.push_back(convertEigenToGeometry(pose.topRightCorner(3, 1)));
                 msg.axis.push_back(convertEigenToGeometry(axis));
                 msg.torque.push_back(torques[i - 1]);
+                msg.q.push_back(q[i-1]);
+                msg.qd.push_back(qd[i-1]);
             }
             joint_state_pub.publish(msg);
         }
         last_visualization = ros::Time::now();
     }
+    ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "qdd " << qdd.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "qd " << qd.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "q " << q.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "l " << l.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "ld " << Ld[0].transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "torques " << torques.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "cable_forces " << cable_forces.transpose().format(fmt));
 }
 
 void Robot::forwardKinematics(double dt) {
@@ -578,13 +599,9 @@ void Robot::forwardKinematics(double dt) {
 
     for(int i = 0; i<endeffectors.size();i++) {
         int dof_offset = endeffector_dof_offset[i];
-        Ld.setZero();
-        for (int j = dof_offset; j < endeffector_number_of_dofs[i] + dof_offset; j++) {
-            Ld -= ld[j];
-        }
         MatrixXd L_endeffector = L.block(0,dof_offset,number_of_cables,endeffector_number_of_dofs[i]);
         MatrixXd L_endeffector_inv = EigenExtension::Pinv(L_endeffector);
-        VectorXd qd_temp =  L_endeffector_inv * Ld;
+        VectorXd qd_temp =  L_endeffector_inv * Ld[i];
 
         for (int j = dof_offset; j < endeffector_number_of_dofs[i]+dof_offset; j++) {
             switch(controller_type[j]){
@@ -594,6 +611,8 @@ void Robot::forwardKinematics(double dt) {
                                 dxdt[1] = qdd_torque_control[j];
                                 dxdt[0] = x[1];
                             }, joint_state[j], integration_time, integration_time + dt, dt);
+                    qd[j] = joint_state[j][1];
+                    q[j] = joint_state[j][0];
                     break;
                 case CARDSflow::ControllerType::cable_length_controller:
                     boost::numeric::odeint::integrate(
@@ -601,6 +620,8 @@ void Robot::forwardKinematics(double dt) {
                                 dxdt[1] = 0;
                                 dxdt[0] = qd_temp[j-dof_offset];
                             }, joint_state[j], integration_time, integration_time + dt, dt);
+                    qd[j] = qd_temp[j-dof_offset];
+                    q[j] = joint_state[j][0];
                     break;
                 case CARDSflow::ControllerType::force_position_controller:
                     boost::numeric::odeint::integrate(
@@ -608,19 +629,19 @@ void Robot::forwardKinematics(double dt) {
                                 dxdt[1] = qdd_force_control[j];
                                 dxdt[0] = x[1];
                             }, joint_state[j], integration_time, integration_time + dt, dt);
+                    qd[j] = joint_state[j][1];
+                    q[j] = joint_state[j][0];
                     break;
             }
-            qd[j] = joint_state[j][1];
-            q[j] = joint_state[j][0];
 //        ROS_INFO("%s control type %d", joint_names[j].c_str(), controller_type[j]);
         }
-        for (int i = 0; i < number_of_cables; i++) {
+        for (int l = 0; l < number_of_cables; l++) {
             boost::numeric::odeint::integrate(
-                    [this, i](const state_type &x, state_type &dxdt, double t) {
+                    [this, i, l](const state_type &x, state_type &dxdt, double t) {
                         dxdt[1] = 0;
-                        dxdt[0] = Ld[i];
-                    }, motor_state[i], integration_time, integration_time + dt, dt);
-            l_int[i] = motor_state[i][0];
+                        dxdt[0] = Ld[i][l];
+                    }, motor_state[l], integration_time, integration_time + dt, dt);
+            l_int[l] = motor_state[l][0];
         }
     }
 

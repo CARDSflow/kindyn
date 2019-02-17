@@ -8,6 +8,7 @@
 
     <buildtool_depend>catkin</buildtool_depend>
     <depend>roscpp</depend>
+    <depend>rospy</depend>
     <depend>rosbag</depend>
     <depend>std_msgs</depend>
     <depend>grid_map_ros</depend>
@@ -20,6 +21,7 @@
 
     <export>
         <controller_interface plugin="${prefix}/CableLengthController_plugin.xml"/>
+        <controller_interface plugin="${prefix}/CableLengthVelocityController_plugin.xml"/>
         <controller_interface plugin="${prefix}/TorquePositionController_plugin.xml"/>
         <controller_interface plugin="${prefix}/ForcePositionController_plugin.xml"/>
     </export>

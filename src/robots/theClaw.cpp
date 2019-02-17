@@ -70,8 +70,8 @@ public:
         stringstream str;
         for (int i = 0; i < number_of_cables; i++) {
             msg.motors.push_back(i);
-            msg.set_points.push_back(meterPerSecondToServoSpeed(Ld[i])); //
-            str << meterPerSecondToServoSpeed(Ld[i]) << "\t" << Ld[i] << "\t";
+            msg.set_points.push_back(meterPerSecondToServoSpeed(Ld[0][i])); //
+            str << meterPerSecondToServoSpeed(Ld[0][i]) << "\t" << Ld[0][i] << "\t";
         }
 //        ROS_INFO_STREAM_THROTTLE(1,str.str());
         motor_command.publish(msg);

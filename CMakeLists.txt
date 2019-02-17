@@ -19,6 +19,7 @@ endif ()
 #==============================================================================
 find_package(catkin REQUIRED COMPONENTS
 		roscpp
+		rospy
 		rosbag
 		std_msgs geometry_msgs
 		message_generation
@@ -75,6 +76,11 @@ add_library(CableLengthController src/controller/cableLengthController.cpp )
 add_dependencies(CableLengthController roboy_middleware_msgs_generate_messages_cpp roboy_control_msgs_generate_messages_cpp)
 target_link_libraries(CableLengthController ${catkin_LIBRARIES} CardsflowHardwareInterface)
 
+# Cable Length Velocity Controller
+add_library(CableLengthVelocityController src/controller/cableLengthVelocityController.cpp )
+add_dependencies(CableLengthVelocityController roboy_middleware_msgs_generate_messages_cpp roboy_control_msgs_generate_messages_cpp)
+target_link_libraries(CableLengthVelocityController ${catkin_LIBRARIES} CardsflowHardwareInterface)
+
 # Torque Position Controller
 add_library(TorquePositionController src/controller/torquePositionController.cpp )
 add_dependencies(TorquePositionController roboy_middleware_msgs_generate_messages_cpp roboy_control_msgs_generate_messages_cpp)
@@ -127,6 +133,19 @@ target_link_libraries(theClaw ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 # yatr
 add_executable( yatr src/robots/yatr.cpp)
 target_link_libraries(yatr ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+
+# rikshaw
+add_executable( rikshaw src/robots/rikshaw.cpp)
+target_link_libraries(rikshaw ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+
+# capture_trajectory
+catkin_install_python(PROGRAMS
+  src/capture_trajectory/capture_trajectory.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+#add_executable( capture_trajectory src/capture_trajectory.py)
+#target_link_libraries(capture_trajectory ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+
 #==============================================================================
 # Installation
 #==============================================================================
