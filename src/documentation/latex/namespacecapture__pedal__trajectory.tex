@@ -89,24 +89,24 @@ dictionary \mbox{\hyperlink{namespacecapture__pedal__trajectory_a240d770bc46f43f
 
 
 
-Definition at line 194 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 195 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{194 \textcolor{keyword}{def }\mbox{\hyperlink{namespacecapture__pedal__trajectory_a73fc41de533fbb350b426e9c08886203}{getPedalPositions}}(numSamples):}
-\DoxyCodeLine{195     \textcolor{comment}{\# Format: [[pedal\_angle\_1, x, y, z], [pedal\_angle\_2, x, y, z], ...]}}
-\DoxyCodeLine{196     capturedPositions = []}
-\DoxyCodeLine{197     angularStep = 2.0 * math.pi / numSamples}
-\DoxyCodeLine{198     \textcolor{keywordflow}{for} sampleIterator \textcolor{keywordflow}{in} range(numSamples + 1):}
-\DoxyCodeLine{199         thisPedalAngle = sampleIterator * angularStep}
-\DoxyCodeLine{200         thisXVal = PEDAL\_CENTER\_OFFSET\_X + math.cos(thisPedalAngle) * PEDAL\_RADIUS}
-\DoxyCodeLine{201         thisYVal = PEDAL\_CENTER\_OFFSET\_Y}
-\DoxyCodeLine{202         thisZVal = PEDAL\_CENTER\_OFFSET\_Z + math.sin(thisPedalAngle) * PEDAL\_RADIUS}
-\DoxyCodeLine{203         capturedPositions.append([thisPedalAngle, thisXVal, thisYVal, thisZVal])}
-\DoxyCodeLine{204 }
-\DoxyCodeLine{205     \textcolor{keywordflow}{return} capturedPositions}
-\DoxyCodeLine{206 }
+\DoxyCodeLine{195 \textcolor{keyword}{def }\mbox{\hyperlink{namespacecapture__pedal__trajectory_a73fc41de533fbb350b426e9c08886203}{getPedalPositions}}(numSamples):}
+\DoxyCodeLine{196     \textcolor{comment}{\# Format: [[pedal\_angle\_1, x, y, z], [pedal\_angle\_2, x, y, z], ...]}}
+\DoxyCodeLine{197     capturedPositions = []}
+\DoxyCodeLine{198     angularStep = 2.0 * math.pi / numSamples}
+\DoxyCodeLine{199     \textcolor{keywordflow}{for} sampleIterator \textcolor{keywordflow}{in} range(numSamples + 1):}
+\DoxyCodeLine{200         thisPedalAngle = sampleIterator * angularStep}
+\DoxyCodeLine{201         thisXVal = PEDAL\_CENTER\_OFFSET\_X + math.cos(thisPedalAngle) * PEDAL\_RADIUS}
+\DoxyCodeLine{202         thisYVal = PEDAL\_CENTER\_OFFSET\_Y}
+\DoxyCodeLine{203         thisZVal = PEDAL\_CENTER\_OFFSET\_Z + math.sin(thisPedalAngle) * PEDAL\_RADIUS}
+\DoxyCodeLine{204         capturedPositions.append([thisPedalAngle, thisXVal, thisYVal, thisZVal])}
+\DoxyCodeLine{205 }
+\DoxyCodeLine{206     \textcolor{keywordflow}{return} capturedPositions}
 \DoxyCodeLine{207 }
+\DoxyCodeLine{208 }
 
 \end{DoxyCode}
 Here is the caller graph for this function\+:\nopagebreak
@@ -128,28 +128,28 @@ U\+T\+I\+L\+I\+TY F\+U\+N\+C\+T\+I\+O\+NS \#\#\#.
 
 
 
-Definition at line 88 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 89 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{88 \textcolor{keyword}{def }\mbox{\hyperlink{namespacecapture__pedal__trajectory_a8d1d532a39c3c5a5efe8d6110ecd1723}{getPositionLeftFoot}}():}
-\DoxyCodeLine{89     fkJointNamesList = [ROS\_JOINT\_HIP\_LEFT, ROS\_JOINT\_KNEE\_LEFT, ROS\_JOINT\_ANKLE\_LEFT]}
-\DoxyCodeLine{90     fkJointPositions = [\_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}],}
-\DoxyCodeLine{91                         \_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}]]}
-\DoxyCodeLine{92 }
-\DoxyCodeLine{93     rospy.wait\_for\_service(\textcolor{stringliteral}{'fk'})}
-\DoxyCodeLine{94     \textcolor{keywordflow}{try}:}
-\DoxyCodeLine{95         fk\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'fk'}, ForwardKinematics)}
-\DoxyCodeLine{96         fk\_result = fk\_srv(\textcolor{stringliteral}{"foot\_left\_tip"}, \textcolor{stringliteral}{"foot\_left\_tip"}, fkJointNamesList, fkJointPositions)}
-\DoxyCodeLine{97         \textcolor{keywordflow}{return} [fk\_result.pose.position.x, fk\_result.pose.position.z]}
-\DoxyCodeLine{98 }
-\DoxyCodeLine{99     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
-\DoxyCodeLine{100         print(\textcolor{stringliteral}{"Service call failed: \%s"} \% e)}
-\DoxyCodeLine{101 }
-\DoxyCodeLine{102     print(\textcolor{stringliteral}{"ERROR fk foot\_left failed"})}
-\DoxyCodeLine{103     \textcolor{keywordflow}{return} [0.0, 0.0]  \textcolor{comment}{\# [x, z]}}
-\DoxyCodeLine{104 }
+\DoxyCodeLine{89 \textcolor{keyword}{def }\mbox{\hyperlink{namespacecapture__pedal__trajectory_a8d1d532a39c3c5a5efe8d6110ecd1723}{getPositionLeftFoot}}():}
+\DoxyCodeLine{90     fkJointNamesList = [ROS\_JOINT\_HIP\_LEFT, ROS\_JOINT\_KNEE\_LEFT, ROS\_JOINT\_ANKLE\_LEFT]}
+\DoxyCodeLine{91     fkJointPositions = [\_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}],}
+\DoxyCodeLine{92                         \_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}]]}
+\DoxyCodeLine{93 }
+\DoxyCodeLine{94     rospy.wait\_for\_service(\textcolor{stringliteral}{'fk'})}
+\DoxyCodeLine{95     \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{96         fk\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'fk'}, ForwardKinematics)}
+\DoxyCodeLine{97         fk\_result = fk\_srv(\textcolor{stringliteral}{"foot\_left\_tip"}, \textcolor{stringliteral}{"foot\_left\_tip"}, fkJointNamesList, fkJointPositions)}
+\DoxyCodeLine{98         \textcolor{keywordflow}{return} [fk\_result.pose.position.x, fk\_result.pose.position.z]}
+\DoxyCodeLine{99 }
+\DoxyCodeLine{100     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
+\DoxyCodeLine{101         print(\textcolor{stringliteral}{"Service call failed: \%s"} \% e)}
+\DoxyCodeLine{102 }
+\DoxyCodeLine{103     print(\textcolor{stringliteral}{"ERROR fk foot\_left failed"})}
+\DoxyCodeLine{104     \textcolor{keywordflow}{return} [0.0, 0.0]  \textcolor{comment}{\# [x, z]}}
 \DoxyCodeLine{105 }
+\DoxyCodeLine{106 }
 
 \end{DoxyCode}
 Here is the caller graph for this function\+:\nopagebreak
@@ -167,28 +167,28 @@ Here is the caller graph for this function\+:\nopagebreak
 
 
 
-Definition at line 106 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 107 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{106 \textcolor{keyword}{def }\mbox{\hyperlink{namespacecapture__pedal__trajectory_abd2b89d215476e10e9079f6f971a669c}{getPositionRightFoot}}():}
-\DoxyCodeLine{107     fkJointNamesList = [ROS\_JOINT\_HIP\_RIGHT, ROS\_JOINT\_KNEE\_RIGHT, ROS\_JOINT\_ANKLE\_RIGHT]}
-\DoxyCodeLine{108     fkJointPositions = [\_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}],}
-\DoxyCodeLine{109                         \_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}]]}
-\DoxyCodeLine{110 }
-\DoxyCodeLine{111     rospy.wait\_for\_service(\textcolor{stringliteral}{'fk'})}
-\DoxyCodeLine{112     \textcolor{keywordflow}{try}:}
-\DoxyCodeLine{113         fk\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'fk'}, ForwardKinematics)}
-\DoxyCodeLine{114         fk\_result = fk\_srv(\textcolor{stringliteral}{"foot\_right\_tip"}, \textcolor{stringliteral}{"foot\_right\_tip"}, fkJointNamesList, fkJointPositions)}
-\DoxyCodeLine{115         \textcolor{keywordflow}{return} [fk\_result.pose.position.x, fk\_result.pose.position.z]}
-\DoxyCodeLine{116 }
-\DoxyCodeLine{117     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
-\DoxyCodeLine{118         print(\textcolor{stringliteral}{"Service call failed: \%s"} \% e)}
-\DoxyCodeLine{119 }
-\DoxyCodeLine{120     print(\textcolor{stringliteral}{"ERROR fk foot\_right failed"})}
-\DoxyCodeLine{121     \textcolor{keywordflow}{return} [0.0, 0.0]  \textcolor{comment}{\# [x, z]}}
-\DoxyCodeLine{122 }
+\DoxyCodeLine{107 \textcolor{keyword}{def }\mbox{\hyperlink{namespacecapture__pedal__trajectory_abd2b89d215476e10e9079f6f971a669c}{getPositionRightFoot}}():}
+\DoxyCodeLine{108     fkJointNamesList = [ROS\_JOINT\_HIP\_RIGHT, ROS\_JOINT\_KNEE\_RIGHT, ROS\_JOINT\_ANKLE\_RIGHT]}
+\DoxyCodeLine{109     fkJointPositions = [\_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}],}
+\DoxyCodeLine{110                         \_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}]]}
+\DoxyCodeLine{111 }
+\DoxyCodeLine{112     rospy.wait\_for\_service(\textcolor{stringliteral}{'fk'})}
+\DoxyCodeLine{113     \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{114         fk\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'fk'}, ForwardKinematics)}
+\DoxyCodeLine{115         fk\_result = fk\_srv(\textcolor{stringliteral}{"foot\_right\_tip"}, \textcolor{stringliteral}{"foot\_right\_tip"}, fkJointNamesList, fkJointPositions)}
+\DoxyCodeLine{116         \textcolor{keywordflow}{return} [fk\_result.pose.position.x, fk\_result.pose.position.z]}
+\DoxyCodeLine{117 }
+\DoxyCodeLine{118     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
+\DoxyCodeLine{119         print(\textcolor{stringliteral}{"Service call failed: \%s"} \% e)}
+\DoxyCodeLine{120 }
+\DoxyCodeLine{121     print(\textcolor{stringliteral}{"ERROR fk foot\_right failed"})}
+\DoxyCodeLine{122     \textcolor{keywordflow}{return} [0.0, 0.0]  \textcolor{comment}{\# [x, z]}}
 \DoxyCodeLine{123 }
+\DoxyCodeLine{124 }
 
 \end{DoxyCode}
 Here is the caller graph for this function\+:\nopagebreak
@@ -206,29 +206,29 @@ Here is the caller graph for this function\+:\nopagebreak
 
 
 
-Definition at line 329 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 330 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{329 \textcolor{keyword}{def }\mbox{\hyperlink{namespacecapture__pedal__trajectory_affbe4020d535c4967511b40d3aef141d}{inverse\_kinematics\_client}}(endeffector, frame, x, y, z):}
-\DoxyCodeLine{330     rospy.wait\_for\_service(\textcolor{stringliteral}{'ik'})}
-\DoxyCodeLine{331     \textcolor{keywordflow}{try}:}
-\DoxyCodeLine{332         ik\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'ik'}, InverseKinematics)}
-\DoxyCodeLine{333         requested\_position = Point(x, y, z)}
-\DoxyCodeLine{334         requested\_pose = Pose(position=requested\_position)}
-\DoxyCodeLine{335         requested\_ik\_type = 1  \textcolor{comment}{\# Position only}}
-\DoxyCodeLine{336         ik\_result = ik\_srv(endeffector, requested\_ik\_type, frame, requested\_pose)}
-\DoxyCodeLine{337 }
-\DoxyCodeLine{338         jointDict = \{\}}
-\DoxyCodeLine{339         \textcolor{keywordflow}{for} thisJoint \textcolor{keywordflow}{in} range(len(ik\_result.angles)):}
-\DoxyCodeLine{340             jointDict[ik\_result.joint\_names[thisJoint]] = ik\_result.angles[thisJoint]}
-\DoxyCodeLine{341 }
-\DoxyCodeLine{342         \textcolor{keywordflow}{return} jointDict}
-\DoxyCodeLine{343 }
-\DoxyCodeLine{344     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
-\DoxyCodeLine{345         print(\textcolor{stringliteral}{"Service call failed:"}, e)}
-\DoxyCodeLine{346 }
+\DoxyCodeLine{330 \textcolor{keyword}{def }\mbox{\hyperlink{namespacecapture__pedal__trajectory_affbe4020d535c4967511b40d3aef141d}{inverse\_kinematics\_client}}(endeffector, frame, x, y, z):}
+\DoxyCodeLine{331     rospy.wait\_for\_service(\textcolor{stringliteral}{'ik'})}
+\DoxyCodeLine{332     \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{333         ik\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'ik'}, InverseKinematics)}
+\DoxyCodeLine{334         requested\_position = Point(x, y, z)}
+\DoxyCodeLine{335         requested\_pose = Pose(position=requested\_position)}
+\DoxyCodeLine{336         requested\_ik\_type = 1  \textcolor{comment}{\# Position only}}
+\DoxyCodeLine{337         ik\_result = ik\_srv(endeffector, requested\_ik\_type, frame, requested\_pose)}
+\DoxyCodeLine{338 }
+\DoxyCodeLine{339         jointDict = \{\}}
+\DoxyCodeLine{340         \textcolor{keywordflow}{for} thisJoint \textcolor{keywordflow}{in} range(len(ik\_result.angles)):}
+\DoxyCodeLine{341             jointDict[ik\_result.joint\_names[thisJoint]] = ik\_result.angles[thisJoint]}
+\DoxyCodeLine{342 }
+\DoxyCodeLine{343         \textcolor{keywordflow}{return} jointDict}
+\DoxyCodeLine{344 }
+\DoxyCodeLine{345     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
+\DoxyCodeLine{346         print(\textcolor{stringliteral}{"Service call failed:"}, e)}
 \DoxyCodeLine{347 }
+\DoxyCodeLine{348 }
 
 \end{DoxyCode}
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_af4a490afbf4bfcafcd9d2d733ea5fac1}\label{namespacecapture__pedal__trajectory_af4a490afbf4bfcafcd9d2d733ea5fac1}} 
@@ -239,33 +239,33 @@ Definition at line 329 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 348 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 349 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{348 \textcolor{keyword}{def }\mbox{\hyperlink{namespacecapture__pedal__trajectory_af4a490afbf4bfcafcd9d2d733ea5fac1}{inverse\_kinematics\_two\_frames\_client}}(endeffector, frame1, x1, y1, z1, weight1, frame2, x2, y2, z2, weight2):}
-\DoxyCodeLine{349     rospy.wait\_for\_service(\textcolor{stringliteral}{'ik\_two\_frames'})}
-\DoxyCodeLine{350     \textcolor{keywordflow}{try}:}
-\DoxyCodeLine{351         ik\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'ik\_two\_frames'}, InverseKinematicsTwoFrames)}
-\DoxyCodeLine{352         requested\_position\_1 = Point(x1, y1, z1)}
-\DoxyCodeLine{353         requested\_pose\_1 = Pose(position=requested\_position\_1)}
-\DoxyCodeLine{354         requested\_position\_2 = Point(x2, y2, z2)}
-\DoxyCodeLine{355         requested\_pose\_2 = Pose(position=requested\_position\_2)}
-\DoxyCodeLine{356         requested\_ik\_type = 1  \textcolor{comment}{\# Position only}}
-\DoxyCodeLine{357         ik\_result = ik\_srv(endeffector, requested\_ik\_type, frame1, requested\_pose\_1, weight1, frame2, requested\_pose\_2,}
-\DoxyCodeLine{358                            weight2)}
-\DoxyCodeLine{359 }
-\DoxyCodeLine{360         jointDict = \{\}}
-\DoxyCodeLine{361         \textcolor{keywordflow}{for} thisJoint \textcolor{keywordflow}{in} range(len(ik\_result.angles)):}
-\DoxyCodeLine{362             jointDict[ik\_result.joint\_names[thisJoint]] = ik\_result.angles[thisJoint]}
-\DoxyCodeLine{363 }
-\DoxyCodeLine{364         \textcolor{keywordflow}{return} jointDict}
-\DoxyCodeLine{365 }
+\DoxyCodeLine{349 \textcolor{keyword}{def }\mbox{\hyperlink{namespacecapture__pedal__trajectory_af4a490afbf4bfcafcd9d2d733ea5fac1}{inverse\_kinematics\_two\_frames\_client}}(endeffector, frame1, x1, y1, z1, weight1, frame2, x2, y2, z2, weight2):}
+\DoxyCodeLine{350     rospy.wait\_for\_service(\textcolor{stringliteral}{'ik\_two\_frames'})}
+\DoxyCodeLine{351     \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{352         ik\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'ik\_two\_frames'}, InverseKinematicsTwoFrames)}
+\DoxyCodeLine{353         requested\_position\_1 = Point(x1, y1, z1)}
+\DoxyCodeLine{354         requested\_pose\_1 = Pose(position=requested\_position\_1)}
+\DoxyCodeLine{355         requested\_position\_2 = Point(x2, y2, z2)}
+\DoxyCodeLine{356         requested\_pose\_2 = Pose(position=requested\_position\_2)}
+\DoxyCodeLine{357         requested\_ik\_type = 1  \textcolor{comment}{\# Position only}}
+\DoxyCodeLine{358         ik\_result = ik\_srv(endeffector, requested\_ik\_type, frame1, requested\_pose\_1, weight1, frame2, requested\_pose\_2,}
+\DoxyCodeLine{359                            weight2)}
+\DoxyCodeLine{360 }
+\DoxyCodeLine{361         jointDict = \{\}}
+\DoxyCodeLine{362         \textcolor{keywordflow}{for} thisJoint \textcolor{keywordflow}{in} range(len(ik\_result.angles)):}
+\DoxyCodeLine{363             jointDict[ik\_result.joint\_names[thisJoint]] = ik\_result.angles[thisJoint]}
+\DoxyCodeLine{364 }
+\DoxyCodeLine{365         \textcolor{keywordflow}{return} jointDict}
 \DoxyCodeLine{366 }
-\DoxyCodeLine{367     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
-\DoxyCodeLine{368         print(\textcolor{stringliteral}{"Service call failed:"}, e)}
-\DoxyCodeLine{369 }
+\DoxyCodeLine{367 }
+\DoxyCodeLine{368     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
+\DoxyCodeLine{369         print(\textcolor{stringliteral}{"Service call failed:"}, e)}
 \DoxyCodeLine{370 }
+\DoxyCodeLine{371 }
 
 \end{DoxyCode}
 Here is the caller graph for this function\+:\nopagebreak
@@ -283,34 +283,34 @@ Here is the caller graph for this function\+:\nopagebreak
 
 
 
-Definition at line 170 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 171 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{170 \textcolor{keyword}{def }\mbox{\hyperlink{namespacecapture__pedal__trajectory_ac931a7ae623a2c8c8df34da551639cce}{jointStateCallback}}(joint\_data):}
-\DoxyCodeLine{171     \textcolor{keyword}{global} \_jointsStatusData}
-\DoxyCodeLine{172     \textcolor{comment}{\# Assert order of joints}}
-\DoxyCodeLine{173     \textcolor{keywordflow}{for} stringIter \textcolor{keywordflow}{in} range(len(joint\_data.names)):}
-\DoxyCodeLine{174         \textcolor{keywordflow}{if} joint\_data.names[stringIter] == ROS\_JOINT\_HIP\_RIGHT:}
-\DoxyCodeLine{175             \_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
-\DoxyCodeLine{176             \_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
-\DoxyCodeLine{177         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_HIP\_LEFT:}
-\DoxyCodeLine{178             \_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
-\DoxyCodeLine{179             \_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
-\DoxyCodeLine{180         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_KNEE\_RIGHT:}
-\DoxyCodeLine{181             \_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
-\DoxyCodeLine{182             \_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
-\DoxyCodeLine{183         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_KNEE\_LEFT:}
-\DoxyCodeLine{184             \_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
-\DoxyCodeLine{185             \_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
-\DoxyCodeLine{186         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_ANKLE\_RIGHT:}
-\DoxyCodeLine{187             \_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
-\DoxyCodeLine{188             \_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
-\DoxyCodeLine{189         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_ANKLE\_LEFT:}
-\DoxyCodeLine{190             \_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
-\DoxyCodeLine{191             \_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
-\DoxyCodeLine{192 }
+\DoxyCodeLine{171 \textcolor{keyword}{def }\mbox{\hyperlink{namespacecapture__pedal__trajectory_ac931a7ae623a2c8c8df34da551639cce}{jointStateCallback}}(joint\_data):}
+\DoxyCodeLine{172     \textcolor{keyword}{global} \_jointsStatusData}
+\DoxyCodeLine{173     \textcolor{comment}{\# Assert order of joints}}
+\DoxyCodeLine{174     \textcolor{keywordflow}{for} stringIter \textcolor{keywordflow}{in} range(len(joint\_data.names)):}
+\DoxyCodeLine{175         \textcolor{keywordflow}{if} joint\_data.names[stringIter] == ROS\_JOINT\_HIP\_RIGHT:}
+\DoxyCodeLine{176             \_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{177             \_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
+\DoxyCodeLine{178         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_HIP\_LEFT:}
+\DoxyCodeLine{179             \_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{180             \_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
+\DoxyCodeLine{181         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_KNEE\_RIGHT:}
+\DoxyCodeLine{182             \_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{183             \_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
+\DoxyCodeLine{184         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_KNEE\_LEFT:}
+\DoxyCodeLine{185             \_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{186             \_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
+\DoxyCodeLine{187         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_ANKLE\_RIGHT:}
+\DoxyCodeLine{188             \_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{189             \_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
+\DoxyCodeLine{190         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_ANKLE\_LEFT:}
+\DoxyCodeLine{191             \_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{192             \_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
 \DoxyCodeLine{193 }
+\DoxyCodeLine{194 }
 
 \end{DoxyCode}
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_ae43bcee5928a71a9e44c3400a772a161}\label{namespacecapture__pedal__trajectory_ae43bcee5928a71a9e44c3400a772a161}} 
@@ -325,152 +325,152 @@ M\+A\+IN \#\#\#.
 
 
 
-Definition at line 375 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 376 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{375 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a17184534fa48653e3e1957dd8fe17257}{main}}():}
-\DoxyCodeLine{376     \textcolor{keywordflow}{if} len(sys.argv) > 1:}
-\DoxyCodeLine{377         num\_requested\_points = int(sys.argv[1])}
-\DoxyCodeLine{378     \textcolor{keywordflow}{else}:}
-\DoxyCodeLine{379         num\_requested\_points = 72}
-\DoxyCodeLine{380 }
-\DoxyCodeLine{381     \textcolor{keyword}{global} JOINT\_ANGLE\_TOLERANCE\_FK}
-\DoxyCodeLine{382 }
-\DoxyCodeLine{383     rospy.init\_node(\textcolor{stringliteral}{'pedal\_simulation'}, anonymous=\textcolor{keyword}{True})}
-\DoxyCodeLine{384     rospy.Subscriber(\textcolor{stringliteral}{"joint\_state"}, JointState, jointStateCallback)}
-\DoxyCodeLine{385     ros\_right\_hip\_publisher = rospy.Publisher(\textcolor{stringliteral}{'joint\_hip\_right/joint\_hip\_right/target'}, Float32, queue\_size=1)}
-\DoxyCodeLine{386     ros\_right\_knee\_publisher = rospy.Publisher(\textcolor{stringliteral}{'joint\_knee\_right/joint\_knee\_right/target'}, Float32, queue\_size=1)}
-\DoxyCodeLine{387     ros\_right\_ankle\_publisher = rospy.Publisher(\textcolor{stringliteral}{'joint\_foot\_right/joint\_foot\_right/target'}, Float32, queue\_size=1)}
-\DoxyCodeLine{388     ros\_left\_hip\_publisher = rospy.Publisher(\textcolor{stringliteral}{'joint\_hip\_left/joint\_hip\_left/target'}, Float32, queue\_size=1)}
-\DoxyCodeLine{389     ros\_left\_knee\_publisher = rospy.Publisher(\textcolor{stringliteral}{'joint\_knee\_left/joint\_knee\_left/target'}, Float32, queue\_size=1)}
-\DoxyCodeLine{390     ros\_left\_ankle\_publisher = rospy.Publisher(\textcolor{stringliteral}{'joint\_foot\_left/joint\_foot\_left/target'}, Float32, queue\_size=1)}
-\DoxyCodeLine{391     time.sleep(2)}
-\DoxyCodeLine{392 }
-\DoxyCodeLine{393     \mbox{\hyperlink{namespacecapture__pedal__trajectory_a00dff2df306072da5d299eba96e79b4b}{setJointControllerParameters}}(JOINT\_KP, JOINT\_KD)}
-\DoxyCodeLine{394 }
-\DoxyCodeLine{395     capturedPositions = \mbox{\hyperlink{namespacecapture__pedal__trajectory_a73fc41de533fbb350b426e9c08886203}{getPedalPositions}}(num\_requested\_points)}
-\DoxyCodeLine{396 }
-\DoxyCodeLine{397     endeffector\_right = \textcolor{stringliteral}{"foot\_right\_tip"}}
-\DoxyCodeLine{398     frame\_right = \textcolor{stringliteral}{"foot\_right\_tip"}}
-\DoxyCodeLine{399     y\_offset\_right = RIGHT\_LEG\_OFFSET\_Y}
-\DoxyCodeLine{400     frame\_right\_1 = \textcolor{stringliteral}{"foot\_right\_tip"}}
-\DoxyCodeLine{401     weight\_right\_1 = 1}
-\DoxyCodeLine{402     frame\_right\_2 = \textcolor{stringliteral}{"thigh\_right"}}
-\DoxyCodeLine{403     weight\_right\_2 = 0.1}
-\DoxyCodeLine{404     frame\_right\_2\_x\_offset = -0.1}
-\DoxyCodeLine{405     frame\_right\_2\_y\_offset = 0}
-\DoxyCodeLine{406     frame\_right\_2\_z\_offset = 0.3}
-\DoxyCodeLine{407 }
-\DoxyCodeLine{408     endeffector\_left = \textcolor{stringliteral}{"foot\_left\_tip"}}
-\DoxyCodeLine{409     frame\_left = \textcolor{stringliteral}{"foot\_left\_tip"}}
-\DoxyCodeLine{410     y\_offset\_left = LEFT\_LEG\_OFFSET\_Y}
-\DoxyCodeLine{411     frame\_left\_1 = \textcolor{stringliteral}{"foot\_left\_tip"}}
-\DoxyCodeLine{412     weight\_left\_1 = 1}
-\DoxyCodeLine{413     frame\_left\_2 = \textcolor{stringliteral}{"thigh\_left"}}
-\DoxyCodeLine{414     weight\_left\_2 = 0.1}
-\DoxyCodeLine{415     frame\_left\_2\_x\_offset = -0.1}
-\DoxyCodeLine{416     frame\_left\_2\_y\_offset = 0}
-\DoxyCodeLine{417     frame\_left\_2\_z\_offset = 0.3}
-\DoxyCodeLine{418 }
-\DoxyCodeLine{419     jointAngleDict = \{\}}
-\DoxyCodeLine{420     jointAngleDict[\textcolor{stringliteral}{"num\_points"}] = num\_requested\_points}
-\DoxyCodeLine{421 }
-\DoxyCodeLine{422     \textcolor{keywordflow}{for} pointIter \textcolor{keywordflow}{in} range(num\_requested\_points):}
-\DoxyCodeLine{423         print(\textcolor{stringliteral}{"Capturing point number "}, pointIter)}
-\DoxyCodeLine{424         thisX = capturedPositions[pointIter][1]}
-\DoxyCodeLine{425         thisZ = capturedPositions[pointIter][3]}
-\DoxyCodeLine{426         thisPedalAngle = capturedPositions[pointIter][0]}
-\DoxyCodeLine{427         \textcolor{comment}{\# jointAngleResult\_right = inverse\_kinematics\_client(endeffector\_right, frame\_right, thisX + BIKE\_OFFSET\_X, y\_offset\_right + BIKE\_OFFSET\_Y, thisZ + BIKE\_OFFSET\_Z)}}
-\DoxyCodeLine{428         \textcolor{comment}{\# jointAngleResult\_left = inverse\_kinematics\_client(endeffector\_left, frame\_left, thisX + BIKE\_OFFSET\_X, y\_offset\_left + BIKE\_OFFSET\_Y, thisZ + BIKE\_OFFSET\_Z)}}
-\DoxyCodeLine{429         jointAngleResult\_right = \mbox{\hyperlink{namespacecapture__pedal__trajectory_af4a490afbf4bfcafcd9d2d733ea5fac1}{inverse\_kinematics\_two\_frames\_client}}(endeffector\_right, frame\_right\_1,}
-\DoxyCodeLine{430                                                                       thisX + BIKE\_OFFSET\_X,}
-\DoxyCodeLine{431                                                                       y\_offset\_right + BIKE\_OFFSET\_Y,}
-\DoxyCodeLine{432                                                                       thisZ + BIKE\_OFFSET\_Z,}
-\DoxyCodeLine{433                                                                       weight\_right\_1, frame\_right\_2,}
-\DoxyCodeLine{434                                                                       thisX + BIKE\_OFFSET\_X + frame\_right\_2\_x\_offset,}
-\DoxyCodeLine{435                                                                       y\_offset\_right + BIKE\_OFFSET\_Y + frame\_right\_2\_y\_offset,}
-\DoxyCodeLine{436                                                                       thisZ + BIKE\_OFFSET\_Z + frame\_right\_2\_z\_offset,}
-\DoxyCodeLine{437                                                                       weight\_right\_2)}
-\DoxyCodeLine{438         print(\textcolor{stringliteral}{"ik result fetched for foot\_right\_tip"})}
-\DoxyCodeLine{439         jointAngleResult\_left = \mbox{\hyperlink{namespacecapture__pedal__trajectory_af4a490afbf4bfcafcd9d2d733ea5fac1}{inverse\_kinematics\_two\_frames\_client}}(endeffector\_left, frame\_left\_1,}
-\DoxyCodeLine{440                                                                      thisX + BIKE\_OFFSET\_X,}
-\DoxyCodeLine{441                                                                      y\_offset\_left + BIKE\_OFFSET\_Y,}
-\DoxyCodeLine{442                                                                      thisZ + BIKE\_OFFSET\_Z,}
-\DoxyCodeLine{443                                                                      weight\_left\_1, frame\_left\_2,}
-\DoxyCodeLine{444                                                                      thisX + BIKE\_OFFSET\_X + frame\_left\_2\_x\_offset,}
-\DoxyCodeLine{445                                                                      y\_offset\_left + BIKE\_OFFSET\_Y + frame\_left\_2\_y\_offset,}
-\DoxyCodeLine{446                                                                      thisZ + BIKE\_OFFSET\_Z + frame\_left\_2\_z\_offset,}
-\DoxyCodeLine{447                                                                      weight\_left\_2)}
-\DoxyCodeLine{448 }
-\DoxyCodeLine{449         print(\textcolor{stringliteral}{"ik result fetched for foot\_left\_tip"})}
-\DoxyCodeLine{450         \textcolor{keywordflow}{if} jointAngleResult\_right \textcolor{keywordflow}{and} jointAngleResult\_left:}
-\DoxyCodeLine{451             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)] = \{\}}
-\DoxyCodeLine{452             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}] = \{\}}
-\DoxyCodeLine{453             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}] = \{\}}
-\DoxyCodeLine{454             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Pedal"}] = [thisX, thisZ]}
-\DoxyCodeLine{455             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Pedal\_angle"}] = thisPedalAngle}
-\DoxyCodeLine{456             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Hip"}] = jointAngleResult\_left[\textcolor{stringliteral}{"joint\_hip\_left"}]}
-\DoxyCodeLine{457             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Knee"}] = jointAngleResult\_left[\textcolor{stringliteral}{"joint\_knee\_left"}]}
-\DoxyCodeLine{458             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Ankle"}] = jointAngleResult\_left[\textcolor{stringliteral}{"joint\_foot\_left"}]}
-\DoxyCodeLine{459             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Pedal"}] = [thisX, thisZ]}
-\DoxyCodeLine{460             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Pedal\_angle"}] = thisPedalAngle}
-\DoxyCodeLine{461             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Hip"}] = jointAngleResult\_right[\textcolor{stringliteral}{"joint\_hip\_right"}]}
-\DoxyCodeLine{462             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Knee"}] = jointAngleResult\_right[\textcolor{stringliteral}{"joint\_knee\_right"}]}
-\DoxyCodeLine{463             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Ankle"}] = jointAngleResult\_right[\textcolor{stringliteral}{"joint\_foot\_right"}]}
-\DoxyCodeLine{464 }
-\DoxyCodeLine{465             print(\textcolor{stringliteral}{"Left: "}, jointAngleResult\_left)}
-\DoxyCodeLine{466             print(\textcolor{stringliteral}{"Right: "}, jointAngleResult\_right)}
-\DoxyCodeLine{467             ros\_right\_hip\_publisher.publish(jointAngleResult\_right[\textcolor{stringliteral}{"joint\_hip\_right"}])}
-\DoxyCodeLine{468             ros\_right\_knee\_publisher.publish(jointAngleResult\_right[\textcolor{stringliteral}{"joint\_knee\_right"}])}
-\DoxyCodeLine{469             ros\_right\_ankle\_publisher.publish(jointAngleResult\_right[\textcolor{stringliteral}{"joint\_foot\_right"}])}
-\DoxyCodeLine{470             ros\_left\_hip\_publisher.publish(jointAngleResult\_left[\textcolor{stringliteral}{"joint\_hip\_left"}])}
-\DoxyCodeLine{471             ros\_left\_knee\_publisher.publish(jointAngleResult\_left[\textcolor{stringliteral}{"joint\_knee\_left"}])}
-\DoxyCodeLine{472             ros\_left\_ankle\_publisher.publish(jointAngleResult\_left[\textcolor{stringliteral}{"joint\_foot\_left"}])}
-\DoxyCodeLine{473             print(\textcolor{stringliteral}{"Target angles published"})}
-\DoxyCodeLine{474 }
-\DoxyCodeLine{475             \textcolor{keywordflow}{while} abs(\_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}] - jointAngleResult\_right[}
-\DoxyCodeLine{476                 \textcolor{stringliteral}{"joint\_hip\_right"}]) > JOINT\_ANGLE\_TOLERANCE\_FK:}
-\DoxyCodeLine{477                 time.sleep(0.1)}
-\DoxyCodeLine{478             print(\textcolor{stringliteral}{"Right hip moved to new position"})}
-\DoxyCodeLine{479             \textcolor{keywordflow}{while} abs(\_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}] - jointAngleResult\_right[}
-\DoxyCodeLine{480                 \textcolor{stringliteral}{"joint\_knee\_right"}]) > JOINT\_ANGLE\_TOLERANCE\_FK:}
-\DoxyCodeLine{481                 time.sleep(0.1)}
-\DoxyCodeLine{482             print(\textcolor{stringliteral}{"Right knee moved to new position"})}
-\DoxyCodeLine{483             \textcolor{keywordflow}{while} abs(\_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}] - jointAngleResult\_right[}
-\DoxyCodeLine{484                 \textcolor{stringliteral}{"joint\_foot\_right"}]) > JOINT\_ANGLE\_TOLERANCE\_FK:}
-\DoxyCodeLine{485                 time.sleep(0.1)}
-\DoxyCodeLine{486             print(\textcolor{stringliteral}{"Right ankle moved to new position"})}
-\DoxyCodeLine{487             \textcolor{keywordflow}{while} abs(\_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}] - jointAngleResult\_left[}
-\DoxyCodeLine{488                 \textcolor{stringliteral}{"joint\_hip\_left"}]) > JOINT\_ANGLE\_TOLERANCE\_FK:}
-\DoxyCodeLine{489                 time.sleep(0.1)}
-\DoxyCodeLine{490             print(\textcolor{stringliteral}{"Left hip moved to new position"})}
-\DoxyCodeLine{491             \textcolor{keywordflow}{while} abs(\_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}] - jointAngleResult\_left[}
-\DoxyCodeLine{492                 \textcolor{stringliteral}{"joint\_knee\_left"}]) > JOINT\_ANGLE\_TOLERANCE\_FK:}
-\DoxyCodeLine{493                 time.sleep(0.1)}
-\DoxyCodeLine{494             print(\textcolor{stringliteral}{"Left knee moved to new position"})}
-\DoxyCodeLine{495             \textcolor{keywordflow}{while} abs(\_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}] - jointAngleResult\_left[}
-\DoxyCodeLine{496                 \textcolor{stringliteral}{"joint\_foot\_left"}]) > JOINT\_ANGLE\_TOLERANCE\_FK:}
-\DoxyCodeLine{497                 time.sleep(0.1)}
-\DoxyCodeLine{498             print(\textcolor{stringliteral}{"Left ankle moved to new position"})}
-\DoxyCodeLine{499 }
-\DoxyCodeLine{500             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Pedal\_actual"}] = \mbox{\hyperlink{namespacecapture__pedal__trajectory_abd2b89d215476e10e9079f6f971a669c}{getPositionRightFoot}}()}
-\DoxyCodeLine{501             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Pedal\_actual"}] = \mbox{\hyperlink{namespacecapture__pedal__trajectory_a8d1d532a39c3c5a5efe8d6110ecd1723}{getPositionLeftFoot}}()}
-\DoxyCodeLine{502 }
-\DoxyCodeLine{503         \textcolor{keywordflow}{else}:}
-\DoxyCodeLine{504             jointAngleDict[\textcolor{stringliteral}{"num\_points"}] = jointAngleDict[\textcolor{stringliteral}{"num\_points"}] - 1}
-\DoxyCodeLine{505 }
-\DoxyCodeLine{506         print(\textcolor{stringliteral}{"Finished point "}, pointIter)}
-\DoxyCodeLine{507 }
-\DoxyCodeLine{508     \textcolor{comment}{\# print(jointAngleDict)}}
-\DoxyCodeLine{509     \textcolor{keyword}{with} open(JSON\_FILENAME, \textcolor{stringliteral}{"w"}) \textcolor{keyword}{as} write\_file:}
-\DoxyCodeLine{510         json.dump(jointAngleDict, write\_file, indent=4, sort\_keys=\textcolor{keyword}{True})}
-\DoxyCodeLine{511 }
-\DoxyCodeLine{512     \mbox{\hyperlink{namespacecapture__pedal__trajectory_a54694682225635fb5a735f159e9f059c}{plotEverything}}(jointAngleDict[\textcolor{stringliteral}{"num\_points"}], jointAngleDict)}
-\DoxyCodeLine{513 }
-\DoxyCodeLine{514     \textcolor{keywordflow}{return} 1}
-\DoxyCodeLine{515 }
+\DoxyCodeLine{376 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a17184534fa48653e3e1957dd8fe17257}{main}}():}
+\DoxyCodeLine{377     \textcolor{keywordflow}{if} len(sys.argv) > 1:}
+\DoxyCodeLine{378         num\_requested\_points = int(sys.argv[1])}
+\DoxyCodeLine{379     \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{380         num\_requested\_points = 72}
+\DoxyCodeLine{381 }
+\DoxyCodeLine{382     \textcolor{keyword}{global} JOINT\_ANGLE\_TOLERANCE\_FK}
+\DoxyCodeLine{383 }
+\DoxyCodeLine{384     rospy.init\_node(\textcolor{stringliteral}{'pedal\_simulation'}, anonymous=\textcolor{keyword}{True})}
+\DoxyCodeLine{385     rospy.Subscriber(\textcolor{stringliteral}{"joint\_state"}, JointState, jointStateCallback)}
+\DoxyCodeLine{386     ros\_right\_hip\_publisher = rospy.Publisher(\textcolor{stringliteral}{'joint\_hip\_right/joint\_hip\_right/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{387     ros\_right\_knee\_publisher = rospy.Publisher(\textcolor{stringliteral}{'joint\_knee\_right/joint\_knee\_right/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{388     ros\_right\_ankle\_publisher = rospy.Publisher(\textcolor{stringliteral}{'joint\_foot\_right/joint\_foot\_right/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{389     ros\_left\_hip\_publisher = rospy.Publisher(\textcolor{stringliteral}{'joint\_hip\_left/joint\_hip\_left/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{390     ros\_left\_knee\_publisher = rospy.Publisher(\textcolor{stringliteral}{'joint\_knee\_left/joint\_knee\_left/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{391     ros\_left\_ankle\_publisher = rospy.Publisher(\textcolor{stringliteral}{'joint\_foot\_left/joint\_foot\_left/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{392     time.sleep(2)}
+\DoxyCodeLine{393 }
+\DoxyCodeLine{394     \mbox{\hyperlink{namespacecapture__pedal__trajectory_a00dff2df306072da5d299eba96e79b4b}{setJointControllerParameters}}(JOINT\_KP, JOINT\_KD)}
+\DoxyCodeLine{395 }
+\DoxyCodeLine{396     capturedPositions = \mbox{\hyperlink{namespacecapture__pedal__trajectory_a73fc41de533fbb350b426e9c08886203}{getPedalPositions}}(num\_requested\_points)}
+\DoxyCodeLine{397 }
+\DoxyCodeLine{398     endeffector\_right = \textcolor{stringliteral}{"foot\_right\_tip"}}
+\DoxyCodeLine{399     frame\_right = \textcolor{stringliteral}{"foot\_right\_tip"}}
+\DoxyCodeLine{400     y\_offset\_right = RIGHT\_LEG\_OFFSET\_Y}
+\DoxyCodeLine{401     frame\_right\_1 = \textcolor{stringliteral}{"foot\_right\_tip"}}
+\DoxyCodeLine{402     weight\_right\_1 = 1}
+\DoxyCodeLine{403     frame\_right\_2 = \textcolor{stringliteral}{"thigh\_right"}}
+\DoxyCodeLine{404     weight\_right\_2 = 0.1}
+\DoxyCodeLine{405     frame\_right\_2\_x\_offset = -0.1}
+\DoxyCodeLine{406     frame\_right\_2\_y\_offset = 0}
+\DoxyCodeLine{407     frame\_right\_2\_z\_offset = 0.3}
+\DoxyCodeLine{408 }
+\DoxyCodeLine{409     endeffector\_left = \textcolor{stringliteral}{"foot\_left\_tip"}}
+\DoxyCodeLine{410     frame\_left = \textcolor{stringliteral}{"foot\_left\_tip"}}
+\DoxyCodeLine{411     y\_offset\_left = LEFT\_LEG\_OFFSET\_Y}
+\DoxyCodeLine{412     frame\_left\_1 = \textcolor{stringliteral}{"foot\_left\_tip"}}
+\DoxyCodeLine{413     weight\_left\_1 = 1}
+\DoxyCodeLine{414     frame\_left\_2 = \textcolor{stringliteral}{"thigh\_left"}}
+\DoxyCodeLine{415     weight\_left\_2 = 0.1}
+\DoxyCodeLine{416     frame\_left\_2\_x\_offset = -0.1}
+\DoxyCodeLine{417     frame\_left\_2\_y\_offset = 0}
+\DoxyCodeLine{418     frame\_left\_2\_z\_offset = 0.3}
+\DoxyCodeLine{419 }
+\DoxyCodeLine{420     jointAngleDict = \{\}}
+\DoxyCodeLine{421     jointAngleDict[\textcolor{stringliteral}{"num\_points"}] = num\_requested\_points}
+\DoxyCodeLine{422 }
+\DoxyCodeLine{423     \textcolor{keywordflow}{for} pointIter \textcolor{keywordflow}{in} range(num\_requested\_points):}
+\DoxyCodeLine{424         print(\textcolor{stringliteral}{"Capturing point number "}, pointIter)}
+\DoxyCodeLine{425         thisX = capturedPositions[pointIter][1]}
+\DoxyCodeLine{426         thisZ = capturedPositions[pointIter][3]}
+\DoxyCodeLine{427         thisPedalAngle = capturedPositions[pointIter][0]}
+\DoxyCodeLine{428         \textcolor{comment}{\# jointAngleResult\_right = inverse\_kinematics\_client(endeffector\_right, frame\_right, thisX + BIKE\_OFFSET\_X, y\_offset\_right + BIKE\_OFFSET\_Y, thisZ + BIKE\_OFFSET\_Z)}}
+\DoxyCodeLine{429         \textcolor{comment}{\# jointAngleResult\_left = inverse\_kinematics\_client(endeffector\_left, frame\_left, thisX + BIKE\_OFFSET\_X, y\_offset\_left + BIKE\_OFFSET\_Y, thisZ + BIKE\_OFFSET\_Z)}}
+\DoxyCodeLine{430         jointAngleResult\_right = \mbox{\hyperlink{namespacecapture__pedal__trajectory_af4a490afbf4bfcafcd9d2d733ea5fac1}{inverse\_kinematics\_two\_frames\_client}}(endeffector\_right, frame\_right\_1,}
+\DoxyCodeLine{431                                                                       thisX + BIKE\_OFFSET\_X,}
+\DoxyCodeLine{432                                                                       y\_offset\_right + BIKE\_OFFSET\_Y,}
+\DoxyCodeLine{433                                                                       thisZ + BIKE\_OFFSET\_Z,}
+\DoxyCodeLine{434                                                                       weight\_right\_1, frame\_right\_2,}
+\DoxyCodeLine{435                                                                       thisX + BIKE\_OFFSET\_X + frame\_right\_2\_x\_offset,}
+\DoxyCodeLine{436                                                                       y\_offset\_right + BIKE\_OFFSET\_Y + frame\_right\_2\_y\_offset,}
+\DoxyCodeLine{437                                                                       thisZ + BIKE\_OFFSET\_Z + frame\_right\_2\_z\_offset,}
+\DoxyCodeLine{438                                                                       weight\_right\_2)}
+\DoxyCodeLine{439         print(\textcolor{stringliteral}{"ik result fetched for foot\_right\_tip"})}
+\DoxyCodeLine{440         jointAngleResult\_left = \mbox{\hyperlink{namespacecapture__pedal__trajectory_af4a490afbf4bfcafcd9d2d733ea5fac1}{inverse\_kinematics\_two\_frames\_client}}(endeffector\_left, frame\_left\_1,}
+\DoxyCodeLine{441                                                                      thisX + BIKE\_OFFSET\_X,}
+\DoxyCodeLine{442                                                                      y\_offset\_left + BIKE\_OFFSET\_Y,}
+\DoxyCodeLine{443                                                                      thisZ + BIKE\_OFFSET\_Z,}
+\DoxyCodeLine{444                                                                      weight\_left\_1, frame\_left\_2,}
+\DoxyCodeLine{445                                                                      thisX + BIKE\_OFFSET\_X + frame\_left\_2\_x\_offset,}
+\DoxyCodeLine{446                                                                      y\_offset\_left + BIKE\_OFFSET\_Y + frame\_left\_2\_y\_offset,}
+\DoxyCodeLine{447                                                                      thisZ + BIKE\_OFFSET\_Z + frame\_left\_2\_z\_offset,}
+\DoxyCodeLine{448                                                                      weight\_left\_2)}
+\DoxyCodeLine{449 }
+\DoxyCodeLine{450         print(\textcolor{stringliteral}{"ik result fetched for foot\_left\_tip"})}
+\DoxyCodeLine{451         \textcolor{keywordflow}{if} jointAngleResult\_right \textcolor{keywordflow}{and} jointAngleResult\_left:}
+\DoxyCodeLine{452             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)] = \{\}}
+\DoxyCodeLine{453             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}] = \{\}}
+\DoxyCodeLine{454             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}] = \{\}}
+\DoxyCodeLine{455             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Pedal"}] = [thisX, thisZ]}
+\DoxyCodeLine{456             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Pedal\_angle"}] = thisPedalAngle}
+\DoxyCodeLine{457             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Hip"}] = jointAngleResult\_left[\textcolor{stringliteral}{"joint\_hip\_left"}]}
+\DoxyCodeLine{458             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Knee"}] = jointAngleResult\_left[\textcolor{stringliteral}{"joint\_knee\_left"}]}
+\DoxyCodeLine{459             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Ankle"}] = jointAngleResult\_left[\textcolor{stringliteral}{"joint\_foot\_left"}]}
+\DoxyCodeLine{460             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Pedal"}] = [thisX, thisZ]}
+\DoxyCodeLine{461             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Pedal\_angle"}] = thisPedalAngle}
+\DoxyCodeLine{462             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Hip"}] = jointAngleResult\_right[\textcolor{stringliteral}{"joint\_hip\_right"}]}
+\DoxyCodeLine{463             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Knee"}] = jointAngleResult\_right[\textcolor{stringliteral}{"joint\_knee\_right"}]}
+\DoxyCodeLine{464             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Ankle"}] = jointAngleResult\_right[\textcolor{stringliteral}{"joint\_foot\_right"}]}
+\DoxyCodeLine{465 }
+\DoxyCodeLine{466             print(\textcolor{stringliteral}{"Left: "}, jointAngleResult\_left)}
+\DoxyCodeLine{467             print(\textcolor{stringliteral}{"Right: "}, jointAngleResult\_right)}
+\DoxyCodeLine{468             ros\_right\_hip\_publisher.publish(jointAngleResult\_right[\textcolor{stringliteral}{"joint\_hip\_right"}])}
+\DoxyCodeLine{469             ros\_right\_knee\_publisher.publish(jointAngleResult\_right[\textcolor{stringliteral}{"joint\_knee\_right"}])}
+\DoxyCodeLine{470             ros\_right\_ankle\_publisher.publish(jointAngleResult\_right[\textcolor{stringliteral}{"joint\_foot\_right"}])}
+\DoxyCodeLine{471             ros\_left\_hip\_publisher.publish(jointAngleResult\_left[\textcolor{stringliteral}{"joint\_hip\_left"}])}
+\DoxyCodeLine{472             ros\_left\_knee\_publisher.publish(jointAngleResult\_left[\textcolor{stringliteral}{"joint\_knee\_left"}])}
+\DoxyCodeLine{473             ros\_left\_ankle\_publisher.publish(jointAngleResult\_left[\textcolor{stringliteral}{"joint\_foot\_left"}])}
+\DoxyCodeLine{474             print(\textcolor{stringliteral}{"Target angles published"})}
+\DoxyCodeLine{475 }
+\DoxyCodeLine{476             \textcolor{keywordflow}{while} abs(\_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}] - jointAngleResult\_right[}
+\DoxyCodeLine{477                 \textcolor{stringliteral}{"joint\_hip\_right"}]) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{478                 time.sleep(0.1)}
+\DoxyCodeLine{479             print(\textcolor{stringliteral}{"Right hip moved to new position"})}
+\DoxyCodeLine{480             \textcolor{keywordflow}{while} abs(\_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}] - jointAngleResult\_right[}
+\DoxyCodeLine{481                 \textcolor{stringliteral}{"joint\_knee\_right"}]) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{482                 time.sleep(0.1)}
+\DoxyCodeLine{483             print(\textcolor{stringliteral}{"Right knee moved to new position"})}
+\DoxyCodeLine{484             \textcolor{keywordflow}{while} abs(\_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}] - jointAngleResult\_right[}
+\DoxyCodeLine{485                 \textcolor{stringliteral}{"joint\_foot\_right"}]) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{486                 time.sleep(0.1)}
+\DoxyCodeLine{487             print(\textcolor{stringliteral}{"Right ankle moved to new position"})}
+\DoxyCodeLine{488             \textcolor{keywordflow}{while} abs(\_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}] - jointAngleResult\_left[}
+\DoxyCodeLine{489                 \textcolor{stringliteral}{"joint\_hip\_left"}]) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{490                 time.sleep(0.1)}
+\DoxyCodeLine{491             print(\textcolor{stringliteral}{"Left hip moved to new position"})}
+\DoxyCodeLine{492             \textcolor{keywordflow}{while} abs(\_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}] - jointAngleResult\_left[}
+\DoxyCodeLine{493                 \textcolor{stringliteral}{"joint\_knee\_left"}]) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{494                 time.sleep(0.1)}
+\DoxyCodeLine{495             print(\textcolor{stringliteral}{"Left knee moved to new position"})}
+\DoxyCodeLine{496             \textcolor{keywordflow}{while} abs(\_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}] - jointAngleResult\_left[}
+\DoxyCodeLine{497                 \textcolor{stringliteral}{"joint\_foot\_left"}]) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{498                 time.sleep(0.1)}
+\DoxyCodeLine{499             print(\textcolor{stringliteral}{"Left ankle moved to new position"})}
+\DoxyCodeLine{500 }
+\DoxyCodeLine{501             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Pedal\_actual"}] = \mbox{\hyperlink{namespacecapture__pedal__trajectory_abd2b89d215476e10e9079f6f971a669c}{getPositionRightFoot}}()}
+\DoxyCodeLine{502             jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Pedal\_actual"}] = \mbox{\hyperlink{namespacecapture__pedal__trajectory_a8d1d532a39c3c5a5efe8d6110ecd1723}{getPositionLeftFoot}}()}
+\DoxyCodeLine{503 }
+\DoxyCodeLine{504         \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{505             jointAngleDict[\textcolor{stringliteral}{"num\_points"}] = jointAngleDict[\textcolor{stringliteral}{"num\_points"}] - 1}
+\DoxyCodeLine{506 }
+\DoxyCodeLine{507         print(\textcolor{stringliteral}{"Finished point "}, pointIter)}
+\DoxyCodeLine{508 }
+\DoxyCodeLine{509     \textcolor{comment}{\# print(jointAngleDict)}}
+\DoxyCodeLine{510     \textcolor{keyword}{with} open(JSON\_FILENAME, \textcolor{stringliteral}{"w"}) \textcolor{keyword}{as} write\_file:}
+\DoxyCodeLine{511         json.dump(jointAngleDict, write\_file, indent=4, sort\_keys=\textcolor{keyword}{True})}
+\DoxyCodeLine{512 }
+\DoxyCodeLine{513     \mbox{\hyperlink{namespacecapture__pedal__trajectory_a54694682225635fb5a735f159e9f059c}{plotEverything}}(jointAngleDict[\textcolor{stringliteral}{"num\_points"}], jointAngleDict)}
+\DoxyCodeLine{514 }
+\DoxyCodeLine{515     \textcolor{keywordflow}{return} 1}
 \DoxyCodeLine{516 }
+\DoxyCodeLine{517 }
 
 \end{DoxyCode}
 Here is the call graph for this function\+:\nopagebreak
@@ -488,111 +488,111 @@ Here is the call graph for this function\+:\nopagebreak
 
 
 
-Definition at line 228 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 229 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{228 \textcolor{keyword}{def }\mbox{\hyperlink{namespacecapture__pedal__trajectory_a54694682225635fb5a735f159e9f059c}{plotEverything}}(numSamples, jointAngleDict):}
-\DoxyCodeLine{229     plt.figure(1)}
-\DoxyCodeLine{230     plt.title(\textcolor{stringliteral}{'Pedal trajectory planned and ik result'})}
-\DoxyCodeLine{231     capturedPositions = \mbox{\hyperlink{namespacecapture__pedal__trajectory_a73fc41de533fbb350b426e9c08886203}{getPedalPositions}}(numSamples)}
-\DoxyCodeLine{232     x\_values = []}
-\DoxyCodeLine{233     z\_values = []}
-\DoxyCodeLine{234     \textcolor{keywordflow}{for} pointIterator \textcolor{keywordflow}{in} capturedPositions:}
-\DoxyCodeLine{235         x\_values.append(pointIterator[1])}
-\DoxyCodeLine{236         z\_values.append(pointIterator[3])}
-\DoxyCodeLine{237     plt.plot(x\_values, z\_values, label=\textcolor{stringliteral}{"Ideal"})}
-\DoxyCodeLine{238     \textcolor{keywordflow}{for} pointIter \textcolor{keywordflow}{in} range(jointAngleDict[\textcolor{stringliteral}{"num\_points"}]):}
-\DoxyCodeLine{239         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"} + str(pointIter) \textcolor{keywordflow}{in} jointAngleDict:}
-\DoxyCodeLine{240             \textcolor{keywordflow}{if} \textcolor{stringliteral}{"Pedal"} \textcolor{keywordflow}{in} jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}]:}
-\DoxyCodeLine{241                 plt.plot(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Pedal"}][0],}
-\DoxyCodeLine{242                          jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Pedal"}][1], \textcolor{stringliteral}{'gs'}, label=\textcolor{stringliteral}{"IK recorded left"})}
-\DoxyCodeLine{243                 plt.plot(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Pedal\_actual"}][0],}
-\DoxyCodeLine{244                          jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Pedal\_actual"}][1], \textcolor{stringliteral}{'rs'},}
-\DoxyCodeLine{245                          label=\textcolor{stringliteral}{"Actual left"})}
-\DoxyCodeLine{246             \textcolor{keywordflow}{if} \textcolor{stringliteral}{"Pedal"} \textcolor{keywordflow}{in} jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}]:}
-\DoxyCodeLine{247                 plt.plot(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Pedal"}][0],}
-\DoxyCodeLine{248                          jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Pedal"}][1], \textcolor{stringliteral}{'gs'},}
-\DoxyCodeLine{249                          label=\textcolor{stringliteral}{"IK recorded right"})}
-\DoxyCodeLine{250                 plt.plot(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Pedal\_actual"}][0],}
-\DoxyCodeLine{251                          jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Pedal\_actual"}][1], \textcolor{stringliteral}{'rs'},}
-\DoxyCodeLine{252                          label=\textcolor{stringliteral}{"Actual right"})}
-\DoxyCodeLine{253 }
-\DoxyCodeLine{254     plt.figure(2)}
-\DoxyCodeLine{255     plt.title(\textcolor{stringliteral}{'Hip positions left'})}
-\DoxyCodeLine{256     x\_values = []}
-\DoxyCodeLine{257     z\_values = []}
-\DoxyCodeLine{258     tot\_points = jointAngleDict[\textcolor{stringliteral}{"num\_points"}]}
-\DoxyCodeLine{259     \textcolor{keywordflow}{for} pointIter \textcolor{keywordflow}{in} range(tot\_points):}
-\DoxyCodeLine{260         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"} + str(pointIter) \textcolor{keywordflow}{in} jointAngleDict:}
-\DoxyCodeLine{261             \textcolor{keywordflow}{if} \textcolor{stringliteral}{"Hip"} \textcolor{keywordflow}{in} jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}]:}
-\DoxyCodeLine{262                 x\_values.append(pointIter * (2 * math.pi / tot\_points))}
-\DoxyCodeLine{263                 z\_values.append(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Hip"}])}
-\DoxyCodeLine{264     plt.plot(x\_values, z\_values)}
-\DoxyCodeLine{265 }
-\DoxyCodeLine{266     plt.figure(3)}
-\DoxyCodeLine{267     plt.title(\textcolor{stringliteral}{'Hip positions right'})}
-\DoxyCodeLine{268     x\_values = []}
-\DoxyCodeLine{269     z\_values = []}
-\DoxyCodeLine{270     tot\_points = jointAngleDict[\textcolor{stringliteral}{"num\_points"}]}
-\DoxyCodeLine{271     \textcolor{keywordflow}{for} pointIter \textcolor{keywordflow}{in} range(tot\_points):}
-\DoxyCodeLine{272         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"} + str(pointIter) \textcolor{keywordflow}{in} jointAngleDict:}
-\DoxyCodeLine{273             \textcolor{keywordflow}{if} \textcolor{stringliteral}{"Hip"} \textcolor{keywordflow}{in} jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}]:}
-\DoxyCodeLine{274                 x\_values.append(pointIter * (2 * math.pi / tot\_points))}
-\DoxyCodeLine{275                 z\_values.append(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Hip"}])}
-\DoxyCodeLine{276     plt.plot(x\_values, z\_values)}
-\DoxyCodeLine{277 }
-\DoxyCodeLine{278     plt.figure(4)}
-\DoxyCodeLine{279     plt.title(\textcolor{stringliteral}{'Knee positions left'})}
-\DoxyCodeLine{280     x\_values = []}
-\DoxyCodeLine{281     z\_values = []}
-\DoxyCodeLine{282     tot\_points = jointAngleDict[\textcolor{stringliteral}{"num\_points"}]}
-\DoxyCodeLine{283     \textcolor{keywordflow}{for} pointIter \textcolor{keywordflow}{in} range(tot\_points):}
-\DoxyCodeLine{284         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"} + str(pointIter) \textcolor{keywordflow}{in} jointAngleDict:}
-\DoxyCodeLine{285             \textcolor{keywordflow}{if} \textcolor{stringliteral}{"Knee"} \textcolor{keywordflow}{in} jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}]:}
-\DoxyCodeLine{286                 x\_values.append(pointIter * (2 * math.pi / tot\_points))}
-\DoxyCodeLine{287                 z\_values.append(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Knee"}])}
-\DoxyCodeLine{288     plt.plot(x\_values, z\_values)}
-\DoxyCodeLine{289 }
-\DoxyCodeLine{290     plt.figure(5)}
-\DoxyCodeLine{291     plt.title(\textcolor{stringliteral}{'Knee positions right'})}
-\DoxyCodeLine{292     x\_values = []}
-\DoxyCodeLine{293     z\_values = []}
-\DoxyCodeLine{294     tot\_points = jointAngleDict[\textcolor{stringliteral}{"num\_points"}]}
-\DoxyCodeLine{295     \textcolor{keywordflow}{for} pointIter \textcolor{keywordflow}{in} range(tot\_points):}
-\DoxyCodeLine{296         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"} + str(pointIter) \textcolor{keywordflow}{in} jointAngleDict:}
-\DoxyCodeLine{297             \textcolor{keywordflow}{if} \textcolor{stringliteral}{"Knee"} \textcolor{keywordflow}{in} jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}]:}
-\DoxyCodeLine{298                 x\_values.append(pointIter * (2 * math.pi / tot\_points))}
-\DoxyCodeLine{299                 z\_values.append(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Knee"}])}
-\DoxyCodeLine{300     plt.plot(x\_values, z\_values)}
-\DoxyCodeLine{301 }
-\DoxyCodeLine{302     plt.figure(6)}
-\DoxyCodeLine{303     plt.title(\textcolor{stringliteral}{'Ankle positions left'})}
-\DoxyCodeLine{304     x\_values = []}
-\DoxyCodeLine{305     z\_values = []}
-\DoxyCodeLine{306     tot\_points = jointAngleDict[\textcolor{stringliteral}{"num\_points"}]}
-\DoxyCodeLine{307     \textcolor{keywordflow}{for} pointIter \textcolor{keywordflow}{in} range(tot\_points):}
-\DoxyCodeLine{308         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"} + str(pointIter) \textcolor{keywordflow}{in} jointAngleDict:}
-\DoxyCodeLine{309             \textcolor{keywordflow}{if} \textcolor{stringliteral}{"Ankle"} \textcolor{keywordflow}{in} jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}]:}
-\DoxyCodeLine{310                 x\_values.append(pointIter * (2 * math.pi / tot\_points))}
-\DoxyCodeLine{311                 z\_values.append(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Ankle"}])}
-\DoxyCodeLine{312     plt.plot(x\_values, z\_values)}
-\DoxyCodeLine{313 }
-\DoxyCodeLine{314     plt.figure(7)}
-\DoxyCodeLine{315     plt.title(\textcolor{stringliteral}{'Ankle positions right'})}
-\DoxyCodeLine{316     x\_values = []}
-\DoxyCodeLine{317     z\_values = []}
-\DoxyCodeLine{318     tot\_points = jointAngleDict[\textcolor{stringliteral}{"num\_points"}]}
-\DoxyCodeLine{319     \textcolor{keywordflow}{for} pointIter \textcolor{keywordflow}{in} range(tot\_points):}
-\DoxyCodeLine{320         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"} + str(pointIter) \textcolor{keywordflow}{in} jointAngleDict:}
-\DoxyCodeLine{321             \textcolor{keywordflow}{if} \textcolor{stringliteral}{"Ankle"} \textcolor{keywordflow}{in} jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}]:}
-\DoxyCodeLine{322                 x\_values.append(pointIter * (2 * math.pi / tot\_points))}
-\DoxyCodeLine{323                 z\_values.append(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Ankle"}])}
-\DoxyCodeLine{324     plt.plot(x\_values, z\_values)}
-\DoxyCodeLine{325 }
-\DoxyCodeLine{326     plt.show()}
-\DoxyCodeLine{327 }
+\DoxyCodeLine{229 \textcolor{keyword}{def }\mbox{\hyperlink{namespacecapture__pedal__trajectory_a54694682225635fb5a735f159e9f059c}{plotEverything}}(numSamples, jointAngleDict):}
+\DoxyCodeLine{230     plt.figure(1)}
+\DoxyCodeLine{231     plt.title(\textcolor{stringliteral}{'Pedal trajectory planned and ik result'})}
+\DoxyCodeLine{232     capturedPositions = \mbox{\hyperlink{namespacecapture__pedal__trajectory_a73fc41de533fbb350b426e9c08886203}{getPedalPositions}}(numSamples)}
+\DoxyCodeLine{233     x\_values = []}
+\DoxyCodeLine{234     z\_values = []}
+\DoxyCodeLine{235     \textcolor{keywordflow}{for} pointIterator \textcolor{keywordflow}{in} capturedPositions:}
+\DoxyCodeLine{236         x\_values.append(pointIterator[1])}
+\DoxyCodeLine{237         z\_values.append(pointIterator[3])}
+\DoxyCodeLine{238     plt.plot(x\_values, z\_values, label=\textcolor{stringliteral}{"Ideal"})}
+\DoxyCodeLine{239     \textcolor{keywordflow}{for} pointIter \textcolor{keywordflow}{in} range(jointAngleDict[\textcolor{stringliteral}{"num\_points"}]):}
+\DoxyCodeLine{240         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"} + str(pointIter) \textcolor{keywordflow}{in} jointAngleDict:}
+\DoxyCodeLine{241             \textcolor{keywordflow}{if} \textcolor{stringliteral}{"Pedal"} \textcolor{keywordflow}{in} jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}]:}
+\DoxyCodeLine{242                 plt.plot(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Pedal"}][0],}
+\DoxyCodeLine{243                          jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Pedal"}][1], \textcolor{stringliteral}{'gs'}, label=\textcolor{stringliteral}{"IK recorded left"})}
+\DoxyCodeLine{244                 plt.plot(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Pedal\_actual"}][0],}
+\DoxyCodeLine{245                          jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Pedal\_actual"}][1], \textcolor{stringliteral}{'rs'},}
+\DoxyCodeLine{246                          label=\textcolor{stringliteral}{"Actual left"})}
+\DoxyCodeLine{247             \textcolor{keywordflow}{if} \textcolor{stringliteral}{"Pedal"} \textcolor{keywordflow}{in} jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}]:}
+\DoxyCodeLine{248                 plt.plot(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Pedal"}][0],}
+\DoxyCodeLine{249                          jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Pedal"}][1], \textcolor{stringliteral}{'gs'},}
+\DoxyCodeLine{250                          label=\textcolor{stringliteral}{"IK recorded right"})}
+\DoxyCodeLine{251                 plt.plot(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Pedal\_actual"}][0],}
+\DoxyCodeLine{252                          jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Pedal\_actual"}][1], \textcolor{stringliteral}{'rs'},}
+\DoxyCodeLine{253                          label=\textcolor{stringliteral}{"Actual right"})}
+\DoxyCodeLine{254 }
+\DoxyCodeLine{255     plt.figure(2)}
+\DoxyCodeLine{256     plt.title(\textcolor{stringliteral}{'Hip positions left'})}
+\DoxyCodeLine{257     x\_values = []}
+\DoxyCodeLine{258     z\_values = []}
+\DoxyCodeLine{259     tot\_points = jointAngleDict[\textcolor{stringliteral}{"num\_points"}]}
+\DoxyCodeLine{260     \textcolor{keywordflow}{for} pointIter \textcolor{keywordflow}{in} range(tot\_points):}
+\DoxyCodeLine{261         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"} + str(pointIter) \textcolor{keywordflow}{in} jointAngleDict:}
+\DoxyCodeLine{262             \textcolor{keywordflow}{if} \textcolor{stringliteral}{"Hip"} \textcolor{keywordflow}{in} jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}]:}
+\DoxyCodeLine{263                 x\_values.append(pointIter * (2 * math.pi / tot\_points))}
+\DoxyCodeLine{264                 z\_values.append(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Hip"}])}
+\DoxyCodeLine{265     plt.plot(x\_values, z\_values)}
+\DoxyCodeLine{266 }
+\DoxyCodeLine{267     plt.figure(3)}
+\DoxyCodeLine{268     plt.title(\textcolor{stringliteral}{'Hip positions right'})}
+\DoxyCodeLine{269     x\_values = []}
+\DoxyCodeLine{270     z\_values = []}
+\DoxyCodeLine{271     tot\_points = jointAngleDict[\textcolor{stringliteral}{"num\_points"}]}
+\DoxyCodeLine{272     \textcolor{keywordflow}{for} pointIter \textcolor{keywordflow}{in} range(tot\_points):}
+\DoxyCodeLine{273         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"} + str(pointIter) \textcolor{keywordflow}{in} jointAngleDict:}
+\DoxyCodeLine{274             \textcolor{keywordflow}{if} \textcolor{stringliteral}{"Hip"} \textcolor{keywordflow}{in} jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}]:}
+\DoxyCodeLine{275                 x\_values.append(pointIter * (2 * math.pi / tot\_points))}
+\DoxyCodeLine{276                 z\_values.append(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Hip"}])}
+\DoxyCodeLine{277     plt.plot(x\_values, z\_values)}
+\DoxyCodeLine{278 }
+\DoxyCodeLine{279     plt.figure(4)}
+\DoxyCodeLine{280     plt.title(\textcolor{stringliteral}{'Knee positions left'})}
+\DoxyCodeLine{281     x\_values = []}
+\DoxyCodeLine{282     z\_values = []}
+\DoxyCodeLine{283     tot\_points = jointAngleDict[\textcolor{stringliteral}{"num\_points"}]}
+\DoxyCodeLine{284     \textcolor{keywordflow}{for} pointIter \textcolor{keywordflow}{in} range(tot\_points):}
+\DoxyCodeLine{285         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"} + str(pointIter) \textcolor{keywordflow}{in} jointAngleDict:}
+\DoxyCodeLine{286             \textcolor{keywordflow}{if} \textcolor{stringliteral}{"Knee"} \textcolor{keywordflow}{in} jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}]:}
+\DoxyCodeLine{287                 x\_values.append(pointIter * (2 * math.pi / tot\_points))}
+\DoxyCodeLine{288                 z\_values.append(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Knee"}])}
+\DoxyCodeLine{289     plt.plot(x\_values, z\_values)}
+\DoxyCodeLine{290 }
+\DoxyCodeLine{291     plt.figure(5)}
+\DoxyCodeLine{292     plt.title(\textcolor{stringliteral}{'Knee positions right'})}
+\DoxyCodeLine{293     x\_values = []}
+\DoxyCodeLine{294     z\_values = []}
+\DoxyCodeLine{295     tot\_points = jointAngleDict[\textcolor{stringliteral}{"num\_points"}]}
+\DoxyCodeLine{296     \textcolor{keywordflow}{for} pointIter \textcolor{keywordflow}{in} range(tot\_points):}
+\DoxyCodeLine{297         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"} + str(pointIter) \textcolor{keywordflow}{in} jointAngleDict:}
+\DoxyCodeLine{298             \textcolor{keywordflow}{if} \textcolor{stringliteral}{"Knee"} \textcolor{keywordflow}{in} jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}]:}
+\DoxyCodeLine{299                 x\_values.append(pointIter * (2 * math.pi / tot\_points))}
+\DoxyCodeLine{300                 z\_values.append(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Knee"}])}
+\DoxyCodeLine{301     plt.plot(x\_values, z\_values)}
+\DoxyCodeLine{302 }
+\DoxyCodeLine{303     plt.figure(6)}
+\DoxyCodeLine{304     plt.title(\textcolor{stringliteral}{'Ankle positions left'})}
+\DoxyCodeLine{305     x\_values = []}
+\DoxyCodeLine{306     z\_values = []}
+\DoxyCodeLine{307     tot\_points = jointAngleDict[\textcolor{stringliteral}{"num\_points"}]}
+\DoxyCodeLine{308     \textcolor{keywordflow}{for} pointIter \textcolor{keywordflow}{in} range(tot\_points):}
+\DoxyCodeLine{309         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"} + str(pointIter) \textcolor{keywordflow}{in} jointAngleDict:}
+\DoxyCodeLine{310             \textcolor{keywordflow}{if} \textcolor{stringliteral}{"Ankle"} \textcolor{keywordflow}{in} jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}]:}
+\DoxyCodeLine{311                 x\_values.append(pointIter * (2 * math.pi / tot\_points))}
+\DoxyCodeLine{312                 z\_values.append(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Ankle"}])}
+\DoxyCodeLine{313     plt.plot(x\_values, z\_values)}
+\DoxyCodeLine{314 }
+\DoxyCodeLine{315     plt.figure(7)}
+\DoxyCodeLine{316     plt.title(\textcolor{stringliteral}{'Ankle positions right'})}
+\DoxyCodeLine{317     x\_values = []}
+\DoxyCodeLine{318     z\_values = []}
+\DoxyCodeLine{319     tot\_points = jointAngleDict[\textcolor{stringliteral}{"num\_points"}]}
+\DoxyCodeLine{320     \textcolor{keywordflow}{for} pointIter \textcolor{keywordflow}{in} range(tot\_points):}
+\DoxyCodeLine{321         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"} + str(pointIter) \textcolor{keywordflow}{in} jointAngleDict:}
+\DoxyCodeLine{322             \textcolor{keywordflow}{if} \textcolor{stringliteral}{"Ankle"} \textcolor{keywordflow}{in} jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}]:}
+\DoxyCodeLine{323                 x\_values.append(pointIter * (2 * math.pi / tot\_points))}
+\DoxyCodeLine{324                 z\_values.append(jointAngleDict[\textcolor{stringliteral}{"point\_"} + str(pointIter)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Ankle"}])}
+\DoxyCodeLine{325     plt.plot(x\_values, z\_values)}
+\DoxyCodeLine{326 }
+\DoxyCodeLine{327     plt.show()}
 \DoxyCodeLine{328 }
+\DoxyCodeLine{329 }
 
 \end{DoxyCode}
 Here is the call graph for this function\+:\nopagebreak
@@ -617,30 +617,30 @@ Here is the caller graph for this function\+:\nopagebreak
 
 
 
-Definition at line 208 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 209 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{208 \textcolor{keyword}{def }\mbox{\hyperlink{namespacecapture__pedal__trajectory_ab92d9c5ee601a8497311ab922392e027}{plotPedalTrajectories}}():}
-\DoxyCodeLine{209     numSamples = []}
-\DoxyCodeLine{210     \textcolor{keywordflow}{if} len(sys.argv) > 1:}
-\DoxyCodeLine{211         \textcolor{keywordflow}{for} argIterator \textcolor{keywordflow}{in} range(1, len(sys.argv)):}
-\DoxyCodeLine{212             numSamples.append(int(sys.argv[argIterator]))}
-\DoxyCodeLine{213 }
-\DoxyCodeLine{214     plt.title(\textcolor{stringliteral}{'Pedal trajectory estimation by number of intermediate points'})}
-\DoxyCodeLine{215 }
-\DoxyCodeLine{216     \textcolor{keywordflow}{for} thisSample \textcolor{keywordflow}{in} numSamples:}
-\DoxyCodeLine{217         capturedPositions = \mbox{\hyperlink{namespacecapture__pedal__trajectory_a73fc41de533fbb350b426e9c08886203}{getPedalPositions}}(thisSample)}
-\DoxyCodeLine{218         x\_values = []}
-\DoxyCodeLine{219         z\_values = []}
-\DoxyCodeLine{220         \textcolor{keywordflow}{for} pointIterator \textcolor{keywordflow}{in} capturedPositions:}
-\DoxyCodeLine{221             x\_values.append(pointIterator[1])}
-\DoxyCodeLine{222             z\_values.append(pointIterator[3])}
-\DoxyCodeLine{223         plt.plot(x\_values, z\_values, label=str(thisSample))}
-\DoxyCodeLine{224     plt.legend()}
-\DoxyCodeLine{225     plt.show()}
-\DoxyCodeLine{226 }
+\DoxyCodeLine{209 \textcolor{keyword}{def }\mbox{\hyperlink{namespacecapture__pedal__trajectory_ab92d9c5ee601a8497311ab922392e027}{plotPedalTrajectories}}():}
+\DoxyCodeLine{210     numSamples = []}
+\DoxyCodeLine{211     \textcolor{keywordflow}{if} len(sys.argv) > 1:}
+\DoxyCodeLine{212         \textcolor{keywordflow}{for} argIterator \textcolor{keywordflow}{in} range(1, len(sys.argv)):}
+\DoxyCodeLine{213             numSamples.append(int(sys.argv[argIterator]))}
+\DoxyCodeLine{214 }
+\DoxyCodeLine{215     plt.title(\textcolor{stringliteral}{'Pedal trajectory estimation by number of intermediate points'})}
+\DoxyCodeLine{216 }
+\DoxyCodeLine{217     \textcolor{keywordflow}{for} thisSample \textcolor{keywordflow}{in} numSamples:}
+\DoxyCodeLine{218         capturedPositions = \mbox{\hyperlink{namespacecapture__pedal__trajectory_a73fc41de533fbb350b426e9c08886203}{getPedalPositions}}(thisSample)}
+\DoxyCodeLine{219         x\_values = []}
+\DoxyCodeLine{220         z\_values = []}
+\DoxyCodeLine{221         \textcolor{keywordflow}{for} pointIterator \textcolor{keywordflow}{in} capturedPositions:}
+\DoxyCodeLine{222             x\_values.append(pointIterator[1])}
+\DoxyCodeLine{223             z\_values.append(pointIterator[3])}
+\DoxyCodeLine{224         plt.plot(x\_values, z\_values, label=str(thisSample))}
+\DoxyCodeLine{225     plt.legend()}
+\DoxyCodeLine{226     plt.show()}
 \DoxyCodeLine{227 }
+\DoxyCodeLine{228 }
 
 \end{DoxyCode}
 Here is the call graph for this function\+:\nopagebreak
@@ -658,56 +658,56 @@ Here is the call graph for this function\+:\nopagebreak
 
 
 
-Definition at line 124 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 125 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{124 \textcolor{keyword}{def }\mbox{\hyperlink{namespacecapture__pedal__trajectory_a00dff2df306072da5d299eba96e79b4b}{setJointControllerParameters}}(proportionalVal, derivativeVal):}
-\DoxyCodeLine{125     rospy.wait\_for\_service(\textcolor{stringliteral}{'joint\_foot\_left/joint\_foot\_left/params'})}
-\DoxyCodeLine{126     \textcolor{keywordflow}{try}:}
-\DoxyCodeLine{127         foot\_left\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'joint\_foot\_left/joint\_foot\_left/params'}, SetControllerParameters)}
-\DoxyCodeLine{128         foot\_left\_srv(proportionalVal, derivativeVal)}
-\DoxyCodeLine{129     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
-\DoxyCodeLine{130         print(\textcolor{stringliteral}{"Service call joint\_foot\_left failed:"}, e)}
-\DoxyCodeLine{131 }
-\DoxyCodeLine{132     rospy.wait\_for\_service(\textcolor{stringliteral}{'joint\_foot\_right/joint\_foot\_right/params'})}
-\DoxyCodeLine{133     \textcolor{keywordflow}{try}:}
-\DoxyCodeLine{134         foot\_right\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'joint\_foot\_right/joint\_foot\_right/params'}, SetControllerParameters)}
-\DoxyCodeLine{135         foot\_right\_srv(proportionalVal, derivativeVal)}
-\DoxyCodeLine{136     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
-\DoxyCodeLine{137         print(\textcolor{stringliteral}{"Service call joint\_foot\_right failed:"}, e)}
-\DoxyCodeLine{138 }
-\DoxyCodeLine{139     rospy.wait\_for\_service(\textcolor{stringliteral}{'joint\_knee\_left/joint\_knee\_left/params'})}
-\DoxyCodeLine{140     \textcolor{keywordflow}{try}:}
-\DoxyCodeLine{141         knee\_left\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'joint\_knee\_left/joint\_knee\_left/params'}, SetControllerParameters)}
-\DoxyCodeLine{142         knee\_left\_srv(proportionalVal, derivativeVal)}
-\DoxyCodeLine{143     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
-\DoxyCodeLine{144         print(\textcolor{stringliteral}{"Service call joint\_knee\_left failed:"}, e)}
-\DoxyCodeLine{145 }
-\DoxyCodeLine{146     rospy.wait\_for\_service(\textcolor{stringliteral}{'joint\_knee\_right/joint\_knee\_right/params'})}
-\DoxyCodeLine{147     \textcolor{keywordflow}{try}:}
-\DoxyCodeLine{148         knee\_right\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'joint\_knee\_right/joint\_knee\_right/params'}, SetControllerParameters)}
-\DoxyCodeLine{149         knee\_right\_srv(proportionalVal, derivativeVal)}
-\DoxyCodeLine{150     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
-\DoxyCodeLine{151         print(\textcolor{stringliteral}{"Service call joint\_knee\_right failed:"}, e)}
-\DoxyCodeLine{152 }
-\DoxyCodeLine{153     rospy.wait\_for\_service(\textcolor{stringliteral}{'joint\_hip\_left/joint\_hip\_left/params'})}
-\DoxyCodeLine{154     \textcolor{keywordflow}{try}:}
-\DoxyCodeLine{155         hip\_left\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'joint\_hip\_left/joint\_hip\_left/params'}, SetControllerParameters)}
-\DoxyCodeLine{156         hip\_left\_srv(proportionalVal, derivativeVal)}
-\DoxyCodeLine{157     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
-\DoxyCodeLine{158         print(\textcolor{stringliteral}{"Service call joint\_hip\_left failed:"}, e)}
-\DoxyCodeLine{159 }
-\DoxyCodeLine{160     rospy.wait\_for\_service(\textcolor{stringliteral}{'joint\_hip\_right/joint\_hip\_right/params'})}
-\DoxyCodeLine{161     \textcolor{keywordflow}{try}:}
-\DoxyCodeLine{162         hip\_right\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'joint\_hip\_right/joint\_hip\_right/params'}, SetControllerParameters)}
-\DoxyCodeLine{163         hip\_right\_srv(proportionalVal, derivativeVal)}
-\DoxyCodeLine{164     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
-\DoxyCodeLine{165         print(\textcolor{stringliteral}{"Service call joint\_hip\_right failed:"}, e)}
-\DoxyCodeLine{166 }
-\DoxyCodeLine{167     print(\textcolor{stringliteral}{"Controller paramters updated"})}
-\DoxyCodeLine{168 }
+\DoxyCodeLine{125 \textcolor{keyword}{def }\mbox{\hyperlink{namespacecapture__pedal__trajectory_a00dff2df306072da5d299eba96e79b4b}{setJointControllerParameters}}(proportionalVal, derivativeVal):}
+\DoxyCodeLine{126     rospy.wait\_for\_service(\textcolor{stringliteral}{'joint\_foot\_left/joint\_foot\_left/params'})}
+\DoxyCodeLine{127     \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{128         foot\_left\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'joint\_foot\_left/joint\_foot\_left/params'}, SetControllerParameters)}
+\DoxyCodeLine{129         foot\_left\_srv(proportionalVal, derivativeVal)}
+\DoxyCodeLine{130     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
+\DoxyCodeLine{131         print(\textcolor{stringliteral}{"Service call joint\_foot\_left failed:"}, e)}
+\DoxyCodeLine{132 }
+\DoxyCodeLine{133     rospy.wait\_for\_service(\textcolor{stringliteral}{'joint\_foot\_right/joint\_foot\_right/params'})}
+\DoxyCodeLine{134     \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{135         foot\_right\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'joint\_foot\_right/joint\_foot\_right/params'}, SetControllerParameters)}
+\DoxyCodeLine{136         foot\_right\_srv(proportionalVal, derivativeVal)}
+\DoxyCodeLine{137     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
+\DoxyCodeLine{138         print(\textcolor{stringliteral}{"Service call joint\_foot\_right failed:"}, e)}
+\DoxyCodeLine{139 }
+\DoxyCodeLine{140     rospy.wait\_for\_service(\textcolor{stringliteral}{'joint\_knee\_left/joint\_knee\_left/params'})}
+\DoxyCodeLine{141     \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{142         knee\_left\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'joint\_knee\_left/joint\_knee\_left/params'}, SetControllerParameters)}
+\DoxyCodeLine{143         knee\_left\_srv(proportionalVal, derivativeVal)}
+\DoxyCodeLine{144     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
+\DoxyCodeLine{145         print(\textcolor{stringliteral}{"Service call joint\_knee\_left failed:"}, e)}
+\DoxyCodeLine{146 }
+\DoxyCodeLine{147     rospy.wait\_for\_service(\textcolor{stringliteral}{'joint\_knee\_right/joint\_knee\_right/params'})}
+\DoxyCodeLine{148     \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{149         knee\_right\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'joint\_knee\_right/joint\_knee\_right/params'}, SetControllerParameters)}
+\DoxyCodeLine{150         knee\_right\_srv(proportionalVal, derivativeVal)}
+\DoxyCodeLine{151     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
+\DoxyCodeLine{152         print(\textcolor{stringliteral}{"Service call joint\_knee\_right failed:"}, e)}
+\DoxyCodeLine{153 }
+\DoxyCodeLine{154     rospy.wait\_for\_service(\textcolor{stringliteral}{'joint\_hip\_left/joint\_hip\_left/params'})}
+\DoxyCodeLine{155     \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{156         hip\_left\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'joint\_hip\_left/joint\_hip\_left/params'}, SetControllerParameters)}
+\DoxyCodeLine{157         hip\_left\_srv(proportionalVal, derivativeVal)}
+\DoxyCodeLine{158     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
+\DoxyCodeLine{159         print(\textcolor{stringliteral}{"Service call joint\_hip\_left failed:"}, e)}
+\DoxyCodeLine{160 }
+\DoxyCodeLine{161     rospy.wait\_for\_service(\textcolor{stringliteral}{'joint\_hip\_right/joint\_hip\_right/params'})}
+\DoxyCodeLine{162     \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{163         hip\_right\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'joint\_hip\_right/joint\_hip\_right/params'}, SetControllerParameters)}
+\DoxyCodeLine{164         hip\_right\_srv(proportionalVal, derivativeVal)}
+\DoxyCodeLine{165     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
+\DoxyCodeLine{166         print(\textcolor{stringliteral}{"Service call joint\_hip\_right failed:"}, e)}
+\DoxyCodeLine{167 }
+\DoxyCodeLine{168     print(\textcolor{stringliteral}{"Controller paramters updated"})}
 \DoxyCodeLine{169 }
+\DoxyCodeLine{170 }
 
 \end{DoxyCode}
 Here is the caller graph for this function\+:\nopagebreak
@@ -758,7 +758,7 @@ Here is the caller graph for this function\+:\nopagebreak
 \end{DoxyCode}
 
 
-Definition at line 56 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 57 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_a1b49dec5499551d0e71e6ab97ff29212}\label{namespacecapture__pedal__trajectory_a1b49dec5499551d0e71e6ab97ff29212}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!BIKE\_OFFSET\_X@{BIKE\_OFFSET\_X}}
@@ -768,7 +768,7 @@ Definition at line 56 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 29 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 30 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_a475c3dee13003f3ece2d10e85edb1f83}\label{namespacecapture__pedal__trajectory_a475c3dee13003f3ece2d10e85edb1f83}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!BIKE\_OFFSET\_Y@{BIKE\_OFFSET\_Y}}
@@ -778,7 +778,7 @@ Definition at line 29 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 30 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 31 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_ae56ea6a6121fd586046b998e9cb04733}\label{namespacecapture__pedal__trajectory_ae56ea6a6121fd586046b998e9cb04733}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!BIKE\_OFFSET\_Z@{BIKE\_OFFSET\_Z}}
@@ -788,7 +788,7 @@ Definition at line 30 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 31 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 32 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_ab099221b0d5408d71443d0ec46c934dd}\label{namespacecapture__pedal__trajectory_ab099221b0d5408d71443d0ec46c934dd}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!JOINT\_ANGLE\_TOLERANCE\_FK@{JOINT\_ANGLE\_TOLERANCE\_FK}}
@@ -798,7 +798,7 @@ Definition at line 31 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 17 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 18 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_aafb2017b021edc06d1500bcb8965fed9}\label{namespacecapture__pedal__trajectory_aafb2017b021edc06d1500bcb8965fed9}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!JOINT\_KD@{JOINT\_KD}}
@@ -808,7 +808,7 @@ Definition at line 17 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 19 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 20 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_a17f32ce02010543add42596faff74a22}\label{namespacecapture__pedal__trajectory_a17f32ce02010543add42596faff74a22}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!JOINT\_KP@{JOINT\_KP}}
@@ -818,7 +818,7 @@ Definition at line 19 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 18 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 19 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_ad1d5add611204b12043a126abb98492c}\label{namespacecapture__pedal__trajectory_ad1d5add611204b12043a126abb98492c}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!JSON\_FILENAME@{JSON\_FILENAME}}
@@ -828,7 +828,7 @@ Definition at line 18 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 15 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 16 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_a498ea7bdb7ff782e4c26e38ec4c119c7}\label{namespacecapture__pedal__trajectory_a498ea7bdb7ff782e4c26e38ec4c119c7}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!LEFT\_ANKLE\_JOINT@{LEFT\_ANKLE\_JOINT}}
@@ -838,7 +838,7 @@ Definition at line 15 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 54 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 55 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_ae837fb7d509f64b8c35bad991e20eb06}\label{namespacecapture__pedal__trajectory_ae837fb7d509f64b8c35bad991e20eb06}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!LEFT\_HIP\_JOINT@{LEFT\_HIP\_JOINT}}
@@ -848,7 +848,7 @@ Definition at line 54 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 52 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 53 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_a4ac7e5482c7632b894bddac8c4e4c314}\label{namespacecapture__pedal__trajectory_a4ac7e5482c7632b894bddac8c4e4c314}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!LEFT\_KNEE\_JOINT@{LEFT\_KNEE\_JOINT}}
@@ -858,7 +858,7 @@ Definition at line 52 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 53 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 54 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_a624e3b2ffb27de7ac8ef0f742d2902c5}\label{namespacecapture__pedal__trajectory_a624e3b2ffb27de7ac8ef0f742d2902c5}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!LEFT\_LEG\_OFFSET\_Y@{LEFT\_LEG\_OFFSET\_Y}}
@@ -868,7 +868,7 @@ Definition at line 53 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 36 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 37 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_a3d0288c92be21566c30d330ec9b04ddf}\label{namespacecapture__pedal__trajectory_a3d0288c92be21566c30d330ec9b04ddf}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!PEDAL\_CENTER\_OFFSET\_X@{PEDAL\_CENTER\_OFFSET\_X}}
@@ -882,7 +882,7 @@ M\+E\+A\+S\+U\+R\+ED P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#.
 
 
 
-Definition at line 25 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 26 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_ad3b6cdad0edebb959ecdb76e709876f4}\label{namespacecapture__pedal__trajectory_ad3b6cdad0edebb959ecdb76e709876f4}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!PEDAL\_CENTER\_OFFSET\_Y@{PEDAL\_CENTER\_OFFSET\_Y}}
@@ -892,7 +892,7 @@ Definition at line 25 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 26 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 27 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_adecb66f79b8a878ce63c441bbd250b0e}\label{namespacecapture__pedal__trajectory_adecb66f79b8a878ce63c441bbd250b0e}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!PEDAL\_CENTER\_OFFSET\_Z@{PEDAL\_CENTER\_OFFSET\_Z}}
@@ -902,7 +902,7 @@ Definition at line 26 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 27 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 28 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_a4a76a55d0312e30b5da43583ce1f53ea}\label{namespacecapture__pedal__trajectory_a4a76a55d0312e30b5da43583ce1f53ea}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!PEDAL\_RADIUS@{PEDAL\_RADIUS}}
@@ -912,7 +912,7 @@ Definition at line 27 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 33 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 34 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_aeaa979292407a578df6b6ed8088b908d}\label{namespacecapture__pedal__trajectory_aeaa979292407a578df6b6ed8088b908d}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!RIGHT\_ANKLE\_JOINT@{RIGHT\_ANKLE\_JOINT}}
@@ -922,7 +922,7 @@ Definition at line 33 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 51 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 52 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_a82263d3cb2967d2b210c72d013362610}\label{namespacecapture__pedal__trajectory_a82263d3cb2967d2b210c72d013362610}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!RIGHT\_HIP\_JOINT@{RIGHT\_HIP\_JOINT}}
@@ -932,7 +932,7 @@ Definition at line 51 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 49 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 50 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_a13c6b4844291f74230c8fa8376e4c14f}\label{namespacecapture__pedal__trajectory_a13c6b4844291f74230c8fa8376e4c14f}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!RIGHT\_KNEE\_JOINT@{RIGHT\_KNEE\_JOINT}}
@@ -942,7 +942,7 @@ Definition at line 49 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 50 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 51 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_abc5f034cd21c3878a3d10594ad89e589}\label{namespacecapture__pedal__trajectory_abc5f034cd21c3878a3d10594ad89e589}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!RIGHT\_LEG\_OFFSET\_Y@{RIGHT\_LEG\_OFFSET\_Y}}
@@ -952,7 +952,7 @@ Definition at line 50 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 35 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 36 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_a07733166d6384f69b9880e18c9c70fb3}\label{namespacecapture__pedal__trajectory_a07733166d6384f69b9880e18c9c70fb3}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!ROS\_JOINT\_ANKLE\_LEFT@{ROS\_JOINT\_ANKLE\_LEFT}}
@@ -962,7 +962,7 @@ Definition at line 35 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 47 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 48 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_ae399b4f7124a1cd67c10a5ff5a0efba5}\label{namespacecapture__pedal__trajectory_ae399b4f7124a1cd67c10a5ff5a0efba5}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!ROS\_JOINT\_ANKLE\_RIGHT@{ROS\_JOINT\_ANKLE\_RIGHT}}
@@ -972,7 +972,7 @@ Definition at line 47 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 44 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 45 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_af2271fa55dd911979e17d7a7bd891e42}\label{namespacecapture__pedal__trajectory_af2271fa55dd911979e17d7a7bd891e42}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!ROS\_JOINT\_HIP\_LEFT@{ROS\_JOINT\_HIP\_LEFT}}
@@ -982,7 +982,7 @@ Definition at line 44 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 45 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 46 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_ace3bd5ff6f7bfb6e65aadc4487a89ffe}\label{namespacecapture__pedal__trajectory_ace3bd5ff6f7bfb6e65aadc4487a89ffe}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!ROS\_JOINT\_HIP\_RIGHT@{ROS\_JOINT\_HIP\_RIGHT}}
@@ -996,7 +996,7 @@ G\+L\+O\+B\+AL V\+A\+R\+I\+A\+B\+L\+ES \#\#\#.
 
 
 
-Definition at line 42 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 43 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_a2573f1326727542b82629e3ba73f57fd}\label{namespacecapture__pedal__trajectory_a2573f1326727542b82629e3ba73f57fd}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!ROS\_JOINT\_KNEE\_LEFT@{ROS\_JOINT\_KNEE\_LEFT}}
@@ -1006,7 +1006,7 @@ Definition at line 42 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 46 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 47 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 \mbox{\Hypertarget{namespacecapture__pedal__trajectory_a79c63fa5ca37fc7f030568dfe7079f73}\label{namespacecapture__pedal__trajectory_a79c63fa5ca37fc7f030568dfe7079f73}} 
 \index{capture\_pedal\_trajectory@{capture\_pedal\_trajectory}!ROS\_JOINT\_KNEE\_RIGHT@{ROS\_JOINT\_KNEE\_RIGHT}}
@@ -1016,5 +1016,5 @@ Definition at line 46 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 
 
 
-Definition at line 43 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
+Definition at line 44 of file capture\+\_\+pedal\+\_\+trajectory.\+py.
 

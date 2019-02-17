@@ -143,22 +143,22 @@ string \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__traje
 
 
 
-Definition at line 390 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 391 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{390 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a66385fbebb1478a8f7666e94252cd986}{checkOutputLimits}}(inputVal):}
-\DoxyCodeLine{391 }
-\DoxyCodeLine{392     returnVal = inputVal}
-\DoxyCodeLine{393 }
-\DoxyCodeLine{394     \textcolor{keywordflow}{if} inputVal > MAX\_JOINT\_VEL:}
-\DoxyCodeLine{395         returnVal = MAX\_JOINT\_VEL}
-\DoxyCodeLine{396     \textcolor{keywordflow}{elif} inputVal < MIN\_JOINT\_VEL:}
-\DoxyCodeLine{397         returnVal = MIN\_JOINT\_VEL}
-\DoxyCodeLine{398 }
-\DoxyCodeLine{399     \textcolor{keywordflow}{return} returnVal}
-\DoxyCodeLine{400 }
+\DoxyCodeLine{391 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a66385fbebb1478a8f7666e94252cd986}{checkOutputLimits}}(inputVal):}
+\DoxyCodeLine{392 }
+\DoxyCodeLine{393     returnVal = inputVal}
+\DoxyCodeLine{394 }
+\DoxyCodeLine{395     \textcolor{keywordflow}{if} inputVal > MAX\_JOINT\_VEL:}
+\DoxyCodeLine{396         returnVal = MAX\_JOINT\_VEL}
+\DoxyCodeLine{397     \textcolor{keywordflow}{elif} inputVal < MIN\_JOINT\_VEL:}
+\DoxyCodeLine{398         returnVal = MIN\_JOINT\_VEL}
+\DoxyCodeLine{399 }
+\DoxyCodeLine{400     \textcolor{keywordflow}{return} returnVal}
 \DoxyCodeLine{401 }
+\DoxyCodeLine{402 }
 
 \end{DoxyCode}
 Here is the caller graph for this function\+:\nopagebreak
@@ -176,58 +176,58 @@ Here is the caller graph for this function\+:\nopagebreak
 
 
 
-Definition at line 402 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 403 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{402 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_acd7eb1865e5d89c44a0a4e799df6ff8f}{computeVelocitySetpoint}}(jointName, endPos, startTime, currTime, endTime):}
-\DoxyCodeLine{403 }
-\DoxyCodeLine{404     \textcolor{keyword}{global} \_jointsControlData}
-\DoxyCodeLine{405     \textcolor{keyword}{global} PRINT\_DEBUG}
-\DoxyCodeLine{406     \textcolor{keyword}{global} JOINT\_TRAJECTORY\_ERROR\_TOLERANCE}
-\DoxyCodeLine{407     \textcolor{keyword}{global} JOINT\_VELOCITY\_FACTOR}
-\DoxyCodeLine{408 }
-\DoxyCodeLine{409     currPos = \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_ab795561d31a73377693ae3df6ad51304}{getJointPosition}}(jointName)}
-\DoxyCodeLine{410     goalPos = \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a566b961b7c78e9a10e7bc0cca3e0c184}{interpolateTrajectoryPoints}}(\_jointsControlData[jointName][\textcolor{stringliteral}{"trajectory\_startpoint"}], endPos, startTime, currTime, endTime)}
-\DoxyCodeLine{411     jointError = goalPos - currPos}
-\DoxyCodeLine{412 }
-\DoxyCodeLine{413     \textcolor{keywordflow}{if} \_jointsControlData[jointName][\textcolor{stringliteral}{"bool\_update\_iv"}]:}
-\DoxyCodeLine{414         \textcolor{keywordflow}{if} currTime < endTime:}
-\DoxyCodeLine{415             jointTravelTime = endTime - currTime}
-\DoxyCodeLine{416             jointTravelDistance = endPos - currPos}
-\DoxyCodeLine{417             jointIdealVelocity = float(jointTravelDistance) / jointTravelTime}
-\DoxyCodeLine{418             \_jointsControlData[jointName][\textcolor{stringliteral}{"ideal\_velocity"}] = jointIdealVelocity}
-\DoxyCodeLine{419             \_jointsControlData[jointName][\textcolor{stringliteral}{"bool\_update\_iv"}] = \textcolor{keyword}{False}}
-\DoxyCodeLine{420         \textcolor{keywordflow}{else}:}
-\DoxyCodeLine{421             print(\textcolor{stringliteral}{"ERROR in compute ideal joint velocity: currTime > endTime"})}
-\DoxyCodeLine{422 }
-\DoxyCodeLine{423     thisPosErrorDerivative = float(jointError - \_jointsControlData[jointName][\textcolor{stringliteral}{"prev\_error"}])/CONTROLLER\_FREQUENCY}
-\DoxyCodeLine{424 }
-\DoxyCodeLine{425     \textcolor{comment}{\#print("COMPUTED \%s VELOCITY SETPOINT: \%s (jointTravelTime: \%s, jointTravelDistance: \%s)" \% (jointName, jointVelocityReachGoal, jointTravelTime, jointTravelDistance))}}
-\DoxyCodeLine{426 }
-\DoxyCodeLine{427     thisReturnVal = \_jointsControlData[jointName][\textcolor{stringliteral}{"ideal\_velocity"}]}
-\DoxyCodeLine{428     thisReturnVal = thisReturnVal*JOINT\_VELOCITY\_FACTOR}
-\DoxyCodeLine{429     \textcolor{comment}{\# SWITCH CONTROL MODE IF STATEMENT IS TRUE (FROM IDEAL VELOCITY TO PID POSITION ERROR)}}
-\DoxyCodeLine{430     \textcolor{keywordflow}{if} currTime > endTime:  \textcolor{comment}{\# jointError > JOINT\_TRAJECTORY\_ERROR\_TOLERANCE or}}
-\DoxyCodeLine{431         \textcolor{keywordflow}{if} PRINT\_DEBUG:}
-\DoxyCodeLine{432             print(\textcolor{stringliteral}{"Switching control to PID for joint \%s"} \% jointName)}
-\DoxyCodeLine{433         \_jointsControlData[jointName][\textcolor{stringliteral}{"pos\_error\_integral"}] += float(jointError)/CONTROLLER\_FREQUENCY}
-\DoxyCodeLine{434         \_jointsControlData[jointName][\textcolor{stringliteral}{"prev\_time"}] = currTime}
-\DoxyCodeLine{435         \_jointsControlData[jointName][\textcolor{stringliteral}{"prev\_pos"}] = currPos}
-\DoxyCodeLine{436         \_jointsControlData[jointName][\textcolor{stringliteral}{"prev\_error"}] = jointError}
-\DoxyCodeLine{437         thisReturnVal = \_jointsControlData[jointName][\textcolor{stringliteral}{"param\_p"}]*jointError + \_jointsControlData[jointName][\textcolor{stringliteral}{"param\_i"}]*\_jointsControlData[jointName][\textcolor{stringliteral}{"pos\_error\_integral"}] + \_jointsControlData[jointName][\textcolor{stringliteral}{"param\_d"}]*thisPosErrorDerivative}
-\DoxyCodeLine{438 }
-\DoxyCodeLine{439     thisReturnVal = \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a66385fbebb1478a8f7666e94252cd986}{checkOutputLimits}}(thisReturnVal)}
-\DoxyCodeLine{440 }
-\DoxyCodeLine{441     \textcolor{keywordflow}{if} PRINT\_DEBUG:}
-\DoxyCodeLine{442         \textcolor{keywordflow}{if} jointName == RIGHT\_HIP\_JOINT:}
-\DoxyCodeLine{443             print(\textcolor{stringliteral}{"\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\%0.5f\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\%0.5f"} \% (jointError, thisReturnVal), end=\textcolor{stringliteral}{'\(\backslash\)r'})}
-\DoxyCodeLine{444         \textcolor{keywordflow}{elif} jointName == RIGHT\_KNEE\_JOINT:}
-\DoxyCodeLine{445             print(\textcolor{stringliteral}{"\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\%0.5f\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\%0.5f"} \% (jointError, thisReturnVal), end=\textcolor{stringliteral}{'\(\backslash\)r'})}
-\DoxyCodeLine{446 }
-\DoxyCodeLine{447     \textcolor{keywordflow}{return} thisReturnVal}
-\DoxyCodeLine{448 }
+\DoxyCodeLine{403 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_acd7eb1865e5d89c44a0a4e799df6ff8f}{computeVelocitySetpoint}}(jointName, endPos, startTime, currTime, endTime):}
+\DoxyCodeLine{404 }
+\DoxyCodeLine{405     \textcolor{keyword}{global} \_jointsControlData}
+\DoxyCodeLine{406     \textcolor{keyword}{global} PRINT\_DEBUG}
+\DoxyCodeLine{407     \textcolor{keyword}{global} JOINT\_TRAJECTORY\_ERROR\_TOLERANCE}
+\DoxyCodeLine{408     \textcolor{keyword}{global} JOINT\_VELOCITY\_FACTOR}
+\DoxyCodeLine{409 }
+\DoxyCodeLine{410     currPos = \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_ab795561d31a73377693ae3df6ad51304}{getJointPosition}}(jointName)}
+\DoxyCodeLine{411     goalPos = \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a566b961b7c78e9a10e7bc0cca3e0c184}{interpolateTrajectoryPoints}}(\_jointsControlData[jointName][\textcolor{stringliteral}{"trajectory\_startpoint"}], endPos, startTime, currTime, endTime)}
+\DoxyCodeLine{412     jointError = goalPos - currPos}
+\DoxyCodeLine{413 }
+\DoxyCodeLine{414     \textcolor{keywordflow}{if} \_jointsControlData[jointName][\textcolor{stringliteral}{"bool\_update\_iv"}]:}
+\DoxyCodeLine{415         \textcolor{keywordflow}{if} currTime < endTime:}
+\DoxyCodeLine{416             jointTravelTime = endTime - currTime}
+\DoxyCodeLine{417             jointTravelDistance = endPos - currPos}
+\DoxyCodeLine{418             jointIdealVelocity = float(jointTravelDistance) / jointTravelTime}
+\DoxyCodeLine{419             \_jointsControlData[jointName][\textcolor{stringliteral}{"ideal\_velocity"}] = jointIdealVelocity}
+\DoxyCodeLine{420             \_jointsControlData[jointName][\textcolor{stringliteral}{"bool\_update\_iv"}] = \textcolor{keyword}{False}}
+\DoxyCodeLine{421         \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{422             print(\textcolor{stringliteral}{"ERROR in compute ideal joint velocity: currTime > endTime"})}
+\DoxyCodeLine{423 }
+\DoxyCodeLine{424     thisPosErrorDerivative = float(jointError - \_jointsControlData[jointName][\textcolor{stringliteral}{"prev\_error"}])/CONTROLLER\_FREQUENCY}
+\DoxyCodeLine{425 }
+\DoxyCodeLine{426     \textcolor{comment}{\#print("COMPUTED \%s VELOCITY SETPOINT: \%s (jointTravelTime: \%s, jointTravelDistance: \%s)" \% (jointName, jointVelocityReachGoal, jointTravelTime, jointTravelDistance))}}
+\DoxyCodeLine{427 }
+\DoxyCodeLine{428     thisReturnVal = \_jointsControlData[jointName][\textcolor{stringliteral}{"ideal\_velocity"}]}
+\DoxyCodeLine{429     thisReturnVal = thisReturnVal*JOINT\_VELOCITY\_FACTOR}
+\DoxyCodeLine{430     \textcolor{comment}{\# SWITCH CONTROL MODE IF STATEMENT IS TRUE (FROM IDEAL VELOCITY TO PID POSITION ERROR)}}
+\DoxyCodeLine{431     \textcolor{keywordflow}{if} currTime > endTime:  \textcolor{comment}{\# jointError > JOINT\_TRAJECTORY\_ERROR\_TOLERANCE or}}
+\DoxyCodeLine{432         \textcolor{keywordflow}{if} PRINT\_DEBUG:}
+\DoxyCodeLine{433             print(\textcolor{stringliteral}{"Switching control to PID for joint \%s"} \% jointName)}
+\DoxyCodeLine{434         \_jointsControlData[jointName][\textcolor{stringliteral}{"pos\_error\_integral"}] += float(jointError)/CONTROLLER\_FREQUENCY}
+\DoxyCodeLine{435         \_jointsControlData[jointName][\textcolor{stringliteral}{"prev\_time"}] = currTime}
+\DoxyCodeLine{436         \_jointsControlData[jointName][\textcolor{stringliteral}{"prev\_pos"}] = currPos}
+\DoxyCodeLine{437         \_jointsControlData[jointName][\textcolor{stringliteral}{"prev\_error"}] = jointError}
+\DoxyCodeLine{438         thisReturnVal = \_jointsControlData[jointName][\textcolor{stringliteral}{"param\_p"}]*jointError + \_jointsControlData[jointName][\textcolor{stringliteral}{"param\_i"}]*\_jointsControlData[jointName][\textcolor{stringliteral}{"pos\_error\_integral"}] + \_jointsControlData[jointName][\textcolor{stringliteral}{"param\_d"}]*thisPosErrorDerivative}
+\DoxyCodeLine{439 }
+\DoxyCodeLine{440     thisReturnVal = \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a66385fbebb1478a8f7666e94252cd986}{checkOutputLimits}}(thisReturnVal)}
+\DoxyCodeLine{441 }
+\DoxyCodeLine{442     \textcolor{keywordflow}{if} PRINT\_DEBUG:}
+\DoxyCodeLine{443         \textcolor{keywordflow}{if} jointName == RIGHT\_HIP\_JOINT:}
+\DoxyCodeLine{444             print(\textcolor{stringliteral}{"\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\%0.5f\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\%0.5f"} \% (jointError, thisReturnVal), end=\textcolor{stringliteral}{'\(\backslash\)r'})}
+\DoxyCodeLine{445         \textcolor{keywordflow}{elif} jointName == RIGHT\_KNEE\_JOINT:}
+\DoxyCodeLine{446             print(\textcolor{stringliteral}{"\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\%0.5f\(\backslash\)t\(\backslash\)t\(\backslash\)t\(\backslash\)t\%0.5f"} \% (jointError, thisReturnVal), end=\textcolor{stringliteral}{'\(\backslash\)r'})}
+\DoxyCodeLine{447 }
+\DoxyCodeLine{448     \textcolor{keywordflow}{return} thisReturnVal}
 \DoxyCodeLine{449 }
+\DoxyCodeLine{450 }
 
 \end{DoxyCode}
 Here is the call graph for this function\+:\nopagebreak
@@ -252,155 +252,155 @@ Here is the caller graph for this function\+:\nopagebreak
 
 
 
-Definition at line 459 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 460 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{459 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_aa9b9e1956f51882e5f93d5f2bc0fd29b}{FSM}}():}
-\DoxyCodeLine{460 }
-\DoxyCodeLine{461     \textcolor{keyword}{global} numTrajectoryPoints}
-\DoxyCodeLine{462     \textcolor{keyword}{global} \_jointsControlData}
-\DoxyCodeLine{463     \textcolor{keyword}{global} \_jointsList}
-\DoxyCodeLine{464     \textcolor{keyword}{global} PRINT\_DEBUG}
-\DoxyCodeLine{465 }
-\DoxyCodeLine{466     \textcolor{keyword}{global} x\_pedal\_record}
-\DoxyCodeLine{467     \textcolor{keyword}{global} y\_pedal\_record}
-\DoxyCodeLine{468     \textcolor{keyword}{global} pedalTrajectoryRight}
-\DoxyCodeLine{469 }
-\DoxyCodeLine{470     \_runFSM = \textcolor{keyword}{True}}
-\DoxyCodeLine{471 }
-\DoxyCodeLine{472     \_currState = INIT}
-\DoxyCodeLine{473     \_currTrajectoryPoint = -1}
-\DoxyCodeLine{474 }
-\DoxyCodeLine{475     \_startTime = 0.0}
-\DoxyCodeLine{476     \_endTime = 0.0}
-\DoxyCodeLine{477     \_currTime = 0.0}
-\DoxyCodeLine{478     \_prevTime = 0.0}
-\DoxyCodeLine{479 }
-\DoxyCodeLine{480     initial\_trajectory\_point = 0}
-\DoxyCodeLine{481     past\_initial\_trajectory\_point = \textcolor{keyword}{False}}
-\DoxyCodeLine{482 }
-\DoxyCodeLine{483     ros\_right\_hip\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/joint\_hip\_right/joint\_hip\_right/target'}, Float32, queue\_size=2)}
-\DoxyCodeLine{484     ros\_right\_knee\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/joint\_knee\_right/joint\_knee\_right/target'}, Float32, queue\_size=2)}
-\DoxyCodeLine{485     ros\_right\_ankle\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/joint\_foot\_right/joint\_foot\_right/target'}, Float32, queue\_size=2)}
-\DoxyCodeLine{486 }
-\DoxyCodeLine{487     ros\_left\_hip\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/joint\_hip\_left/joint\_hip\_left/target'}, Float32, queue\_size=2)}
-\DoxyCodeLine{488     ros\_left\_knee\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/joint\_knee\_left/joint\_knee\_left/target'}, Float32, queue\_size=2)}
-\DoxyCodeLine{489     ros\_left\_ankle\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/joint\_foot\_left/joint\_foot\_left/target'}, Float32, queue\_size=2)}
-\DoxyCodeLine{490 }
-\DoxyCodeLine{491     \textcolor{keywordflow}{while} \_runFSM:}
-\DoxyCodeLine{492 }
-\DoxyCodeLine{493         }
-\DoxyCodeLine{494         \textcolor{keywordflow}{if} \_currState == INIT:}
-\DoxyCodeLine{495         }
-\DoxyCodeLine{496 }
-\DoxyCodeLine{497             \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a5ecaa1f0c7b7379d5d217b69ecbcfafc}{importJointTrajectoryRecord}}()}
-\DoxyCodeLine{498             \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a8ae6fa3671e9ca6e05825e390f12b8b6}{setTrajectoryPointDuration}}()}
-\DoxyCodeLine{499 }
-\DoxyCodeLine{500             \textcolor{comment}{\# Find starting point on the trajectory}}
-\DoxyCodeLine{501 }
-\DoxyCodeLine{502             \_currState = PEDAL}
-\DoxyCodeLine{503 }
-\DoxyCodeLine{504         }
-\DoxyCodeLine{505         \textcolor{keywordflow}{if} \_currState == PEDAL:}
-\DoxyCodeLine{506         }
-\DoxyCodeLine{507 }
-\DoxyCodeLine{508             \textcolor{comment}{\# Initialize state}}
-\DoxyCodeLine{509             \textcolor{keywordflow}{if} \_currTrajectoryPoint == -1:}
-\DoxyCodeLine{510                 \_currTrajectoryPoint = trajectoryStartingPoint}
-\DoxyCodeLine{511                 initial\_trajectory\_point = \_currTrajectoryPoint}
-\DoxyCodeLine{512             \textcolor{keywordflow}{if} \_startTime == 0.0:}
-\DoxyCodeLine{513                 \_startTime = time.time()}
-\DoxyCodeLine{514             \textcolor{keywordflow}{if} \_endTime == 0.0:}
-\DoxyCodeLine{515                 \_endTime = \_startTime + TRAJECTORY\_POINT\_DURATION}
-\DoxyCodeLine{516             \textcolor{keywordflow}{if} \_prevTime == 0.0:}
-\DoxyCodeLine{517                 \_prevTime = time.time()}
-\DoxyCodeLine{518 }
-\DoxyCodeLine{519             currPedalPosXY = \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_aa470979737ea0796da119aaeb2e46c94}{getPositionRightFoot}}()}
-\DoxyCodeLine{520             x\_pedal\_record.append(currPedalPosXY[0])}
-\DoxyCodeLine{521             y\_pedal\_record.append(currPedalPosXY[1])}
-\DoxyCodeLine{522 }
-\DoxyCodeLine{523             \textcolor{keywordflow}{if} \_currTrajectoryPoint == initial\_trajectory\_point \textcolor{keywordflow}{and} past\_initial\_trajectory\_point:}
-\DoxyCodeLine{524                 print(len(pedalTrajectoryRight))}
-\DoxyCodeLine{525                 print(\textcolor{stringliteral}{"Reached starting point"})}
-\DoxyCodeLine{526                 \textcolor{keywordflow}{for} pedal\_pos \textcolor{keywordflow}{in} pedalTrajectoryRight:}
-\DoxyCodeLine{527                     plt.plot(pedal\_pos[0], pedal\_pos[1], \textcolor{stringliteral}{'*'})}
-\DoxyCodeLine{528                 plt.plot(x\_pedal\_record, y\_pedal\_record)}
-\DoxyCodeLine{529                 plt.show()}
-\DoxyCodeLine{530                 past\_initial\_trajectory\_point = \textcolor{keyword}{False}}
-\DoxyCodeLine{531 }
-\DoxyCodeLine{532             \textcolor{comment}{\# Regulate update frequency}}
-\DoxyCodeLine{533             \_currTime = time.time()}
-\DoxyCodeLine{534             \textcolor{keywordflow}{while} float(float(\_currTime) - float(\_prevTime)) < (1 / CONTROLLER\_FREQUENCY):}
-\DoxyCodeLine{535                 time.sleep(1)}
-\DoxyCodeLine{536                 currPedalPosXY = \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_aa470979737ea0796da119aaeb2e46c94}{getPositionRightFoot}}()}
-\DoxyCodeLine{537                 x\_pedal\_record.append(currPedalPosXY[0])}
-\DoxyCodeLine{538                 y\_pedal\_record.append(currPedalPosXY[1])}
-\DoxyCodeLine{539                 \_currTime = time.time()}
-\DoxyCodeLine{540             \_prevTime = \_currTime}
-\DoxyCodeLine{541 }
-\DoxyCodeLine{542             \textcolor{comment}{\# Check if trajectory point reached and act accordingly}}
-\DoxyCodeLine{543             \textcolor{keywordflow}{if} PRINT\_DEBUG:}
-\DoxyCodeLine{544                 print(\textcolor{stringliteral}{"\%0.5f"} \% (\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_abcf37086aa984f3a2d352f009de5a362}{getDistance}}(\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_aa470979737ea0796da119aaeb2e46c94}{getPositionRightFoot}}(), pedalTrajectoryRight[\_currTrajectoryPoint])), end=\textcolor{stringliteral}{'\(\backslash\)r'})}
-\DoxyCodeLine{545 }
-\DoxyCodeLine{546             \textcolor{keywordflow}{if} \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_abcf37086aa984f3a2d352f009de5a362}{getDistance}}(\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_aa470979737ea0796da119aaeb2e46c94}{getPositionRightFoot}}(), pedalTrajectoryRight[\_currTrajectoryPoint]) <= PEDAL\_POSITION\_ERROR\_TOLERANCE:  \textcolor{comment}{\# and \_currTime >= \_endTime}}
-\DoxyCodeLine{547                 \textcolor{comment}{\# getDistance(getPositionLeftFoot(), pedalTrajectoryLeft[\_currTrajectoryPoint]) <= PEDAL\_POSITION\_ERROR\_TOLERANCE and}}
-\DoxyCodeLine{548                 past\_initial\_trajectory\_point = \textcolor{keyword}{True}}
-\DoxyCodeLine{549                 \textcolor{keywordflow}{if} \_currTrajectoryPoint < (numTrajectoryPoints - 1):}
-\DoxyCodeLine{550                     \_currTrajectoryPoint += 1}
-\DoxyCodeLine{551                 \textcolor{keywordflow}{elif} \_currTrajectoryPoint >= (numTrajectoryPoints - 1):}
-\DoxyCodeLine{552                     \_currTrajectoryPoint = 0}
-\DoxyCodeLine{553                 \textcolor{keywordflow}{if} PRINT\_DEBUG:}
-\DoxyCodeLine{554                     print(\textcolor{stringliteral}{"UPDATING TRAJECTORY POINT. NEW POINT: \%s"} \% \_currTrajectoryPoint)}
-\DoxyCodeLine{555                 \_startTime = time.time()}
-\DoxyCodeLine{556                 \_endTime = \_startTime + TRAJECTORY\_POINT\_DURATION}
-\DoxyCodeLine{557                 \textcolor{keywordflow}{for} thisJointName \textcolor{keywordflow}{in} \_jointsList:}
-\DoxyCodeLine{558                     \_jointsControlData[thisJointName][\textcolor{stringliteral}{"trajectory\_startpoint"}] = \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_ab795561d31a73377693ae3df6ad51304}{getJointPosition}}(thisJointName)}
-\DoxyCodeLine{559                     \_jointsControlData[thisJointName][\textcolor{stringliteral}{"pos\_error\_integral"}] = 0}
-\DoxyCodeLine{560                     \_jointsControlData[thisJointName][\textcolor{stringliteral}{"bool\_update\_iv"}] = \textcolor{keyword}{True}}
-\DoxyCodeLine{561 }
-\DoxyCodeLine{562                 \textcolor{comment}{\# Iterate through joints and update setpoints}}
-\DoxyCodeLine{563                 \textcolor{keywordflow}{for} thisJointName \textcolor{keywordflow}{in} \_jointsList:}
-\DoxyCodeLine{564 }
-\DoxyCodeLine{565                     thisJointPositionGoalpoint = 0.0}
-\DoxyCodeLine{566                     \textcolor{keywordflow}{if} thisJointName == RIGHT\_HIP\_JOINT:}
-\DoxyCodeLine{567                         thisJointPositionGoalpoint = hipTrajectoryRight[\_currTrajectoryPoint]}
-\DoxyCodeLine{568                     \textcolor{keywordflow}{elif} thisJointName == RIGHT\_KNEE\_JOINT:}
-\DoxyCodeLine{569                         thisJointPositionGoalpoint = kneeTrajectoryRight[\_currTrajectoryPoint]}
-\DoxyCodeLine{570                     \textcolor{keywordflow}{elif} thisJointName == RIGHT\_ANKLE\_JOINT:}
-\DoxyCodeLine{571                         thisJointPositionGoalpoint = ankleTrajectoryRight[\_currTrajectoryPoint]}
-\DoxyCodeLine{572                     \textcolor{keywordflow}{elif} thisJointName == LEFT\_HIP\_JOINT:}
-\DoxyCodeLine{573                         thisJointPositionGoalpoint = hipTrajectoryLeft[\_currTrajectoryPoint]}
-\DoxyCodeLine{574                     \textcolor{keywordflow}{elif} thisJointName == LEFT\_KNEE\_JOINT:}
-\DoxyCodeLine{575                         thisJointPositionGoalpoint = kneeTrajectoryLeft[\_currTrajectoryPoint]}
-\DoxyCodeLine{576                     \textcolor{keywordflow}{elif} thisJointName == LEFT\_ANKLE\_JOINT:}
-\DoxyCodeLine{577                         thisJointPositionGoalpoint = ankleTrajectoryLeft[\_currTrajectoryPoint]}
-\DoxyCodeLine{578 }
-\DoxyCodeLine{579                     \_currTime = time.time()}
-\DoxyCodeLine{580 }
-\DoxyCodeLine{581                     \textcolor{comment}{\#thisJointPositionSetpoint = interpolateTrajectoryPoints(\_jointsControlData[thisJointName]["trajectory\_startpoint"], thisJointPositionGoalpoint, \_startTime, \_currTime, \_endTime)}}
-\DoxyCodeLine{582 }
-\DoxyCodeLine{583                     thisJointVelocitySetpoint = \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_acd7eb1865e5d89c44a0a4e799df6ff8f}{computeVelocitySetpoint}}(thisJointName, thisJointPositionGoalpoint, \_startTime, \_currTime, \_endTime)}
-\DoxyCodeLine{584 }
-\DoxyCodeLine{585                     \textcolor{keywordflow}{if} thisJointName == RIGHT\_HIP\_JOINT:}
-\DoxyCodeLine{586                         ros\_right\_hip\_publisher.publish(thisJointVelocitySetpoint)}
-\DoxyCodeLine{587                     \textcolor{keywordflow}{elif} thisJointName == RIGHT\_KNEE\_JOINT:}
-\DoxyCodeLine{588                         ros\_right\_knee\_publisher.publish(thisJointVelocitySetpoint)}
-\DoxyCodeLine{589                     \textcolor{keywordflow}{elif} thisJointName == RIGHT\_ANKLE\_JOINT:}
-\DoxyCodeLine{590                         ros\_right\_ankle\_publisher.publish(thisJointVelocitySetpoint)}
-\DoxyCodeLine{591 \textcolor{comment}{\#                    elif thisJointName == LEFT\_HIP\_JOINT:}}
-\DoxyCodeLine{592 \textcolor{comment}{\#                        ros\_left\_hip\_publisher.publish(thisJointVelocitySetpoint)}}
-\DoxyCodeLine{593 \textcolor{comment}{\#                    elif thisJointName == LEFT\_KNEE\_JOINT:}}
-\DoxyCodeLine{594 \textcolor{comment}{\#                        ros\_left\_knee\_publisher.publish(thisJointVelocitySetpoint)}}
-\DoxyCodeLine{595 \textcolor{comment}{\#                    elif thisJointName == LEFT\_ANKLE\_JOINT:}}
-\DoxyCodeLine{596 \textcolor{comment}{\#                        ros\_left\_ankle\_publisher.publish(thisJointVelocitySetpoint)}}
-\DoxyCodeLine{597 }
-\DoxyCodeLine{598         }
-\DoxyCodeLine{601 }
-\DoxyCodeLine{602             \textcolor{comment}{\# Reload trajectory and PID parameters}}
-\DoxyCodeLine{603 }
-\DoxyCodeLine{604     \textcolor{keywordflow}{return} 1}
-\DoxyCodeLine{605 }
+\DoxyCodeLine{460 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_aa9b9e1956f51882e5f93d5f2bc0fd29b}{FSM}}():}
+\DoxyCodeLine{461 }
+\DoxyCodeLine{462     \textcolor{keyword}{global} numTrajectoryPoints}
+\DoxyCodeLine{463     \textcolor{keyword}{global} \_jointsControlData}
+\DoxyCodeLine{464     \textcolor{keyword}{global} \_jointsList}
+\DoxyCodeLine{465     \textcolor{keyword}{global} PRINT\_DEBUG}
+\DoxyCodeLine{466 }
+\DoxyCodeLine{467     \textcolor{keyword}{global} x\_pedal\_record}
+\DoxyCodeLine{468     \textcolor{keyword}{global} y\_pedal\_record}
+\DoxyCodeLine{469     \textcolor{keyword}{global} pedalTrajectoryRight}
+\DoxyCodeLine{470 }
+\DoxyCodeLine{471     \_runFSM = \textcolor{keyword}{True}}
+\DoxyCodeLine{472 }
+\DoxyCodeLine{473     \_currState = INIT}
+\DoxyCodeLine{474     \_currTrajectoryPoint = -1}
+\DoxyCodeLine{475 }
+\DoxyCodeLine{476     \_startTime = 0.0}
+\DoxyCodeLine{477     \_endTime = 0.0}
+\DoxyCodeLine{478     \_currTime = 0.0}
+\DoxyCodeLine{479     \_prevTime = 0.0}
+\DoxyCodeLine{480 }
+\DoxyCodeLine{481     initial\_trajectory\_point = 0}
+\DoxyCodeLine{482     past\_initial\_trajectory\_point = \textcolor{keyword}{False}}
+\DoxyCodeLine{483 }
+\DoxyCodeLine{484     ros\_right\_hip\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/joint\_hip\_right/joint\_hip\_right/target'}, Float32, queue\_size=2)}
+\DoxyCodeLine{485     ros\_right\_knee\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/joint\_knee\_right/joint\_knee\_right/target'}, Float32, queue\_size=2)}
+\DoxyCodeLine{486     ros\_right\_ankle\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/joint\_foot\_right/joint\_foot\_right/target'}, Float32, queue\_size=2)}
+\DoxyCodeLine{487 }
+\DoxyCodeLine{488     ros\_left\_hip\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/joint\_hip\_left/joint\_hip\_left/target'}, Float32, queue\_size=2)}
+\DoxyCodeLine{489     ros\_left\_knee\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/joint\_knee\_left/joint\_knee\_left/target'}, Float32, queue\_size=2)}
+\DoxyCodeLine{490     ros\_left\_ankle\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/joint\_foot\_left/joint\_foot\_left/target'}, Float32, queue\_size=2)}
+\DoxyCodeLine{491 }
+\DoxyCodeLine{492     \textcolor{keywordflow}{while} \_runFSM:}
+\DoxyCodeLine{493 }
+\DoxyCodeLine{494         }
+\DoxyCodeLine{495         \textcolor{keywordflow}{if} \_currState == INIT:}
+\DoxyCodeLine{496         }
+\DoxyCodeLine{497 }
+\DoxyCodeLine{498             \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a5ecaa1f0c7b7379d5d217b69ecbcfafc}{importJointTrajectoryRecord}}()}
+\DoxyCodeLine{499             \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a8ae6fa3671e9ca6e05825e390f12b8b6}{setTrajectoryPointDuration}}()}
+\DoxyCodeLine{500 }
+\DoxyCodeLine{501             \textcolor{comment}{\# Find starting point on the trajectory}}
+\DoxyCodeLine{502 }
+\DoxyCodeLine{503             \_currState = PEDAL}
+\DoxyCodeLine{504 }
+\DoxyCodeLine{505         }
+\DoxyCodeLine{506         \textcolor{keywordflow}{if} \_currState == PEDAL:}
+\DoxyCodeLine{507         }
+\DoxyCodeLine{508 }
+\DoxyCodeLine{509             \textcolor{comment}{\# Initialize state}}
+\DoxyCodeLine{510             \textcolor{keywordflow}{if} \_currTrajectoryPoint == -1:}
+\DoxyCodeLine{511                 \_currTrajectoryPoint = trajectoryStartingPoint}
+\DoxyCodeLine{512                 initial\_trajectory\_point = \_currTrajectoryPoint}
+\DoxyCodeLine{513             \textcolor{keywordflow}{if} \_startTime == 0.0:}
+\DoxyCodeLine{514                 \_startTime = time.time()}
+\DoxyCodeLine{515             \textcolor{keywordflow}{if} \_endTime == 0.0:}
+\DoxyCodeLine{516                 \_endTime = \_startTime + TRAJECTORY\_POINT\_DURATION}
+\DoxyCodeLine{517             \textcolor{keywordflow}{if} \_prevTime == 0.0:}
+\DoxyCodeLine{518                 \_prevTime = time.time()}
+\DoxyCodeLine{519 }
+\DoxyCodeLine{520             currPedalPosXY = \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_aa470979737ea0796da119aaeb2e46c94}{getPositionRightFoot}}()}
+\DoxyCodeLine{521             x\_pedal\_record.append(currPedalPosXY[0])}
+\DoxyCodeLine{522             y\_pedal\_record.append(currPedalPosXY[1])}
+\DoxyCodeLine{523 }
+\DoxyCodeLine{524             \textcolor{keywordflow}{if} \_currTrajectoryPoint == initial\_trajectory\_point \textcolor{keywordflow}{and} past\_initial\_trajectory\_point:}
+\DoxyCodeLine{525                 print(len(pedalTrajectoryRight))}
+\DoxyCodeLine{526                 print(\textcolor{stringliteral}{"Reached starting point"})}
+\DoxyCodeLine{527                 \textcolor{keywordflow}{for} pedal\_pos \textcolor{keywordflow}{in} pedalTrajectoryRight:}
+\DoxyCodeLine{528                     plt.plot(pedal\_pos[0], pedal\_pos[1], \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{529                 plt.plot(x\_pedal\_record, y\_pedal\_record)}
+\DoxyCodeLine{530                 plt.show()}
+\DoxyCodeLine{531                 past\_initial\_trajectory\_point = \textcolor{keyword}{False}}
+\DoxyCodeLine{532 }
+\DoxyCodeLine{533             \textcolor{comment}{\# Regulate update frequency}}
+\DoxyCodeLine{534             \_currTime = time.time()}
+\DoxyCodeLine{535             \textcolor{keywordflow}{while} float(float(\_currTime) - float(\_prevTime)) < (1 / CONTROLLER\_FREQUENCY):}
+\DoxyCodeLine{536                 time.sleep(1)}
+\DoxyCodeLine{537                 currPedalPosXY = \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_aa470979737ea0796da119aaeb2e46c94}{getPositionRightFoot}}()}
+\DoxyCodeLine{538                 x\_pedal\_record.append(currPedalPosXY[0])}
+\DoxyCodeLine{539                 y\_pedal\_record.append(currPedalPosXY[1])}
+\DoxyCodeLine{540                 \_currTime = time.time()}
+\DoxyCodeLine{541             \_prevTime = \_currTime}
+\DoxyCodeLine{542 }
+\DoxyCodeLine{543             \textcolor{comment}{\# Check if trajectory point reached and act accordingly}}
+\DoxyCodeLine{544             \textcolor{keywordflow}{if} PRINT\_DEBUG:}
+\DoxyCodeLine{545                 print(\textcolor{stringliteral}{"\%0.5f"} \% (\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_abcf37086aa984f3a2d352f009de5a362}{getDistance}}(\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_aa470979737ea0796da119aaeb2e46c94}{getPositionRightFoot}}(), pedalTrajectoryRight[\_currTrajectoryPoint])), end=\textcolor{stringliteral}{'\(\backslash\)r'})}
+\DoxyCodeLine{546 }
+\DoxyCodeLine{547             \textcolor{keywordflow}{if} \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_abcf37086aa984f3a2d352f009de5a362}{getDistance}}(\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_aa470979737ea0796da119aaeb2e46c94}{getPositionRightFoot}}(), pedalTrajectoryRight[\_currTrajectoryPoint]) <= PEDAL\_POSITION\_ERROR\_TOLERANCE:  \textcolor{comment}{\# and \_currTime >= \_endTime}}
+\DoxyCodeLine{548                 \textcolor{comment}{\# getDistance(getPositionLeftFoot(), pedalTrajectoryLeft[\_currTrajectoryPoint]) <= PEDAL\_POSITION\_ERROR\_TOLERANCE and}}
+\DoxyCodeLine{549                 past\_initial\_trajectory\_point = \textcolor{keyword}{True}}
+\DoxyCodeLine{550                 \textcolor{keywordflow}{if} \_currTrajectoryPoint < (numTrajectoryPoints - 1):}
+\DoxyCodeLine{551                     \_currTrajectoryPoint += 1}
+\DoxyCodeLine{552                 \textcolor{keywordflow}{elif} \_currTrajectoryPoint >= (numTrajectoryPoints - 1):}
+\DoxyCodeLine{553                     \_currTrajectoryPoint = 0}
+\DoxyCodeLine{554                 \textcolor{keywordflow}{if} PRINT\_DEBUG:}
+\DoxyCodeLine{555                     print(\textcolor{stringliteral}{"UPDATING TRAJECTORY POINT. NEW POINT: \%s"} \% \_currTrajectoryPoint)}
+\DoxyCodeLine{556                 \_startTime = time.time()}
+\DoxyCodeLine{557                 \_endTime = \_startTime + TRAJECTORY\_POINT\_DURATION}
+\DoxyCodeLine{558                 \textcolor{keywordflow}{for} thisJointName \textcolor{keywordflow}{in} \_jointsList:}
+\DoxyCodeLine{559                     \_jointsControlData[thisJointName][\textcolor{stringliteral}{"trajectory\_startpoint"}] = \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_ab795561d31a73377693ae3df6ad51304}{getJointPosition}}(thisJointName)}
+\DoxyCodeLine{560                     \_jointsControlData[thisJointName][\textcolor{stringliteral}{"pos\_error\_integral"}] = 0}
+\DoxyCodeLine{561                     \_jointsControlData[thisJointName][\textcolor{stringliteral}{"bool\_update\_iv"}] = \textcolor{keyword}{True}}
+\DoxyCodeLine{562 }
+\DoxyCodeLine{563                 \textcolor{comment}{\# Iterate through joints and update setpoints}}
+\DoxyCodeLine{564                 \textcolor{keywordflow}{for} thisJointName \textcolor{keywordflow}{in} \_jointsList:}
+\DoxyCodeLine{565 }
+\DoxyCodeLine{566                     thisJointPositionGoalpoint = 0.0}
+\DoxyCodeLine{567                     \textcolor{keywordflow}{if} thisJointName == RIGHT\_HIP\_JOINT:}
+\DoxyCodeLine{568                         thisJointPositionGoalpoint = hipTrajectoryRight[\_currTrajectoryPoint]}
+\DoxyCodeLine{569                     \textcolor{keywordflow}{elif} thisJointName == RIGHT\_KNEE\_JOINT:}
+\DoxyCodeLine{570                         thisJointPositionGoalpoint = kneeTrajectoryRight[\_currTrajectoryPoint]}
+\DoxyCodeLine{571                     \textcolor{keywordflow}{elif} thisJointName == RIGHT\_ANKLE\_JOINT:}
+\DoxyCodeLine{572                         thisJointPositionGoalpoint = ankleTrajectoryRight[\_currTrajectoryPoint]}
+\DoxyCodeLine{573                     \textcolor{keywordflow}{elif} thisJointName == LEFT\_HIP\_JOINT:}
+\DoxyCodeLine{574                         thisJointPositionGoalpoint = hipTrajectoryLeft[\_currTrajectoryPoint]}
+\DoxyCodeLine{575                     \textcolor{keywordflow}{elif} thisJointName == LEFT\_KNEE\_JOINT:}
+\DoxyCodeLine{576                         thisJointPositionGoalpoint = kneeTrajectoryLeft[\_currTrajectoryPoint]}
+\DoxyCodeLine{577                     \textcolor{keywordflow}{elif} thisJointName == LEFT\_ANKLE\_JOINT:}
+\DoxyCodeLine{578                         thisJointPositionGoalpoint = ankleTrajectoryLeft[\_currTrajectoryPoint]}
+\DoxyCodeLine{579 }
+\DoxyCodeLine{580                     \_currTime = time.time()}
+\DoxyCodeLine{581 }
+\DoxyCodeLine{582                     \textcolor{comment}{\#thisJointPositionSetpoint = interpolateTrajectoryPoints(\_jointsControlData[thisJointName]["trajectory\_startpoint"], thisJointPositionGoalpoint, \_startTime, \_currTime, \_endTime)}}
+\DoxyCodeLine{583 }
+\DoxyCodeLine{584                     thisJointVelocitySetpoint = \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_acd7eb1865e5d89c44a0a4e799df6ff8f}{computeVelocitySetpoint}}(thisJointName, thisJointPositionGoalpoint, \_startTime, \_currTime, \_endTime)}
+\DoxyCodeLine{585 }
+\DoxyCodeLine{586                     \textcolor{keywordflow}{if} thisJointName == RIGHT\_HIP\_JOINT:}
+\DoxyCodeLine{587                         ros\_right\_hip\_publisher.publish(thisJointVelocitySetpoint)}
+\DoxyCodeLine{588                     \textcolor{keywordflow}{elif} thisJointName == RIGHT\_KNEE\_JOINT:}
+\DoxyCodeLine{589                         ros\_right\_knee\_publisher.publish(thisJointVelocitySetpoint)}
+\DoxyCodeLine{590                     \textcolor{keywordflow}{elif} thisJointName == RIGHT\_ANKLE\_JOINT:}
+\DoxyCodeLine{591                         ros\_right\_ankle\_publisher.publish(thisJointVelocitySetpoint)}
+\DoxyCodeLine{592 \textcolor{comment}{\#                    elif thisJointName == LEFT\_HIP\_JOINT:}}
+\DoxyCodeLine{593 \textcolor{comment}{\#                        ros\_left\_hip\_publisher.publish(thisJointVelocitySetpoint)}}
+\DoxyCodeLine{594 \textcolor{comment}{\#                    elif thisJointName == LEFT\_KNEE\_JOINT:}}
+\DoxyCodeLine{595 \textcolor{comment}{\#                        ros\_left\_knee\_publisher.publish(thisJointVelocitySetpoint)}}
+\DoxyCodeLine{596 \textcolor{comment}{\#                    elif thisJointName == LEFT\_ANKLE\_JOINT:}}
+\DoxyCodeLine{597 \textcolor{comment}{\#                        ros\_left\_ankle\_publisher.publish(thisJointVelocitySetpoint)}}
+\DoxyCodeLine{598 }
+\DoxyCodeLine{599         }
+\DoxyCodeLine{602 }
+\DoxyCodeLine{603             \textcolor{comment}{\# Reload trajectory and PID parameters}}
+\DoxyCodeLine{604 }
+\DoxyCodeLine{605     \textcolor{keywordflow}{return} 1}
+\DoxyCodeLine{606 }
 
 \end{DoxyCode}
 Here is the call graph for this function\+:\nopagebreak
@@ -425,18 +425,18 @@ Here is the caller graph for this function\+:\nopagebreak
 
 
 
-Definition at line 352 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 353 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{352 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_abcf37086aa984f3a2d352f009de5a362}{getDistance}}(point1, point2):}
-\DoxyCodeLine{353 }
-\DoxyCodeLine{354     x\_diff = point2[0] - point1[0]}
-\DoxyCodeLine{355     y\_diff = point2[1] - point1[1]}
-\DoxyCodeLine{356 }
-\DoxyCodeLine{357     \textcolor{keywordflow}{return} math.sqrt((x\_diff*x\_diff) + (y\_diff*y\_diff))}
-\DoxyCodeLine{358 }
+\DoxyCodeLine{353 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_abcf37086aa984f3a2d352f009de5a362}{getDistance}}(point1, point2):}
+\DoxyCodeLine{354 }
+\DoxyCodeLine{355     x\_diff = point2[0] - point1[0]}
+\DoxyCodeLine{356     y\_diff = point2[1] - point1[1]}
+\DoxyCodeLine{357 }
+\DoxyCodeLine{358     \textcolor{keywordflow}{return} math.sqrt((x\_diff*x\_diff) + (y\_diff*y\_diff))}
 \DoxyCodeLine{359 }
+\DoxyCodeLine{360 }
 
 \end{DoxyCode}
 Here is the caller graph for this function\+:\nopagebreak
@@ -454,15 +454,15 @@ Here is the caller graph for this function\+:\nopagebreak
 
 
 
-Definition at line 293 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 294 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{293 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_ab795561d31a73377693ae3df6ad51304}{getJointPosition}}(jointName):}
-\DoxyCodeLine{294     \textcolor{keyword}{global} \_jointsStatusData}
-\DoxyCodeLine{295     \textcolor{keywordflow}{return} \_jointsStatusData[jointName][\textcolor{stringliteral}{"Pos"}]}
-\DoxyCodeLine{296 }
+\DoxyCodeLine{294 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_ab795561d31a73377693ae3df6ad51304}{getJointPosition}}(jointName):}
+\DoxyCodeLine{295     \textcolor{keyword}{global} \_jointsStatusData}
+\DoxyCodeLine{296     \textcolor{keywordflow}{return} \_jointsStatusData[jointName][\textcolor{stringliteral}{"Pos"}]}
 \DoxyCodeLine{297 }
+\DoxyCodeLine{298 }
 
 \end{DoxyCode}
 Here is the caller graph for this function\+:\nopagebreak
@@ -480,15 +480,15 @@ Here is the caller graph for this function\+:\nopagebreak
 
 
 
-Definition at line 298 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 299 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{298 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a52f9b10a639d512975b928adace6f31b}{getJointVelocity}}(jointName):}
-\DoxyCodeLine{299     \textcolor{keyword}{global} \_jointsStatusData}
-\DoxyCodeLine{300     \textcolor{keywordflow}{return} \_jointsStatusData[jointName][\textcolor{stringliteral}{"Vel"}]}
-\DoxyCodeLine{301 }
+\DoxyCodeLine{299 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a52f9b10a639d512975b928adace6f31b}{getJointVelocity}}(jointName):}
+\DoxyCodeLine{300     \textcolor{keyword}{global} \_jointsStatusData}
+\DoxyCodeLine{301     \textcolor{keywordflow}{return} \_jointsStatusData[jointName][\textcolor{stringliteral}{"Vel"}]}
 \DoxyCodeLine{302 }
+\DoxyCodeLine{303 }
 
 \end{DoxyCode}
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a8c9e3f7ebe2d661e153d4d63eeb804fc}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a8c9e3f7ebe2d661e153d4d63eeb804fc}} 
@@ -499,25 +499,25 @@ Definition at line 298 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 
 
 
-Definition at line 303 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 304 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{303 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a8c9e3f7ebe2d661e153d4d63eeb804fc}{getPosition}}(endeffector, frame):}
-\DoxyCodeLine{304     fkJointNamesList = [ROS\_JOINT\_HIP\_RIGHT, ROS\_JOINT\_HIP\_LEFT, ROS\_JOINT\_KNEE\_RIGHT, ROS\_JOINT\_KNEE\_LEFT, ROS\_JOINT\_ANKLE\_RIGHT, ROS\_JOINT\_ANKLE\_LEFT]}
-\DoxyCodeLine{305     fkJointPositions = [\_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}]]}
-\DoxyCodeLine{306 }
-\DoxyCodeLine{307     rospy.wait\_for\_service(\textcolor{stringliteral}{'fk'})}
-\DoxyCodeLine{308     \textcolor{keywordflow}{try}:}
-\DoxyCodeLine{309         fk\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'fk'}, ForwardKinematics)}
-\DoxyCodeLine{310         fk\_result = fk\_srv(endeffector, frame, fkJointNamesList, fkJointPositions)}
-\DoxyCodeLine{311         \textcolor{keywordflow}{return} [fk\_result.pose.position.x, fk\_result.pose.position.z]}
-\DoxyCodeLine{312 }
-\DoxyCodeLine{313     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
-\DoxyCodeLine{314         print(\textcolor{stringliteral}{"Service call failed:"}, e)}
-\DoxyCodeLine{315     \textcolor{keywordflow}{return} [0.0, 0.0]  \textcolor{comment}{\# [x, z]}}
-\DoxyCodeLine{316 }
+\DoxyCodeLine{304 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a8c9e3f7ebe2d661e153d4d63eeb804fc}{getPosition}}(endeffector, frame):}
+\DoxyCodeLine{305     fkJointNamesList = [ROS\_JOINT\_HIP\_RIGHT, ROS\_JOINT\_HIP\_LEFT, ROS\_JOINT\_KNEE\_RIGHT, ROS\_JOINT\_KNEE\_LEFT, ROS\_JOINT\_ANKLE\_RIGHT, ROS\_JOINT\_ANKLE\_LEFT]}
+\DoxyCodeLine{306     fkJointPositions = [\_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}]]}
+\DoxyCodeLine{307 }
+\DoxyCodeLine{308     rospy.wait\_for\_service(\textcolor{stringliteral}{'fk'})}
+\DoxyCodeLine{309     \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{310         fk\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'fk'}, ForwardKinematics)}
+\DoxyCodeLine{311         fk\_result = fk\_srv(endeffector, frame, fkJointNamesList, fkJointPositions)}
+\DoxyCodeLine{312         \textcolor{keywordflow}{return} [fk\_result.pose.position.x, fk\_result.pose.position.z]}
+\DoxyCodeLine{313 }
+\DoxyCodeLine{314     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
+\DoxyCodeLine{315         print(\textcolor{stringliteral}{"Service call failed:"}, e)}
+\DoxyCodeLine{316     \textcolor{keywordflow}{return} [0.0, 0.0]  \textcolor{comment}{\# [x, z]}}
 \DoxyCodeLine{317 }
+\DoxyCodeLine{318 }
 
 \end{DoxyCode}
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a1334cc54f77770d48e6410fe09960aa7}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a1334cc54f77770d48e6410fe09960aa7}} 
@@ -528,27 +528,27 @@ Definition at line 303 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 
 
 
-Definition at line 318 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 319 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{318 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a1334cc54f77770d48e6410fe09960aa7}{getPositionLeftFoot}}():}
-\DoxyCodeLine{319     fkJointNamesList = [ROS\_JOINT\_HIP\_LEFT, ROS\_JOINT\_KNEE\_LEFT, ROS\_JOINT\_ANKLE\_LEFT]}
-\DoxyCodeLine{320     fkJointPositions = [\_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}]]}
-\DoxyCodeLine{321 }
-\DoxyCodeLine{322     rospy.wait\_for\_service(\textcolor{stringliteral}{'fk'})}
-\DoxyCodeLine{323     \textcolor{keywordflow}{try}:}
-\DoxyCodeLine{324         fk\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'fk'}, ForwardKinematics)}
-\DoxyCodeLine{325         fk\_result = fk\_srv(\textcolor{stringliteral}{"left\_leg"}, \textcolor{stringliteral}{"foot\_left\_tip"}, fkJointNamesList, fkJointPositions)}
-\DoxyCodeLine{326         \textcolor{keywordflow}{return} [fk\_result.pose.position.x, fk\_result.pose.position.z]}
-\DoxyCodeLine{327 }
-\DoxyCodeLine{328     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
-\DoxyCodeLine{329         print(\textcolor{stringliteral}{"Service call failed:"}, e)}
-\DoxyCodeLine{330 }
-\DoxyCodeLine{331     print(\textcolor{stringliteral}{"ERROR fk foot\_left failed"})}
-\DoxyCodeLine{332     \textcolor{keywordflow}{return} [0.0, 0.0]  \textcolor{comment}{\# [x, z]}}
-\DoxyCodeLine{333 }
+\DoxyCodeLine{319 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a1334cc54f77770d48e6410fe09960aa7}{getPositionLeftFoot}}():}
+\DoxyCodeLine{320     fkJointNamesList = [ROS\_JOINT\_HIP\_LEFT, ROS\_JOINT\_KNEE\_LEFT, ROS\_JOINT\_ANKLE\_LEFT]}
+\DoxyCodeLine{321     fkJointPositions = [\_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}]]}
+\DoxyCodeLine{322 }
+\DoxyCodeLine{323     rospy.wait\_for\_service(\textcolor{stringliteral}{'fk'})}
+\DoxyCodeLine{324     \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{325         fk\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'fk'}, ForwardKinematics)}
+\DoxyCodeLine{326         fk\_result = fk\_srv(\textcolor{stringliteral}{"left\_leg"}, \textcolor{stringliteral}{"foot\_left\_tip"}, fkJointNamesList, fkJointPositions)}
+\DoxyCodeLine{327         \textcolor{keywordflow}{return} [fk\_result.pose.position.x, fk\_result.pose.position.z]}
+\DoxyCodeLine{328 }
+\DoxyCodeLine{329     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
+\DoxyCodeLine{330         print(\textcolor{stringliteral}{"Service call failed:"}, e)}
+\DoxyCodeLine{331 }
+\DoxyCodeLine{332     print(\textcolor{stringliteral}{"ERROR fk foot\_left failed"})}
+\DoxyCodeLine{333     \textcolor{keywordflow}{return} [0.0, 0.0]  \textcolor{comment}{\# [x, z]}}
 \DoxyCodeLine{334 }
+\DoxyCodeLine{335 }
 
 \end{DoxyCode}
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_aa470979737ea0796da119aaeb2e46c94}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_aa470979737ea0796da119aaeb2e46c94}} 
@@ -559,27 +559,27 @@ Definition at line 318 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 
 
 
-Definition at line 335 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 336 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{335 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_aa470979737ea0796da119aaeb2e46c94}{getPositionRightFoot}}():}
-\DoxyCodeLine{336     fkJointNamesList = [ROS\_JOINT\_HIP\_RIGHT, ROS\_JOINT\_KNEE\_RIGHT, ROS\_JOINT\_ANKLE\_RIGHT]}
-\DoxyCodeLine{337     fkJointPositions = [\_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}]]}
-\DoxyCodeLine{338 }
-\DoxyCodeLine{339     rospy.wait\_for\_service(\textcolor{stringliteral}{'fk'})}
-\DoxyCodeLine{340     \textcolor{keywordflow}{try}:}
-\DoxyCodeLine{341         fk\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'fk'}, ForwardKinematics)}
-\DoxyCodeLine{342         fk\_result = fk\_srv(\textcolor{stringliteral}{"right\_leg"}, \textcolor{stringliteral}{"foot\_right\_tip"}, fkJointNamesList, fkJointPositions)}
-\DoxyCodeLine{343         \textcolor{keywordflow}{return} [fk\_result.pose.position.x, fk\_result.pose.position.z]}
-\DoxyCodeLine{344 }
-\DoxyCodeLine{345     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
-\DoxyCodeLine{346         print(\textcolor{stringliteral}{"Service call failed:"}, e)}
-\DoxyCodeLine{347 }
-\DoxyCodeLine{348     print(\textcolor{stringliteral}{"ERROR fk foot\_right failed"})}
-\DoxyCodeLine{349     \textcolor{keywordflow}{return} [0.0, 0.0]  \textcolor{comment}{\# [x, z]}}
-\DoxyCodeLine{350 }
+\DoxyCodeLine{336 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_aa470979737ea0796da119aaeb2e46c94}{getPositionRightFoot}}():}
+\DoxyCodeLine{337     fkJointNamesList = [ROS\_JOINT\_HIP\_RIGHT, ROS\_JOINT\_KNEE\_RIGHT, ROS\_JOINT\_ANKLE\_RIGHT]}
+\DoxyCodeLine{338     fkJointPositions = [\_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}]]}
+\DoxyCodeLine{339 }
+\DoxyCodeLine{340     rospy.wait\_for\_service(\textcolor{stringliteral}{'fk'})}
+\DoxyCodeLine{341     \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{342         fk\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'fk'}, ForwardKinematics)}
+\DoxyCodeLine{343         fk\_result = fk\_srv(\textcolor{stringliteral}{"right\_leg"}, \textcolor{stringliteral}{"foot\_right\_tip"}, fkJointNamesList, fkJointPositions)}
+\DoxyCodeLine{344         \textcolor{keywordflow}{return} [fk\_result.pose.position.x, fk\_result.pose.position.z]}
+\DoxyCodeLine{345 }
+\DoxyCodeLine{346     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
+\DoxyCodeLine{347         print(\textcolor{stringliteral}{"Service call failed:"}, e)}
+\DoxyCodeLine{348 }
+\DoxyCodeLine{349     print(\textcolor{stringliteral}{"ERROR fk foot\_right failed"})}
+\DoxyCodeLine{350     \textcolor{keywordflow}{return} [0.0, 0.0]  \textcolor{comment}{\# [x, z]}}
 \DoxyCodeLine{351 }
+\DoxyCodeLine{352 }
 
 \end{DoxyCode}
 Here is the caller graph for this function\+:\nopagebreak
@@ -597,59 +597,59 @@ Here is the caller graph for this function\+:\nopagebreak
 
 
 
-Definition at line 244 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 245 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{244 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a5ecaa1f0c7b7379d5d217b69ecbcfafc}{importJointTrajectoryRecord}}():}
-\DoxyCodeLine{245 }
-\DoxyCodeLine{246     \textcolor{keyword}{global} numTrajectoryPoints}
-\DoxyCodeLine{247     \textcolor{keyword}{global} pedalTrajectoryLeft}
-\DoxyCodeLine{248     \textcolor{keyword}{global} pedalTrajectoryRight}
-\DoxyCodeLine{249     \textcolor{keyword}{global} hipTrajectoryRight}
-\DoxyCodeLine{250     \textcolor{keyword}{global} kneeTrajectoryRight}
-\DoxyCodeLine{251     \textcolor{keyword}{global} ankleTrajectoryRight}
-\DoxyCodeLine{252     \textcolor{keyword}{global} hipTrajectoryLeft}
-\DoxyCodeLine{253     \textcolor{keyword}{global} kneeTrajectoryLeft}
-\DoxyCodeLine{254     \textcolor{keyword}{global} ankleTrajectoryLeft}
-\DoxyCodeLine{255     \textcolor{keyword}{global} PRINT\_DEBUG}
-\DoxyCodeLine{256 }
-\DoxyCodeLine{257     \textcolor{keyword}{with} open(RECORDED\_TRAJECTORY\_FILENAME, \textcolor{stringliteral}{"r"}) \textcolor{keyword}{as} read\_file:}
-\DoxyCodeLine{258         loaded\_data = json.load(read\_file)}
-\DoxyCodeLine{259 }
-\DoxyCodeLine{260     \textcolor{keywordflow}{if} loaded\_data[\textcolor{stringliteral}{"num\_points"}] \textcolor{keywordflow}{is} \textcolor{keywordtype}{None}:}
-\DoxyCodeLine{261         \textcolor{keywordflow}{return} 0}
-\DoxyCodeLine{262     \textcolor{keywordflow}{else}:}
-\DoxyCodeLine{263         numTrajectoryPoints = loaded\_data[\textcolor{stringliteral}{"num\_points"}]}
-\DoxyCodeLine{264 }
-\DoxyCodeLine{265     \textcolor{comment}{\# Deleting previous trajectory before loading new}}
-\DoxyCodeLine{266     del pedalTrajectoryLeft[:]}
-\DoxyCodeLine{267     del pedalTrajectoryRight[:]}
-\DoxyCodeLine{268     del hipTrajectoryRight[:]}
-\DoxyCodeLine{269     del kneeTrajectoryRight[:]}
-\DoxyCodeLine{270     del ankleTrajectoryRight[:]}
-\DoxyCodeLine{271     del hipTrajectoryLeft[:]}
-\DoxyCodeLine{272     del kneeTrajectoryLeft[:]}
-\DoxyCodeLine{273     del ankleTrajectoryLeft[:]}
-\DoxyCodeLine{274     \textcolor{keywordflow}{for} pointIterator \textcolor{keywordflow}{in} range(numTrajectoryPoints):}
-\DoxyCodeLine{275         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"}+str(pointIterator) \textcolor{keywordflow}{in} loaded\_data:}
-\DoxyCodeLine{276             pedalTrajectoryLeft.append(loaded\_data[\textcolor{stringliteral}{"point\_"}+str(pointIterator)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Pedal"}])}
-\DoxyCodeLine{277             pedalTrajectoryRight.append(loaded\_data[\textcolor{stringliteral}{"point\_"}+str(pointIterator)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Pedal"}])}
-\DoxyCodeLine{278             hipTrajectoryRight.append(loaded\_data[\textcolor{stringliteral}{"point\_"}+str(pointIterator)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Hip"}])}
-\DoxyCodeLine{279             kneeTrajectoryRight.append(loaded\_data[\textcolor{stringliteral}{"point\_"}+str(pointIterator)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Knee"}])}
-\DoxyCodeLine{280             ankleTrajectoryRight.append(loaded\_data[\textcolor{stringliteral}{"point\_"}+str(pointIterator)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Ankle"}])}
-\DoxyCodeLine{281             hipTrajectoryLeft.append(loaded\_data[\textcolor{stringliteral}{"point\_"}+str(pointIterator)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Hip"}])}
-\DoxyCodeLine{282             kneeTrajectoryLeft.append(loaded\_data[\textcolor{stringliteral}{"point\_"}+str(pointIterator)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Knee"}])}
-\DoxyCodeLine{283             ankleTrajectoryLeft.append(loaded\_data[\textcolor{stringliteral}{"point\_"}+str(pointIterator)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Ankle"}])}
-\DoxyCodeLine{284         \textcolor{keywordflow}{else}:}
-\DoxyCodeLine{285             print(\textcolor{stringliteral}{"WARNING: No point\_\%s in trajectory"} \% pointIterator)}
-\DoxyCodeLine{286             numTrajectoryPoints -= 1}
-\DoxyCodeLine{287 }
-\DoxyCodeLine{288     \textcolor{keywordflow}{if} PRINT\_DEBUG:}
-\DoxyCodeLine{289         print(\textcolor{stringliteral}{"--------- Num trajectory points:"})}
-\DoxyCodeLine{290         print(numTrajectoryPoints)}
-\DoxyCodeLine{291 }
+\DoxyCodeLine{245 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a5ecaa1f0c7b7379d5d217b69ecbcfafc}{importJointTrajectoryRecord}}():}
+\DoxyCodeLine{246 }
+\DoxyCodeLine{247     \textcolor{keyword}{global} numTrajectoryPoints}
+\DoxyCodeLine{248     \textcolor{keyword}{global} pedalTrajectoryLeft}
+\DoxyCodeLine{249     \textcolor{keyword}{global} pedalTrajectoryRight}
+\DoxyCodeLine{250     \textcolor{keyword}{global} hipTrajectoryRight}
+\DoxyCodeLine{251     \textcolor{keyword}{global} kneeTrajectoryRight}
+\DoxyCodeLine{252     \textcolor{keyword}{global} ankleTrajectoryRight}
+\DoxyCodeLine{253     \textcolor{keyword}{global} hipTrajectoryLeft}
+\DoxyCodeLine{254     \textcolor{keyword}{global} kneeTrajectoryLeft}
+\DoxyCodeLine{255     \textcolor{keyword}{global} ankleTrajectoryLeft}
+\DoxyCodeLine{256     \textcolor{keyword}{global} PRINT\_DEBUG}
+\DoxyCodeLine{257 }
+\DoxyCodeLine{258     \textcolor{keyword}{with} open(RECORDED\_TRAJECTORY\_FILENAME, \textcolor{stringliteral}{"r"}) \textcolor{keyword}{as} read\_file:}
+\DoxyCodeLine{259         loaded\_data = json.load(read\_file)}
+\DoxyCodeLine{260 }
+\DoxyCodeLine{261     \textcolor{keywordflow}{if} loaded\_data[\textcolor{stringliteral}{"num\_points"}] \textcolor{keywordflow}{is} \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{262         \textcolor{keywordflow}{return} 0}
+\DoxyCodeLine{263     \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{264         numTrajectoryPoints = loaded\_data[\textcolor{stringliteral}{"num\_points"}]}
+\DoxyCodeLine{265 }
+\DoxyCodeLine{266     \textcolor{comment}{\# Deleting previous trajectory before loading new}}
+\DoxyCodeLine{267     del pedalTrajectoryLeft[:]}
+\DoxyCodeLine{268     del pedalTrajectoryRight[:]}
+\DoxyCodeLine{269     del hipTrajectoryRight[:]}
+\DoxyCodeLine{270     del kneeTrajectoryRight[:]}
+\DoxyCodeLine{271     del ankleTrajectoryRight[:]}
+\DoxyCodeLine{272     del hipTrajectoryLeft[:]}
+\DoxyCodeLine{273     del kneeTrajectoryLeft[:]}
+\DoxyCodeLine{274     del ankleTrajectoryLeft[:]}
+\DoxyCodeLine{275     \textcolor{keywordflow}{for} pointIterator \textcolor{keywordflow}{in} range(numTrajectoryPoints):}
+\DoxyCodeLine{276         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"}+str(pointIterator) \textcolor{keywordflow}{in} loaded\_data:}
+\DoxyCodeLine{277             pedalTrajectoryLeft.append(loaded\_data[\textcolor{stringliteral}{"point\_"}+str(pointIterator)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Pedal"}])}
+\DoxyCodeLine{278             pedalTrajectoryRight.append(loaded\_data[\textcolor{stringliteral}{"point\_"}+str(pointIterator)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Pedal"}])}
+\DoxyCodeLine{279             hipTrajectoryRight.append(loaded\_data[\textcolor{stringliteral}{"point\_"}+str(pointIterator)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Hip"}])}
+\DoxyCodeLine{280             kneeTrajectoryRight.append(loaded\_data[\textcolor{stringliteral}{"point\_"}+str(pointIterator)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Knee"}])}
+\DoxyCodeLine{281             ankleTrajectoryRight.append(loaded\_data[\textcolor{stringliteral}{"point\_"}+str(pointIterator)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Ankle"}])}
+\DoxyCodeLine{282             hipTrajectoryLeft.append(loaded\_data[\textcolor{stringliteral}{"point\_"}+str(pointIterator)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Hip"}])}
+\DoxyCodeLine{283             kneeTrajectoryLeft.append(loaded\_data[\textcolor{stringliteral}{"point\_"}+str(pointIterator)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Knee"}])}
+\DoxyCodeLine{284             ankleTrajectoryLeft.append(loaded\_data[\textcolor{stringliteral}{"point\_"}+str(pointIterator)][\textcolor{stringliteral}{"Left"}][\textcolor{stringliteral}{"Ankle"}])}
+\DoxyCodeLine{285         \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{286             print(\textcolor{stringliteral}{"WARNING: No point\_\%s in trajectory"} \% pointIterator)}
+\DoxyCodeLine{287             numTrajectoryPoints -= 1}
+\DoxyCodeLine{288 }
+\DoxyCodeLine{289     \textcolor{keywordflow}{if} PRINT\_DEBUG:}
+\DoxyCodeLine{290         print(\textcolor{stringliteral}{"--------- Num trajectory points:"})}
+\DoxyCodeLine{291         print(numTrajectoryPoints)}
 \DoxyCodeLine{292 }
+\DoxyCodeLine{293 }
 
 \end{DoxyCode}
 Here is the caller graph for this function\+:\nopagebreak
@@ -671,16 +671,16 @@ C\+O\+N\+T\+R\+OL F\+U\+N\+C\+T\+I\+O\+NS \#\#\#.
 
 
 
-Definition at line 384 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 385 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{384 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a566b961b7c78e9a10e7bc0cca3e0c184}{interpolateTrajectoryPoints}}(value1, value2, startTime, currTime, endTime):}
-\DoxyCodeLine{385     \textcolor{keywordflow}{if} currTime > endTime:}
-\DoxyCodeLine{386         \textcolor{keywordflow}{return} value2}
-\DoxyCodeLine{387     \textcolor{keywordflow}{return} value1 + (value2 - value1)*(float(currTime - startTime)/(endTime - startTime))}
-\DoxyCodeLine{388 }
+\DoxyCodeLine{385 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a566b961b7c78e9a10e7bc0cca3e0c184}{interpolateTrajectoryPoints}}(value1, value2, startTime, currTime, endTime):}
+\DoxyCodeLine{386     \textcolor{keywordflow}{if} currTime > endTime:}
+\DoxyCodeLine{387         \textcolor{keywordflow}{return} value2}
+\DoxyCodeLine{388     \textcolor{keywordflow}{return} value1 + (value2 - value1)*(float(currTime - startTime)/(endTime - startTime))}
 \DoxyCodeLine{389 }
+\DoxyCodeLine{390 }
 
 \end{DoxyCode}
 Here is the caller graph for this function\+:\nopagebreak
@@ -702,34 +702,34 @@ U\+T\+I\+L\+I\+TY F\+U\+N\+C\+T\+I\+O\+NS \#\#\#.
 
 
 
-Definition at line 207 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 208 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{207 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a34fd0c8e437253db31d7df2ae69a52aa}{jointStateCallback}}(joint\_data):}
-\DoxyCodeLine{208     \textcolor{keyword}{global} \_jointsStatusData}
-\DoxyCodeLine{209     \textcolor{comment}{\# Assert order of joints}}
-\DoxyCodeLine{210     \textcolor{keywordflow}{for} stringIter \textcolor{keywordflow}{in} range(len(joint\_data.names)):}
-\DoxyCodeLine{211         \textcolor{keywordflow}{if} joint\_data.names[stringIter] == ROS\_JOINT\_HIP\_RIGHT:}
-\DoxyCodeLine{212             \_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
-\DoxyCodeLine{213             \_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
-\DoxyCodeLine{214         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_HIP\_LEFT:}
-\DoxyCodeLine{215             \_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
-\DoxyCodeLine{216             \_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
-\DoxyCodeLine{217         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_KNEE\_RIGHT:}
-\DoxyCodeLine{218             \_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
-\DoxyCodeLine{219             \_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
-\DoxyCodeLine{220         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_KNEE\_LEFT:}
-\DoxyCodeLine{221             \_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
-\DoxyCodeLine{222             \_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
-\DoxyCodeLine{223         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_ANKLE\_RIGHT:}
-\DoxyCodeLine{224             \_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
-\DoxyCodeLine{225             \_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
-\DoxyCodeLine{226         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_ANKLE\_LEFT:}
-\DoxyCodeLine{227             \_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
-\DoxyCodeLine{228             \_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
-\DoxyCodeLine{229 }
+\DoxyCodeLine{208 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a34fd0c8e437253db31d7df2ae69a52aa}{jointStateCallback}}(joint\_data):}
+\DoxyCodeLine{209     \textcolor{keyword}{global} \_jointsStatusData}
+\DoxyCodeLine{210     \textcolor{comment}{\# Assert order of joints}}
+\DoxyCodeLine{211     \textcolor{keywordflow}{for} stringIter \textcolor{keywordflow}{in} range(len(joint\_data.names)):}
+\DoxyCodeLine{212         \textcolor{keywordflow}{if} joint\_data.names[stringIter] == ROS\_JOINT\_HIP\_RIGHT:}
+\DoxyCodeLine{213             \_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{214             \_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
+\DoxyCodeLine{215         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_HIP\_LEFT:}
+\DoxyCodeLine{216             \_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{217             \_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
+\DoxyCodeLine{218         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_KNEE\_RIGHT:}
+\DoxyCodeLine{219             \_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{220             \_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
+\DoxyCodeLine{221         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_KNEE\_LEFT:}
+\DoxyCodeLine{222             \_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{223             \_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
+\DoxyCodeLine{224         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_ANKLE\_RIGHT:}
+\DoxyCodeLine{225             \_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{226             \_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
+\DoxyCodeLine{227         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_ANKLE\_LEFT:}
+\DoxyCodeLine{228             \_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{229             \_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
 \DoxyCodeLine{230 }
+\DoxyCodeLine{231 }
 
 \end{DoxyCode}
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_ab9a3bad7d020fd392cc08fdc73486141}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_ab9a3bad7d020fd392cc08fdc73486141}} 
@@ -744,20 +744,20 @@ M\+A\+IN \#\#\#.
 
 
 
-Definition at line 611 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 612 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{611 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a17184534fa48653e3e1957dd8fe17257}{main}}():}
-\DoxyCodeLine{612 }
-\DoxyCodeLine{613     rospy.init\_node(\textcolor{stringliteral}{'pedal\_simulation'}, anonymous=\textcolor{keyword}{True})}
-\DoxyCodeLine{614     rospy.Subscriber(\textcolor{stringliteral}{"joint\_state"}, JointState, jointStateCallback)}
-\DoxyCodeLine{615 }
-\DoxyCodeLine{616     \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_aa9b9e1956f51882e5f93d5f2bc0fd29b}{FSM}}()}
-\DoxyCodeLine{617 }
-\DoxyCodeLine{618     \textcolor{keywordflow}{return} 1}
-\DoxyCodeLine{619 }
+\DoxyCodeLine{612 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a17184534fa48653e3e1957dd8fe17257}{main}}():}
+\DoxyCodeLine{613 }
+\DoxyCodeLine{614     rospy.init\_node(\textcolor{stringliteral}{'pedal\_simulation'}, anonymous=\textcolor{keyword}{True})}
+\DoxyCodeLine{615     rospy.Subscriber(\textcolor{stringliteral}{"joint\_state"}, JointState, jointStateCallback)}
+\DoxyCodeLine{616 }
+\DoxyCodeLine{617     \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_aa9b9e1956f51882e5f93d5f2bc0fd29b}{FSM}}()}
+\DoxyCodeLine{618 }
+\DoxyCodeLine{619     \textcolor{keywordflow}{return} 1}
 \DoxyCodeLine{620 }
+\DoxyCodeLine{621 }
 
 \end{DoxyCode}
 Here is the call graph for this function\+:\nopagebreak
@@ -775,23 +775,23 @@ Here is the call graph for this function\+:\nopagebreak
 
 
 
-Definition at line 231 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 232 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{231 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a9e2d0e6c755b25949d26f531662766b3}{setJointControllerParameters}}(proportionalVal, derivativeVal):}
-\DoxyCodeLine{232 }
-\DoxyCodeLine{233     \textcolor{keywordflow}{for} thisJointName \textcolor{keywordflow}{in} \_jointsListROS:}
-\DoxyCodeLine{234         rospy.wait\_for\_service(thisJointName + \textcolor{stringliteral}{'/'} + thisJointName + \textcolor{stringliteral}{'/params'})}
-\DoxyCodeLine{235         \textcolor{keywordflow}{try}:}
-\DoxyCodeLine{236             param\_srv = rospy.ServiceProxy(thisJointName + \textcolor{stringliteral}{'/'} + thisJointName + \textcolor{stringliteral}{'/params'}, SetControllerParameters)}
-\DoxyCodeLine{237             param\_srv(proportionalVal, derivativeVal)}
-\DoxyCodeLine{238         \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
-\DoxyCodeLine{239             print(\textcolor{stringliteral}{"Service call for "} + thisJointName + \textcolor{stringliteral}{"failed: "} + e)}
-\DoxyCodeLine{240 }
-\DoxyCodeLine{241     print(\textcolor{stringliteral}{"Controller paramters updated"})}
-\DoxyCodeLine{242 }
+\DoxyCodeLine{232 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a9e2d0e6c755b25949d26f531662766b3}{setJointControllerParameters}}(proportionalVal, derivativeVal):}
+\DoxyCodeLine{233 }
+\DoxyCodeLine{234     \textcolor{keywordflow}{for} thisJointName \textcolor{keywordflow}{in} \_jointsListROS:}
+\DoxyCodeLine{235         rospy.wait\_for\_service(thisJointName + \textcolor{stringliteral}{'/'} + thisJointName + \textcolor{stringliteral}{'/params'})}
+\DoxyCodeLine{236         \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{237             param\_srv = rospy.ServiceProxy(thisJointName + \textcolor{stringliteral}{'/'} + thisJointName + \textcolor{stringliteral}{'/params'}, SetControllerParameters)}
+\DoxyCodeLine{238             param\_srv(proportionalVal, derivativeVal)}
+\DoxyCodeLine{239         \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
+\DoxyCodeLine{240             print(\textcolor{stringliteral}{"Service call for "} + thisJointName + \textcolor{stringliteral}{"failed: "} + e)}
+\DoxyCodeLine{241 }
+\DoxyCodeLine{242     print(\textcolor{stringliteral}{"Controller paramters updated"})}
 \DoxyCodeLine{243 }
+\DoxyCodeLine{244 }
 
 \end{DoxyCode}
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_aaad7b5ea9961b4497da52d7d649f1309}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_aaad7b5ea9961b4497da52d7d649f1309}} 
@@ -802,17 +802,17 @@ Definition at line 231 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 
 
 
-Definition at line 360 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 361 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{360 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_aaad7b5ea9961b4497da52d7d649f1309}{setPedalSingleRotationDuration}}(new\_duration\_seconds):}
-\DoxyCodeLine{361     \textcolor{keyword}{global} PEDAL\_SINGLE\_ROTATION\_DURATION}
-\DoxyCodeLine{362     PEDAL\_SINGLE\_ROTATION\_DURATION = new\_duration\_seconds}
-\DoxyCodeLine{363     \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a8ae6fa3671e9ca6e05825e390f12b8b6}{setTrajectoryPointDuration}}()}
-\DoxyCodeLine{364     \textcolor{keywordflow}{return} 1}
-\DoxyCodeLine{365 }
+\DoxyCodeLine{361 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_aaad7b5ea9961b4497da52d7d649f1309}{setPedalSingleRotationDuration}}(new\_duration\_seconds):}
+\DoxyCodeLine{362     \textcolor{keyword}{global} PEDAL\_SINGLE\_ROTATION\_DURATION}
+\DoxyCodeLine{363     PEDAL\_SINGLE\_ROTATION\_DURATION = new\_duration\_seconds}
+\DoxyCodeLine{364     \mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a8ae6fa3671e9ca6e05825e390f12b8b6}{setTrajectoryPointDuration}}()}
+\DoxyCodeLine{365     \textcolor{keywordflow}{return} 1}
 \DoxyCodeLine{366 }
+\DoxyCodeLine{367 }
 
 \end{DoxyCode}
 Here is the call graph for this function\+:\nopagebreak
@@ -830,23 +830,23 @@ Here is the call graph for this function\+:\nopagebreak
 
 
 
-Definition at line 367 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 368 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{367 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a8ae6fa3671e9ca6e05825e390f12b8b6}{setTrajectoryPointDuration}}():}
-\DoxyCodeLine{368     \textcolor{keyword}{global} TRAJECTORY\_POINT\_DURATION}
-\DoxyCodeLine{369     \textcolor{keyword}{global} PEDAL\_SINGLE\_ROTATION\_DURATION}
-\DoxyCodeLine{370     \textcolor{keyword}{global} numTrajectoryPoints}
-\DoxyCodeLine{371     \textcolor{keywordflow}{if} numTrajectoryPoints != 0:}
-\DoxyCodeLine{372         TRAJECTORY\_POINT\_DURATION = float(PEDAL\_SINGLE\_ROTATION\_DURATION) / numTrajectoryPoints}
-\DoxyCodeLine{373     \textcolor{keywordflow}{else}:}
-\DoxyCodeLine{374         TRAJECTORY\_POINT\_DURATION = 1}
-\DoxyCodeLine{375         \textcolor{keywordflow}{return} 0}
-\DoxyCodeLine{376 }
-\DoxyCodeLine{377     \textcolor{keywordflow}{return} 1}
-\DoxyCodeLine{378 }
+\DoxyCodeLine{368 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__linear__trajectory__points_a8ae6fa3671e9ca6e05825e390f12b8b6}{setTrajectoryPointDuration}}():}
+\DoxyCodeLine{369     \textcolor{keyword}{global} TRAJECTORY\_POINT\_DURATION}
+\DoxyCodeLine{370     \textcolor{keyword}{global} PEDAL\_SINGLE\_ROTATION\_DURATION}
+\DoxyCodeLine{371     \textcolor{keyword}{global} numTrajectoryPoints}
+\DoxyCodeLine{372     \textcolor{keywordflow}{if} numTrajectoryPoints != 0:}
+\DoxyCodeLine{373         TRAJECTORY\_POINT\_DURATION = float(PEDAL\_SINGLE\_ROTATION\_DURATION) / numTrajectoryPoints}
+\DoxyCodeLine{374     \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{375         TRAJECTORY\_POINT\_DURATION = 1}
+\DoxyCodeLine{376         \textcolor{keywordflow}{return} 0}
+\DoxyCodeLine{377 }
+\DoxyCodeLine{378     \textcolor{keywordflow}{return} 1}
 \DoxyCodeLine{379 }
+\DoxyCodeLine{380 }
 
 \end{DoxyCode}
 Here is the caller graph for this function\+:\nopagebreak
@@ -879,7 +879,7 @@ Here is the caller graph for this function\+:\nopagebreak
 \end{DoxyCode}
 
 
-Definition at line 154 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 155 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a49880c9dedc855e3a7261fed8e06e9b9}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a49880c9dedc855e3a7261fed8e06e9b9}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!\_jointsList@{\_jointsList}}
@@ -889,7 +889,7 @@ Definition at line 154 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 
 
 
-Definition at line 59 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 60 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_ac3814b85b594eab0e70346d90890e265}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_ac3814b85b594eab0e70346d90890e265}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!\_jointsListROS@{\_jointsListROS}}
@@ -899,7 +899,7 @@ Definition at line 59 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 61 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 62 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a12bf389baf4d2446ef9913c03d1f8d9f}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a12bf389baf4d2446ef9913c03d1f8d9f}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!\_jointsStatusData@{\_jointsStatusData}}
@@ -939,7 +939,7 @@ Definition at line 61 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 \end{DoxyCode}
 
 
-Definition at line 163 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 164 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a7373ef0f60bd03a128d685c0e4f825b7}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a7373ef0f60bd03a128d685c0e4f825b7}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!\_parametersLeftAnkle@{\_parametersLeftAnkle}}
@@ -967,7 +967,7 @@ Definition at line 163 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 \end{DoxyCode}
 
 
-Definition at line 139 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 140 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a10d3f51a296f22b0418e917a305caa33}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a10d3f51a296f22b0418e917a305caa33}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!\_parametersLeftHip@{\_parametersLeftHip}}
@@ -995,7 +995,7 @@ Definition at line 139 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 \end{DoxyCode}
 
 
-Definition at line 109 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 110 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a29ff49c9473fb6cd2353aa2ecb74d3f1}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a29ff49c9473fb6cd2353aa2ecb74d3f1}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!\_parametersLeftKnee@{\_parametersLeftKnee}}
@@ -1023,7 +1023,7 @@ Definition at line 109 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 \end{DoxyCode}
 
 
-Definition at line 124 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 125 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a442747fc78d2d06fd3f9def983a6fe62}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a442747fc78d2d06fd3f9def983a6fe62}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!\_parametersRightAnkle@{\_parametersRightAnkle}}
@@ -1051,7 +1051,7 @@ Definition at line 124 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 \end{DoxyCode}
 
 
-Definition at line 94 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 95 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a53987684da94775e9edf9a7f856f7d23}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a53987684da94775e9edf9a7f856f7d23}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!\_parametersRightHip@{\_parametersRightHip}}
@@ -1079,7 +1079,7 @@ Definition at line 94 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 \end{DoxyCode}
 
 
-Definition at line 64 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 65 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_adc766045ef9ecc1e718307b55df361f5}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_adc766045ef9ecc1e718307b55df361f5}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!\_parametersRightKnee@{\_parametersRightKnee}}
@@ -1107,7 +1107,7 @@ Definition at line 64 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 \end{DoxyCode}
 
 
-Definition at line 79 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 80 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a61d19d5f9f3609135172835e78083554}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a61d19d5f9f3609135172835e78083554}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!ankleTrajectoryLeft@{ankleTrajectoryLeft}}
@@ -1117,7 +1117,7 @@ Definition at line 79 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 200 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 201 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a5f2bca53b614ab6ffa810136938f6582}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a5f2bca53b614ab6ffa810136938f6582}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!ankleTrajectoryRight@{ankleTrajectoryRight}}
@@ -1127,7 +1127,7 @@ Definition at line 200 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 
 
 
-Definition at line 197 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 198 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a605d0bf3d1a8b43a752ddfc76b24360c}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a605d0bf3d1a8b43a752ddfc76b24360c}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!CONTROLLER\_FREQUENCY@{CONTROLLER\_FREQUENCY}}
@@ -1137,7 +1137,7 @@ Definition at line 197 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 
 
 
-Definition at line 33 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 34 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a8fcd95b1adc418c6c7d55a38bf0a1cee}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a8fcd95b1adc418c6c7d55a38bf0a1cee}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!hipTrajectoryLeft@{hipTrajectoryLeft}}
@@ -1147,7 +1147,7 @@ Definition at line 33 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 198 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 199 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_ace7f997b53af6aa7e56d803971231859}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_ace7f997b53af6aa7e56d803971231859}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!hipTrajectoryRight@{hipTrajectoryRight}}
@@ -1157,7 +1157,7 @@ Definition at line 198 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 
 
 
-Definition at line 195 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 196 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_ab8cabfeb707015adbd71d6bef236a23a}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_ab8cabfeb707015adbd71d6bef236a23a}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!INIT@{INIT}}
@@ -1171,7 +1171,7 @@ S\+T\+A\+TE M\+A\+C\+H\+I\+NE \#\#\#.
 
 
 
-Definition at line 454 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 455 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_ab397fcf14b760279c017de0a7843c994}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_ab397fcf14b760279c017de0a7843c994}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!JOINT\_TRAJECTORY\_ERROR\_TOLERANCE@{JOINT\_TRAJECTORY\_ERROR\_TOLERANCE}}
@@ -1181,7 +1181,7 @@ Definition at line 454 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 
 
 
-Definition at line 30 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 31 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a72b8165cb2dcdd6b1dbe58492d1dbbd0}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a72b8165cb2dcdd6b1dbe58492d1dbbd0}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!JOINT\_VELOCITY\_FACTOR@{JOINT\_VELOCITY\_FACTOR}}
@@ -1191,7 +1191,7 @@ Definition at line 30 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 36 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 37 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a02a93db21d5912e18e0313dfc9d2ef33}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a02a93db21d5912e18e0313dfc9d2ef33}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!kneeTrajectoryLeft@{kneeTrajectoryLeft}}
@@ -1201,7 +1201,7 @@ Definition at line 36 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 199 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 200 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a2ee3e814328b3282a0f363ac68133bcc}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a2ee3e814328b3282a0f363ac68133bcc}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!kneeTrajectoryRight@{kneeTrajectoryRight}}
@@ -1211,7 +1211,7 @@ Definition at line 199 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 
 
 
-Definition at line 196 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 197 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_abdefc2b4767c73a7a8294af102dd3415}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_abdefc2b4767c73a7a8294af102dd3415}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!LEFT\_ANKLE\_JOINT@{LEFT\_ANKLE\_JOINT}}
@@ -1221,7 +1221,7 @@ Definition at line 196 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 
 
 
-Definition at line 57 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 58 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a2e323c236affa8da1a73fd22ec5c57fd}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a2e323c236affa8da1a73fd22ec5c57fd}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!LEFT\_HIP\_JOINT@{LEFT\_HIP\_JOINT}}
@@ -1231,7 +1231,7 @@ Definition at line 57 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 55 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 56 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a9c802e4a98b4578d0c641fe208f2442d}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a9c802e4a98b4578d0c641fe208f2442d}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!LEFT\_KNEE\_JOINT@{LEFT\_KNEE\_JOINT}}
@@ -1241,7 +1241,7 @@ Definition at line 55 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 56 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 57 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_afb48b713f436f5b50e00b59a37610c09}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_afb48b713f436f5b50e00b59a37610c09}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!MAX\_JOINT\_VEL@{MAX\_JOINT\_VEL}}
@@ -1251,7 +1251,7 @@ Definition at line 56 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 35 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 36 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a7c4ae70fe470e9f12ee15e53722461af}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a7c4ae70fe470e9f12ee15e53722461af}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!MIN\_JOINT\_VEL@{MIN\_JOINT\_VEL}}
@@ -1261,7 +1261,7 @@ Definition at line 35 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 34 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 35 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a691cfd1106487bb086581826d18d7aa6}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a691cfd1106487bb086581826d18d7aa6}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!numTrajectoryPoints@{numTrajectoryPoints}}
@@ -1271,7 +1271,7 @@ Definition at line 34 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 190 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 191 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_ad153ee88b7219453ffb7121f2bd7e29f}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_ad153ee88b7219453ffb7121f2bd7e29f}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!PEDAL@{PEDAL}}
@@ -1281,7 +1281,7 @@ Definition at line 190 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 
 
 
-Definition at line 455 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 456 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_aebb6bdd4e961ce8277705e205220759b}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_aebb6bdd4e961ce8277705e205220759b}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!PEDAL\_POSITION\_ERROR\_TOLERANCE@{PEDAL\_POSITION\_ERROR\_TOLERANCE}}
@@ -1291,7 +1291,7 @@ Definition at line 455 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 
 
 
-Definition at line 29 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 30 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a6cb7e7f3aa3bebfa232e54ccdc9ab649}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a6cb7e7f3aa3bebfa232e54ccdc9ab649}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!PEDAL\_SINGLE\_ROTATION\_DURATION@{PEDAL\_SINGLE\_ROTATION\_DURATION}}
@@ -1301,7 +1301,7 @@ Definition at line 29 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 31 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 32 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_adc5a80a6f2b5d3125efdc4bb85565816}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_adc5a80a6f2b5d3125efdc4bb85565816}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!pedalTrajectoryLeft@{pedalTrajectoryLeft}}
@@ -1311,7 +1311,7 @@ Definition at line 31 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 194 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 195 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a81db8748afcb81d89828466eb7bc97cd}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a81db8748afcb81d89828466eb7bc97cd}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!pedalTrajectoryRight@{pedalTrajectoryRight}}
@@ -1321,7 +1321,7 @@ Definition at line 194 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 
 
 
-Definition at line 193 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 194 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a528355ac4d2635ea23b3d19a0e08fce4}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a528355ac4d2635ea23b3d19a0e08fce4}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!PRINT\_DEBUG@{PRINT\_DEBUG}}
@@ -1335,7 +1335,7 @@ M\+O\+D\+U\+LE P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#.
 
 
 
-Definition at line 25 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 26 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_ac8b019fceb68391fd2d5cd1598b0921d}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_ac8b019fceb68391fd2d5cd1598b0921d}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!RECORDED\_TRAJECTORY\_FILENAME@{RECORDED\_TRAJECTORY\_FILENAME}}
@@ -1345,7 +1345,7 @@ Definition at line 25 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 27 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 28 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a73797898e16f2468ee1e593d1ff8571d}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a73797898e16f2468ee1e593d1ff8571d}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!RIGHT\_ANKLE\_JOINT@{RIGHT\_ANKLE\_JOINT}}
@@ -1355,7 +1355,7 @@ Definition at line 27 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 54 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 55 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a303b81404877d3cada1a712ccdfdcac3}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a303b81404877d3cada1a712ccdfdcac3}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!RIGHT\_HIP\_JOINT@{RIGHT\_HIP\_JOINT}}
@@ -1365,7 +1365,7 @@ Definition at line 54 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 52 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 53 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a707545ad904721bb0f00348a2cf93f11}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a707545ad904721bb0f00348a2cf93f11}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!RIGHT\_KNEE\_JOINT@{RIGHT\_KNEE\_JOINT}}
@@ -1375,7 +1375,7 @@ Definition at line 52 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 53 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 54 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a601687afe04f4c7814fee7ac4af804f6}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a601687afe04f4c7814fee7ac4af804f6}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!ROS\_JOINT\_ANKLE\_LEFT@{ROS\_JOINT\_ANKLE\_LEFT}}
@@ -1385,7 +1385,7 @@ Definition at line 53 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 50 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 51 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a593c7b6f49b5c4ba041aa3efe609fb75}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a593c7b6f49b5c4ba041aa3efe609fb75}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!ROS\_JOINT\_ANKLE\_RIGHT@{ROS\_JOINT\_ANKLE\_RIGHT}}
@@ -1395,7 +1395,7 @@ Definition at line 50 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 47 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 48 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a4134acdea8d46c49c3031087a5dfa459}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a4134acdea8d46c49c3031087a5dfa459}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!ROS\_JOINT\_HIP\_LEFT@{ROS\_JOINT\_HIP\_LEFT}}
@@ -1405,7 +1405,7 @@ Definition at line 47 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 48 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 49 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a073eb93be3570097fd140f4488393467}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a073eb93be3570097fd140f4488393467}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!ROS\_JOINT\_HIP\_RIGHT@{ROS\_JOINT\_HIP\_RIGHT}}
@@ -1415,7 +1415,7 @@ Definition at line 48 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 45 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 46 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a0e2787b945854e034b47dec8918298f2}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a0e2787b945854e034b47dec8918298f2}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!ROS\_JOINT\_KNEE\_LEFT@{ROS\_JOINT\_KNEE\_LEFT}}
@@ -1425,7 +1425,7 @@ Definition at line 45 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 49 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 50 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_af1c84f3b73df0161dd11c10d2faa4112}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_af1c84f3b73df0161dd11c10d2faa4112}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!ROS\_JOINT\_KNEE\_RIGHT@{ROS\_JOINT\_KNEE\_RIGHT}}
@@ -1435,7 +1435,7 @@ Definition at line 49 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 46 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 47 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a1d4e40a9e146872f75e44f9e22cf4a70}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a1d4e40a9e146872f75e44f9e22cf4a70}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!TRAJECTORY\_POINT\_DURATION@{TRAJECTORY\_POINT\_DURATION}}
@@ -1445,7 +1445,7 @@ Definition at line 46 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 32 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 33 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_ab9feb3b578048c3a5b67ad31e0ba23ab}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_ab9feb3b578048c3a5b67ad31e0ba23ab}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!trajectoryStartingPoint@{trajectoryStartingPoint}}
@@ -1455,7 +1455,7 @@ Definition at line 32 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 191 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 192 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a2662ff45979e02a3e142a88c51b48225}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a2662ff45979e02a3e142a88c51b48225}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!UPDATE\_PARAMETERS@{UPDATE\_PARAMETERS}}
@@ -1465,7 +1465,7 @@ Definition at line 191 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+lin
 
 
 
-Definition at line 456 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 457 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a518247061f2b34486d78160c6ce3c9ae}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a518247061f2b34486d78160c6ce3c9ae}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!x\_pedal\_record@{x\_pedal\_record}}
@@ -1479,7 +1479,7 @@ G\+L\+O\+B\+AL V\+A\+R\+I\+A\+B\+L\+ES \#\#\#.
 
 
 
-Definition at line 42 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 43 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 
 \mbox{\Hypertarget{namespacepedal__simulation__interpolation__linear__trajectory__points_a8c7cde143a0538002a53439ae50296a4}\label{namespacepedal__simulation__interpolation__linear__trajectory__points_a8c7cde143a0538002a53439ae50296a4}} 
 \index{pedal\_simulation\_interpolation\_linear\_trajectory\_points@{pedal\_simulation\_interpolation\_linear\_trajectory\_points}!y\_pedal\_record@{y\_pedal\_record}}
@@ -1489,5 +1489,5 @@ Definition at line 42 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+line
 
 
 
-Definition at line 43 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
+Definition at line 44 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+linear\+\_\+trajectory\+\_\+points.\+py.
 

@@ -1,4 +1,5 @@
-#! /usr/bin/env python
+## @package pedaling
+
 import json
 import math
 import sys

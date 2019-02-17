@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+## @package pedaling
+
 from __future__ import print_function
 
 #roslaunch kindyn robot.launch robot_name:=rikshaw model_name:=rikshaw start_controllers:='joint_hip_right joint_knee_right joint_foot_right joint_hip_left joint_knee_left joint_foot_left joint_pedal'
