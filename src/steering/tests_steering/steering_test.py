@@ -1,9 +1,16 @@
-#!/usr/bin/env python
+## @package steering
+#  Documentation for this module.
+#
+#  Test-script for testing the transition-time between two different-steering-angles.
+#  Accuracy-measurement is not important as we are using position-control for the joint-angles
+#  and assume they are working.
+#
+#  @STEPS_DISTRIBUTION_TEST determines the amount of steps for measurement between min and max angle.
+#  The program saves all transition-times between two angles going from min to max and from max to min anngle
+#  and saves them in two separate lists.
+
 from __future__ import print_function
-
-# roslaunch kindyn robot.launch robot_name:=rikshaw start_controllers:='joint_hip_left joint_hip_right joint_wheel_right joint_wheel_back joint_pedal spine_joint joint_wheel_left joint_front joint_pedal_right joint_pedal_left elbow_right_rot1 joint_foot_left joint_knee_right joint_knee_left joint_foot_right left_shoulder_axis0 left_shoulder_axis1 left_shoulder_axis2 elbow_left_rot1 elbow_left_rot0 left_wrist_0 left_wrist_1 right_shoulder_axis0 right_shoulder_axis2 right_shoulder_axis1 elbow_right_rot0 right_wrist_0 right_wrist_1 head_axis0 head_axis1 head_axis2'
 from threading import Thread
-
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import json
@@ -111,8 +118,28 @@ _interpolatedWrist1Right = None
 _interpolatedWrist0Left = None
 _interpolatedWrist1Left = None
 
+_regressedShoulder0Right = None
+_regressedShoulder1Right = None
+_regressedShoulder2Right = None
+_regressedShoulder0Left = None
+_regressedShoulder1Left = None
+_regressedShoulder2Left = None
+_regressedElbow0Right = None
+_regressedElbow1Right = None
+_regressedElbow0Left = None
+_regressedElbow1Left = None
+_regressedWrist0Right = None
+_regressedWrist1Right = None
+_regressedWrist0Left = None
+_regressedWrist1Left = None
+
 RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/steering_trajectory.json"
 
+
+## Documentation for a function.
+#
+#  Collects and saves all joint- and steering-angles from the pre-captured
+#  trajectory from the @read_file (global variable).
 def import_joint_trajectory_record():
     global _trajectorySteering
     global _trajectoryShoulder0Right
@@ -181,38 +208,71 @@ def import_joint_trajectory_record():
         print(_numTrajectoryPoints)
 
 
-def interpolate_joint_angles():
-    global _interpolatedShoulder0Right
-    global _interpolatedShoulder1Right
-    global _interpolatedShoulder2Right
-    global _interpolatedShoulder0Left
-    global _interpolatedShoulder1Left
-    global _interpolatedShoulder2Left
-    global _interpolatedElbow0Right
-    global _interpolatedElbow1Right
-    global _interpolatedElbow0Left
-    global _interpolatedElbow1Left
-    global _interpolatedWrist0Right
-    global _interpolatedWrist1Right
-    global _interpolatedWrist0Left
-    global _interpolatedWrist1Left
+## Documentation for a function.
+#
+#  Initializes the interpolation-functions for every joint-angle using regression.
+#  The input value of the function is a steering angle and the output value of the function
+#  is the correspondent joint angle.
+#
+#  The functions can be used by calling "<function_name>(<steering_angle>)"
+#  ==> returns <joint_angle>
+def regress_joint_positions_from_file(filename):
+    global _trajectorySteering
+    global _trajectoryShoulder0Right
+    global _trajectoryShoulder1Right
+    global _trajectoryShoulder2Right
+    global _trajectoryShoulder0Left
+    global _trajectoryShoulder1Left
+    global _trajectoryShoulder2Left
+    global _trajectoryElbow0Right
+    global _trajectoryElbow1Right
+    global _trajectoryElbow0Left
+    global _trajectoryElbow1Left
+    global _trajectoryWrist0Right
+    global _trajectoryWrist1Right
+    global _trajectoryWrist0Left
+    global _trajectoryWrist1Left
 
-    _interpolatedShoulder0Right = interpolate.interp1d(_trajectorySteering, _trajectoryShoulder0Right, kind="cubic")
-    _interpolatedShoulder1Right = interpolate.interp1d(_trajectorySteering, _trajectoryShoulder1Right, kind="cubic")
-    _interpolatedShoulder2Right = interpolate.interp1d(_trajectorySteering, _trajectoryShoulder2Right, kind="cubic")
-    _interpolatedElbow0Right = interpolate.interp1d(_trajectorySteering, _trajectoryElbow0Right, kind="cubic")
-    _interpolatedElbow1Right = interpolate.interp1d(_trajectorySteering, _trajectoryElbow1Right, kind="cubic")
-    _interpolatedWrist0Right = interpolate.interp1d(_trajectorySteering, _trajectoryWrist0Right, kind="cubic")
-    _interpolatedWrist1Right = interpolate.interp1d(_trajectorySteering, _trajectoryWrist1Right, kind="cubic")
+    global _regressedShoulder0Right
+    global _regressedShoulder1Right
+    global _regressedShoulder2Right
+    global _regressedShoulder0Left
+    global _regressedShoulder1Left
+    global _regressedShoulder2Left
+    global _regressedElbow0Right
+    global _regressedElbow1Right
+    global _regressedElbow0Left
+    global _regressedElbow1Left
+    global _regressedWrist0Right
+    global _regressedWrist1Right
+    global _regressedWrist0Left
+    global _regressedWrist1Left
 
-    _interpolatedShoulder0Left = interpolate.interp1d(_trajectorySteering, _trajectoryShoulder0Left, kind="cubic")
-    _interpolatedShoulder1Left = interpolate.interp1d(_trajectorySteering, _trajectoryShoulder1Left, kind="cubic")
-    _interpolatedShoulder2Left = interpolate.interp1d(_trajectorySteering, _trajectoryShoulder2Left, kind="cubic")
-    _interpolatedElbow0Left = interpolate.interp1d(_trajectorySteering, _trajectoryElbow0Left, kind="cubic")
-    _interpolatedElbow1Left = interpolate.interp1d(_trajectorySteering, _trajectoryElbow1Left, kind="cubic")
-    _interpolatedWrist0Left = interpolate.interp1d(_trajectorySteering, _trajectoryWrist0Left, kind="cubic")
-    _interpolatedWrist1Left = interpolate.interp1d(_trajectorySteering, _trajectoryWrist1Left, kind="cubic")
+    loaded_data = None
+    with open(filename, "r") as read_file:
+        loaded_data = json.load(read_file)
 
+    _regressedShoulder0Right = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS0_RIGHT])
+    _regressedShoulder1Right = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS1_RIGHT])
+    _regressedShoulder2Right = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS2_RIGHT])
+    _regressedElbow0Right = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT0_RIGHT])
+    _regressedElbow1Right = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT1_RIGHT])
+    _regressedWrist0Right = poly.Polynomial(loaded_data[JOINT_WRIST_0_RIGHT])
+    _regressedWrist1Right = poly.Polynomial(loaded_data[JOINT_WRIST_1_RIGHT])
+
+    _regressedShoulder0Left = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS0_LEFT])
+    _regressedShoulder1Left = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS1_LEFT])
+    _regressedShoulder2Left = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS2_LEFT])
+    _regressedElbow0Left = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT0_LEFT])
+    _regressedElbow1Left = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT1_LEFT])
+    _regressedWrist0Left = poly.Polynomial(loaded_data[JOINT_WRIST_0_LEFT])
+    _regressedWrist1Left = poly.Polynomial(loaded_data[JOINT_WRIST_1_LEFT])
+
+
+## Documentation for a function.
+#
+#  This function collects the current status of the joint-angles and saves
+#  them in the global dictionary "_jointStatusData".
 def joint_state_callback(joint_data):
     global joint_status_data
     # Assert order of joints
@@ -249,39 +309,41 @@ def joint_state_callback(joint_data):
             joint_status_data[ JOINT_WRIST_1_RIGHT ] = joint_data.q[ stringIter ]
 
 
-###### Test-Methods #####
-
+## Documentation for a function.
+#
+#  Checks if joint @joint_name has reached the joint-angle within error-tolerance
+#  corresponding to the steering angle @steering_angle and returns if so or if @MAX_TRANSITION_TIME has been reached.
 def check_joint_angle(joint_name, steering_angle):
     f_interpolated = None
 
     if joint_name == JOINT_SHOULDER_AXIS0_LEFT:
-        f_interpolated = _interpolatedShoulder0Left
+        f_interpolated = _regressedShoulder0Left
     elif joint_name == JOINT_SHOULDER_AXIS1_LEFT:
-        f_interpolated = _interpolatedShoulder1Left
+        f_interpolated = _regressedShoulder1Left
     elif joint_name == JOINT_SHOULDER_AXIS2_LEFT:
-        f_interpolated = _interpolatedShoulder2Left
+        f_interpolated = _regressedShoulder2Left
     elif joint_name == JOINT_SHOULDER_AXIS0_RIGHT:
-        f_interpolated = _interpolatedShoulder0Right
+        f_interpolated = _regressedShoulder0Right
     elif joint_name == JOINT_SHOULDER_AXIS1_RIGHT:
-        f_interpolated = _interpolatedShoulder1Right
+        f_interpolated = _regressedShoulder1Right
     elif joint_name == JOINT_SHOULDER_AXIS2_RIGHT:
-        f_interpolated = _interpolatedShoulder2Right
+        f_interpolated = _regressedShoulder2Right
     elif joint_name == JOINT_ELBOW_ROT0_LEFT:
-        f_interpolated = _interpolatedElbow0Left
+        f_interpolated = _regressedElbow0Left
     elif joint_name == JOINT_ELBOW_ROT1_LEFT:
-        f_interpolated = _interpolatedElbow1Left
+        f_interpolated = _regressedElbow1Left
     elif joint_name == JOINT_ELBOW_ROT0_RIGHT:
-        f_interpolated = _interpolatedElbow0Right
+        f_interpolated = _regressedElbow0Right
     elif joint_name == JOINT_ELBOW_ROT1_RIGHT:
-        f_interpolated = _interpolatedElbow1Right
+        f_interpolated = _regressedElbow1Right
     elif joint_name == JOINT_WRIST_0_LEFT:
-        f_interpolated = _interpolatedWrist0Left
+        f_interpolated = _regressedWrist0Left
     elif joint_name == JOINT_WRIST_1_LEFT:
-        f_interpolated = _interpolatedWrist1Left
+        f_interpolated = _regressedWrist1Left
     elif joint_name == JOINT_WRIST_0_RIGHT:
-        f_interpolated = _interpolatedWrist0Right
+        f_interpolated = _regressedWrist0Right
     elif joint_name == JOINT_WRIST_1_RIGHT:
-        f_interpolated = _interpolatedWrist1Right
+        f_interpolated = _regressedWrist1Right
 
     target_joint_angle = f_interpolated(steering_angle)
     current_joint_angle = joint_status_data[joint_name]
@@ -292,6 +354,11 @@ def check_joint_angle(joint_name, steering_angle):
         current_joint_angle = joint_status_data[joint_name]
         time.sleep(UPDATE_FREQUENCY)
 
+
+## Documentation for a function.
+#
+#  Checks if a steering-angle has been reached with checking if all joint-angles have reached the correspondent
+#  joint-angles
 def steering_angle_reached(steering_angle):
     threads = [ ]
     i = 0
@@ -304,6 +371,11 @@ def steering_angle_reached(steering_angle):
         thread.join()
 
 
+## Documentation for a function.
+#
+#  Program for testing the transition-time between two different steering-angles.
+#  Saves measurements in lists and displays them using pyplot, or just the average values for all steps in
+#  @STEPS_DISTRIBUTION_TEST
 def steering_test(pub):
     transition_times_increasing = [[]] * len(STEPS_DISTRIBUTION_TEST)
     transition_times_decreasing = [[]] * len(STEPS_DISTRIBUTION_TEST)
@@ -376,6 +448,9 @@ def steering_test(pub):
     plt.show()
 
 
+## Documentation for a function
+#
+#  Initializes the Test-Node for the steering-test
 def main():
     pub = rospy.Publisher('/cmd_steering_angle_rickshaw', Float32, queue_size=10)
     rospy.Subscriber("joint_state", JointState, joint_state_callback)

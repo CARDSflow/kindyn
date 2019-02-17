@@ -1,25 +1,28 @@
-#!/usr/bin/env python
+## @package pedaling
+#  Documentation for this module.
+#
+#  Test-script for testing the accuracy of a requested velocity and the transition-time (acceleration) between two
+#  different velocities, which is only important for testing in reality, because there is no transition-time between
+#  different velocities in simulation.
+#
+#  @TIME_STEP_SIMULATION and @TIME_STEP_REALITY determine the time-steps in seconds for the measurement of velocity
+#  @VELOCITY_STEPS_REALITY and @VELOCITY_STEP_SIMULATION  determine the size of a step between two different velocities
+#  in m/s
+
 from __future__ import print_function
-
-# roslaunch kindyn robot.launch robot_name:=rikshaw start_controllers:='joint_hip_left joint_hip_right joint_wheel_right joint_wheel_back joint_pedal spine_joint joint_wheel_left joint_front joint_pedal_right joint_pedal_left elbow_right_rot1 joint_foot_left joint_knee_right joint_knee_left joint_foot_right left_shoulder_axis0 left_shoulder_axis1 left_shoulder_axis2 elbow_left_rot1 elbow_left_rot0 left_wrist_0 left_wrist_1 right_shoulder_axis0 right_shoulder_axis2 right_shoulder_axis1 elbow_right_rot0 right_wrist_0 right_wrist_1 head_axis0 head_axis1 head_axis2'
-
-
-import math
 import time
-from threading import Thread
-
 import numpy as np
-
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 import rospy
 from roboy_middleware_msgs.srv import InverseKinematics, ForwardKinematics
 from std_msgs.msg import Float32
 
 TIME_STEP_SIMULATION = 0.5
 TIME_STEP_REALITY = 0.5
-VELOCITY_STEPS_REALITY = [2, 5, 10]
+VELOCITY_STEP_SIMULATION = 0.1
+VELOCITY_STEPS_REALITY = [0.1, 0.2, 0.5]
 ERROR_TOLERANCE_REALITY = 2*np.pi / 720
+MAX_VELOCITY = 5
 
 
 PEDAL_CENTER_OFFSET_X = 0.20421
@@ -72,7 +75,10 @@ joint_status_data = {
 }
 
 
-def getPositionLeftFoot():
+## Documentation for a function
+#
+#  Return the position of the left foot of Roboy.
+def get_position_left_foot():
     fkJointNamesList = [ ROS_JOINT_HIP_LEFT, ROS_JOINT_KNEE_LEFT, ROS_JOINT_ANKLE_LEFT ]
     fkJointPositions = [ joint_status_data[ LEFT_HIP_JOINT ][ "Pos" ], joint_status_data[ LEFT_KNEE_JOINT ][ "Pos" ],
                          joint_status_data[ LEFT_ANKLE_JOINT ][ "Pos" ] ]
@@ -90,7 +96,10 @@ def getPositionLeftFoot():
     return [ 0.0, 0.0 ]  # [x, z]
 
 
-def getPositionRightFoot():
+## Documentation for a function
+#
+#  Return the position of the right foot of Roboy.
+def get_position_right_foot():
     fk_joint_names_list = [ ROS_JOINT_HIP_RIGHT, ROS_JOINT_KNEE_RIGHT, ROS_JOINT_ANKLE_RIGHT ]
     fk_joint_positions = [ joint_status_data[ RIGHT_HIP_JOINT ][ "Pos" ],
                            joint_status_data[ RIGHT_KNEE_JOINT ][ "Pos" ],
@@ -109,7 +118,11 @@ def getPositionRightFoot():
     return [ 0.0, 0.0 ]  # [x, z]
 
 
-def evaluate_current_angle(current_point):
+## Documentation for a function
+#
+#  Evaluating the current pedal-angle according to the current position of the left foot @current_point.
+#  Using trigonometric functions for the evaluation of the angle.
+def evaluate_current_pedal_angle(current_point):
     current_x = current_point[ 0 ] - PEDAL_CENTER_OFFSET_X
     current_y = current_point[ 1 ] - PEDAL_CENTER_OFFSET_Y
 
@@ -132,25 +145,28 @@ def evaluate_current_angle(current_point):
         return np.pi
 
 
+## Documentation for a function
+#
+#  Returns the absolute difference of two angles within the interval [0;2pi]
 def get_angle_difference(angle_1, angle_2):
     return np.pi - np.abs(np.abs(angle_1 - angle_2) - np.pi)
 
 
-###### Test-Methods #####
-
-
+## Documentation for a function
+#
+#  Evaluate the angle-error for velocity @velocity after @TIME_STEP_SIMULATION seconds
 def evaluate_error(velocity, leg):
 
     current_angle = 0
     next_angle = 0
     if leg == "right":
-        current_angle = evaluate_current_angle(getPositionRightFoot())
+        current_angle = evaluate_current_pedal_angle(get_position_right_foot())
         time.sleep(TIME_STEP_SIMULATION)
-        next_angle = evaluate_current_angle(getPositionRightFoot())
+        next_angle = evaluate_current_pedal_angle(get_position_right_foot())
     elif leg == "left":
-        current_angle = evaluate_current_angle(getPositionLeftFoot())
+        current_angle = evaluate_current_pedal_angle(get_position_left_foot())
         time.sleep(TIME_STEP_SIMULATION)
-        next_angle = evaluate_current_angle(getPositionLeftFoot())
+        next_angle = evaluate_current_pedal_angle(get_position_left_foot())
 
     circulation_time = 2 * np.pi * (RADIUS_FRONT_CHAIN_RING / RADIUS_GEAR_CLUSTER /
                                                           (velocity / RADIUS_BACK_TIRE))
@@ -159,12 +175,17 @@ def evaluate_error(velocity, leg):
     return get_angle_difference(target_angle, next_angle)
 
 
+## Documentation for a function
+#
+#  Test program for evaluating the accuracy of velocity.
+#  Saves ten error-results for every target velocity and determines average error and max error for every velocity
+#  and displays them using pyplot.
 def simulation_test(pub):
 
-    error_results_right = [[]] * 20
-    error_results_left = [[]] * 20
+    error_results_right = [[]] * (MAX_VELOCITY / VELOCITY_STEP_SIMULATION)
+    error_results_left = [[]] * (MAX_VELOCITY / VELOCITY_STEP_SIMULATION)
 
-    for i in range(1, 21):
+    for i in range(1, MAX_VELOCITY, VELOCITY_STEP_SIMULATION):
         pub.publish(i)
         for k in range(10):
             error_results_right[i].append(evaluate_error(i, "right"))
@@ -181,19 +202,22 @@ def simulation_test(pub):
         avg_error_left.append(sum(velocity) / len(velocity))
         max_error_left.append(max(velocity))
 
-    plt.plot(range(1, 21), avg_error_left, label="average error left")
-    plt.plot(range(1, 21), avg_error_right, label="average error right")
-    plt.plot(range(1, 21), max_error_left, label="max error left")
-    plt.plot(range(1, 21), max_error_right, label="max error right")
+    plt.plot(range(1, MAX_VELOCITY, VELOCITY_STEP_SIMULATION), avg_error_left, label="average error left")
+    plt.plot(range(1, MAX_VELOCITY, VELOCITY_STEP_SIMULATION), avg_error_right, label="average error right")
+    plt.plot(range(1, MAX_VELOCITY, VELOCITY_STEP_SIMULATION), max_error_left, label="max error left")
+    plt.plot(range(1, MAX_VELOCITY, VELOCITY_STEP_SIMULATION), max_error_right, label="max error right")
     plt.ylabel("error value")
     plt.xlabel("velocity")
     plt.show()
 
 
+## Documentation for a function
+#
+#  Returns if @velocity has been reached within the error-tolerance
 def velocity_reached(velocity):
-    current_angle = evaluate_current_angle(getPositionRightFoot())
+    current_angle = evaluate_current_pedal_angle(get_position_right_foot())
     time.sleep(TIME_STEP_REALITY)
-    next_angle = evaluate_current_angle(getPositionRightFoot())
+    next_angle = evaluate_current_pedal_angle(get_position_right_foot())
 
     circulation_time = 2 * np.pi * (RADIUS_FRONT_CHAIN_RING / RADIUS_GEAR_CLUSTER /
                                     (velocity / RADIUS_BACK_TIRE))
@@ -204,11 +228,17 @@ def velocity_reached(velocity):
     return angle_error < ERROR_TOLERANCE_REALITY
 
 
+## Documentation for a function
+#
+#  Test program for evaluating the acceleration time (time needed to change between two velocities.
+#
+#  Uses @VELOCITY_STEPS_REALITY to determine the difference between two different velocities and measures the time
+#  needed to change between the two velocities. Displays all acceleration times using pyplot.
 def reality_test_acceleration(pub):
     acceleration_times = [[]] * len(VELOCITY_STEPS_REALITY)
 
     for j in range(len(VELOCITY_STEPS_REALITY)):
-        for i in range(1, 21, VELOCITY_STEPS_REALITY[i]):
+        for i in range(1, MAX_VELOCITY, VELOCITY_STEPS_REALITY[i]):
             start_time = rospy.get_rostime()
             pub.publish(i)
             while not velocity_reached(i):
@@ -218,7 +248,7 @@ def reality_test_acceleration(pub):
             acceleration_times[j].append(acceleration_time)
 
     for i in range(len(VELOCITY_STEPS_REALITY)):
-        plt.plot(range(1, 21, VELOCITY_STEPS_REALITY[i]), acceleration_times[i],
+        plt.plot(range(1, MAX_VELOCITY, VELOCITY_STEPS_REALITY[i]), acceleration_times[i],
                  label="velocity steps = "+str(VELOCITY_STEPS_REALITY))
 
     plt.xlabel("velocity")
@@ -226,7 +256,9 @@ def reality_test_acceleration(pub):
     plt.show()
 
 
-
+## Documentation for a function
+#
+#  Initializes the Test-Node for the velocity-tests
 def main():
     pub = rospy.Publisher('/cmd_velocity_rickshaw', Float32, queue_size=10)
     rospy.init_node('velocity_publisher', anonymous=True)
@@ -237,3 +269,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
