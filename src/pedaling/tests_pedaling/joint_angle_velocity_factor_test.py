@@ -511,11 +511,11 @@ def evaluate_current_angle(current_point):
 
     if current_x > 0 and current_y > 0:
         return np.arctan(current_y / current_x)
-    elif current_x < 0 and current_y > 0:
+    elif current_x < 0 < current_y:
         return np.arctan(current_y / current_x) + np.pi
     elif current_x < 0 and current_y < 0:
         return np.arctan(current_y / current_x) + np.pi
-    elif current_x > 0 and current_y < 0:
+    elif current_x > 0 > current_y:
         return np.arctan(current_y / current_x) + 2 * np.pi
 
     elif current_x == 0 and current_y > 0:

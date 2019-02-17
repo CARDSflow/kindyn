@@ -26,7 +26,7 @@ from std_msgs.msg import Float32, String
 
 
 PRINT_DEBUG = True
-RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/steering_trajectory.json"
+RECORDED_TRAJECTORY_FILENAME = "trajectory_steering/steering_trajectory.json"
 JOINT_TARGET_ERROR_TOLERANCE = 0.01
 UPDATE_FREQUENCY = 0.001
 MAX_ANGLE_CHANGE = np.pi / 72
@@ -404,8 +404,8 @@ def set_joint_controller_parameters(proportional_value, derivative_value):
         try:
             joint_srv = rospy.ServiceProxy(thisJointName + '/' + thisJointName + '/params', SetControllerParameters)
             joint_srv(proportional_value, derivative_value)
-        except rospy.ServiceException, e:
-            print("Service call joint_foot_left failed: ", e)
+        except rospy.ServiceException as e:
+            print("Service call joint_foot_left failed:", e)
 
 
 ## Documentation for a function
@@ -648,7 +648,7 @@ def main():
     rospy.Subscriber("joint_state", JointState, joint_state_callback)
     import_joint_trajectory_record()
     interpolate_joint_angles()
-    regress_joint_positions_from_file("capture_trajectory/saved_coefficients.json")
+    regress_joint_positions_from_file("trajectory_steering/saved_coefficients.json")
     set_joint_controller_parameters(1000, 0)
     steering_control()
 

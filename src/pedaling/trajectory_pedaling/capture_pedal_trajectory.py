@@ -12,9 +12,9 @@ from roboy_middleware_msgs.srv import InverseKinematics, ForwardKinematics
 from roboy_simulation_msgs.msg import JointState
 from std_msgs.msg import Float32
 
-JSON_FILENAME = "captured_pedal_trajectory_06feb.json"
+JSON_FILENAME = "captured_pedal_trajectory_06feb.json"  # "captured_trajectory_two_frames.json"
 
-JOINT_ANGLE_TOLERANCE_FK = 0.1
+JOINT_ANGLE_TOLERANCE_FK = 0.05
 JOINT_KP = 500
 JOINT_KD = 0
 
@@ -96,7 +96,7 @@ def getPositionLeftFoot():
         fk_result = fk_srv("foot_left_tip", "foot_left_tip", fkJointNamesList, fkJointPositions)
         return [fk_result.pose.position.x, fk_result.pose.position.z]
 
-    except rospy.ServiceException, e:
+    except rospy.ServiceException as e:
         print("Service call failed: %s" % e)
 
     print("ERROR fk foot_left failed")
@@ -114,7 +114,7 @@ def getPositionRightFoot():
         fk_result = fk_srv("foot_right_tip", "foot_right_tip", fkJointNamesList, fkJointPositions)
         return [fk_result.pose.position.x, fk_result.pose.position.z]
 
-    except rospy.ServiceException, e:
+    except rospy.ServiceException as e:
         print("Service call failed: %s" % e)
 
     print("ERROR fk foot_right failed")
@@ -126,49 +126,43 @@ def setJointControllerParameters(proportionalVal, derivativeVal):
     try:
         foot_left_srv = rospy.ServiceProxy('joint_foot_left/joint_foot_left/params', SetControllerParameters)
         foot_left_srv(proportionalVal, derivativeVal)
-    except rospy.ServiceException, e:
-        print
-        "Service call joint_foot_left failed: %s" % e
+    except rospy.ServiceException as e:
+        print("Service call joint_foot_left failed:", e)
 
     rospy.wait_for_service('joint_foot_right/joint_foot_right/params')
     try:
         foot_right_srv = rospy.ServiceProxy('joint_foot_right/joint_foot_right/params', SetControllerParameters)
         foot_right_srv(proportionalVal, derivativeVal)
-    except rospy.ServiceException, e:
-        print
-        "Service call joint_foot_right failed: %s" % e
+    except rospy.ServiceException as e:
+        print("Service call joint_foot_right failed:", e)
 
     rospy.wait_for_service('joint_knee_left/joint_knee_left/params')
     try:
         knee_left_srv = rospy.ServiceProxy('joint_knee_left/joint_knee_left/params', SetControllerParameters)
         knee_left_srv(proportionalVal, derivativeVal)
-    except rospy.ServiceException, e:
-        print
-        "Service call joint_knee_left failed: %s" % e
+    except rospy.ServiceException as e:
+        print("Service call joint_knee_left failed:", e)
 
     rospy.wait_for_service('joint_knee_right/joint_knee_right/params')
     try:
         knee_right_srv = rospy.ServiceProxy('joint_knee_right/joint_knee_right/params', SetControllerParameters)
         knee_right_srv(proportionalVal, derivativeVal)
-    except rospy.ServiceException, e:
-        print
-        "Service call joint_knee_right failed: %s" % e
+    except rospy.ServiceException as e:
+        print("Service call joint_knee_right failed:", e)
 
     rospy.wait_for_service('joint_hip_left/joint_hip_left/params')
     try:
         hip_left_srv = rospy.ServiceProxy('joint_hip_left/joint_hip_left/params', SetControllerParameters)
         hip_left_srv(proportionalVal, derivativeVal)
-    except rospy.ServiceException, e:
-        print
-        "Service call joint_hip_left failed: %s" % e
+    except rospy.ServiceException as e:
+        print("Service call joint_hip_left failed:", e)
 
     rospy.wait_for_service('joint_hip_right/joint_hip_right/params')
     try:
         hip_right_srv = rospy.ServiceProxy('joint_hip_right/joint_hip_right/params', SetControllerParameters)
         hip_right_srv(proportionalVal, derivativeVal)
-    except rospy.ServiceException, e:
-        print
-        "Service call joint_hip_right failed: %s" % e
+    except rospy.ServiceException as e:
+        print("Service call joint_hip_right failed:", e)
 
     print("Controller paramters updated")
 
@@ -347,9 +341,31 @@ def inverse_kinematics_client(endeffector, frame, x, y, z):
 
         return jointDict
 
-    except rospy.ServiceException, e:
-        print
-        "Service call failed: %s" % e
+    except rospy.ServiceException as e:
+        print("Service call failed:", e)
+
+
+def inverse_kinematics_two_frames_client(endeffector, frame1, x1, y1, z1, weight1, frame2, x2, y2, z2, weight2):
+    rospy.wait_for_service('ik_two_frames')
+    try:
+        ik_srv = rospy.ServiceProxy('ik_two_frames', InverseKinematicsTwoFrames)
+        requested_position_1 = Point(x1, y1, z1)
+        requested_pose_1 = Pose(position=requested_position_1)
+        requested_position_2 = Point(x2, y2, z2)
+        requested_pose_2 = Pose(position=requested_position_2)
+        requested_ik_type = 1  # Position only
+        ik_result = ik_srv(endeffector, requested_ik_type, frame1, requested_pose_1, weight1, frame2, requested_pose_2,
+                           weight2)
+
+        jointDict = {}
+        for thisJoint in range(len(ik_result.angles)):
+            jointDict[ik_result.joint_names[thisJoint]] = ik_result.angles[thisJoint]
+
+        return jointDict
+
+
+    except rospy.ServiceException as e:
+        print("Service call failed:", e)
 
 
 ################
@@ -381,10 +397,24 @@ def main():
     endeffector_right = "foot_right_tip"
     frame_right = "foot_right_tip"
     y_offset_right = RIGHT_LEG_OFFSET_Y
+    frame_right_1 = "foot_right_tip"
+    weight_right_1 = 1
+    frame_right_2 = "thigh_right"
+    weight_right_2 = 0.1
+    frame_right_2_x_offset = -0.1
+    frame_right_2_y_offset = 0
+    frame_right_2_z_offset = 0.3
 
     endeffector_left = "foot_left_tip"
     frame_left = "foot_left_tip"
     y_offset_left = LEFT_LEG_OFFSET_Y
+    frame_left_1 = "foot_left_tip"
+    weight_left_1 = 1
+    frame_left_2 = "thigh_left"
+    weight_left_2 = 0.1
+    frame_left_2_x_offset = -0.1
+    frame_left_2_y_offset = 0
+    frame_left_2_z_offset = 0.3
 
     jointAngleDict = {}
     jointAngleDict["num_points"] = num_requested_points
@@ -394,11 +424,28 @@ def main():
         thisX = capturedPositions[pointIter][1]
         thisZ = capturedPositions[pointIter][3]
         thisPedalAngle = capturedPositions[pointIter][0]
-        jointAngleResult_right = inverse_kinematics_client(endeffector_right, frame_right, thisX + BIKE_OFFSET_X,
-                                                           y_offset_right + BIKE_OFFSET_Y, thisZ + BIKE_OFFSET_Z)
+        # jointAngleResult_right = inverse_kinematics_client(endeffector_right, frame_right, thisX + BIKE_OFFSET_X, y_offset_right + BIKE_OFFSET_Y, thisZ + BIKE_OFFSET_Z)
+        # jointAngleResult_left = inverse_kinematics_client(endeffector_left, frame_left, thisX + BIKE_OFFSET_X, y_offset_left + BIKE_OFFSET_Y, thisZ + BIKE_OFFSET_Z)
+        jointAngleResult_right = inverse_kinematics_two_frames_client(endeffector_right, frame_right_1,
+                                                                      thisX + BIKE_OFFSET_X,
+                                                                      y_offset_right + BIKE_OFFSET_Y,
+                                                                      thisZ + BIKE_OFFSET_Z,
+                                                                      weight_right_1, frame_right_2,
+                                                                      thisX + BIKE_OFFSET_X + frame_right_2_x_offset,
+                                                                      y_offset_right + BIKE_OFFSET_Y + frame_right_2_y_offset,
+                                                                      thisZ + BIKE_OFFSET_Z + frame_right_2_z_offset,
+                                                                      weight_right_2)
         print("ik result fetched for foot_right_tip")
-        jointAngleResult_left = inverse_kinematics_client(endeffector_left, frame_left, thisX + BIKE_OFFSET_X,
-                                                          y_offset_left + BIKE_OFFSET_Y, thisZ + BIKE_OFFSET_Z)
+        jointAngleResult_left = inverse_kinematics_two_frames_client(endeffector_left, frame_left_1,
+                                                                     thisX + BIKE_OFFSET_X,
+                                                                     y_offset_left + BIKE_OFFSET_Y,
+                                                                     thisZ + BIKE_OFFSET_Z,
+                                                                     weight_left_1, frame_left_2,
+                                                                     thisX + BIKE_OFFSET_X + frame_left_2_x_offset,
+                                                                     y_offset_left + BIKE_OFFSET_Y + frame_left_2_y_offset,
+                                                                     thisZ + BIKE_OFFSET_Z + frame_left_2_z_offset,
+                                                                     weight_left_2)
+
         print("ik result fetched for foot_left_tip")
         if jointAngleResult_right and jointAngleResult_left:
             jointAngleDict["point_" + str(pointIter)] = {}
