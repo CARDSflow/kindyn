@@ -175,7 +175,6 @@ public:
 
     ///find the closest limit point when the robot is in infeasible state
     VectorXd findClosestJointLimit(double q0, double q1, double q3){
-        ROS_INFO("FINDING CLOSEST JOINT LIMIT");
         VectorXd closestLimit;
         closestLimit.resize(number_of_dofs);
         closestLimit.setZero();
@@ -263,13 +262,6 @@ public:
         jointAngle.setZero();
         jointVel.setZero();
 
-        setJointAngleAndVelocity(jointAngle, jointVel);
-
-        VectorXd jointAngle, jointVel;
-        jointAngle.resize(number_of_dofs);
-        jointAngle.setZero();
-        jointVel.resize(number_of_dofs);
-        jointVel.setZero();
         setJointAngleAndVelocity(jointAngle, jointVel);
 	    for(int i=0; i< number_of_cables; i++){
 	        //Set the commanded tendon velocity from RL agent to simulation 
