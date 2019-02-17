@@ -67,7 +67,6 @@
 #include <tf/transform_listener.h>
 #include <tf_conversions/tf_eigen.h>
 #include <eigen_conversions/eigen_msg.h>
-#include <grid_map_ros/GridMapMsgHelpers.hpp>
 
 #include <qpOASES.hpp>
 
