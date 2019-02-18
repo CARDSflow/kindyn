@@ -24,7 +24,7 @@ public:
      * @param urdf path to urdf
      * @param cardsflow_xml path to cardsflow xml
      */
-    MsjPlatform(string urdf, string cardsflow_xml, int id , int num_workers){
+    MsjPlatform(string urdf, string cardsflow_xml, int id){
 
         if (!ros::isInitialized()) {
             int argc = 0;
@@ -37,7 +37,7 @@ public:
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
 
 
-        initService(id, num_workers);
+        initService(id);
 
         readJointLimits();
 
@@ -55,21 +55,10 @@ public:
     };
 
     ///Open AI Gym services
-    void initService(int id, int num_workers){
-        string gym_step_topic, gym_reset_topic, gym_goal_topic;
-        if (num_workers > 1){
-            gym_step_topic = "/instance" + to_string(id) + "/gym_step";
-            gym_reset_topic = "/instance" + to_string(id) + "/gym_reset";
-            gym_goal_topic = "/instance" + to_string(id) + "/gym_goal";
-        }
-        else{
-            gym_step_topic  = "/gym_step";
-            gym_reset_topic = "/gym_reset";
-            gym_goal_topic = "/gym_goal";
-        }
-        gym_step = nh->advertiseService(gym_step_topic, &MsjPlatform::GymStepService,this);
-        gym_reset = nh->advertiseService(gym_reset_topic, &MsjPlatform::GymResetService,this);
-        gym_goal = nh->advertiseService(gym_goal_topic, &MsjPlatform::GymGoalService,this);
+    void initService(int id){
+        gym_step = nh->advertiseService("/instance" + to_string(id) + "/gym_step", &MsjPlatform::GymStepService,this);
+        gym_reset = nh->advertiseService("/instance" + to_string(id) + "/gym_reset", &MsjPlatform::GymResetService,this);
+        gym_goal = nh->advertiseService("/instance" + to_string(id) + "/gym_goal", &MsjPlatform::GymGoalService,this);
     }
 
     void readJointLimits(){
@@ -333,7 +322,7 @@ int main(int argc, char *argv[]) {
 
     vector<boost::shared_ptr<MsjPlatform>> platforms;
     for(int id = 0; id < workers; id++) {
-        boost::shared_ptr<MsjPlatform> platform(new MsjPlatform(urdf, cardsflow_xml, id + 1, workers));
+        boost::shared_ptr<MsjPlatform> platform(new MsjPlatform(urdf, cardsflow_xml, id + 1));
         platforms.push_back(platform);
     }
 
