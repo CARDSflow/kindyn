@@ -1,2 +1,4 @@
 *.swp
 *.save
+cmake-build-debug/
+
