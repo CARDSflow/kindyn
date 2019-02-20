@@ -208,12 +208,7 @@ public:
                         roboy_simulation_msgs::GymStep::Response &res){
 
         setResponse(q,qd,res);
-        if(isFeasible(limits[0],limits[1],q[0],q[1])){
-            res.feasible = true;
-        }
-        else{
-            res.feasible = false;
-        }
+        res.feasible = isFeasible(limits[0],limits[1],q[0],q[1]);
         return true;
     }
 
@@ -230,12 +225,8 @@ public:
 
         ROS_INFO_STREAM_THROTTLE(5, "Ld = " << Ld[0].format(fmt));
         write();
-        if(isFeasible(limits[0],limits[1],q[0],q[1])){
-            res.feasible = true;
-            setResponse(q,qd,res);
-        }
-        else{
-            res.feasible = false;
+        res.feasible = isFeasible(limits[0],limits[1],q[0],q[1]);
+        if(!res.feasible){
             VectorXd closestLimit = findClosestJointLimit(q[0],q[1],q[2]); //Find closest boundary point where we can teleport
             VectorXd jointVel;                                             //We hit the boundary so zero velocity.
 
@@ -243,9 +234,8 @@ public:
             jointVel.setZero();
 
             setJointAngleAndVelocity(closestLimit, jointVel);
-            setResponse(closestLimit, jointVel,res );
-
         }
+        setResponse(q,qd,res);
         return true;
     }
     bool GymResetService(roboy_simulation_msgs::GymReset::Request &req,
