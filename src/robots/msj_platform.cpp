@@ -147,7 +147,7 @@ public:
             q0 = min[0] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[0]-min[0]))));
             q1 = min[1] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[1]-min[1]))));
             q2 = min[2] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[2]-min[2]))));
-            not_feasible = isFeasible(limits[0], limits[1], q0, q1);
+            not_feasible = !isFeasible(limits[0], limits[1], q0, q1);
         }
 
         q_target << static_cast<double> (q0), static_cast<double> (q1), static_cast<double> (q2);
