@@ -57,7 +57,7 @@ public:
     ///Open AI Gym services
     void initService(int id){
         gym_step = nh->advertiseService("/instance" + to_string(id) + "/gym_step", &MsjPlatform::GymStepService,this);
-        gym_observation = nh->advertiseService("/instance" + to_string(id) + "/gym_observation", &MsjPlatform::GymObservationService,this);
+        gym_read_state = nh->advertiseService("/instance" + to_string(id) + "/gym_read_state", &MsjPlatform::GymReadStateService,this);
         gym_reset = nh->advertiseService("/instance" + to_string(id) + "/gym_reset", &MsjPlatform::GymResetService,this);
         gym_goal = nh->advertiseService("/instance" + to_string(id) + "/gym_goal", &MsjPlatform::GymGoalService,this);
     }
@@ -204,7 +204,7 @@ public:
     }
 
     ///Return only qdot, q and feasibility to gym environment
-    bool GymObservationService(roboy_simulation_msgs::GymStep::Request &req,
+    bool GymReadStateService(roboy_simulation_msgs::GymStep::Request &req,
                         roboy_simulation_msgs::GymStep::Response &res){
 
         setResponse(q,qd,res);
@@ -281,7 +281,7 @@ private:
     ros::Publisher motor_command; /// motor command publisher
 
     ros::ServiceServer gym_step; //OpenAI Gym training environment step function, ros service instance
-    ros::ServiceServer gym_observation; //OpenAI Gym training environment observation function, returns q, qdot and feasbility
+    ros::ServiceServer gym_read_state; //OpenAI Gym training environment observation function, returns q, qdot and feasbility
     ros::ServiceServer gym_reset; //OpenAI Gym training environment reset function, ros service instance
     ros::ServiceServer gym_goal; //OpenAI Gym training environment sets new feasible goal function, ros service instance
 
