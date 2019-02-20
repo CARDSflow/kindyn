@@ -57,6 +57,7 @@ public:
     ///Open AI Gym services
     void initService(int id){
         gym_step = nh->advertiseService("/instance" + to_string(id) + "/gym_step", &MsjPlatform::GymStepService,this);
+        gym_observation = nh->advertiseService("/instance" + to_string(id) + "/gym_observation", &MsjPlatform::GymObservationService,this);
         gym_reset = nh->advertiseService("/instance" + to_string(id) + "/gym_reset", &MsjPlatform::GymResetService,this);
         gym_goal = nh->advertiseService("/instance" + to_string(id) + "/gym_goal", &MsjPlatform::GymGoalService,this);
     }
@@ -128,7 +129,7 @@ public:
         motor_command.publish(msg);
     };
 
-    int pnpoly(vector<double> limits_x, vector<double> limits_y, double testx, double testy){
+    int isFeasible(vector<double> limits_x, vector<double> limits_y, double testx, double testy){
         int i, j, c = 0;
         for (i = 0, j = limits_x.size()-1; i < limits_x.size(); j = i++) {
             if ( ((limits_y[i]>testy) != (limits_y[j]>testy)) &&
@@ -139,7 +140,6 @@ public:
     }
     bool GymGoalService(roboy_simulation_msgs::GymGoal::Request &req,
                         roboy_simulation_msgs::GymGoal::Response &res){
-        //ROS_INFO("Gymgoal is called");
         bool not_feasible = true;
         float q0= 0.0,q1= 0.0,q2 = 0.0;
         srand(static_cast<unsigned int>(clock()));
@@ -147,7 +147,7 @@ public:
             q0 = min[0] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[0]-min[0]))));
             q1 = min[1] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[1]-min[1]))));
             q2 = min[2] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[2]-min[2]))));
-            if (pnpoly(limits[0], limits[1], q0, q1))
+            if (isFeasible(limits[0], limits[1], q0, q1))
                 not_feasible = false;
         }
 
@@ -203,33 +203,41 @@ public:
         }
     }
 
+    ///Return only qdot, q and feasibility to gym environment
+    bool GymObservationService(roboy_simulation_msgs::GymStep::Request &req,
+                        roboy_simulation_msgs::GymStep::Response &res){
+
+        setResponse(q,qd,res);
+        if(isFeasible(limits[0],limits[1],q[0],q[1])){
+            res.feasible = true;
+        }
+        else{
+            res.feasible = false;
+        }
+        return true;
+    }
 
     bool GymStepService(roboy_simulation_msgs::GymStep::Request &req,
                         roboy_simulation_msgs::GymStep::Response &res){
-        
-        if(req.set_points.size() != 0){ //If no set_point set then just return observation.
-        	update();
-	        for(int i=0; i< number_of_cables; i++){
-	        	//Set the commanded tendon velocity from RL agent to simulation 
-	        	Ld[0][i] = req.set_points[i];
-	        }
-	        if(!external_robot_state)
-	            forwardKinematics(req.step_size);
 
-	        ROS_INFO_STREAM_THROTTLE(5, "Ld = " << Ld[0].format(fmt));
+        update();
+        for(int i=0; i< number_of_cables; i++){
+            //Set the commanded tendon velocity from RL agent to simulation
+            Ld[0][i] = req.set_points[i];
+        }
+        if(!external_robot_state)
+            forwardKinematics(req.step_size);
 
-	        write();
-	    }
-        if(pnpoly(limits[0],limits[1],q[0],q[1])){
-            //task space is feasible
+        ROS_INFO_STREAM_THROTTLE(5, "Ld = " << Ld[0].format(fmt));
+        write();
+        if(isFeasible(limits[0],limits[1],q[0],q[1])){
             res.feasible = true;
             setResponse(q,qd,res);
         }
         else{
-            //task space is not feasible
             res.feasible = false;
             VectorXd closestLimit = findClosestJointLimit(q[0],q[1],q[2]); //Find closest boundary point where we can teleport
-            VectorXd jointVel;                          //We hit the boundary so zero velocity.
+            VectorXd jointVel;                                             //We hit the boundary so zero velocity.
 
             jointVel.resize(number_of_dofs);
             jointVel.setZero();
@@ -242,7 +250,6 @@ public:
     }
     bool GymResetService(roboy_simulation_msgs::GymReset::Request &req,
                         roboy_simulation_msgs::GymReset::Response &res){
-    	//ROS_INFO("Gymreset is called");      
     	integration_time = 0.0;
         VectorXd jointAngle, jointVel;
         jointAngle.resize(number_of_dofs);
@@ -264,7 +271,6 @@ public:
         	res.q.push_back(q[i]);
         	res.qdot.push_back(qd[i]);
         }
-        //ROS_INFO("Gymreset is done");
         return true;
     }
 
@@ -275,6 +281,7 @@ private:
     ros::Publisher motor_command; /// motor command publisher
 
     ros::ServiceServer gym_step; //OpenAI Gym training environment step function, ros service instance
+    ros::ServiceServer gym_observation; //OpenAI Gym training environment observation function, returns q, qdot and feasbility
     ros::ServiceServer gym_reset; //OpenAI Gym training environment reset function, ros service instance
     ros::ServiceServer gym_goal; //OpenAI Gym training environment sets new feasible goal function, ros service instance
 
