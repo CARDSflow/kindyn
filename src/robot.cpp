@@ -335,7 +335,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     joint_state_sub = nh->subscribe("/joint_states", 100, &Robot::JointState, this);
     floating_base_sub = nh->subscribe("/floating_base", 100, &Robot::FloatingBase, this);
     ik_srv = nh->advertiseService("/ik", &Robot::InverseKinematicsService, this);
-    ik_two_frames_srv = nh->advertiseService("/ik_two_frames", &Robot::InverseKinematicsTwoFramesService, this);
+    ik_two_frames_srv = nh->advertiseService("/ik_multiple_frames", &Robot::InverseKinematicsMultipleFramesService, this);
     fk_srv = nh->advertiseService("/fk", &Robot::ForwardKinematicsService, this);
     interactive_marker_sub = nh->subscribe("/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
 }
@@ -955,8 +955,8 @@ bool Robot::InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::R
     }
 }
 
-bool Robot::InverseKinematicsTwoFramesService(roboy_middleware_msgs::InverseKinematicsTwoFrames::Request &req,
-                                     roboy_middleware_msgs::InverseKinematicsTwoFrames::Response &res) {
+bool Robot::InverseKinematicsMultipleFramesService(roboy_middleware_msgs::InverseKinematicsMultipleFrames::Request &req,
+                                     roboy_middleware_msgs::InverseKinematicsMultipleFrames::Response &res) {
     if (ik_models.find(req.endeffector) == ik_models.end()) {
         ROS_ERROR_STREAM("endeffector " << req.endeffector << " not initialized");
         return false;
@@ -975,17 +975,17 @@ bool Robot::InverseKinematicsTwoFramesService(roboy_middleware_msgs::InverseKine
     ik[req.endeffector].setCostTolerance(0.001);
     // we constrain the base link to stay where it is
     ik[req.endeffector].addTarget(ik_base_link[req.endeffector], ik_models[req.endeffector].model().getFrameTransform(
-            ik_models[req.endeffector].getFrameIndex(ik_base_link[req.endeffector])), 100, 100);
+            ik_models[req.endeffector].getFrameIndex(ik_base_link[req.endeffector])),1,1);
 
     switch (req.type) {
         case 0: {
             break;
         }
         case 1: {
-            iDynTree::Position pos_1(req.pose_1.position.x, req.pose_1.position.y, req.pose_1.position.z);
-            ik[req.endeffector].addPositionTarget(req.target_frame_1, pos_1, req.pos_weight_1);
-            iDynTree::Position pos_2(req.pose_2.position.x, req.pose_2.position.y, req.pose_2.position.z);
-            ik[req.endeffector].addPositionTarget(req.target_frame_2, pos_2, req.pos_weight_2);
+            for (int reqIterator = 0; reqIterator < req.poses.size(); reqIterator++) {
+              iDynTree::Position pos(req.poses[reqIterator].position.x, req.poses[reqIterator].position.y, req.poses[reqIterator].position.z);
+              ik[req.endeffector].addPositionTarget(req.target_frames[reqIterator], pos, req.weights[reqIterator]);
+            }
             break;
         }
         case 2: {
