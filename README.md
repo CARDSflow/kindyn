@@ -1,7 +1,6 @@
 # What do we do?
 deepRoboy-feature branch of Kindyn creates interface for [Gym Environment](https://github.com/Roboy/gym-roboy) to train cable robots for specific tasks.
-# What do we train for?
-At the moment we train our agents to learn to control MsjPlatform robot by actuating the tendons and observing the joint angles and velocities.
+
 # Gym Services
 Gym services currently only apply to [MsjPlatform robot](https://github.com/CARDSflow/kindyn/blob/deepRoboy-feature/src/robots/msj_platform.cpp)
 - Gym Service provide the functionality to:
@@ -14,7 +13,10 @@ Gym services currently only apply to [MsjPlatform robot](https://github.com/CARD
      - Reset Service does not take a request message. It resets the joint velocity and position, tendon velocity and position to initial state which is assumened as origin.
   - **Read-State**
      - Observation service message type uses the same message type as step.
-     - It sends the response message as the joint angle and velocities.
+     - It sents the response message as the joint angle and velocities.
   - **Set Random Goal**
-     - Uses this message type without request part. https://github.com/Roboy/roboy_communication/blob/master/roboy_simulation_msgs/srv/GymGoal.srv
+     - Uses goal message type [here](https://github.com/Roboy/roboy_communication/blob/master/roboy_simulation_msgs/srv/GymGoal.srv).
      - Finds a feasible random goal for gym training environment.
+     
+# Current Progress
+We trained an agents to learn to control MsjPlatform robot by actuating the tendons and taking feedback as the joint angles and velocities.
