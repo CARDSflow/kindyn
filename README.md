@@ -1,4 +1,4 @@
-# What do we do?
+# Idea
 deepRoboy-feature branch of Kindyn creates interface for [Gym Environment](https://github.com/Roboy/gym-roboy) to train cable robots for specific tasks.
 
 # Gym Services
