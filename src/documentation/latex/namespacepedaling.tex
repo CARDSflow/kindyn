@@ -1,0 +1,21 @@
+\hypertarget{namespacepedaling}{}\section{pedaling Namespace Reference}
+\label{namespacepedaling}\index{pedaling@{pedaling}}
+
+
+Documentation for this module.  
+
+
+
+
+\subsection{Detailed Description}
+Documentation for this module. 
+
+Control of Roboys\textquotesingle{} hip, knees and feet for pedaling. In order to reach the requested bike-\/velocity, we compute correspondent angular-\/velocity for the pedals. The circulation is ideally divided into @\+N\+U\+M\+B\+E\+R\+\_\+\+C\+I\+R\+C\+U\+L\+A\+T\+I\+O\+N\+\_\+\+P\+O\+I\+N\+TS trajectory points represented by angles within the circulation circle (pedal-\/angle). With angle-\/difference between two points and angular-\/velocity we use the correspondent transition time to control the joints in order to create a pedaling motion for Roboy.
+
+For every joint, we use cubic spline interpolation of pre-\/captured set points with pedal\+\_\+angle as input to receive continuous function to be able to get the corresponding joint-\/angle for every pedal-\/angle. This enables to use joint-\/angle-\/difference between two trajectory-\/points and transition time to compute and apply velocity-\/control to the joint-\/angles to create pedaling-\/motion
+
+In order to decrease and hopefully erase velocity-\/error, we multiply the computed (ideal) velocity with an error-\/factor which is computed and dependent on the velocity-\/error of previous transitions and measured by pedal-\/angle-\/error
+
+Test-\/script for testing the accuracy of a requested velocity and the transition-\/time (acceleration) between two different velocities, which is only important for testing in reality, because there is no transition-\/time between different velocities in simulation.
+
+@\+T\+I\+M\+E\+\_\+\+S\+T\+E\+P\+\_\+\+S\+I\+M\+U\+L\+A\+T\+I\+ON and @\+T\+I\+M\+E\+\_\+\+S\+T\+E\+P\+\_\+\+R\+E\+A\+L\+I\+TY determine the time-\/steps in seconds for the measurement of velocity @\+V\+E\+L\+O\+C\+I\+T\+Y\+\_\+\+S\+T\+E\+P\+S\+\_\+\+R\+E\+A\+L\+I\+TY and @\+V\+E\+L\+O\+C\+I\+T\+Y\+\_\+\+S\+T\+E\+P\+\_\+\+S\+I\+M\+U\+L\+A\+T\+I\+ON determine the size of a step between two different velocities in m/s 

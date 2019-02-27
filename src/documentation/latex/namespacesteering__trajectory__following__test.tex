@@ -1,0 +1,1230 @@
+\hypertarget{namespacesteering__trajectory__following__test}{}\section{steering\+\_\+trajectory\+\_\+following\+\_\+test Namespace Reference}
+\label{namespacesteering__trajectory__following__test}\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__following__test_a09ce0e9b50241eec3bb69e5362b69159}{regress\+Functions\+From\+File}} (filename\+\_\+coefficients)
+\begin{DoxyCompactList}\small\item\em U\+T\+I\+L\+I\+TY F\+U\+N\+C\+T\+I\+O\+NS \#\#\#. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__following__test_aeb34a93dbcb90ea991b0c006e351b6f6}{set\+Joint\+Controller\+Parameters}} (proportional\+Val, derivative\+Val)
+\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__following__test_a5d4d723b5836e3ff73ecf1548a0f96e4}{compute\+Steering\+Angles}} ()
+\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__following__test_a378cc54eed1c58dc9d547aea3d6f14c9}{compute\+Hand\+Trajectories}} ()
+\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__following__test_a0f76013b90d9b49c61ca4054512e5852}{get\+Position\+Left\+Hand}} ()
+\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__following__test_a69336b47326639e5108afdb6eec04bfa}{get\+Position\+Right\+Hand}} ()
+\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__following__test_a6356c27c30a8d888ab126157624e9944}{joint\+State\+Callback}} (joint\+\_\+data)
+\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__following__test_a143549e166bd92e4c144e7fd9f9194bb}{record\+Actual\+Hand\+Trajectories}} (ros\+\_\+right\+\_\+shoulder0\+\_\+publisher, ros\+\_\+right\+\_\+shoulder1\+\_\+publisher, ros\+\_\+right\+\_\+shoulder2\+\_\+publisher, ros\+\_\+right\+\_\+elbow0\+\_\+publisher, ros\+\_\+right\+\_\+elbow1\+\_\+publisher, ros\+\_\+right\+\_\+wrist0\+\_\+publisher, ros\+\_\+right\+\_\+wrist1\+\_\+publisher, ros\+\_\+left\+\_\+shoulder0\+\_\+publisher, ros\+\_\+left\+\_\+shoulder1\+\_\+publisher, ros\+\_\+left\+\_\+shoulder2\+\_\+publisher, ros\+\_\+left\+\_\+elbow0\+\_\+publisher, ros\+\_\+left\+\_\+elbow1\+\_\+publisher, ros\+\_\+left\+\_\+wrist0\+\_\+publisher, ros\+\_\+left\+\_\+wrist1\+\_\+publisher)
+\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__following__test_aad9b51b98a58a40eec88a0a39e6e38c9}{print\+Planned\+Actual\+Hand\+Trajectories}} ()
+\item 
+def \mbox{\hyperlink{namespacesteering__trajectory__following__test_a9100afcdf1effc9234df538db9e8a5af}{main}} ()
+\begin{DoxyCompactList}\small\item\em M\+A\+IN \#\#\#. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{namespacesteering__trajectory__following__test_a9bd926a4a846deabbe48eab3e7219a77}{M\+A\+X\+\_\+\+T\+U\+R\+N\+I\+N\+G\+\_\+\+A\+N\+G\+LE}} = math.\+pi/15
+\begin{DoxyCompactList}\small\item\em M\+O\+D\+U\+LE P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{namespacesteering__trajectory__following__test_a1eceaea757386a63dd208fe6c3407887}{N\+U\+M\+\_\+\+S\+T\+E\+E\+R\+I\+N\+G\+\_\+\+A\+N\+G\+L\+ES}} = 61
+\item 
+float \mbox{\hyperlink{namespacesteering__trajectory__following__test_af0d2a6ee09ffeae01a634a6d70413cd1}{J\+O\+I\+N\+T\+\_\+\+A\+N\+G\+L\+E\+\_\+\+T\+O\+L\+E\+R\+A\+N\+C\+E\+\_\+\+FK}} = 0.\+01
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__following__test_a015d0e3bf973472d055af475ec878099}{E\+N\+D\+E\+F\+F\+E\+C\+T\+O\+R\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+hand\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__following__test_ad2b3d81f8b97a726200a2c467b173ea7}{F\+R\+A\+M\+E\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+hand\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__following__test_a750ea60836d7697be3955b118c91925e}{E\+N\+D\+E\+F\+F\+E\+C\+T\+O\+R\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+hand\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__following__test_a1715eb3be2d0df23493b6618f822a20b}{F\+R\+A\+M\+E\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+hand\char`\"{}
+\item 
+int \mbox{\hyperlink{namespacesteering__trajectory__following__test_a130062548b68d0794e4296549fc1a8e1}{B\+I\+K\+E\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+X}} = 0
+\begin{DoxyCompactList}\small\item\em M\+E\+A\+S\+U\+R\+ED P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{namespacesteering__trajectory__following__test_ac4bd8b57aab5072e7e6468ccb6f4ecbd}{B\+I\+K\+E\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Y}} = 0
+\item 
+int \mbox{\hyperlink{namespacesteering__trajectory__following__test_a8e900f2349a00e740da3d6ee884c18b9}{B\+I\+K\+E\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Z}} = 0
+\item 
+float \mbox{\hyperlink{namespacesteering__trajectory__following__test_a004b0c34aea2307ae6445ecd4279d401}{R\+I\+K\+S\+H\+A\+W\+\_\+\+T\+U\+R\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+X\+\_\+\+O\+F\+F\+S\+ET}} = 0.\+7163902600571725+0.\+23003546879794612
+\item 
+float \mbox{\hyperlink{namespacesteering__trajectory__following__test_ae18e7d3e16b872bcc8bf62cb263a109e}{R\+I\+K\+S\+H\+A\+W\+\_\+\+T\+U\+R\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+Y\+\_\+\+O\+F\+F\+S\+ET}} = -\/0.\+010388552466272516+0.\+010388308199859624
+\item 
+float \mbox{\hyperlink{namespacesteering__trajectory__following__test_aaafe07ee8e5a288632dc7bcd5c29f91e}{R\+I\+K\+S\+H\+A\+W\+\_\+\+T\+U\+R\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+Z\+\_\+\+O\+F\+F\+S\+ET}} = 0.\+2164376942146126-\/0.\+20527069599791542
+\item 
+int \mbox{\hyperlink{namespacesteering__trajectory__following__test_a0f1fc685145b73065e03bc8d450e7c44}{Y\+A\+W\+\_\+\+R\+I\+G\+H\+T\+\_\+\+H\+A\+N\+D\+\_\+\+O\+F\+F\+S\+ET}} = math.\+pi / 2 + math.\+pi
+\item 
+int \mbox{\hyperlink{namespacesteering__trajectory__following__test_a8fc58cbdf64094b4d9cc2e0bb3319825}{Y\+A\+W\+\_\+\+L\+E\+F\+T\+\_\+\+H\+A\+N\+D\+\_\+\+O\+F\+F\+S\+ET}} = 3 $\ast$ math.\+pi / 2 + math.\+pi
+\item 
+float \mbox{\hyperlink{namespacesteering__trajectory__following__test_a6ba20e809d4f5b3820ac8afb19bf90d8}{H\+A\+N\+D\+L\+E\+B\+A\+R\+\_\+\+X\+\_\+\+O\+F\+F\+S\+ET}} = 0.\+728713
+\item 
+float \mbox{\hyperlink{namespacesteering__trajectory__following__test_a1b352cfed7d4963785bf84372c1072ee}{H\+A\+N\+D\+L\+E\+B\+A\+R\+\_\+\+Z\+\_\+\+O\+F\+F\+S\+ET}} = 0.\+719269
+\item 
+float \mbox{\hyperlink{namespacesteering__trajectory__following__test_a6e8e6313b3c00feb6adb4a97e50117a2}{H\+A\+N\+D\+\_\+\+Y\+\_\+\+O\+F\+F\+S\+ET}} = 0.\+2
+\item 
+list \mbox{\hyperlink{namespacesteering__trajectory__following__test_a2d977c9a658e4af1d3f3d1c275b29952}{\+\_\+steering\+Angles}} = \mbox{[}$\,$\mbox{]}
+\begin{DoxyCompactList}\small\item\em G\+L\+O\+B\+AL V\+A\+R\+I\+A\+B\+L\+ES \#\#\#. \end{DoxyCompactList}\item 
+list \mbox{\hyperlink{namespacesteering__trajectory__following__test_ab63e69afbc3c8869330bba2b5fe075b4}{\+\_\+right\+Hand\+Trajectory\+Planned}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__trajectory__following__test_ae417a72c7e362028fbdac218f3f4b303}{\+\_\+left\+Hand\+Trajectory\+Planned}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__trajectory__following__test_a11d89f8a08631c2b1e7d499fecbb33ed}{\+\_\+center\+Handlebar\+Trajectory\+Planned}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__trajectory__following__test_ac6de0716852e9f87218ab1cdba0c4ba9}{\+\_\+right\+Hand\+Trajectory\+Actual}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__trajectory__following__test_a8f516e8d2977b7f47327a25e57e67693}{\+\_\+left\+Hand\+Trajectory\+Actual}} = \mbox{[}$\,$\mbox{]}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__following__test_aff54edc18c0f74b3a4ce2d52a39ff4ce}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+shoulder\+\_\+axis0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__following__test_a9a40d67e3e6febc4c75cf55b3b8a7440}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+shoulder\+\_\+axis1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__following__test_acf310dab770cd8f3e7f0409bafdbfb80}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+shoulder\+\_\+axis2\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__following__test_ae9645446475d21e458612d9e772eed58}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+shoulder\+\_\+axis0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__following__test_a940cffedeae8e95eb444bc0976991024}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+shoulder\+\_\+axis1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__following__test_a95784ab115aa92aafcfc54f38bcaafc2}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+shoulder\+\_\+axis2\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__following__test_abc51ae8ad86e5d9b21f7dd13b148d399}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+R\+I\+G\+HT}} = \char`\"{}elbow\+\_\+right\+\_\+rot0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__following__test_af35633e9dae72a4c4954547bf663230a}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+R\+I\+G\+HT}} = \char`\"{}elbow\+\_\+right\+\_\+rot1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__following__test_a6a7871c328a9f20e05eb0f3e5b59d76d}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+L\+E\+FT}} = \char`\"{}elbow\+\_\+left\+\_\+rot0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__following__test_a556a732fad8dbebfcc5ca994f802edc2}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+L\+E\+FT}} = \char`\"{}elbow\+\_\+left\+\_\+rot1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__following__test_a4ca6c59cd0baabbd4197019a8b0118ea}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+wrist\+\_\+0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__following__test_a760ce96026a20c86c4729886030b45f9}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+wrist\+\_\+1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__following__test_a3a58ea85a8bc020017166eb776399262}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+wrist\+\_\+0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__trajectory__following__test_abfc90e80f3a6b56330e318c71578ec12}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+wrist\+\_\+1\char`\"{}
+\item 
+list \mbox{\hyperlink{namespacesteering__trajectory__following__test_a2faadcccb34daa25db7f290f251fc759}{J\+O\+I\+N\+T\+\_\+\+L\+I\+ST}} = \mbox{[}\mbox{\hyperlink{namespacesteering__trajectory__following__test_aff54edc18c0f74b3a4ce2d52a39ff4ce}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_a9a40d67e3e6febc4c75cf55b3b8a7440}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_acf310dab770cd8f3e7f0409bafdbfb80}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_ae9645446475d21e458612d9e772eed58}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_a940cffedeae8e95eb444bc0976991024}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_a95784ab115aa92aafcfc54f38bcaafc2}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_abc51ae8ad86e5d9b21f7dd13b148d399}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_af35633e9dae72a4c4954547bf663230a}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_a6a7871c328a9f20e05eb0f3e5b59d76d}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_a556a732fad8dbebfcc5ca994f802edc2}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_a4ca6c59cd0baabbd4197019a8b0118ea}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_a760ce96026a20c86c4729886030b45f9}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_a3a58ea85a8bc020017166eb776399262}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_abfc90e80f3a6b56330e318c71578ec12}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+L\+E\+FT}}\mbox{]}
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__following__test_ac2bfa946834d1dacf28574c91ae4771e}{\+\_\+regressed\+Shoulder0\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__following__test_a99e08e3f648f94190db5fd41c1b57587}{\+\_\+regressed\+Shoulder1\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__following__test_a812ee8dc53a47b23490c0b870b4306d8}{\+\_\+regressed\+Shoulder2\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__following__test_aa57323586fb6698b0cacd2d9b017a86f}{\+\_\+regressed\+Shoulder0\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__following__test_a42bb937133cd06c17ef8d08d642a22fa}{\+\_\+regressed\+Shoulder1\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__following__test_a77c32c567dcf540320f634ddaa2cbc34}{\+\_\+regressed\+Shoulder2\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__following__test_a6416f267e6d27bb54eebbbe24bae4384}{\+\_\+regressed\+Elbow0\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__following__test_a1a0ba79c0ee80a593ea6347fa9f976a3}{\+\_\+regressed\+Elbow1\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__following__test_a0c2e5a2ca871b8fadbdbc9963a00e5bd}{\+\_\+regressed\+Elbow0\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__following__test_ac025f01349e0c59c2cd72c8deb780132}{\+\_\+regressed\+Elbow1\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__following__test_a18e9c920e52116ab6bddb3d45eb237ef}{\+\_\+regressed\+Wrist0\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__following__test_a3ebfbc22a790ede2aadcbbaccdfb44e8}{\+\_\+regressed\+Wrist1\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__following__test_a90d130565b37986a1cdd3a295108d452}{\+\_\+regressed\+Wrist0\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__trajectory__following__test_a0ef037ff09cf0d447c29b3f563f88602}{\+\_\+regressed\+Wrist1\+Left}} = None
+\item 
+dictionary \mbox{\hyperlink{namespacesteering__trajectory__following__test_a3d941037e2aebba9bac0d806d60ddb56}{\+\_\+joints\+Status\+Data}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a378cc54eed1c58dc9d547aea3d6f14c9}\label{namespacesteering__trajectory__following__test_a378cc54eed1c58dc9d547aea3d6f14c9}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!computeHandTrajectories@{computeHandTrajectories}}
+\index{computeHandTrajectories@{computeHandTrajectories}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{computeHandTrajectories()}{computeHandTrajectories()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+following\+\_\+test.\+compute\+Hand\+Trajectories (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 242 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{242 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__trajectory__following__test_a378cc54eed1c58dc9d547aea3d6f14c9}{computeHandTrajectories}}():}
+\DoxyCodeLine{243 }
+\DoxyCodeLine{244     \textcolor{keyword}{global} \_steeringAngles}
+\DoxyCodeLine{245     \textcolor{keyword}{global} \_rightHandTrajectoryPlanned}
+\DoxyCodeLine{246     \textcolor{keyword}{global} \_leftHandTrajectoryPlanned}
+\DoxyCodeLine{247     \textcolor{keyword}{global} \_centerHandlebarTrajectoryPlanned}
+\DoxyCodeLine{248 }
+\DoxyCodeLine{249     \textcolor{keywordflow}{for} steeringAngleIterator \textcolor{keywordflow}{in} range(len(\_steeringAngles)):}
+\DoxyCodeLine{250 }
+\DoxyCodeLine{251         thisCenterPointX = RIKSHAW\_TURN\_JOINT\_X\_OFFSET - (HANDLEBAR\_X\_OFFSET * math.cos(\_steeringAngles[steeringAngleIterator]))}
+\DoxyCodeLine{252         thisCenterPointY = RIKSHAW\_TURN\_JOINT\_Y\_OFFSET - (HANDLEBAR\_X\_OFFSET * math.sin(\_steeringAngles[steeringAngleIterator]))}
+\DoxyCodeLine{253 }
+\DoxyCodeLine{254         thisRightHandPointX = thisCenterPointX + (HAND\_Y\_OFFSET * math.cos(\_steeringAngles[steeringAngleIterator] - (math.pi / 2)))}
+\DoxyCodeLine{255         thisRightHandPointY = thisCenterPointY + (HAND\_Y\_OFFSET * math.sin(\_steeringAngles[steeringAngleIterator] - (math.pi / 2)))}
+\DoxyCodeLine{256 }
+\DoxyCodeLine{257         thisLeftHandPointX = thisCenterPointX + (HAND\_Y\_OFFSET * math.cos(\_steeringAngles[steeringAngleIterator] + (math.pi / 2)))}
+\DoxyCodeLine{258         thisLeftHandPointY = thisCenterPointY + (HAND\_Y\_OFFSET * math.sin(\_steeringAngles[steeringAngleIterator] + (math.pi / 2)))}
+\DoxyCodeLine{259 }
+\DoxyCodeLine{260         \_centerHandlebarTrajectoryPlanned.append([thisCenterPointX, thisCenterPointY])}
+\DoxyCodeLine{261         \_rightHandTrajectoryPlanned.append([thisRightHandPointX, thisRightHandPointY])}
+\DoxyCodeLine{262         \_leftHandTrajectoryPlanned.append([thisLeftHandPointX, thisLeftHandPointY])}
+\DoxyCodeLine{263 }
+\DoxyCodeLine{264 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__trajectory__following__test_a378cc54eed1c58dc9d547aea3d6f14c9_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a5d4d723b5836e3ff73ecf1548a0f96e4}\label{namespacesteering__trajectory__following__test_a5d4d723b5836e3ff73ecf1548a0f96e4}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!computeSteeringAngles@{computeSteeringAngles}}
+\index{computeSteeringAngles@{computeSteeringAngles}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{computeSteeringAngles()}{computeSteeringAngles()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+following\+\_\+test.\+compute\+Steering\+Angles (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 221 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{221 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__trajectory__following__test_a5d4d723b5836e3ff73ecf1548a0f96e4}{computeSteeringAngles}}():}
+\DoxyCodeLine{222 }
+\DoxyCodeLine{223     \textcolor{keyword}{global} \_steeringAngles}
+\DoxyCodeLine{224     \textcolor{keyword}{global} NUM\_STEERING\_ANGLES}
+\DoxyCodeLine{225 }
+\DoxyCodeLine{226     \textcolor{keywordflow}{if} NUM\_STEERING\_ANGLES \% 2 == 0:}
+\DoxyCodeLine{227         print(\textcolor{stringliteral}{"ERROR: NUM\_STEERING\_ANGLES must be odd number"})}
+\DoxyCodeLine{228         \textcolor{keywordflow}{return}}
+\DoxyCodeLine{229 }
+\DoxyCodeLine{230     numSymmetricSteeringAngles = (NUM\_STEERING\_ANGLES - 1) / 2}
+\DoxyCodeLine{231 }
+\DoxyCodeLine{232     \textcolor{keywordflow}{for} sizeIterator \textcolor{keywordflow}{in} range(NUM\_STEERING\_ANGLES):}
+\DoxyCodeLine{233         \_steeringAngles.append(0.0)}
+\DoxyCodeLine{234 }
+\DoxyCodeLine{235     \_steeringAngles[int(NUM\_STEERING\_ANGLES / 2)] = 0.0  \textcolor{comment}{\# Redundant}}
+\DoxyCodeLine{236     \textcolor{keywordflow}{for} steeringAngleIterator \textcolor{keywordflow}{in} range(1, numSymmetricSteeringAngles + 1, 1):}
+\DoxyCodeLine{237         thisAngle = steeringAngleIterator * (MAX\_TURNING\_ANGLE / numSymmetricSteeringAngles)}
+\DoxyCodeLine{238         \_steeringAngles[numSymmetricSteeringAngles + steeringAngleIterator] = thisAngle}
+\DoxyCodeLine{239         \_steeringAngles[numSymmetricSteeringAngles - steeringAngleIterator] = (-1) * thisAngle}
+\DoxyCodeLine{240 }
+\DoxyCodeLine{241 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__trajectory__following__test_a5d4d723b5836e3ff73ecf1548a0f96e4_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a0f76013b90d9b49c61ca4054512e5852}\label{namespacesteering__trajectory__following__test_a0f76013b90d9b49c61ca4054512e5852}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!getPositionLeftHand@{getPositionLeftHand}}
+\index{getPositionLeftHand@{getPositionLeftHand}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{getPositionLeftHand()}{getPositionLeftHand()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+following\+\_\+test.\+get\+Position\+Left\+Hand (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 265 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{265 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__trajectory__following__test_a0f76013b90d9b49c61ca4054512e5852}{getPositionLeftHand}}():}
+\DoxyCodeLine{266     fkJointNamesList = [JOINT\_SHOULDER\_AXIS0\_LEFT, JOINT\_SHOULDER\_AXIS1\_LEFT, JOINT\_SHOULDER\_AXIS2\_LEFT, JOINT\_ELBOW\_ROT0\_LEFT, JOINT\_ELBOW\_ROT1\_LEFT, JOINT\_WRIST\_0\_LEFT, JOINT\_WRIST\_1\_LEFT]}
+\DoxyCodeLine{267     fkJointPositions = [\_jointsStatusData[JOINT\_SHOULDER\_AXIS0\_LEFT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[JOINT\_SHOULDER\_AXIS1\_LEFT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[JOINT\_SHOULDER\_AXIS2\_LEFT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[JOINT\_ELBOW\_ROT0\_LEFT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[JOINT\_ELBOW\_ROT1\_LEFT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[JOINT\_WRIST\_0\_LEFT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[JOINT\_WRIST\_1\_LEFT][\textcolor{stringliteral}{"Pos"}]]}
+\DoxyCodeLine{268 }
+\DoxyCodeLine{269     rospy.wait\_for\_service(\textcolor{stringliteral}{'fk'})}
+\DoxyCodeLine{270     \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{271         fk\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'fk'}, ForwardKinematics)}
+\DoxyCodeLine{272         fk\_result = fk\_srv(ENDEFFECTOR\_LEFT, FRAME\_LEFT, fkJointNamesList, fkJointPositions)}
+\DoxyCodeLine{273         \textcolor{keywordflow}{return} [fk\_result.pose.position.x, fk\_result.pose.position.y, fk\_result.pose.position.z]}
+\DoxyCodeLine{274 }
+\DoxyCodeLine{275     \textcolor{keywordflow}{except} rospy.ServiceException, e:}
+\DoxyCodeLine{276         print(\textcolor{stringliteral}{"Service call failed: \%s"} \% e)}
+\DoxyCodeLine{277 }
+\DoxyCodeLine{278     print(\textcolor{stringliteral}{"ERROR fk left\_hand failed"})}
+\DoxyCodeLine{279     \textcolor{keywordflow}{return} [0.0, 0.0, 0.0]  \textcolor{comment}{\# [x, z]}}
+\DoxyCodeLine{280 }
+\DoxyCodeLine{281 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__trajectory__following__test_a0f76013b90d9b49c61ca4054512e5852_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a69336b47326639e5108afdb6eec04bfa}\label{namespacesteering__trajectory__following__test_a69336b47326639e5108afdb6eec04bfa}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!getPositionRightHand@{getPositionRightHand}}
+\index{getPositionRightHand@{getPositionRightHand}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{getPositionRightHand()}{getPositionRightHand()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+following\+\_\+test.\+get\+Position\+Right\+Hand (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 282 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{282 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__trajectory__following__test_a69336b47326639e5108afdb6eec04bfa}{getPositionRightHand}}():}
+\DoxyCodeLine{283     fkJointNamesList = [JOINT\_SHOULDER\_AXIS0\_RIGHT, JOINT\_SHOULDER\_AXIS1\_RIGHT, JOINT\_SHOULDER\_AXIS2\_RIGHT, JOINT\_ELBOW\_ROT0\_RIGHT, JOINT\_ELBOW\_ROT1\_RIGHT, JOINT\_WRIST\_0\_RIGHT, JOINT\_WRIST\_1\_RIGHT]}
+\DoxyCodeLine{284     fkJointPositions = [\_jointsStatusData[JOINT\_SHOULDER\_AXIS0\_RIGHT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[JOINT\_SHOULDER\_AXIS1\_RIGHT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[JOINT\_SHOULDER\_AXIS2\_RIGHT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[JOINT\_ELBOW\_ROT0\_RIGHT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[JOINT\_ELBOW\_ROT1\_RIGHT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[JOINT\_WRIST\_0\_RIGHT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[JOINT\_WRIST\_1\_RIGHT][\textcolor{stringliteral}{"Pos"}]]}
+\DoxyCodeLine{285 }
+\DoxyCodeLine{286     rospy.wait\_for\_service(\textcolor{stringliteral}{'fk'})}
+\DoxyCodeLine{287     \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{288         fk\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'fk'}, ForwardKinematics)}
+\DoxyCodeLine{289         fk\_result = fk\_srv(ENDEFFECTOR\_RIGHT, FRAME\_RIGHT, fkJointNamesList, fkJointPositions)}
+\DoxyCodeLine{290         \textcolor{keywordflow}{return} [fk\_result.pose.position.x, fk\_result.pose.position.y, fk\_result.pose.position.z]}
+\DoxyCodeLine{291 }
+\DoxyCodeLine{292     \textcolor{keywordflow}{except} rospy.ServiceException, e:}
+\DoxyCodeLine{293         print(\textcolor{stringliteral}{"Service call failed: \%s"} \% e)}
+\DoxyCodeLine{294 }
+\DoxyCodeLine{295     print(\textcolor{stringliteral}{"ERROR fk right\_hand failed"})}
+\DoxyCodeLine{296     \textcolor{keywordflow}{return} [0.0, 0.0, 0.0]  \textcolor{comment}{\# [x, z]}}
+\DoxyCodeLine{297 }
+\DoxyCodeLine{298 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__trajectory__following__test_a69336b47326639e5108afdb6eec04bfa_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a6356c27c30a8d888ab126157624e9944}\label{namespacesteering__trajectory__following__test_a6356c27c30a8d888ab126157624e9944}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!jointStateCallback@{jointStateCallback}}
+\index{jointStateCallback@{jointStateCallback}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{jointStateCallback()}{jointStateCallback()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+following\+\_\+test.\+joint\+State\+Callback (\begin{DoxyParamCaption}\item[{}]{joint\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Definition at line 299 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{299 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__trajectory__following__test_a6356c27c30a8d888ab126157624e9944}{jointStateCallback}}(joint\_data):}
+\DoxyCodeLine{300     \textcolor{keyword}{global} \_jointsStatusData}
+\DoxyCodeLine{301     \textcolor{comment}{\# Assert order of joints}}
+\DoxyCodeLine{302     \textcolor{keywordflow}{for} stringIter \textcolor{keywordflow}{in} range(len(joint\_data.names)):}
+\DoxyCodeLine{303         \textcolor{keywordflow}{if} joint\_data.names[stringIter] \textcolor{keywordflow}{in} \_jointsStatusData:}
+\DoxyCodeLine{304             \_jointsStatusData[joint\_data.names[stringIter]][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{305             \_jointsStatusData[joint\_data.names[stringIter]][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
+\DoxyCodeLine{306 }
+
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a9100afcdf1effc9234df538db9e8a5af}\label{namespacesteering__trajectory__following__test_a9100afcdf1effc9234df538db9e8a5af}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!main@{main}}
+\index{main@{main}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+following\+\_\+test.\+main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+M\+A\+IN \#\#\#. 
+
+
+
+Definition at line 456 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{456 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a17184534fa48653e3e1957dd8fe17257}{main}}():}
+\DoxyCodeLine{457 }
+\DoxyCodeLine{458     filename\_coefficients = \textcolor{stringliteral}{"saved\_coefficients.json"}}
+\DoxyCodeLine{459 }
+\DoxyCodeLine{460     rospy.init\_node(\textcolor{stringliteral}{'steering\_trajectory\_test'}, anonymous=\textcolor{keyword}{True})}
+\DoxyCodeLine{461     rospy.Subscriber(\textcolor{stringliteral}{"joint\_state"}, JointState, jointStateCallback)}
+\DoxyCodeLine{462 }
+\DoxyCodeLine{463     ros\_right\_shoulder0\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/'} + JOINT\_SHOULDER\_AXIS0\_RIGHT + \textcolor{stringliteral}{'/'} + JOINT\_SHOULDER\_AXIS0\_RIGHT + \textcolor{stringliteral}{'/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{464     ros\_right\_shoulder1\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/'} + JOINT\_SHOULDER\_AXIS1\_RIGHT + \textcolor{stringliteral}{'/'} + JOINT\_SHOULDER\_AXIS1\_RIGHT + \textcolor{stringliteral}{'/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{465     ros\_right\_shoulder2\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/'} + JOINT\_SHOULDER\_AXIS2\_RIGHT + \textcolor{stringliteral}{'/'} + JOINT\_SHOULDER\_AXIS2\_RIGHT + \textcolor{stringliteral}{'/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{466     ros\_right\_elbow0\_publisher    = rospy.Publisher(\textcolor{stringliteral}{'/'} + JOINT\_ELBOW\_ROT0\_RIGHT + \textcolor{stringliteral}{'/'} + JOINT\_ELBOW\_ROT0\_RIGHT + \textcolor{stringliteral}{'/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{467     ros\_right\_elbow1\_publisher    = rospy.Publisher(\textcolor{stringliteral}{'/'} + JOINT\_ELBOW\_ROT1\_RIGHT + \textcolor{stringliteral}{'/'} + JOINT\_ELBOW\_ROT1\_RIGHT + \textcolor{stringliteral}{'/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{468     ros\_right\_wrist0\_publisher    = rospy.Publisher(\textcolor{stringliteral}{'/'} + JOINT\_WRIST\_0\_RIGHT + \textcolor{stringliteral}{'/'} + JOINT\_WRIST\_0\_RIGHT + \textcolor{stringliteral}{'/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{469     ros\_right\_wrist1\_publisher    = rospy.Publisher(\textcolor{stringliteral}{'/'} + JOINT\_WRIST\_1\_RIGHT + \textcolor{stringliteral}{'/'} + JOINT\_WRIST\_1\_RIGHT + \textcolor{stringliteral}{'/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{470 }
+\DoxyCodeLine{471     ros\_left\_shoulder0\_publisher  = rospy.Publisher(\textcolor{stringliteral}{'/'} + JOINT\_SHOULDER\_AXIS0\_LEFT + \textcolor{stringliteral}{'/'} + JOINT\_SHOULDER\_AXIS0\_LEFT + \textcolor{stringliteral}{'/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{472     ros\_left\_shoulder1\_publisher  = rospy.Publisher(\textcolor{stringliteral}{'/'} + JOINT\_SHOULDER\_AXIS1\_LEFT + \textcolor{stringliteral}{'/'} + JOINT\_SHOULDER\_AXIS1\_LEFT + \textcolor{stringliteral}{'/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{473     ros\_left\_shoulder2\_publisher  = rospy.Publisher(\textcolor{stringliteral}{'/'} + JOINT\_SHOULDER\_AXIS2\_LEFT + \textcolor{stringliteral}{'/'} + JOINT\_SHOULDER\_AXIS2\_LEFT + \textcolor{stringliteral}{'/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{474     ros\_left\_elbow0\_publisher     = rospy.Publisher(\textcolor{stringliteral}{'/'} + JOINT\_ELBOW\_ROT0\_LEFT + \textcolor{stringliteral}{'/'} + JOINT\_ELBOW\_ROT0\_LEFT + \textcolor{stringliteral}{'/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{475     ros\_left\_elbow1\_publisher     = rospy.Publisher(\textcolor{stringliteral}{'/'} + JOINT\_ELBOW\_ROT1\_LEFT + \textcolor{stringliteral}{'/'} + JOINT\_ELBOW\_ROT1\_LEFT + \textcolor{stringliteral}{'/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{476     ros\_left\_wrist0\_publisher     = rospy.Publisher(\textcolor{stringliteral}{'/'} + JOINT\_WRIST\_0\_LEFT + \textcolor{stringliteral}{'/'} + JOINT\_WRIST\_0\_LEFT + \textcolor{stringliteral}{'/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{477     ros\_left\_wrist1\_publisher     = rospy.Publisher(\textcolor{stringliteral}{'/'} + JOINT\_WRIST\_1\_LEFT + \textcolor{stringliteral}{'/'} + JOINT\_WRIST\_1\_LEFT + \textcolor{stringliteral}{'/target'}, Float32, queue\_size=1)}
+\DoxyCodeLine{478 }
+\DoxyCodeLine{479     time.sleep(3)}
+\DoxyCodeLine{480     print(\textcolor{stringliteral}{"Initialized"})}
+\DoxyCodeLine{481     \mbox{\hyperlink{namespacesteering__trajectory__following__test_a09ce0e9b50241eec3bb69e5362b69159}{regressFunctionsFromFile}}(filename\_coefficients)}
+\DoxyCodeLine{482     print(\textcolor{stringliteral}{"Regressed based on coefficients from file"})}
+\DoxyCodeLine{483     \mbox{\hyperlink{namespacesteering__trajectory__following__test_aeb34a93dbcb90ea991b0c006e351b6f6}{setJointControllerParameters}}(proportionalVal = 2500, derivativeVal = 0)}
+\DoxyCodeLine{484     \mbox{\hyperlink{namespacesteering__trajectory__following__test_a5d4d723b5836e3ff73ecf1548a0f96e4}{computeSteeringAngles}}()}
+\DoxyCodeLine{485     \mbox{\hyperlink{namespacesteering__trajectory__following__test_a378cc54eed1c58dc9d547aea3d6f14c9}{computeHandTrajectories}}()}
+\DoxyCodeLine{486     print(\textcolor{stringliteral}{"Planned hand trajectories calculated"})}
+\DoxyCodeLine{487     \mbox{\hyperlink{namespacesteering__trajectory__following__test_a143549e166bd92e4c144e7fd9f9194bb}{recordActualHandTrajectories}}(ros\_right\_shoulder0\_publisher, ros\_right\_shoulder1\_publisher, ros\_right\_shoulder2\_publisher, ros\_right\_elbow0\_publisher, ros\_right\_elbow1\_publisher, ros\_right\_wrist0\_publisher, ros\_right\_wrist1\_publisher, ros\_left\_shoulder0\_publisher, ros\_left\_shoulder1\_publisher, ros\_left\_shoulder2\_publisher, ros\_left\_elbow0\_publisher, ros\_left\_elbow1\_publisher, ros\_left\_wrist0\_publisher, ros\_left\_wrist1\_publisher)}
+\DoxyCodeLine{488     print(\textcolor{stringliteral}{"Actual hand trajectories recorded"})}
+\DoxyCodeLine{489     \mbox{\hyperlink{namespacesteering__trajectory__following__test_aad9b51b98a58a40eec88a0a39e6e38c9}{printPlannedActualHandTrajectories}}()}
+\DoxyCodeLine{490 }
+\DoxyCodeLine{491     \textcolor{keywordflow}{return} 1}
+\DoxyCodeLine{492 }
+\DoxyCodeLine{493 }
+
+\end{DoxyCode}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__trajectory__following__test_a9100afcdf1effc9234df538db9e8a5af_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_aad9b51b98a58a40eec88a0a39e6e38c9}\label{namespacesteering__trajectory__following__test_aad9b51b98a58a40eec88a0a39e6e38c9}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!printPlannedActualHandTrajectories@{printPlannedActualHandTrajectories}}
+\index{printPlannedActualHandTrajectories@{printPlannedActualHandTrajectories}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{printPlannedActualHandTrajectories()}{printPlannedActualHandTrajectories()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+following\+\_\+test.\+print\+Planned\+Actual\+Hand\+Trajectories (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 401 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{401 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__trajectory__following__test_aad9b51b98a58a40eec88a0a39e6e38c9}{printPlannedActualHandTrajectories}}():}
+\DoxyCodeLine{402 }
+\DoxyCodeLine{403     \textcolor{keyword}{global} \_rightHandTrajectoryPlanned}
+\DoxyCodeLine{404     \textcolor{keyword}{global} \_leftHandTrajectoryPlanned}
+\DoxyCodeLine{405 }
+\DoxyCodeLine{406     \textcolor{keyword}{global} \_rightHandTrajectoryActual}
+\DoxyCodeLine{407     \textcolor{keyword}{global} \_leftHandTrajectoryActual}
+\DoxyCodeLine{408 }
+\DoxyCodeLine{409     rightHandTrajectoryPlannedX = []}
+\DoxyCodeLine{410     rightHandTrajectoryPlannedY = []}
+\DoxyCodeLine{411     leftHandTrajectoryPlannedX = []}
+\DoxyCodeLine{412     leftHandTrajectoryPlannedY = []}
+\DoxyCodeLine{413 }
+\DoxyCodeLine{414     rightHandTrajectoryActualX = []}
+\DoxyCodeLine{415     rightHandTrajectoryActualY = []}
+\DoxyCodeLine{416     leftHandTrajectoryActualX = []}
+\DoxyCodeLine{417     leftHandTrajectoryActualY = []}
+\DoxyCodeLine{418 }
+\DoxyCodeLine{419     \textcolor{keywordflow}{for} pointIterator \textcolor{keywordflow}{in} range(len(\_rightHandTrajectoryPlanned)):}
+\DoxyCodeLine{420         rightHandTrajectoryPlannedX.append(\_rightHandTrajectoryPlanned[pointIterator][0])}
+\DoxyCodeLine{421         rightHandTrajectoryPlannedY.append(\_rightHandTrajectoryPlanned[pointIterator][1])}
+\DoxyCodeLine{422 }
+\DoxyCodeLine{423     \textcolor{keywordflow}{for} pointIterator \textcolor{keywordflow}{in} range(len(\_leftHandTrajectoryPlanned)):}
+\DoxyCodeLine{424         leftHandTrajectoryPlannedX.append(\_leftHandTrajectoryPlanned[pointIterator][0])}
+\DoxyCodeLine{425         leftHandTrajectoryPlannedY.append(\_leftHandTrajectoryPlanned[pointIterator][1])}
+\DoxyCodeLine{426 }
+\DoxyCodeLine{427     \textcolor{keywordflow}{for} pointIterator \textcolor{keywordflow}{in} range(len(\_rightHandTrajectoryActual)):}
+\DoxyCodeLine{428         rightHandTrajectoryActualX.append(\_rightHandTrajectoryActual[pointIterator][0])}
+\DoxyCodeLine{429         rightHandTrajectoryActualY.append(\_rightHandTrajectoryActual[pointIterator][1])}
+\DoxyCodeLine{430 }
+\DoxyCodeLine{431     \textcolor{keywordflow}{for} pointIterator \textcolor{keywordflow}{in} range(len(\_leftHandTrajectoryActual)):}
+\DoxyCodeLine{432         leftHandTrajectoryActualX.append(\_leftHandTrajectoryActual[pointIterator][0])}
+\DoxyCodeLine{433         leftHandTrajectoryActualY.append(\_leftHandTrajectoryActual[pointIterator][1])}
+\DoxyCodeLine{434 }
+\DoxyCodeLine{435     print(\textcolor{stringliteral}{"Right hand trajectory planned x: "}, rightHandTrajectoryPlannedX)}
+\DoxyCodeLine{436     print(\textcolor{stringliteral}{"Right hand trajectory planned y: "}, rightHandTrajectoryPlannedY)}
+\DoxyCodeLine{437 }
+\DoxyCodeLine{438     plt.figure(1)}
+\DoxyCodeLine{439     plt.plot(rightHandTrajectoryPlannedX, rightHandTrajectoryPlannedY, \textcolor{stringliteral}{'b-'}, label = \textcolor{stringliteral}{'Planned'})}
+\DoxyCodeLine{440     plt.plot(rightHandTrajectoryActualX, rightHandTrajectoryActualY, \textcolor{stringliteral}{'r*'}, label = \textcolor{stringliteral}{'Actual'})}
+\DoxyCodeLine{441     plt.title(\textcolor{stringliteral}{"Right hand planned vs. actual path"})}
+\DoxyCodeLine{442 }
+\DoxyCodeLine{443     plt.figure(2)}
+\DoxyCodeLine{444     plt.plot(leftHandTrajectoryPlannedX, leftHandTrajectoryPlannedY, \textcolor{stringliteral}{'b-'}, label = \textcolor{stringliteral}{'Planned'})}
+\DoxyCodeLine{445     plt.plot(leftHandTrajectoryActualX, leftHandTrajectoryActualY, \textcolor{stringliteral}{'r*'}, label = \textcolor{stringliteral}{'Actual'})}
+\DoxyCodeLine{446     plt.title(\textcolor{stringliteral}{"Left hand planned vs. actual path"})}
+\DoxyCodeLine{447 }
+\DoxyCodeLine{448     plt.show()}
+\DoxyCodeLine{449 }
+\DoxyCodeLine{450 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__trajectory__following__test_aad9b51b98a58a40eec88a0a39e6e38c9_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a143549e166bd92e4c144e7fd9f9194bb}\label{namespacesteering__trajectory__following__test_a143549e166bd92e4c144e7fd9f9194bb}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!recordActualHandTrajectories@{recordActualHandTrajectories}}
+\index{recordActualHandTrajectories@{recordActualHandTrajectories}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{recordActualHandTrajectories()}{recordActualHandTrajectories()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+following\+\_\+test.\+record\+Actual\+Hand\+Trajectories (\begin{DoxyParamCaption}\item[{}]{ros\+\_\+right\+\_\+shoulder0\+\_\+publisher,  }\item[{}]{ros\+\_\+right\+\_\+shoulder1\+\_\+publisher,  }\item[{}]{ros\+\_\+right\+\_\+shoulder2\+\_\+publisher,  }\item[{}]{ros\+\_\+right\+\_\+elbow0\+\_\+publisher,  }\item[{}]{ros\+\_\+right\+\_\+elbow1\+\_\+publisher,  }\item[{}]{ros\+\_\+right\+\_\+wrist0\+\_\+publisher,  }\item[{}]{ros\+\_\+right\+\_\+wrist1\+\_\+publisher,  }\item[{}]{ros\+\_\+left\+\_\+shoulder0\+\_\+publisher,  }\item[{}]{ros\+\_\+left\+\_\+shoulder1\+\_\+publisher,  }\item[{}]{ros\+\_\+left\+\_\+shoulder2\+\_\+publisher,  }\item[{}]{ros\+\_\+left\+\_\+elbow0\+\_\+publisher,  }\item[{}]{ros\+\_\+left\+\_\+elbow1\+\_\+publisher,  }\item[{}]{ros\+\_\+left\+\_\+wrist0\+\_\+publisher,  }\item[{}]{ros\+\_\+left\+\_\+wrist1\+\_\+publisher }\end{DoxyParamCaption})}
+
+
+
+Definition at line 307 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{307 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__trajectory__following__test_a143549e166bd92e4c144e7fd9f9194bb}{recordActualHandTrajectories}}(ros\_right\_shoulder0\_publisher, ros\_right\_shoulder1\_publisher, ros\_right\_shoulder2\_publisher, ros\_right\_elbow0\_publisher, ros\_right\_elbow1\_publisher, ros\_right\_wrist0\_publisher, ros\_right\_wrist1\_publisher, ros\_left\_shoulder0\_publisher, ros\_left\_shoulder1\_publisher, ros\_left\_shoulder2\_publisher, ros\_left\_elbow0\_publisher, ros\_left\_elbow1\_publisher, ros\_left\_wrist0\_publisher, ros\_left\_wrist1\_publisher):}
+\DoxyCodeLine{308 }
+\DoxyCodeLine{309     \textcolor{keyword}{global} \_steeringAngles}
+\DoxyCodeLine{310     \textcolor{keyword}{global} \_rightHandTrajectoryActual}
+\DoxyCodeLine{311     \textcolor{keyword}{global} \_leftHandTrajectoryActual}
+\DoxyCodeLine{312 }
+\DoxyCodeLine{313     \textcolor{keyword}{global} \_regressedShoulder0Right}
+\DoxyCodeLine{314     \textcolor{keyword}{global} \_regressedShoulder1Right}
+\DoxyCodeLine{315     \textcolor{keyword}{global} \_regressedShoulder2Right}
+\DoxyCodeLine{316     \textcolor{keyword}{global} \_regressedShoulder0Left}
+\DoxyCodeLine{317     \textcolor{keyword}{global} \_regressedShoulder1Left}
+\DoxyCodeLine{318     \textcolor{keyword}{global} \_regressedShoulder2Left}
+\DoxyCodeLine{319     \textcolor{keyword}{global} \_regressedElbow0Right}
+\DoxyCodeLine{320     \textcolor{keyword}{global} \_regressedElbow1Right}
+\DoxyCodeLine{321     \textcolor{keyword}{global} \_regressedElbow0Left}
+\DoxyCodeLine{322     \textcolor{keyword}{global} \_regressedElbow1Left}
+\DoxyCodeLine{323     \textcolor{keyword}{global} \_regressedWrist0Right}
+\DoxyCodeLine{324     \textcolor{keyword}{global} \_regressedWrist1Right}
+\DoxyCodeLine{325     \textcolor{keyword}{global} \_regressedWrist0Left}
+\DoxyCodeLine{326     \textcolor{keyword}{global} \_regressedWrist1Left}
+\DoxyCodeLine{327 }
+\DoxyCodeLine{328     \textcolor{keywordflow}{for} thisSteeringAngle \textcolor{keywordflow}{in} \_steeringAngles:}
+\DoxyCodeLine{329 }
+\DoxyCodeLine{330         print(\textcolor{stringliteral}{"Recording steering angle: "}, thisSteeringAngle)}
+\DoxyCodeLine{331 }
+\DoxyCodeLine{332         ros\_left\_shoulder0\_publisher.publish(\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a30e469e5d45f2f158ed8d8ed8d0fcf81}{\_regressedShoulder0Left}}(thisSteeringAngle).astype(float))}
+\DoxyCodeLine{333         ros\_left\_shoulder1\_publisher.publish(\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_ab5f93208fa781b69a97c427125c5a4b6}{\_regressedShoulder1Left}}(thisSteeringAngle).astype(float))}
+\DoxyCodeLine{334         ros\_left\_shoulder2\_publisher.publish(\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_aee5f5a2e7c771b98b58ffc98822bf51e}{\_regressedShoulder2Left}}(thisSteeringAngle).astype(float))}
+\DoxyCodeLine{335         ros\_right\_shoulder0\_publisher.publish(\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a4d0dda5857a965afe9648203cd90d3b4}{\_regressedShoulder0Right}}(thisSteeringAngle).astype(float))}
+\DoxyCodeLine{336         ros\_right\_shoulder1\_publisher.publish(\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a8a6efa4759cc921d52020b30a479558e}{\_regressedShoulder1Right}}(thisSteeringAngle).astype(float))}
+\DoxyCodeLine{337         ros\_right\_shoulder2\_publisher.publish(\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a2327a305b2c2dfa305b15b1e5c4c8848}{\_regressedShoulder2Right}}(thisSteeringAngle).astype(float))}
+\DoxyCodeLine{338         ros\_left\_elbow0\_publisher.publish(\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_ae7ab4469cf5dc2b368e5d8d6b9f79ab0}{\_regressedElbow0Left}}(thisSteeringAngle).astype(float))}
+\DoxyCodeLine{339         ros\_left\_elbow1\_publisher.publish(\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a9d4d2667d21c5a16b876d86a0d62c1a7}{\_regressedElbow1Left}}(thisSteeringAngle).astype(float))}
+\DoxyCodeLine{340         ros\_right\_elbow0\_publisher.publish(\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_aa77f4a41c3c298cda99da57dd249a3e4}{\_regressedElbow0Right}}(thisSteeringAngle).astype(float))}
+\DoxyCodeLine{341         ros\_right\_elbow1\_publisher.publish(\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a3689faeaf99e3d97698c6b22b73c4c12}{\_regressedElbow1Right}}(thisSteeringAngle).astype(float))}
+\DoxyCodeLine{342         ros\_left\_wrist0\_publisher.publish(\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a691d8994f1fb578840efff722cc3d59b}{\_regressedWrist0Left}}(thisSteeringAngle).astype(float))}
+\DoxyCodeLine{343         ros\_left\_wrist1\_publisher.publish(\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a6a68a5282fa90f67cc060bb873ed68a7}{\_regressedWrist1Left}}(thisSteeringAngle).astype(float))}
+\DoxyCodeLine{344         ros\_right\_wrist0\_publisher.publish(\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_aaacdc9fde66962dbad14df4e0d2dce34}{\_regressedWrist0Right}}(thisSteeringAngle).astype(float))}
+\DoxyCodeLine{345         ros\_right\_wrist1\_publisher.publish(\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_aa0ecde8ae6f1f4da8ee021071dcd8638}{\_regressedWrist1Right}}(thisSteeringAngle).astype(float))}
+\DoxyCodeLine{346 }
+\DoxyCodeLine{347         \textcolor{keywordflow}{while} abs(\_jointsStatusData[JOINT\_SHOULDER\_AXIS0\_LEFT][\textcolor{stringliteral}{"Pos"}] - \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a30e469e5d45f2f158ed8d8ed8d0fcf81}{\_regressedShoulder0Left}}(thisSteeringAngle).astype(float)) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{348             time.sleep(0.1)}
+\DoxyCodeLine{349         print(\textcolor{stringliteral}{"JOINT\_SHOULDER\_AXIS0\_LEFT moved to new position"})}
+\DoxyCodeLine{350         \textcolor{keywordflow}{while} abs(\_jointsStatusData[JOINT\_SHOULDER\_AXIS1\_LEFT][\textcolor{stringliteral}{"Pos"}] - \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_ab5f93208fa781b69a97c427125c5a4b6}{\_regressedShoulder1Left}}(thisSteeringAngle).astype(float)) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{351             time.sleep(0.1)}
+\DoxyCodeLine{352         print(\textcolor{stringliteral}{"JOINT\_SHOULDER\_AXIS1\_LEFT moved to new position"})}
+\DoxyCodeLine{353         \textcolor{keywordflow}{while} abs(\_jointsStatusData[JOINT\_SHOULDER\_AXIS2\_LEFT][\textcolor{stringliteral}{"Pos"}] - \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_aee5f5a2e7c771b98b58ffc98822bf51e}{\_regressedShoulder2Left}}(thisSteeringAngle).astype(float)) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{354             time.sleep(0.1)}
+\DoxyCodeLine{355         print(\textcolor{stringliteral}{"JOINT\_SHOULDER\_AXIS2\_LEFT moved to new position"})}
+\DoxyCodeLine{356 }
+\DoxyCodeLine{357         \textcolor{keywordflow}{while} abs(\_jointsStatusData[JOINT\_SHOULDER\_AXIS0\_RIGHT][\textcolor{stringliteral}{"Pos"}] - \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a4d0dda5857a965afe9648203cd90d3b4}{\_regressedShoulder0Right}}(thisSteeringAngle).astype(float)) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{358             time.sleep(0.1)}
+\DoxyCodeLine{359         print(\textcolor{stringliteral}{"JOINT\_SHOULDER\_AXIS0\_RIGHT moved to new position"})}
+\DoxyCodeLine{360         \textcolor{keywordflow}{while} abs(\_jointsStatusData[JOINT\_SHOULDER\_AXIS1\_RIGHT][\textcolor{stringliteral}{"Pos"}] - \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a8a6efa4759cc921d52020b30a479558e}{\_regressedShoulder1Right}}(thisSteeringAngle).astype(float)) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{361             time.sleep(0.1)}
+\DoxyCodeLine{362         print(\textcolor{stringliteral}{"JOINT\_SHOULDER\_AXIS1\_RIGHT moved to new position"})}
+\DoxyCodeLine{363         \textcolor{keywordflow}{while} abs(\_jointsStatusData[JOINT\_SHOULDER\_AXIS2\_RIGHT][\textcolor{stringliteral}{"Pos"}] - \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a2327a305b2c2dfa305b15b1e5c4c8848}{\_regressedShoulder2Right}}(thisSteeringAngle).astype(float)) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{364             time.sleep(0.1)}
+\DoxyCodeLine{365         print(\textcolor{stringliteral}{"JOINT\_SHOULDER\_AXIS2\_RIGHT moved to new position"})}
+\DoxyCodeLine{366 }
+\DoxyCodeLine{367         \textcolor{keywordflow}{while} abs(\_jointsStatusData[JOINT\_ELBOW\_ROT0\_LEFT][\textcolor{stringliteral}{"Pos"}] - \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_ae7ab4469cf5dc2b368e5d8d6b9f79ab0}{\_regressedElbow0Left}}(thisSteeringAngle).astype(float)) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{368             time.sleep(0.1)}
+\DoxyCodeLine{369         print(\textcolor{stringliteral}{"JOINT\_ELBOW\_ROT0\_LEFT moved to new position"})}
+\DoxyCodeLine{370         \textcolor{keywordflow}{while} abs(\_jointsStatusData[JOINT\_ELBOW\_ROT1\_LEFT][\textcolor{stringliteral}{"Pos"}] - \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a9d4d2667d21c5a16b876d86a0d62c1a7}{\_regressedElbow1Left}}(thisSteeringAngle).astype(float)) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{371             time.sleep(0.1)}
+\DoxyCodeLine{372         print(\textcolor{stringliteral}{"JOINT\_ELBOW\_ROT1\_LEFT moved to new position"})}
+\DoxyCodeLine{373 }
+\DoxyCodeLine{374         \textcolor{keywordflow}{while} abs(\_jointsStatusData[JOINT\_ELBOW\_ROT0\_RIGHT][\textcolor{stringliteral}{"Pos"}] - \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_aa77f4a41c3c298cda99da57dd249a3e4}{\_regressedElbow0Right}}(thisSteeringAngle).astype(float)) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{375             time.sleep(0.1)}
+\DoxyCodeLine{376         print(\textcolor{stringliteral}{"JOINT\_ELBOW\_ROT0\_RIGHT moved to new position"})}
+\DoxyCodeLine{377         \textcolor{keywordflow}{while} abs(\_jointsStatusData[JOINT\_ELBOW\_ROT1\_RIGHT][\textcolor{stringliteral}{"Pos"}] - \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a3689faeaf99e3d97698c6b22b73c4c12}{\_regressedElbow1Right}}(thisSteeringAngle).astype(float)) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{378             time.sleep(0.1)}
+\DoxyCodeLine{379         print(\textcolor{stringliteral}{"JOINT\_ELBOW\_ROT1\_RIGHT moved to new position"})}
+\DoxyCodeLine{380 }
+\DoxyCodeLine{381         \textcolor{keywordflow}{while} abs(\_jointsStatusData[JOINT\_WRIST\_0\_LEFT][\textcolor{stringliteral}{"Pos"}] - \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a691d8994f1fb578840efff722cc3d59b}{\_regressedWrist0Left}}(thisSteeringAngle).astype(float)) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{382             time.sleep(0.1)}
+\DoxyCodeLine{383         print(\textcolor{stringliteral}{"JOINT\_WRIST\_0\_LEFT moved to new position"})}
+\DoxyCodeLine{384         \textcolor{keywordflow}{while} abs(\_jointsStatusData[JOINT\_WRIST\_1\_LEFT][\textcolor{stringliteral}{"Pos"}] - \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a6a68a5282fa90f67cc060bb873ed68a7}{\_regressedWrist1Left}}(thisSteeringAngle).astype(float)) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{385             time.sleep(0.1)}
+\DoxyCodeLine{386         print(\textcolor{stringliteral}{"JOINT\_WRIST\_1\_LEFT moved to new position"})}
+\DoxyCodeLine{387 }
+\DoxyCodeLine{388         \textcolor{keywordflow}{while} abs(\_jointsStatusData[JOINT\_WRIST\_0\_RIGHT][\textcolor{stringliteral}{"Pos"}] - \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_aaacdc9fde66962dbad14df4e0d2dce34}{\_regressedWrist0Right}}(thisSteeringAngle).astype(float)) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{389             time.sleep(0.1)}
+\DoxyCodeLine{390         print(\textcolor{stringliteral}{"JOINT\_WRIST\_0\_RIGHT moved to new position"})}
+\DoxyCodeLine{391         \textcolor{keywordflow}{while} abs(\_jointsStatusData[JOINT\_WRIST\_1\_RIGHT][\textcolor{stringliteral}{"Pos"}] - \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_aa0ecde8ae6f1f4da8ee021071dcd8638}{\_regressedWrist1Right}}(thisSteeringAngle).astype(float)) > JOINT\_ANGLE\_TOLERANCE\_FK:}
+\DoxyCodeLine{392             time.sleep(0.1)}
+\DoxyCodeLine{393         print(\textcolor{stringliteral}{"JOINT\_WRIST\_1\_RIGHT moved to new position"})}
+\DoxyCodeLine{394 }
+\DoxyCodeLine{395 }
+\DoxyCodeLine{396         \_rightHandTrajectoryActual.append(\mbox{\hyperlink{namespacesteering__trajectory__following__test_a69336b47326639e5108afdb6eec04bfa}{getPositionRightHand}}())}
+\DoxyCodeLine{397         \_leftHandTrajectoryActual.append(\mbox{\hyperlink{namespacesteering__trajectory__following__test_a0f76013b90d9b49c61ca4054512e5852}{getPositionLeftHand}}())}
+\DoxyCodeLine{398 }
+\DoxyCodeLine{399         print(\textcolor{stringliteral}{"Moving on..."})}
+\DoxyCodeLine{400 }
+
+\end{DoxyCode}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__trajectory__following__test_a143549e166bd92e4c144e7fd9f9194bb_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__trajectory__following__test_a143549e166bd92e4c144e7fd9f9194bb_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a09ce0e9b50241eec3bb69e5362b69159}\label{namespacesteering__trajectory__following__test_a09ce0e9b50241eec3bb69e5362b69159}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!regressFunctionsFromFile@{regressFunctionsFromFile}}
+\index{regressFunctionsFromFile@{regressFunctionsFromFile}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{regressFunctionsFromFile()}{regressFunctionsFromFile()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+following\+\_\+test.\+regress\+Functions\+From\+File (\begin{DoxyParamCaption}\item[{}]{filename\+\_\+coefficients }\end{DoxyParamCaption})}
+
+
+
+U\+T\+I\+L\+I\+TY F\+U\+N\+C\+T\+I\+O\+NS \#\#\#. 
+
+
+
+Definition at line 171 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{171 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__trajectory__following__test_a09ce0e9b50241eec3bb69e5362b69159}{regressFunctionsFromFile}}(filename\_coefficients):}
+\DoxyCodeLine{172 }
+\DoxyCodeLine{173     \textcolor{keyword}{global} \_regressedShoulder0Right}
+\DoxyCodeLine{174     \textcolor{keyword}{global} \_regressedShoulder1Right}
+\DoxyCodeLine{175     \textcolor{keyword}{global} \_regressedShoulder2Right}
+\DoxyCodeLine{176     \textcolor{keyword}{global} \_regressedShoulder0Left}
+\DoxyCodeLine{177     \textcolor{keyword}{global} \_regressedShoulder1Left}
+\DoxyCodeLine{178     \textcolor{keyword}{global} \_regressedShoulder2Left}
+\DoxyCodeLine{179     \textcolor{keyword}{global} \_regressedElbow0Right}
+\DoxyCodeLine{180     \textcolor{keyword}{global} \_regressedElbow1Right}
+\DoxyCodeLine{181     \textcolor{keyword}{global} \_regressedElbow0Left}
+\DoxyCodeLine{182     \textcolor{keyword}{global} \_regressedElbow1Left}
+\DoxyCodeLine{183     \textcolor{keyword}{global} \_regressedWrist0Right}
+\DoxyCodeLine{184     \textcolor{keyword}{global} \_regressedWrist1Right}
+\DoxyCodeLine{185     \textcolor{keyword}{global} \_regressedWrist0Left}
+\DoxyCodeLine{186     \textcolor{keyword}{global} \_regressedWrist1Left}
+\DoxyCodeLine{187 }
+\DoxyCodeLine{188     \textcolor{keyword}{with} open(filename\_coefficients, \textcolor{stringliteral}{"r"}) \textcolor{keyword}{as} read\_file:}
+\DoxyCodeLine{189         loaded\_data = json.load(read\_file)}
+\DoxyCodeLine{190 }
+\DoxyCodeLine{191     \_regressedShoulder0Right = poly.Polynomial(loaded\_data[JOINT\_SHOULDER\_AXIS0\_RIGHT])}
+\DoxyCodeLine{192     \_regressedShoulder1Right = poly.Polynomial(loaded\_data[JOINT\_SHOULDER\_AXIS1\_RIGHT])}
+\DoxyCodeLine{193     \_regressedShoulder2Right = poly.Polynomial(loaded\_data[JOINT\_SHOULDER\_AXIS2\_RIGHT])}
+\DoxyCodeLine{194     \_regressedElbow0Right    = poly.Polynomial(loaded\_data[JOINT\_ELBOW\_ROT0\_RIGHT])}
+\DoxyCodeLine{195     \_regressedElbow1Right    = poly.Polynomial(loaded\_data[JOINT\_ELBOW\_ROT1\_RIGHT])}
+\DoxyCodeLine{196     \_regressedWrist0Right    = poly.Polynomial(loaded\_data[JOINT\_WRIST\_0\_RIGHT])}
+\DoxyCodeLine{197     \_regressedWrist1Right    = poly.Polynomial(loaded\_data[JOINT\_WRIST\_1\_RIGHT])}
+\DoxyCodeLine{198 }
+\DoxyCodeLine{199     \_regressedShoulder0Left = poly.Polynomial(loaded\_data[JOINT\_SHOULDER\_AXIS0\_LEFT])}
+\DoxyCodeLine{200     \_regressedShoulder1Left = poly.Polynomial(loaded\_data[JOINT\_SHOULDER\_AXIS1\_LEFT])}
+\DoxyCodeLine{201     \_regressedShoulder2Left = poly.Polynomial(loaded\_data[JOINT\_SHOULDER\_AXIS2\_LEFT])}
+\DoxyCodeLine{202     \_regressedElbow0Left    = poly.Polynomial(loaded\_data[JOINT\_ELBOW\_ROT0\_LEFT])}
+\DoxyCodeLine{203     \_regressedElbow1Left    = poly.Polynomial(loaded\_data[JOINT\_ELBOW\_ROT1\_LEFT])}
+\DoxyCodeLine{204     \_regressedWrist0Left    = poly.Polynomial(loaded\_data[JOINT\_WRIST\_0\_LEFT])}
+\DoxyCodeLine{205     \_regressedWrist1Left    = poly.Polynomial(loaded\_data[JOINT\_WRIST\_1\_LEFT])}
+\DoxyCodeLine{206 }
+\DoxyCodeLine{207     \textcolor{keywordflow}{return} 1}
+\DoxyCodeLine{208 }
+\DoxyCodeLine{209 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__trajectory__following__test_a09ce0e9b50241eec3bb69e5362b69159_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_aeb34a93dbcb90ea991b0c006e351b6f6}\label{namespacesteering__trajectory__following__test_aeb34a93dbcb90ea991b0c006e351b6f6}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!setJointControllerParameters@{setJointControllerParameters}}
+\index{setJointControllerParameters@{setJointControllerParameters}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{setJointControllerParameters()}{setJointControllerParameters()}}
+{\footnotesize\ttfamily def steering\+\_\+trajectory\+\_\+following\+\_\+test.\+set\+Joint\+Controller\+Parameters (\begin{DoxyParamCaption}\item[{}]{proportional\+Val,  }\item[{}]{derivative\+Val }\end{DoxyParamCaption})}
+
+
+
+Definition at line 210 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{210 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__trajectory__following__test_aeb34a93dbcb90ea991b0c006e351b6f6}{setJointControllerParameters}}(proportionalVal, derivativeVal):}
+\DoxyCodeLine{211 }
+\DoxyCodeLine{212     \textcolor{keywordflow}{for} thisJointName \textcolor{keywordflow}{in} JOINT\_LIST:}
+\DoxyCodeLine{213         rospy.wait\_for\_service(thisJointName + \textcolor{stringliteral}{'/'} + thisJointName + \textcolor{stringliteral}{'/params'})}
+\DoxyCodeLine{214         \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{215             joint\_srv = rospy.ServiceProxy(thisJointName + \textcolor{stringliteral}{'/'} + thisJointName + \textcolor{stringliteral}{'/params'}, SetControllerParameters)}
+\DoxyCodeLine{216             joint\_srv(proportionalVal, derivativeVal)}
+\DoxyCodeLine{217         \textcolor{keywordflow}{except} rospy.ServiceException, e:}
+\DoxyCodeLine{218             print(\textcolor{stringliteral}{"Service call change control parameter failed: "}, e)}
+\DoxyCodeLine{219 }
+\DoxyCodeLine{220 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__trajectory__following__test_aeb34a93dbcb90ea991b0c006e351b6f6_icgraph}
+\end{center}
+\end{figure}
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a11d89f8a08631c2b1e7d499fecbb33ed}\label{namespacesteering__trajectory__following__test_a11d89f8a08631c2b1e7d499fecbb33ed}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_centerHandlebarTrajectoryPlanned@{\_centerHandlebarTrajectoryPlanned}}
+\index{\_centerHandlebarTrajectoryPlanned@{\_centerHandlebarTrajectoryPlanned}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_centerHandlebarTrajectoryPlanned}{\_centerHandlebarTrajectoryPlanned}}
+{\footnotesize\ttfamily list steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+center\+Handlebar\+Trajectory\+Planned = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 70 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a3d941037e2aebba9bac0d806d60ddb56}\label{namespacesteering__trajectory__following__test_a3d941037e2aebba9bac0d806d60ddb56}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_jointsStatusData@{\_jointsStatusData}}
+\index{\_jointsStatusData@{\_jointsStatusData}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_jointsStatusData}{\_jointsStatusData}}
+{\footnotesize\ttfamily dictionary steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+joints\+Status\+Data\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 107 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a8f516e8d2977b7f47327a25e57e67693}\label{namespacesteering__trajectory__following__test_a8f516e8d2977b7f47327a25e57e67693}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_leftHandTrajectoryActual@{\_leftHandTrajectoryActual}}
+\index{\_leftHandTrajectoryActual@{\_leftHandTrajectoryActual}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_leftHandTrajectoryActual}{\_leftHandTrajectoryActual}}
+{\footnotesize\ttfamily list steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+left\+Hand\+Trajectory\+Actual = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 73 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_ae417a72c7e362028fbdac218f3f4b303}\label{namespacesteering__trajectory__following__test_ae417a72c7e362028fbdac218f3f4b303}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_leftHandTrajectoryPlanned@{\_leftHandTrajectoryPlanned}}
+\index{\_leftHandTrajectoryPlanned@{\_leftHandTrajectoryPlanned}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_leftHandTrajectoryPlanned}{\_leftHandTrajectoryPlanned}}
+{\footnotesize\ttfamily list steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+left\+Hand\+Trajectory\+Planned = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 69 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a0c2e5a2ca871b8fadbdbc9963a00e5bd}\label{namespacesteering__trajectory__following__test_a0c2e5a2ca871b8fadbdbc9963a00e5bd}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_regressedElbow0Left@{\_regressedElbow0Left}}
+\index{\_regressedElbow0Left@{\_regressedElbow0Left}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_regressedElbow0Left}{\_regressedElbow0Left}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+regressed\+Elbow0\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 100 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a6416f267e6d27bb54eebbbe24bae4384}\label{namespacesteering__trajectory__following__test_a6416f267e6d27bb54eebbbe24bae4384}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_regressedElbow0Right@{\_regressedElbow0Right}}
+\index{\_regressedElbow0Right@{\_regressedElbow0Right}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_regressedElbow0Right}{\_regressedElbow0Right}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+regressed\+Elbow0\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 98 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_ac025f01349e0c59c2cd72c8deb780132}\label{namespacesteering__trajectory__following__test_ac025f01349e0c59c2cd72c8deb780132}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_regressedElbow1Left@{\_regressedElbow1Left}}
+\index{\_regressedElbow1Left@{\_regressedElbow1Left}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_regressedElbow1Left}{\_regressedElbow1Left}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+regressed\+Elbow1\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 101 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a1a0ba79c0ee80a593ea6347fa9f976a3}\label{namespacesteering__trajectory__following__test_a1a0ba79c0ee80a593ea6347fa9f976a3}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_regressedElbow1Right@{\_regressedElbow1Right}}
+\index{\_regressedElbow1Right@{\_regressedElbow1Right}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_regressedElbow1Right}{\_regressedElbow1Right}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+regressed\+Elbow1\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 99 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_aa57323586fb6698b0cacd2d9b017a86f}\label{namespacesteering__trajectory__following__test_aa57323586fb6698b0cacd2d9b017a86f}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_regressedShoulder0Left@{\_regressedShoulder0Left}}
+\index{\_regressedShoulder0Left@{\_regressedShoulder0Left}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_regressedShoulder0Left}{\_regressedShoulder0Left}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+regressed\+Shoulder0\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 95 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_ac2bfa946834d1dacf28574c91ae4771e}\label{namespacesteering__trajectory__following__test_ac2bfa946834d1dacf28574c91ae4771e}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_regressedShoulder0Right@{\_regressedShoulder0Right}}
+\index{\_regressedShoulder0Right@{\_regressedShoulder0Right}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_regressedShoulder0Right}{\_regressedShoulder0Right}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+regressed\+Shoulder0\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 92 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a42bb937133cd06c17ef8d08d642a22fa}\label{namespacesteering__trajectory__following__test_a42bb937133cd06c17ef8d08d642a22fa}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_regressedShoulder1Left@{\_regressedShoulder1Left}}
+\index{\_regressedShoulder1Left@{\_regressedShoulder1Left}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_regressedShoulder1Left}{\_regressedShoulder1Left}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+regressed\+Shoulder1\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 96 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a99e08e3f648f94190db5fd41c1b57587}\label{namespacesteering__trajectory__following__test_a99e08e3f648f94190db5fd41c1b57587}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_regressedShoulder1Right@{\_regressedShoulder1Right}}
+\index{\_regressedShoulder1Right@{\_regressedShoulder1Right}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_regressedShoulder1Right}{\_regressedShoulder1Right}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+regressed\+Shoulder1\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 93 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a77c32c567dcf540320f634ddaa2cbc34}\label{namespacesteering__trajectory__following__test_a77c32c567dcf540320f634ddaa2cbc34}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_regressedShoulder2Left@{\_regressedShoulder2Left}}
+\index{\_regressedShoulder2Left@{\_regressedShoulder2Left}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_regressedShoulder2Left}{\_regressedShoulder2Left}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+regressed\+Shoulder2\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 97 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a812ee8dc53a47b23490c0b870b4306d8}\label{namespacesteering__trajectory__following__test_a812ee8dc53a47b23490c0b870b4306d8}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_regressedShoulder2Right@{\_regressedShoulder2Right}}
+\index{\_regressedShoulder2Right@{\_regressedShoulder2Right}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_regressedShoulder2Right}{\_regressedShoulder2Right}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+regressed\+Shoulder2\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 94 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a90d130565b37986a1cdd3a295108d452}\label{namespacesteering__trajectory__following__test_a90d130565b37986a1cdd3a295108d452}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_regressedWrist0Left@{\_regressedWrist0Left}}
+\index{\_regressedWrist0Left@{\_regressedWrist0Left}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_regressedWrist0Left}{\_regressedWrist0Left}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+regressed\+Wrist0\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 104 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a18e9c920e52116ab6bddb3d45eb237ef}\label{namespacesteering__trajectory__following__test_a18e9c920e52116ab6bddb3d45eb237ef}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_regressedWrist0Right@{\_regressedWrist0Right}}
+\index{\_regressedWrist0Right@{\_regressedWrist0Right}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_regressedWrist0Right}{\_regressedWrist0Right}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+regressed\+Wrist0\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 102 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a0ef037ff09cf0d447c29b3f563f88602}\label{namespacesteering__trajectory__following__test_a0ef037ff09cf0d447c29b3f563f88602}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_regressedWrist1Left@{\_regressedWrist1Left}}
+\index{\_regressedWrist1Left@{\_regressedWrist1Left}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_regressedWrist1Left}{\_regressedWrist1Left}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+regressed\+Wrist1\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 105 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a3ebfbc22a790ede2aadcbbaccdfb44e8}\label{namespacesteering__trajectory__following__test_a3ebfbc22a790ede2aadcbbaccdfb44e8}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_regressedWrist1Right@{\_regressedWrist1Right}}
+\index{\_regressedWrist1Right@{\_regressedWrist1Right}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_regressedWrist1Right}{\_regressedWrist1Right}}
+{\footnotesize\ttfamily steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+regressed\+Wrist1\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 103 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_ac6de0716852e9f87218ab1cdba0c4ba9}\label{namespacesteering__trajectory__following__test_ac6de0716852e9f87218ab1cdba0c4ba9}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_rightHandTrajectoryActual@{\_rightHandTrajectoryActual}}
+\index{\_rightHandTrajectoryActual@{\_rightHandTrajectoryActual}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_rightHandTrajectoryActual}{\_rightHandTrajectoryActual}}
+{\footnotesize\ttfamily list steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+right\+Hand\+Trajectory\+Actual = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 72 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_ab63e69afbc3c8869330bba2b5fe075b4}\label{namespacesteering__trajectory__following__test_ab63e69afbc3c8869330bba2b5fe075b4}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_rightHandTrajectoryPlanned@{\_rightHandTrajectoryPlanned}}
+\index{\_rightHandTrajectoryPlanned@{\_rightHandTrajectoryPlanned}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_rightHandTrajectoryPlanned}{\_rightHandTrajectoryPlanned}}
+{\footnotesize\ttfamily list steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+right\+Hand\+Trajectory\+Planned = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 68 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a2d977c9a658e4af1d3f3d1c275b29952}\label{namespacesteering__trajectory__following__test_a2d977c9a658e4af1d3f3d1c275b29952}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!\_steeringAngles@{\_steeringAngles}}
+\index{\_steeringAngles@{\_steeringAngles}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{\_steeringAngles}{\_steeringAngles}}
+{\footnotesize\ttfamily list steering\+\_\+trajectory\+\_\+following\+\_\+test.\+\_\+steering\+Angles = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+G\+L\+O\+B\+AL V\+A\+R\+I\+A\+B\+L\+ES \#\#\#. 
+
+
+
+Definition at line 67 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a130062548b68d0794e4296549fc1a8e1}\label{namespacesteering__trajectory__following__test_a130062548b68d0794e4296549fc1a8e1}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!BIKE\_OFFSET\_X@{BIKE\_OFFSET\_X}}
+\index{BIKE\_OFFSET\_X@{BIKE\_OFFSET\_X}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{BIKE\_OFFSET\_X}{BIKE\_OFFSET\_X}}
+{\footnotesize\ttfamily int steering\+\_\+trajectory\+\_\+following\+\_\+test.\+B\+I\+K\+E\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+X = 0}
+
+
+
+M\+E\+A\+S\+U\+R\+ED P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#. 
+
+
+
+Definition at line 45 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_ac4bd8b57aab5072e7e6468ccb6f4ecbd}\label{namespacesteering__trajectory__following__test_ac4bd8b57aab5072e7e6468ccb6f4ecbd}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!BIKE\_OFFSET\_Y@{BIKE\_OFFSET\_Y}}
+\index{BIKE\_OFFSET\_Y@{BIKE\_OFFSET\_Y}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{BIKE\_OFFSET\_Y}{BIKE\_OFFSET\_Y}}
+{\footnotesize\ttfamily int steering\+\_\+trajectory\+\_\+following\+\_\+test.\+B\+I\+K\+E\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Y = 0}
+
+
+
+Definition at line 46 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a8e900f2349a00e740da3d6ee884c18b9}\label{namespacesteering__trajectory__following__test_a8e900f2349a00e740da3d6ee884c18b9}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!BIKE\_OFFSET\_Z@{BIKE\_OFFSET\_Z}}
+\index{BIKE\_OFFSET\_Z@{BIKE\_OFFSET\_Z}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{BIKE\_OFFSET\_Z}{BIKE\_OFFSET\_Z}}
+{\footnotesize\ttfamily int steering\+\_\+trajectory\+\_\+following\+\_\+test.\+B\+I\+K\+E\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Z = 0}
+
+
+
+Definition at line 47 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a750ea60836d7697be3955b118c91925e}\label{namespacesteering__trajectory__following__test_a750ea60836d7697be3955b118c91925e}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!ENDEFFECTOR\_LEFT@{ENDEFFECTOR\_LEFT}}
+\index{ENDEFFECTOR\_LEFT@{ENDEFFECTOR\_LEFT}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{ENDEFFECTOR\_LEFT}{ENDEFFECTOR\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+following\+\_\+test.\+E\+N\+D\+E\+F\+F\+E\+C\+T\+O\+R\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+hand\char`\"{}}
+
+
+
+Definition at line 37 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a015d0e3bf973472d055af475ec878099}\label{namespacesteering__trajectory__following__test_a015d0e3bf973472d055af475ec878099}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!ENDEFFECTOR\_RIGHT@{ENDEFFECTOR\_RIGHT}}
+\index{ENDEFFECTOR\_RIGHT@{ENDEFFECTOR\_RIGHT}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{ENDEFFECTOR\_RIGHT}{ENDEFFECTOR\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+following\+\_\+test.\+E\+N\+D\+E\+F\+F\+E\+C\+T\+O\+R\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+hand\char`\"{}}
+
+
+
+Definition at line 35 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a1715eb3be2d0df23493b6618f822a20b}\label{namespacesteering__trajectory__following__test_a1715eb3be2d0df23493b6618f822a20b}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!FRAME\_LEFT@{FRAME\_LEFT}}
+\index{FRAME\_LEFT@{FRAME\_LEFT}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{FRAME\_LEFT}{FRAME\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+following\+\_\+test.\+F\+R\+A\+M\+E\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+hand\char`\"{}}
+
+
+
+Definition at line 38 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_ad2b3d81f8b97a726200a2c467b173ea7}\label{namespacesteering__trajectory__following__test_ad2b3d81f8b97a726200a2c467b173ea7}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!FRAME\_RIGHT@{FRAME\_RIGHT}}
+\index{FRAME\_RIGHT@{FRAME\_RIGHT}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{FRAME\_RIGHT}{FRAME\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+following\+\_\+test.\+F\+R\+A\+M\+E\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+hand\char`\"{}}
+
+
+
+Definition at line 36 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a6e8e6313b3c00feb6adb4a97e50117a2}\label{namespacesteering__trajectory__following__test_a6e8e6313b3c00feb6adb4a97e50117a2}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!HAND\_Y\_OFFSET@{HAND\_Y\_OFFSET}}
+\index{HAND\_Y\_OFFSET@{HAND\_Y\_OFFSET}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{HAND\_Y\_OFFSET}{HAND\_Y\_OFFSET}}
+{\footnotesize\ttfamily float steering\+\_\+trajectory\+\_\+following\+\_\+test.\+H\+A\+N\+D\+\_\+\+Y\+\_\+\+O\+F\+F\+S\+ET = 0.\+2}
+
+
+
+Definition at line 59 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a6ba20e809d4f5b3820ac8afb19bf90d8}\label{namespacesteering__trajectory__following__test_a6ba20e809d4f5b3820ac8afb19bf90d8}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!HANDLEBAR\_X\_OFFSET@{HANDLEBAR\_X\_OFFSET}}
+\index{HANDLEBAR\_X\_OFFSET@{HANDLEBAR\_X\_OFFSET}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{HANDLEBAR\_X\_OFFSET}{HANDLEBAR\_X\_OFFSET}}
+{\footnotesize\ttfamily float steering\+\_\+trajectory\+\_\+following\+\_\+test.\+H\+A\+N\+D\+L\+E\+B\+A\+R\+\_\+\+X\+\_\+\+O\+F\+F\+S\+ET = 0.\+728713}
+
+
+
+Definition at line 56 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a1b352cfed7d4963785bf84372c1072ee}\label{namespacesteering__trajectory__following__test_a1b352cfed7d4963785bf84372c1072ee}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!HANDLEBAR\_Z\_OFFSET@{HANDLEBAR\_Z\_OFFSET}}
+\index{HANDLEBAR\_Z\_OFFSET@{HANDLEBAR\_Z\_OFFSET}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{HANDLEBAR\_Z\_OFFSET}{HANDLEBAR\_Z\_OFFSET}}
+{\footnotesize\ttfamily float steering\+\_\+trajectory\+\_\+following\+\_\+test.\+H\+A\+N\+D\+L\+E\+B\+A\+R\+\_\+\+Z\+\_\+\+O\+F\+F\+S\+ET = 0.\+719269}
+
+
+
+Definition at line 57 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_af0d2a6ee09ffeae01a634a6d70413cd1}\label{namespacesteering__trajectory__following__test_af0d2a6ee09ffeae01a634a6d70413cd1}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!JOINT\_ANGLE\_TOLERANCE\_FK@{JOINT\_ANGLE\_TOLERANCE\_FK}}
+\index{JOINT\_ANGLE\_TOLERANCE\_FK@{JOINT\_ANGLE\_TOLERANCE\_FK}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{JOINT\_ANGLE\_TOLERANCE\_FK}{JOINT\_ANGLE\_TOLERANCE\_FK}}
+{\footnotesize\ttfamily float steering\+\_\+trajectory\+\_\+following\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+A\+N\+G\+L\+E\+\_\+\+T\+O\+L\+E\+R\+A\+N\+C\+E\+\_\+\+FK = 0.\+01}
+
+
+
+Definition at line 33 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a6a7871c328a9f20e05eb0f3e5b59d76d}\label{namespacesteering__trajectory__following__test_a6a7871c328a9f20e05eb0f3e5b59d76d}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!JOINT\_ELBOW\_ROT0\_LEFT@{JOINT\_ELBOW\_ROT0\_LEFT}}
+\index{JOINT\_ELBOW\_ROT0\_LEFT@{JOINT\_ELBOW\_ROT0\_LEFT}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{JOINT\_ELBOW\_ROT0\_LEFT}{JOINT\_ELBOW\_ROT0\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+following\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+L\+E\+FT = \char`\"{}elbow\+\_\+left\+\_\+rot0\char`\"{}}
+
+
+
+Definition at line 83 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_abc51ae8ad86e5d9b21f7dd13b148d399}\label{namespacesteering__trajectory__following__test_abc51ae8ad86e5d9b21f7dd13b148d399}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!JOINT\_ELBOW\_ROT0\_RIGHT@{JOINT\_ELBOW\_ROT0\_RIGHT}}
+\index{JOINT\_ELBOW\_ROT0\_RIGHT@{JOINT\_ELBOW\_ROT0\_RIGHT}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{JOINT\_ELBOW\_ROT0\_RIGHT}{JOINT\_ELBOW\_ROT0\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+following\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+R\+I\+G\+HT = \char`\"{}elbow\+\_\+right\+\_\+rot0\char`\"{}}
+
+
+
+Definition at line 81 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a556a732fad8dbebfcc5ca994f802edc2}\label{namespacesteering__trajectory__following__test_a556a732fad8dbebfcc5ca994f802edc2}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!JOINT\_ELBOW\_ROT1\_LEFT@{JOINT\_ELBOW\_ROT1\_LEFT}}
+\index{JOINT\_ELBOW\_ROT1\_LEFT@{JOINT\_ELBOW\_ROT1\_LEFT}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{JOINT\_ELBOW\_ROT1\_LEFT}{JOINT\_ELBOW\_ROT1\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+following\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+L\+E\+FT = \char`\"{}elbow\+\_\+left\+\_\+rot1\char`\"{}}
+
+
+
+Definition at line 84 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_af35633e9dae72a4c4954547bf663230a}\label{namespacesteering__trajectory__following__test_af35633e9dae72a4c4954547bf663230a}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!JOINT\_ELBOW\_ROT1\_RIGHT@{JOINT\_ELBOW\_ROT1\_RIGHT}}
+\index{JOINT\_ELBOW\_ROT1\_RIGHT@{JOINT\_ELBOW\_ROT1\_RIGHT}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{JOINT\_ELBOW\_ROT1\_RIGHT}{JOINT\_ELBOW\_ROT1\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+following\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+R\+I\+G\+HT = \char`\"{}elbow\+\_\+right\+\_\+rot1\char`\"{}}
+
+
+
+Definition at line 82 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a2faadcccb34daa25db7f290f251fc759}\label{namespacesteering__trajectory__following__test_a2faadcccb34daa25db7f290f251fc759}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!JOINT\_LIST@{JOINT\_LIST}}
+\index{JOINT\_LIST@{JOINT\_LIST}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{JOINT\_LIST}{JOINT\_LIST}}
+{\footnotesize\ttfamily list steering\+\_\+trajectory\+\_\+following\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+L\+I\+ST = \mbox{[}\mbox{\hyperlink{namespacesteering__trajectory__following__test_aff54edc18c0f74b3a4ce2d52a39ff4ce}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_a9a40d67e3e6febc4c75cf55b3b8a7440}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_acf310dab770cd8f3e7f0409bafdbfb80}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_ae9645446475d21e458612d9e772eed58}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_a940cffedeae8e95eb444bc0976991024}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_a95784ab115aa92aafcfc54f38bcaafc2}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_abc51ae8ad86e5d9b21f7dd13b148d399}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_af35633e9dae72a4c4954547bf663230a}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_a6a7871c328a9f20e05eb0f3e5b59d76d}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_a556a732fad8dbebfcc5ca994f802edc2}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_a4ca6c59cd0baabbd4197019a8b0118ea}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_a760ce96026a20c86c4729886030b45f9}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+R\+I\+G\+HT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_a3a58ea85a8bc020017166eb776399262}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+L\+E\+FT}}, \mbox{\hyperlink{namespacesteering__trajectory__following__test_abfc90e80f3a6b56330e318c71578ec12}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+L\+E\+FT}}\mbox{]}}
+
+
+
+Definition at line 90 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_ae9645446475d21e458612d9e772eed58}\label{namespacesteering__trajectory__following__test_ae9645446475d21e458612d9e772eed58}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!JOINT\_SHOULDER\_AXIS0\_LEFT@{JOINT\_SHOULDER\_AXIS0\_LEFT}}
+\index{JOINT\_SHOULDER\_AXIS0\_LEFT@{JOINT\_SHOULDER\_AXIS0\_LEFT}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS0\_LEFT}{JOINT\_SHOULDER\_AXIS0\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+following\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+shoulder\+\_\+axis0\char`\"{}}
+
+
+
+Definition at line 78 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_aff54edc18c0f74b3a4ce2d52a39ff4ce}\label{namespacesteering__trajectory__following__test_aff54edc18c0f74b3a4ce2d52a39ff4ce}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!JOINT\_SHOULDER\_AXIS0\_RIGHT@{JOINT\_SHOULDER\_AXIS0\_RIGHT}}
+\index{JOINT\_SHOULDER\_AXIS0\_RIGHT@{JOINT\_SHOULDER\_AXIS0\_RIGHT}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS0\_RIGHT}{JOINT\_SHOULDER\_AXIS0\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+following\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+shoulder\+\_\+axis0\char`\"{}}
+
+
+
+Definition at line 75 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a940cffedeae8e95eb444bc0976991024}\label{namespacesteering__trajectory__following__test_a940cffedeae8e95eb444bc0976991024}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!JOINT\_SHOULDER\_AXIS1\_LEFT@{JOINT\_SHOULDER\_AXIS1\_LEFT}}
+\index{JOINT\_SHOULDER\_AXIS1\_LEFT@{JOINT\_SHOULDER\_AXIS1\_LEFT}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS1\_LEFT}{JOINT\_SHOULDER\_AXIS1\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+following\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+shoulder\+\_\+axis1\char`\"{}}
+
+
+
+Definition at line 79 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a9a40d67e3e6febc4c75cf55b3b8a7440}\label{namespacesteering__trajectory__following__test_a9a40d67e3e6febc4c75cf55b3b8a7440}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!JOINT\_SHOULDER\_AXIS1\_RIGHT@{JOINT\_SHOULDER\_AXIS1\_RIGHT}}
+\index{JOINT\_SHOULDER\_AXIS1\_RIGHT@{JOINT\_SHOULDER\_AXIS1\_RIGHT}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS1\_RIGHT}{JOINT\_SHOULDER\_AXIS1\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+following\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+shoulder\+\_\+axis1\char`\"{}}
+
+
+
+Definition at line 76 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a95784ab115aa92aafcfc54f38bcaafc2}\label{namespacesteering__trajectory__following__test_a95784ab115aa92aafcfc54f38bcaafc2}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!JOINT\_SHOULDER\_AXIS2\_LEFT@{JOINT\_SHOULDER\_AXIS2\_LEFT}}
+\index{JOINT\_SHOULDER\_AXIS2\_LEFT@{JOINT\_SHOULDER\_AXIS2\_LEFT}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS2\_LEFT}{JOINT\_SHOULDER\_AXIS2\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+following\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+shoulder\+\_\+axis2\char`\"{}}
+
+
+
+Definition at line 80 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_acf310dab770cd8f3e7f0409bafdbfb80}\label{namespacesteering__trajectory__following__test_acf310dab770cd8f3e7f0409bafdbfb80}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!JOINT\_SHOULDER\_AXIS2\_RIGHT@{JOINT\_SHOULDER\_AXIS2\_RIGHT}}
+\index{JOINT\_SHOULDER\_AXIS2\_RIGHT@{JOINT\_SHOULDER\_AXIS2\_RIGHT}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS2\_RIGHT}{JOINT\_SHOULDER\_AXIS2\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+following\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+shoulder\+\_\+axis2\char`\"{}}
+
+
+
+Definition at line 77 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a3a58ea85a8bc020017166eb776399262}\label{namespacesteering__trajectory__following__test_a3a58ea85a8bc020017166eb776399262}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!JOINT\_WRIST\_0\_LEFT@{JOINT\_WRIST\_0\_LEFT}}
+\index{JOINT\_WRIST\_0\_LEFT@{JOINT\_WRIST\_0\_LEFT}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{JOINT\_WRIST\_0\_LEFT}{JOINT\_WRIST\_0\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+following\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+wrist\+\_\+0\char`\"{}}
+
+
+
+Definition at line 87 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a4ca6c59cd0baabbd4197019a8b0118ea}\label{namespacesteering__trajectory__following__test_a4ca6c59cd0baabbd4197019a8b0118ea}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!JOINT\_WRIST\_0\_RIGHT@{JOINT\_WRIST\_0\_RIGHT}}
+\index{JOINT\_WRIST\_0\_RIGHT@{JOINT\_WRIST\_0\_RIGHT}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{JOINT\_WRIST\_0\_RIGHT}{JOINT\_WRIST\_0\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+following\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+wrist\+\_\+0\char`\"{}}
+
+
+
+Definition at line 85 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_abfc90e80f3a6b56330e318c71578ec12}\label{namespacesteering__trajectory__following__test_abfc90e80f3a6b56330e318c71578ec12}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!JOINT\_WRIST\_1\_LEFT@{JOINT\_WRIST\_1\_LEFT}}
+\index{JOINT\_WRIST\_1\_LEFT@{JOINT\_WRIST\_1\_LEFT}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{JOINT\_WRIST\_1\_LEFT}{JOINT\_WRIST\_1\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+following\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+wrist\+\_\+1\char`\"{}}
+
+
+
+Definition at line 88 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a760ce96026a20c86c4729886030b45f9}\label{namespacesteering__trajectory__following__test_a760ce96026a20c86c4729886030b45f9}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!JOINT\_WRIST\_1\_RIGHT@{JOINT\_WRIST\_1\_RIGHT}}
+\index{JOINT\_WRIST\_1\_RIGHT@{JOINT\_WRIST\_1\_RIGHT}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{JOINT\_WRIST\_1\_RIGHT}{JOINT\_WRIST\_1\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+trajectory\+\_\+following\+\_\+test.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+wrist\+\_\+1\char`\"{}}
+
+
+
+Definition at line 86 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a9bd926a4a846deabbe48eab3e7219a77}\label{namespacesteering__trajectory__following__test_a9bd926a4a846deabbe48eab3e7219a77}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!MAX\_TURNING\_ANGLE@{MAX\_TURNING\_ANGLE}}
+\index{MAX\_TURNING\_ANGLE@{MAX\_TURNING\_ANGLE}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{MAX\_TURNING\_ANGLE}{MAX\_TURNING\_ANGLE}}
+{\footnotesize\ttfamily int steering\+\_\+trajectory\+\_\+following\+\_\+test.\+M\+A\+X\+\_\+\+T\+U\+R\+N\+I\+N\+G\+\_\+\+A\+N\+G\+LE = math.\+pi/15}
+
+
+
+M\+O\+D\+U\+LE P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#. 
+
+
+
+Definition at line 30 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a1eceaea757386a63dd208fe6c3407887}\label{namespacesteering__trajectory__following__test_a1eceaea757386a63dd208fe6c3407887}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!NUM\_STEERING\_ANGLES@{NUM\_STEERING\_ANGLES}}
+\index{NUM\_STEERING\_ANGLES@{NUM\_STEERING\_ANGLES}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{NUM\_STEERING\_ANGLES}{NUM\_STEERING\_ANGLES}}
+{\footnotesize\ttfamily int steering\+\_\+trajectory\+\_\+following\+\_\+test.\+N\+U\+M\+\_\+\+S\+T\+E\+E\+R\+I\+N\+G\+\_\+\+A\+N\+G\+L\+ES = 61}
+
+
+
+Definition at line 31 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a004b0c34aea2307ae6445ecd4279d401}\label{namespacesteering__trajectory__following__test_a004b0c34aea2307ae6445ecd4279d401}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!RIKSHAW\_TURN\_JOINT\_X\_OFFSET@{RIKSHAW\_TURN\_JOINT\_X\_OFFSET}}
+\index{RIKSHAW\_TURN\_JOINT\_X\_OFFSET@{RIKSHAW\_TURN\_JOINT\_X\_OFFSET}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{RIKSHAW\_TURN\_JOINT\_X\_OFFSET}{RIKSHAW\_TURN\_JOINT\_X\_OFFSET}}
+{\footnotesize\ttfamily float steering\+\_\+trajectory\+\_\+following\+\_\+test.\+R\+I\+K\+S\+H\+A\+W\+\_\+\+T\+U\+R\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+X\+\_\+\+O\+F\+F\+S\+ET = 0.\+7163902600571725+0.\+23003546879794612}
+
+
+
+Definition at line 49 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_ae18e7d3e16b872bcc8bf62cb263a109e}\label{namespacesteering__trajectory__following__test_ae18e7d3e16b872bcc8bf62cb263a109e}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!RIKSHAW\_TURN\_JOINT\_Y\_OFFSET@{RIKSHAW\_TURN\_JOINT\_Y\_OFFSET}}
+\index{RIKSHAW\_TURN\_JOINT\_Y\_OFFSET@{RIKSHAW\_TURN\_JOINT\_Y\_OFFSET}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{RIKSHAW\_TURN\_JOINT\_Y\_OFFSET}{RIKSHAW\_TURN\_JOINT\_Y\_OFFSET}}
+{\footnotesize\ttfamily float steering\+\_\+trajectory\+\_\+following\+\_\+test.\+R\+I\+K\+S\+H\+A\+W\+\_\+\+T\+U\+R\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+Y\+\_\+\+O\+F\+F\+S\+ET = -\/0.\+010388552466272516+0.\+010388308199859624}
+
+
+
+Definition at line 50 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_aaafe07ee8e5a288632dc7bcd5c29f91e}\label{namespacesteering__trajectory__following__test_aaafe07ee8e5a288632dc7bcd5c29f91e}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!RIKSHAW\_TURN\_JOINT\_Z\_OFFSET@{RIKSHAW\_TURN\_JOINT\_Z\_OFFSET}}
+\index{RIKSHAW\_TURN\_JOINT\_Z\_OFFSET@{RIKSHAW\_TURN\_JOINT\_Z\_OFFSET}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{RIKSHAW\_TURN\_JOINT\_Z\_OFFSET}{RIKSHAW\_TURN\_JOINT\_Z\_OFFSET}}
+{\footnotesize\ttfamily float steering\+\_\+trajectory\+\_\+following\+\_\+test.\+R\+I\+K\+S\+H\+A\+W\+\_\+\+T\+U\+R\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+Z\+\_\+\+O\+F\+F\+S\+ET = 0.\+2164376942146126-\/0.\+20527069599791542}
+
+
+
+Definition at line 51 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a8fc58cbdf64094b4d9cc2e0bb3319825}\label{namespacesteering__trajectory__following__test_a8fc58cbdf64094b4d9cc2e0bb3319825}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!YAW\_LEFT\_HAND\_OFFSET@{YAW\_LEFT\_HAND\_OFFSET}}
+\index{YAW\_LEFT\_HAND\_OFFSET@{YAW\_LEFT\_HAND\_OFFSET}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{YAW\_LEFT\_HAND\_OFFSET}{YAW\_LEFT\_HAND\_OFFSET}}
+{\footnotesize\ttfamily int steering\+\_\+trajectory\+\_\+following\+\_\+test.\+Y\+A\+W\+\_\+\+L\+E\+F\+T\+\_\+\+H\+A\+N\+D\+\_\+\+O\+F\+F\+S\+ET = 3 $\ast$ math.\+pi / 2 + math.\+pi}
+
+
+
+Definition at line 54 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+
+\mbox{\Hypertarget{namespacesteering__trajectory__following__test_a0f1fc685145b73065e03bc8d450e7c44}\label{namespacesteering__trajectory__following__test_a0f1fc685145b73065e03bc8d450e7c44}} 
+\index{steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}!YAW\_RIGHT\_HAND\_OFFSET@{YAW\_RIGHT\_HAND\_OFFSET}}
+\index{YAW\_RIGHT\_HAND\_OFFSET@{YAW\_RIGHT\_HAND\_OFFSET}!steering\_trajectory\_following\_test@{steering\_trajectory\_following\_test}}
+\subsubsection{\texorpdfstring{YAW\_RIGHT\_HAND\_OFFSET}{YAW\_RIGHT\_HAND\_OFFSET}}
+{\footnotesize\ttfamily int steering\+\_\+trajectory\+\_\+following\+\_\+test.\+Y\+A\+W\+\_\+\+R\+I\+G\+H\+T\+\_\+\+H\+A\+N\+D\+\_\+\+O\+F\+F\+S\+ET = math.\+pi / 2 + math.\+pi}
+
+
+
+Definition at line 53 of file steering\+\_\+trajectory\+\_\+following\+\_\+test.\+py.
+

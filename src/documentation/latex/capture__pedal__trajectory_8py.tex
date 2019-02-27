@@ -1,0 +1,87 @@
+\hypertarget{capture__pedal__trajectory_8py}{}\section{pedaling/trajectory\+\_\+pedaling/capture\+\_\+pedal\+\_\+trajectory.py File Reference}
+\label{capture__pedal__trajectory_8py}\index{pedaling/trajectory\_pedaling/capture\_pedal\_trajectory.py@{pedaling/trajectory\_pedaling/capture\_pedal\_trajectory.py}}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespacecapture__pedal__trajectory}{capture\+\_\+pedal\+\_\+trajectory}}
+\item 
+ \mbox{\hyperlink{namespacepedaling}{pedaling}}
+\begin{DoxyCompactList}\small\item\em Documentation for this module. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacecapture__pedal__trajectory_a8d1d532a39c3c5a5efe8d6110ecd1723}{capture\+\_\+pedal\+\_\+trajectory.\+get\+Position\+Left\+Foot}} ()
+\begin{DoxyCompactList}\small\item\em U\+T\+I\+L\+I\+TY F\+U\+N\+C\+T\+I\+O\+NS \#\#\#. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacecapture__pedal__trajectory_abd2b89d215476e10e9079f6f971a669c}{capture\+\_\+pedal\+\_\+trajectory.\+get\+Position\+Right\+Foot}} ()
+\item 
+def \mbox{\hyperlink{namespacecapture__pedal__trajectory_a00dff2df306072da5d299eba96e79b4b}{capture\+\_\+pedal\+\_\+trajectory.\+set\+Joint\+Controller\+Parameters}} (proportional\+Val, derivative\+Val)
+\item 
+def \mbox{\hyperlink{namespacecapture__pedal__trajectory_ac931a7ae623a2c8c8df34da551639cce}{capture\+\_\+pedal\+\_\+trajectory.\+joint\+State\+Callback}} (joint\+\_\+data)
+\item 
+def \mbox{\hyperlink{namespacecapture__pedal__trajectory_a73fc41de533fbb350b426e9c08886203}{capture\+\_\+pedal\+\_\+trajectory.\+get\+Pedal\+Positions}} (num\+Samples)
+\item 
+def \mbox{\hyperlink{namespacecapture__pedal__trajectory_ab92d9c5ee601a8497311ab922392e027}{capture\+\_\+pedal\+\_\+trajectory.\+plot\+Pedal\+Trajectories}} ()
+\item 
+def \mbox{\hyperlink{namespacecapture__pedal__trajectory_a54694682225635fb5a735f159e9f059c}{capture\+\_\+pedal\+\_\+trajectory.\+plot\+Everything}} (num\+Samples, joint\+Angle\+Dict)
+\item 
+def \mbox{\hyperlink{namespacecapture__pedal__trajectory_affbe4020d535c4967511b40d3aef141d}{capture\+\_\+pedal\+\_\+trajectory.\+inverse\+\_\+kinematics\+\_\+client}} (endeffector, frame, x, y, z)
+\item 
+def \mbox{\hyperlink{namespacecapture__pedal__trajectory_af4a490afbf4bfcafcd9d2d733ea5fac1}{capture\+\_\+pedal\+\_\+trajectory.\+inverse\+\_\+kinematics\+\_\+two\+\_\+frames\+\_\+client}} (endeffector, frame1, x1, y1, z1, weight1, frame2, x2, y2, z2, weight2)
+\item 
+def \mbox{\hyperlink{namespacecapture__pedal__trajectory_ae43bcee5928a71a9e44c3400a772a161}{capture\+\_\+pedal\+\_\+trajectory.\+main}} ()
+\begin{DoxyCompactList}\small\item\em M\+A\+IN \#\#\#. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{namespacecapture__pedal__trajectory_ad1d5add611204b12043a126abb98492c}{capture\+\_\+pedal\+\_\+trajectory.\+J\+S\+O\+N\+\_\+\+F\+I\+L\+E\+N\+A\+ME}} = \char`\"{}captured\+\_\+pedal\+\_\+trajectory\+\_\+06feb.\+json\char`\"{}
+\item 
+float \mbox{\hyperlink{namespacecapture__pedal__trajectory_ab099221b0d5408d71443d0ec46c934dd}{capture\+\_\+pedal\+\_\+trajectory.\+J\+O\+I\+N\+T\+\_\+\+A\+N\+G\+L\+E\+\_\+\+T\+O\+L\+E\+R\+A\+N\+C\+E\+\_\+\+FK}} = 0.\+05
+\item 
+int \mbox{\hyperlink{namespacecapture__pedal__trajectory_a17f32ce02010543add42596faff74a22}{capture\+\_\+pedal\+\_\+trajectory.\+J\+O\+I\+N\+T\+\_\+\+KP}} = 500
+\item 
+int \mbox{\hyperlink{namespacecapture__pedal__trajectory_aafb2017b021edc06d1500bcb8965fed9}{capture\+\_\+pedal\+\_\+trajectory.\+J\+O\+I\+N\+T\+\_\+\+KD}} = 0
+\item 
+float \mbox{\hyperlink{namespacecapture__pedal__trajectory_a3d0288c92be21566c30d330ec9b04ddf}{capture\+\_\+pedal\+\_\+trajectory.\+P\+E\+D\+A\+L\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+X}} = 0.\+09223
+\begin{DoxyCompactList}\small\item\em M\+E\+A\+S\+U\+R\+ED P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{namespacecapture__pedal__trajectory_ad3b6cdad0edebb959ecdb76e709876f4}{capture\+\_\+pedal\+\_\+trajectory.\+P\+E\+D\+A\+L\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Y}} = 0.\+00013
+\item 
+float \mbox{\hyperlink{namespacecapture__pedal__trajectory_adecb66f79b8a878ce63c441bbd250b0e}{capture\+\_\+pedal\+\_\+trajectory.\+P\+E\+D\+A\+L\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Z}} = 0.\+00426
+\item 
+int \mbox{\hyperlink{namespacecapture__pedal__trajectory_a1b49dec5499551d0e71e6ab97ff29212}{capture\+\_\+pedal\+\_\+trajectory.\+B\+I\+K\+E\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+X}} = 0
+\item 
+int \mbox{\hyperlink{namespacecapture__pedal__trajectory_a475c3dee13003f3ece2d10e85edb1f83}{capture\+\_\+pedal\+\_\+trajectory.\+B\+I\+K\+E\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Y}} = 0
+\item 
+int \mbox{\hyperlink{namespacecapture__pedal__trajectory_ae56ea6a6121fd586046b998e9cb04733}{capture\+\_\+pedal\+\_\+trajectory.\+B\+I\+K\+E\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Z}} = 0
+\item 
+float \mbox{\hyperlink{namespacecapture__pedal__trajectory_a4a76a55d0312e30b5da43583ce1f53ea}{capture\+\_\+pedal\+\_\+trajectory.\+P\+E\+D\+A\+L\+\_\+\+R\+A\+D\+I\+US}} = 0.\+16924
+\item 
+float \mbox{\hyperlink{namespacecapture__pedal__trajectory_abc5f034cd21c3878a3d10594ad89e589}{capture\+\_\+pedal\+\_\+trajectory.\+R\+I\+G\+H\+T\+\_\+\+L\+E\+G\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Y}} = 0.\+15796
+\item 
+float \mbox{\hyperlink{namespacecapture__pedal__trajectory_a624e3b2ffb27de7ac8ef0f742d2902c5}{capture\+\_\+pedal\+\_\+trajectory.\+L\+E\+F\+T\+\_\+\+L\+E\+G\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Y}} = -\/0.\+18736
+\item 
+string \mbox{\hyperlink{namespacecapture__pedal__trajectory_ace3bd5ff6f7bfb6e65aadc4487a89ffe}{capture\+\_\+pedal\+\_\+trajectory.\+R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+H\+I\+P\+\_\+\+R\+I\+G\+HT}} = \char`\"{}joint\+\_\+hip\+\_\+right\char`\"{}
+\begin{DoxyCompactList}\small\item\em G\+L\+O\+B\+AL V\+A\+R\+I\+A\+B\+L\+ES \#\#\#. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{namespacecapture__pedal__trajectory_a79c63fa5ca37fc7f030568dfe7079f73}{capture\+\_\+pedal\+\_\+trajectory.\+R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+K\+N\+E\+E\+\_\+\+R\+I\+G\+HT}} = \char`\"{}joint\+\_\+knee\+\_\+right\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacecapture__pedal__trajectory_ae399b4f7124a1cd67c10a5ff5a0efba5}{capture\+\_\+pedal\+\_\+trajectory.\+R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+R\+I\+G\+HT}} = \char`\"{}joint\+\_\+foot\+\_\+right\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacecapture__pedal__trajectory_af2271fa55dd911979e17d7a7bd891e42}{capture\+\_\+pedal\+\_\+trajectory.\+R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+H\+I\+P\+\_\+\+L\+E\+FT}} = \char`\"{}joint\+\_\+hip\+\_\+left\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacecapture__pedal__trajectory_a2573f1326727542b82629e3ba73f57fd}{capture\+\_\+pedal\+\_\+trajectory.\+R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+K\+N\+E\+E\+\_\+\+L\+E\+FT}} = \char`\"{}joint\+\_\+knee\+\_\+left\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacecapture__pedal__trajectory_a07733166d6384f69b9880e18c9c70fb3}{capture\+\_\+pedal\+\_\+trajectory.\+R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+L\+E\+FT}} = \char`\"{}joint\+\_\+foot\+\_\+left\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacecapture__pedal__trajectory_a82263d3cb2967d2b210c72d013362610}{capture\+\_\+pedal\+\_\+trajectory.\+R\+I\+G\+H\+T\+\_\+\+H\+I\+P\+\_\+\+J\+O\+I\+NT}} = \char`\"{}right\+\_\+hip\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacecapture__pedal__trajectory_a13c6b4844291f74230c8fa8376e4c14f}{capture\+\_\+pedal\+\_\+trajectory.\+R\+I\+G\+H\+T\+\_\+\+K\+N\+E\+E\+\_\+\+J\+O\+I\+NT}} = \char`\"{}right\+\_\+knee\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacecapture__pedal__trajectory_aeaa979292407a578df6b6ed8088b908d}{capture\+\_\+pedal\+\_\+trajectory.\+R\+I\+G\+H\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+J\+O\+I\+NT}} = \char`\"{}right\+\_\+ankle\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacecapture__pedal__trajectory_ae837fb7d509f64b8c35bad991e20eb06}{capture\+\_\+pedal\+\_\+trajectory.\+L\+E\+F\+T\+\_\+\+H\+I\+P\+\_\+\+J\+O\+I\+NT}} = \char`\"{}left\+\_\+hip\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacecapture__pedal__trajectory_a4ac7e5482c7632b894bddac8c4e4c314}{capture\+\_\+pedal\+\_\+trajectory.\+L\+E\+F\+T\+\_\+\+K\+N\+E\+E\+\_\+\+J\+O\+I\+NT}} = \char`\"{}left\+\_\+knee\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacecapture__pedal__trajectory_a498ea7bdb7ff782e4c26e38ec4c119c7}{capture\+\_\+pedal\+\_\+trajectory.\+L\+E\+F\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+J\+O\+I\+NT}} = \char`\"{}left\+\_\+ankle\char`\"{}
+\item 
+dictionary \mbox{\hyperlink{namespacecapture__pedal__trajectory_a240d770bc46f43f1b4e5591bf959fd9b}{capture\+\_\+pedal\+\_\+trajectory.\+\_\+joints\+Status\+Data}}
+\end{DoxyCompactItemize}
