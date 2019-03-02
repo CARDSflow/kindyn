@@ -7,7 +7,7 @@ Robot::Robot() {
         int argc = 0;
         char **argv = NULL;
         ros::init(argc, argv, "CARDSflow robot", ros::init_options::NoSigintHandler);
-    } //namespace stuff work it out here for every instance
+    }
     nh = ros::NodeHandlePtr(new ros::NodeHandle);
     spinner.reset(new ros::AsyncSpinner(0));
     spinner->start();

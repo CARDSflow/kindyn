@@ -1,5 +1,6 @@
 #include "kindyn/robot.hpp"
 #include <thread>
+#include "../../include/kindyn/gymFunctions.h"
 #include <roboy_middleware_msgs/MotorCommand.h>
 #include <roboy_simulation_msgs/GymStep.h>
 #include <roboy_simulation_msgs/GymReset.h>
@@ -7,6 +8,7 @@
 #include <common_utilities/CommonDefinitions.h>
 #include <stdlib.h> /* atoi*/
 #include <limits>
+
 
 #define NUMBER_OF_MOTORS 8
 #define SPINDLERADIUS 0.00575
@@ -37,9 +39,9 @@ public:
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
 
 
-        initService(id);
+        //initService(id);
 
-        readJointLimits();
+        //readJointLimits();
 
         vector<string> joint_names; // first we retrieve the active joint names from the parameter server
         nh->getParam("joint_names", joint_names);
@@ -49,9 +51,11 @@ public:
         nh->getParam("external_robot_state", external_robot_state); // if we do not get the robot state externally, we use the forwardKinematics function to integrate the robot state
 
         update();
+
         for(int i=0;i<NUMBER_OF_MOTORS;i++)
             l_offset[i] = l[i];
 
+        gymFunctions gf(id);
     };
 
     ///Open AI Gym services
@@ -322,8 +326,8 @@ int main(int argc, char *argv[]) {
         platforms.push_back(platform);
     }
 
-    ros::waitForShutdown();
 
+    ros::waitForShutdown();
 
     ROS_INFO("TERMINATING...");
 

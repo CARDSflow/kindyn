@@ -101,6 +101,9 @@ add_dependencies(kindyn roboy_simulation_msgs_generate_messages_cpp roboy_simula
 target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CardsflowHardwareInterface
 		CableLengthController TorquePositionController ForcePositionController)
 
+add_library(gym src/gymFunctions.cpp)
+target_link_libraries(gym ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+
 # testing idyntree
 add_executable( test_idyntree src/test_idyntree.cpp)
 target_link_libraries(test_idyntree ${iDynTree_LIBRARIES} ${catkin_LIBRARIES})
@@ -109,9 +112,9 @@ target_link_libraries(test_idyntree ${iDynTree_LIBRARIES} ${catkin_LIBRARIES})
 add_executable( test_robot src/robots/test_robot.cpp)
 target_link_libraries(test_robot ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
-# msj_platform
+#msj_platform
 add_executable( msj_platform src/robots/msj_platform.cpp)
-target_link_libraries(msj_platform ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+target_link_libraries(msj_platform ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn gym)
 
 # roboy_upper_body
 #add_executable( roboy_upper_body src/robots/roboy_upper_body.cpp)
