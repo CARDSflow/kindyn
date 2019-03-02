@@ -323,9 +323,13 @@ int main(int argc, char *argv[]) {
 
 
     vector<boost::shared_ptr<MsjPlatform>> platforms;
+    vector<boost::shared_ptr<gymFunctions>> gymFuncs;
     for(int id = 0; id < workers; id++) {
         boost::shared_ptr<MsjPlatform> platform(new MsjPlatform(urdf, cardsflow_xml, id + 1));
+        cardsflow::kindyn::Robot* ref = &*platform;
+        boost::shared_ptr<gymFunctions> gym(new gymFunctions(id + 1, ref));
         platforms.push_back(platform);
+        gymFuncs.push_back(gym);
     }
 
     ros::waitForShutdown();

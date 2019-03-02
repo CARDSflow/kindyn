@@ -24,7 +24,6 @@ gymFunctions::gymFunctions(int id, cardsflow::kindyn::Robot* robot){
     gym_read_state = nh.advertiseService("/instance" + to_string(id) + "/gym_read_state", &gymFunctions::GymReadStateService,this);
     gym_reset = nh.advertiseService("/instance" + to_string(id) + "/gym_reset", &gymFunctions::GymResetService,this);
     fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
-    ros::waitForShutdown();
 }
 
 ///set the gymstep function response
