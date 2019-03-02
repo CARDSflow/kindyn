@@ -16,10 +16,10 @@
 using namespace std;
 using namespace Eigen;
 
-class gymFunctions: public cardsflow::kindyn::Robot{
+class gymFunctions {
 public:
 
-    gymFunctions(int id);
+    gymFunctions(int id, cardsflow::kindyn::Robot* training_robot);
 
     bool GymStepService(roboy_simulation_msgs::GymStep::Request &req,
                  roboy_simulation_msgs::GymStep::Response &res);
@@ -32,7 +32,8 @@ public:
 
 
 private:
-
+    Eigen::IOFormat fmt; /// formator for terminal printouts
+    cardsflow::kindyn::Robot* training_robot;
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::ServiceServer gym_step; /// OpenAI Gym training environment step function, ros service instance
     ros::ServiceServer gym_read_state; ///OpenAI Gym training environment observation function, returns q, qdot and feasibility

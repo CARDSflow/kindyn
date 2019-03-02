@@ -38,7 +38,6 @@ public:
         spinner->start();
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
 
-
         //initService(id);
 
         //readJointLimits();
@@ -55,7 +54,9 @@ public:
         for(int i=0;i<NUMBER_OF_MOTORS;i++)
             l_offset[i] = l[i];
 
-        gymFunctions gf(id);
+        cardsflow::kindyn::Robot* ref = this;
+        gymFunctions gf(id, ref);
+
     };
 
     ///Open AI Gym services
@@ -320,12 +321,12 @@ int main(int argc, char *argv[]) {
     int workers = atoi( argv[1]);
     cout << "\nNUMBER OF WORKERS " << workers << endl;
 
+
     vector<boost::shared_ptr<MsjPlatform>> platforms;
     for(int id = 0; id < workers; id++) {
         boost::shared_ptr<MsjPlatform> platform(new MsjPlatform(urdf, cardsflow_xml, id + 1));
         platforms.push_back(platform);
     }
-
 
     ros::waitForShutdown();
 

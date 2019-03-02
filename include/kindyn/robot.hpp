@@ -260,6 +260,11 @@ namespace cardsflow {
 
             MatrixXd S, P, V, W; /// matrices of cable model
             vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments
+
+            typedef boost::array< double , 2 > state_type; /// second order dynamics integration
+            double integration_time =0; /// odeint integration time
+            vector<state_type> joint_state, motor_state; /// joint and cable states
+
         protected:
             iDynTree::FreeFloatingGeneralizedTorques bias; /// Coriolis+Gravity term
             iDynTree::MatrixDynSize Mass; /// Mass matrix
@@ -272,9 +277,6 @@ namespace cardsflow {
             vector <string> link_names, joint_names; /// link and joint names of the robot
             map<string, int> link_index, joint_index; /// link and joint indices of the robot
             vector<int> controller_type; /// currently active controller type
-            double integration_time =0; /// odeint integration time
-            typedef boost::array< double , 2 > state_type; /// second order dynamics integration
-            vector<state_type> joint_state, motor_state; /// joint and cable states
             bool first_time_solving = true;
             int nWSR = 1000; /// qp working sets
             VectorXd f_min, f_max;
