@@ -40,7 +40,7 @@ public:
 
         //initService(id);
 
-        //readJointLimits();
+        readJointLimits();
 
         vector<string> joint_names; // first we retrieve the active joint names from the parameter server
         nh->getParam("joint_names", joint_names);
@@ -54,8 +54,6 @@ public:
         for(int i=0;i<NUMBER_OF_MOTORS;i++)
             l_offset[i] = l[i];
 
-        cardsflow::kindyn::Robot* ref = this;
-        gymFunctions gf(id, ref);
 
     };
 
@@ -143,6 +141,7 @@ public:
         }
         return c;
     }
+
     bool GymGoalService(roboy_simulation_msgs::GymGoal::Request &req,
                         roboy_simulation_msgs::GymGoal::Response &res){
         bool not_feasible = true;
@@ -270,7 +269,6 @@ public:
 
 private:
 
-    bool external_robot_state; /// indicates if we get the robot state externally
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
 
@@ -278,11 +276,15 @@ private:
     ros::ServiceServer gym_read_state; //OpenAI Gym training environment observation function, returns q, qdot and feasbility
     ros::ServiceServer gym_reset; //OpenAI Gym training environment reset function, ros service instance
     ros::ServiceServer gym_goal; //OpenAI Gym training environment sets new feasible goal function, ros service instance
-
+    /*
+    bool external_robot_state; /// indicates if we get the robot state externally
     vector<double> limits[3];
+    double min[3] = {0,0,-1}, max[3] = {0,0,1};
+     */
+
     double l_offset[NUMBER_OF_MOTORS];
     boost::shared_ptr <ros::AsyncSpinner> spinner;
-    double min[3] = {0,0,-1}, max[3] = {0,0,1};
+
 };
 
 /**
@@ -327,7 +329,7 @@ int main(int argc, char *argv[]) {
     for(int id = 0; id < workers; id++) {
         boost::shared_ptr<MsjPlatform> platform(new MsjPlatform(urdf, cardsflow_xml, id + 1));
         cardsflow::kindyn::Robot* ref = &*platform;
-        boost::shared_ptr<gymFunctions> gym(new gymFunctions(id + 1, ref));
+        boost::shared_ptr<gymFunctions> gym(new gymFunctions(id + 1, ref, true));
         platforms.push_back(platform);
         gymFuncs.push_back(gym);
     }
