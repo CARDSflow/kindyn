@@ -13,6 +13,9 @@ gymFunctions::gymFunctions(cardsflow::kindyn::Robot* robot, int id, bool respect
 
     training_robot = robot;
     training_with_limits = respect_limits;
+    last_action.resize(training_robot->number_of_cables);
+    last_action.setZero();
+
 
     gym_step = nh->advertiseService("/instance" + to_string(id) + "/gym_step", &gymFunctions::GymStepService,this);
     gym_read_state = nh->advertiseService("/instance" + to_string(id) + "/gym_read_state", &gymFunctions::GymReadStateService,this);
@@ -26,16 +29,16 @@ bool gymFunctions::GymStepService(roboy_simulation_msgs::GymStep::Request &req,
                                   roboy_simulation_msgs::GymStep::Response &res){
     training_robot->update();
 
-    for(int i=0; i< training_robot->number_of_cables; i++){
-        //Set the commanded tendon velocity from RL agent to simulation
-        training_robot->Ld[0][i] = req.set_points[i];
-    }
+    VectorXd l_action = VectorXd::Map(req.set_points.data(), req.set_points.size());
+    VectorXd ld_command = (l_action - last_action) / req.step_size;
+    training_robot->Ld[0] = ld_command;
+    last_action = training_robot->Ld[0];
 
     if(!training_robot->getExternalRobotState())
         training_robot->forwardKinematics(req.step_size);
 
     ROS_INFO_STREAM_THROTTLE(5, "Ld = " << training_robot->Ld[0].format(fmt));
-
+    //write();
     if(training_with_limits){
         res.feasible = isFeasible(training_robot->getLimitVector(0), training_robot->getLimitVector(1), training_robot->q[0], training_robot->q[1]);
         if(!res.feasible){
@@ -65,6 +68,7 @@ bool gymFunctions::GymResetService(roboy_simulation_msgs::GymReset::Request &req
                                    roboy_simulation_msgs::GymReset::Response &res){
 
     training_robot->setIntegrationTime(0.0);
+    last_action.setZero();
 
     VectorXd jointAngle, jointVel;
     jointAngle.resize(training_robot->number_of_dofs);
