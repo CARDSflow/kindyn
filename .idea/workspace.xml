@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="795ba161-a500-4cad-8415-72852ddd5039" name="Default Changelist" comment="">
+    <list default="true" id="795ba161-a500-4cad-8415-72852ddd5039" name="Default Changelist" comment="reformated files">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/documentation/html/menudata.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/documentation/html/menudata.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/documentation/html/search/searchdata.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/documentation/html/search/searchdata.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/documentation/latex/refman.tex" beforeDir="false" afterPath="$PROJECT_DIR$/src/documentation/latex/refman.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/steering/steering_simulation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/steering/steering_simulation.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,55 +14,93 @@
     <session id="2044293476">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
+          <entry key="project.closed" value="2" />
+          <entry key="project.open.time.11" value="1" />
           <entry key="project.open.time.2" value="1" />
-          <entry key="project.opened" value="1" />
+          <entry key="project.opened" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="md" value="3" />
-          <entry key="py" value="15" />
+          <entry key="Doxyfile" value="2" />
+          <entry key="js" value="1" />
+          <entry key="md" value="4" />
+          <entry key="py" value="41" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Markdown" value="3" />
-          <entry key="Python" value="15" />
+          <entry key="JavaScript" value="1" />
+          <entry key="Markdown" value="4" />
+          <entry key="PLAIN_TEXT" value="2" />
+          <entry key="Python" value="41" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="md" value="853" />
-          <entry key="py" value="21" />
+          <entry key="Doxyfile" value="76" />
+          <entry key="dummy" value="164" />
+          <entry key="md" value="1170" />
+          <entry key="py" value="183" />
           <entry key="txt" value="69" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Markdown" value="853" />
-          <entry key="PLAIN_TEXT" value="69" />
-          <entry key="Python" value="21" />
+          <entry key="Markdown" value="1170" />
+          <entry key="PLAIN_TEXT" value="309" />
+          <entry key="Python" value="183" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="true">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/steering/steering_simulation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="465">
-              <caret line="41" column="28" lean-forward="true" selection-start-line="41" selection-start-column="28" selection-end-line="41" selection-end-column="28" />
+            <state relative-caret-position="420">
+              <caret line="28" column="51" selection-start-line="28" selection-start-column="51" selection-end-line="28" selection-end-column="51" />
+              <folding>
+                <element signature="e#593#630#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pedaling/pedal_simulation.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="165">
+              <caret line="11" column="32" selection-start-line="11" selection-start-column="32" selection-end-line="11" selection-end-column="32" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pedaling/trajectory_pedaling/capture_pedal_trajectory.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="1" selection-start-line="1" selection-end-line="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pedaling/development_pedaling/pedal_simulation_interpolation_cubic_derivative.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="45">
+              <caret line="3" lean-forward="true" selection-start-line="2" selection-start-column="2" selection-end-line="3" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor>
-                <caret lean-forward="true" />
+              <first_editor relative-caret-position="405">
+                <caret line="27" column="28" selection-start-line="27" selection-start-column="28" selection-end-line="27" selection-end-column="28" />
               </first_editor>
               <second_editor />
             </state>
@@ -75,24 +109,47 @@
       </file>
     </leaf>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>rospy.ServiceException, e</find>
+      <find>except except</find>
+      <find>inverse_kinematics_client</find>
+      <find>OPTIMIZE_OUTPUT_JAVA</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>except rospy.ServiceException as e</replace>
+      <replace>except</replace>
+    </replaceStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/README.md" />
         <option value="$PROJECT_DIR$/src/pedaling/pedal_simulation_old_trajectory.py" />
         <option value="$PROJECT_DIR$/src/steering/trajectory_steering/capture_steering_trajectory.py" />
         <option value="$PROJECT_DIR$/src/steering/trajectory_steering/interpolate_multiple_steering.py" />
-        <option value="$PROJECT_DIR$/src/steering/trajectory_steering/compute_steering_path.py" />
         <option value="$PROJECT_DIR$/src/pedaling/trajectory_pedaling/capture_pedal_trajectory_two_frames.py" />
-        <option value="$PROJECT_DIR$/src/pedaling/trajectory_pedaling/capture_pedal_trajectory.py" />
-        <option value="$PROJECT_DIR$/src/pedaling/pedal_simulation.py" />
-        <option value="$PROJECT_DIR$/src/pedaling/pedal_simulation_interpolation.py" />
         <option value="$PROJECT_DIR$/src/steering/trajectory_steering/multiple_steering_trajectories.py" />
-        <option value="$PROJECT_DIR$/src/steering/steering_simulation.py" />
         <option value="$PROJECT_DIR$/src/steering/doxytest.py" />
+        <option value="$PROJECT_DIR$/src/pedaling/pedal_simulation_interpolation_lennard.py" />
+        <option value="$PROJECT_DIR$/src/pedaling/development_pedaling/pedal_simulation_linear_interpolation_trajectory_points.py" />
+        <option value="$PROJECT_DIR$/src/pedaling/pedal_simulation_interpolation.py" />
+        <option value="$PROJECT_DIR$/src/pedaling/pedal_simulation.py" />
+        <option value="$PROJECT_DIR$/src/pedaling/tests_pedaling/velocity_test.py" />
+        <option value="$PROJECT_DIR$/src/steering/steering_simulation.py" />
+        <option value="$PROJECT_DIR$/src/Doxyfile" />
+        <option value="$PROJECT_DIR$/src/steering/tests_steering/steering_trajectory_following_test.py" />
+        <option value="$PROJECT_DIR$/src/steering/trajectory_steering/compute_steering_path.py" />
+        <option value="$PROJECT_DIR$/src/steering/trajectory_steering/steering_capture_multiple_trajectories.py" />
+        <option value="$PROJECT_DIR$/src/steering/trajectory_steering/steering_capture_trajectory.py" />
+        <option value="$PROJECT_DIR$/src/steering/trajectory_steering/steering_interpolate_and_print.py" />
+        <option value="$PROJECT_DIR$/src/steering/trajectory_steering/steering_interpolate_multiple_trajectories_and_print.py" />
+        <option value="$PROJECT_DIR$/src/pedaling/development_pedaling/pedal_simulation_interpolation_cubic_derivative.py" />
+        <option value="$PROJECT_DIR$/src/pedaling/development_pedaling/pedal_simulation_interpolation_linear_trajectory_points.py" />
+        <option value="$PROJECT_DIR$/src/pedaling/trajectory_pedaling/capture_pedal_trajectory.py" />
+        <option value="$PROJECT_DIR$/src/README.md" />
       </list>
     </option>
   </component>
@@ -128,6 +185,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -144,7 +202,26 @@
               <item name="kindyn" type="b2602c69:ProjectViewProjectNode" />
               <item name="kindyn" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="controller" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kindyn" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kindyn" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="images" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kindyn" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kindyn" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="pedaling" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kindyn" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kindyn" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="pedaling" type="462c0819:PsiDirectoryNode" />
+              <item name="development_pedaling" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="kindyn" type="b2602c69:ProjectViewProjectNode" />
@@ -164,6 +241,13 @@
               <item name="kindyn" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="steering" type="462c0819:PsiDirectoryNode" />
+              <item name="tests_steering" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kindyn" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kindyn" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="steering" type="462c0819:PsiDirectoryNode" />
               <item name="trajectory_steering" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -176,7 +260,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -196,6 +279,7 @@
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/steering/tests_steering" />
+      <recent name="$PROJECT_DIR$/src/pedaling/development_pedaling" />
       <recent name="$PROJECT_DIR$/src/steering/trajectory_steering" />
     </key>
   </component>
@@ -272,56 +356,55 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info id="Favorites" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.33360258" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22859451" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Inspection Results" weight="0.34657535" />
-      <window_info anchor="bottom" id="Python Console" weight="0.32876712" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32876712" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="right" x="0" y="0" width="270" height="600" id="Documentation" side_tool="true" weight="0.3279483" />
-      <window_info anchor="right" id="SciView" />
-      <window_info anchor="right" id="Database" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Inspection Results" order="10" weight="0.23835616" />
+      <window_info anchor="bottom" id="Terminal" order="11" />
+      <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
+      <window_info anchor="bottom" id="Python Console" order="13" weight="0.32876712" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="SciView" order="3" />
+      <window_info anchor="right" x="0" y="0" width="270" height="600" id="Documentation" order="4" side_tool="true" weight="0.3279483" />
+      <window_info anchor="right" id="Database" order="5" />
     </layout>
     <layout-to-restore>
-      <window_info id="Favorites" order="0" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.33360258" />
-      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Inspection Results" order="1" weight="0.34657535" />
-      <window_info anchor="bottom" id="Terminal" order="2" />
-      <window_info anchor="bottom" id="Event Log" order="3" side_tool="true" />
-      <window_info anchor="bottom" id="Database Changes" order="4" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="5" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Python Console" order="6" weight="0.32876712" />
-      <window_info anchor="bottom" id="Message" order="7" />
-      <window_info anchor="bottom" id="Find" order="8" />
-      <window_info anchor="bottom" id="Run" order="9" />
-      <window_info anchor="bottom" id="Debug" order="10" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="11" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="12" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="13" />
-      <window_info anchor="right" x="0" y="0" width="270" height="600" id="Documentation" order="0" side_tool="true" weight="0.3279483" />
-      <window_info anchor="right" id="SciView" order="1" />
-      <window_info anchor="right" id="Database" order="2" />
-      <window_info anchor="right" id="Commander" order="3" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="4" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="5" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.38529888" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32876712" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Inspection Results" order="10" visible="true" weight="0.23835616" />
+      <window_info anchor="bottom" id="Terminal" order="11" />
+      <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
+      <window_info anchor="bottom" id="Python Console" order="13" weight="0.32876712" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="SciView" order="3" />
+      <window_info anchor="right" x="0" y="0" width="270" height="600" id="Documentation" order="4" side_tool="true" weight="0.3279483" />
+      <window_info anchor="right" id="Database" order="5" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -337,17 +420,92 @@
     <option name="LAST_COMMIT_MESSAGE" value="reformated files" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/pedaling/pedal_simulation_old_trajectory.py">
+    <entry file="file://$PROJECT_DIR$/src/steering/doxytest.py" />
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pedaling/trajectory_pedaling/capture_pedal_trajectory_two_frames.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" column="3" selection-start-line="22" selection-start-column="3" selection-end-line="22" selection-end-column="3" />
+        <state relative-caret-position="417">
+          <caret line="352" column="37" lean-forward="true" selection-start-line="331" selection-end-line="352" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/documentation/html/search/files_0.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="56" selection-start-line="3" selection-start-column="56" selection-end-line="3" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pedaling/development_pedaling/pedal_simulation_interpolation_cubic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1392">
+          <caret line="33" column="39" selection-start-line="33" selection-start-column="39" selection-end-line="33" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pedaling/tests_pedaling/joint_angle_velocity_factor_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="513" column="9" selection-start-line="513" selection-start-column="9" selection-end-line="513" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pedaling/tests_pedaling/velocity_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="134" column="9" selection-start-line="134" selection-start-column="9" selection-end-line="134" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/steering/tests_steering/steering_trajectory_following_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/steering/trajectory_steering/compute_steering_path.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="20" selection-start-column="20" selection-end-column="20" />
           <folding>
-            <element signature="e#22#59#0" expanded="true" />
+            <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/steering/trajectory_steering/interpolate_multiple_steering.py">
+    <entry file="file://$PROJECT_DIR$/src/steering/trajectory_steering/steering_capture_multiple_trajectories.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
+          <folding>
+            <element signature="e#23#34#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Doxyfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="166">
+          <caret line="269" column="30" selection-start-line="269" selection-start-column="10" selection-end-line="269" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/steering/tests_steering/steering_response_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/steering/trajectory_steering/steering_interpolate_multiple_trajectories_and_print.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
           <caret line="1" selection-start-line="1" selection-end-line="1" />
@@ -357,93 +515,68 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/steering/trajectory_steering/compute_steering_path.py">
+    <entry file="file://$PROJECT_DIR$/src/steering/trajectory_steering/steering_interpolate_and_print.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="15">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pedaling/trajectory_pedaling/capture_pedal_trajectory_two_frames.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/steering/trajectory_steering/capture_steering_trajectory.py">
+    <entry file="file://$PROJECT_DIR$/src/steering/trajectory_steering/steering_capture_trajectory.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2220">
-          <caret line="148" column="13" selection-start-line="148" selection-start-column="13" selection-end-line="148" selection-end-column="13" />
+        <state relative-caret-position="15">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
           <folding>
             <element signature="e#23#34#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/steering/trajectory_steering/multiple_steering_trajectories.py">
+    <entry file="file://$PROJECT_DIR$/src/pedaling/development_pedaling/pedal_simulation_interpolation_linear_trajectory_points.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#23#34#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="15">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pedaling/pedal_simulation_interpolation.py">
+    <entry file="file://$PROJECT_DIR$/src/steering/steering_simulation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="30" column="26" selection-start-line="30" selection-start-column="26" selection-end-line="30" selection-end-column="26" />
+        <state relative-caret-position="420">
+          <caret line="28" column="51" selection-start-line="28" selection-start-column="51" selection-end-line="28" selection-end-column="51" />
+          <folding>
+            <element signature="e#593#630#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pedaling/pedal_simulation.py">
-      <provider selected="true" editor-type-id="text-editor" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="32" selection-start-line="11" selection-start-column="32" selection-end-line="11" selection-end-column="32" />
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pedaling/trajectory_pedaling/capture_pedal_trajectory.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="41" selection-start-line="14" selection-start-column="41" selection-end-line="14" selection-end-column="41" />
-          <folding>
-            <element signature="e#23#34#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="15">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/steering/trajectory_steering/steering_trajectory_test.py">
+    <entry file="file://$PROJECT_DIR$/src/pedaling/development_pedaling/pedal_simulation_interpolation_cubic_derivative.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/steering/doxytest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="27">
-          <caret line="24" selection-start-line="24" selection-end-line="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor />
-          <second_editor />
+        <state relative-caret-position="45">
+          <caret line="3" lean-forward="true" selection-start-line="2" selection-start-column="2" selection-end-line="3" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor>
-            <caret lean-forward="true" />
+          <first_editor relative-caret-position="405">
+            <caret line="27" column="28" selection-start-line="27" selection-start-column="28" selection-end-line="27" selection-end-column="28" />
           </first_editor>
           <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/steering/steering_simulation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="41" column="28" lean-forward="true" selection-start-line="41" selection-start-column="28" selection-end-line="41" selection-end-column="28" />
         </state>
       </provider>
     </entry>
