@@ -14,7 +14,7 @@ gymFunctions::gymFunctions(int id, cardsflow::kindyn::Robot* robot, bool respect
     ROS_INFO("Gym functions");
 
     training_with_limits = respect_limits;
-    
+
     gym_step = nh->advertiseService("/instance" + to_string(id) + "/gym_step", &gymFunctions::GymStepService,this);
     gym_read_state = nh->advertiseService("/instance" + to_string(id) + "/gym_read_state", &gymFunctions::GymReadStateService,this);
     gym_reset = nh->advertiseService("/instance" + to_string(id) + "/gym_reset", &gymFunctions::GymResetService,this);

@@ -41,14 +41,12 @@ private:
     ros::ServiceServer gym_read_state; ///OpenAI Gym training environment observation function, returns q, qdot and feasibility
     ros::ServiceServer gym_reset; /// OpenAI Gym training environment reset function, ros service instance
     ros::ServiceServer gym_goal; /// OpenAI Gym training environment sets new feasible goal function, ros service instance
-    ros::Publisher motor_command; /// motor command publisher
 
     bool training_with_limits;
     void setResponse(VectorXd jointAngles,VectorXd jointVel,roboy_simulation_msgs::GymStep::Response &res);
     void setJointAngleAndVelocity(VectorXd jointAngles, VectorXd jointVel);
     VectorXd findClosestJointLimit(double q0, double q1, double q3);
     int isFeasible(vector<double> limits_x, vector<double> limits_y, double testx, double testy);
-    void write();
 };
 
 
