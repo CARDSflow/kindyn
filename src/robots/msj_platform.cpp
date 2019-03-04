@@ -38,8 +38,6 @@ public:
         spinner->start();
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
 
-        //initService(id);
-
         readJointLimits();
 
         vector<string> joint_names; // first we retrieve the active joint names from the parameter server
@@ -56,14 +54,6 @@ public:
 
 
     };
-
-    ///Open AI Gym services
-    void initService(int id){
-        gym_step = nh->advertiseService("/instance" + to_string(id) + "/gym_step", &MsjPlatform::GymStepService,this);
-        gym_read_state = nh->advertiseService("/instance" + to_string(id) + "/gym_read_state", &MsjPlatform::GymReadStateService,this);
-        gym_reset = nh->advertiseService("/instance" + to_string(id) + "/gym_reset", &MsjPlatform::GymResetService,this);
-        gym_goal = nh->advertiseService("/instance" + to_string(id) + "/gym_goal", &MsjPlatform::GymGoalService,this);
-    }
 
     void readJointLimits(){
         // Get the limits of joints
@@ -131,141 +121,6 @@ public:
 
         motor_command.publish(msg);
     };
-
-    int isFeasible(vector<double> limits_x, vector<double> limits_y, double testx, double testy){
-        int i, j, c = 0;
-        for (i = 0, j = limits_x.size()-1; i < limits_x.size(); j = i++) {
-            if ( ((limits_y[i]>testy) != (limits_y[j]>testy)) &&
-                 (testx < (limits_x[j]-limits_x[i]) * (testy-limits_y[i]) / (limits_y[j]-limits_y[i]) + limits_x[i]) )
-                c = !c;
-        }
-        return c;
-    }
-
-    bool GymGoalService(roboy_simulation_msgs::GymGoal::Request &req,
-                        roboy_simulation_msgs::GymGoal::Response &res){
-        bool not_feasible = true;
-        float q0= 0.0,q1= 0.0,q2 = 0.0;
-        srand(static_cast<unsigned int>(clock()));
-        while(not_feasible) {
-            q0 = min[0] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[0]-min[0]))));
-            q1 = min[1] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[1]-min[1]))));
-            q2 = min[2] + static_cast<float> (rand() /(static_cast<float> (RAND_MAX/(max[2]-min[2]))));
-            not_feasible = !isFeasible(limits[0], limits[1], q0, q1);
-        }
-
-        q_target << static_cast<double> (q0), static_cast<double> (q1), static_cast<double> (q2);
-
-        update();
-        res.q.push_back(q0);
-        res.q.push_back(q1);
-        res.q.push_back(q2);
-
-        return true;
-
-    }
-
-    ///find the closest limit point when the robot is in infeasible state
-    VectorXd findClosestJointLimit(double q0, double q1, double q3){
-        VectorXd closestLimit;
-        closestLimit.resize(number_of_dofs);
-        closestLimit.setZero();
-
-        double smallestDistance = numeric_limits<double>::max();
-
-        for(int i=0; i < limits[0].size(); i++){
-            VectorXd jointAngle = Vector2d::Zero(), jointLimits = Vector2d::Zero();
-            jointAngle << q0, q1;
-            jointLimits << limits[0][i] ,limits[1][i];
-            double distance = (jointAngle - jointLimits).norm();
-            if (distance < smallestDistance){
-                smallestDistance = distance;
-                closestLimit[0] = jointLimits[0];
-                closestLimit[1] = jointLimits[1];
-                closestLimit[2] = q3;
-            }
-        }
-        return closestLimit;
-    }
-
-    ///set the given joint angle and veloctiy  for each joint
-    void setJointAngleAndVelocity(VectorXd jointAngles, VectorXd jointVel){
-        for(int i=0; i< number_of_dofs; i++){
-            joint_state[i][1] = jointVel[i];		//Setting velocity to zero send the robot to origin..
-            joint_state[i][0] = jointAngles[i];		//Position of ith joint
-            q[i] = jointAngles[i];
-            qd[i] = jointVel[i];
-        }
-    }
-
-    ///set the gymstep function response
-    void setResponse(VectorXd jointAngles,VectorXd jointVel,roboy_simulation_msgs::GymStep::Response &res){
-        for(int i=0; i< number_of_dofs; i++ ){
-            res.q.push_back(jointAngles[i]);
-            res.qdot.push_back(jointVel[i]);
-        }
-    }
-
-    ///Return only qdot, q and feasibility to gym environment
-    bool GymReadStateService(roboy_simulation_msgs::GymStep::Request &req,
-                        roboy_simulation_msgs::GymStep::Response &res){
-
-        setResponse(q,qd,res);
-        res.feasible = isFeasible(limits[0],limits[1],q[0],q[1]);
-        return true;
-    }
-
-    bool GymStepService(roboy_simulation_msgs::GymStep::Request &req,
-                        roboy_simulation_msgs::GymStep::Response &res){
-
-        update();
-        for(int i=0; i< number_of_cables; i++){
-            //Set the commanded tendon velocity from RL agent to simulation
-            Ld[0][i] = req.set_points[i];
-        }
-        if(!external_robot_state)
-            forwardKinematics(req.step_size);
-
-        ROS_INFO_STREAM_THROTTLE(5, "Ld = " << Ld[0].format(fmt));
-        write();
-        res.feasible = isFeasible(limits[0],limits[1],q[0],q[1]);
-        if(!res.feasible){
-            VectorXd closestLimit = findClosestJointLimit(q[0],q[1],q[2]); //Find closest boundary point where we can teleport
-            VectorXd jointVel;                                             //We hit the boundary so zero velocity.
-
-            jointVel.resize(number_of_dofs);
-            jointVel.setZero();
-
-            setJointAngleAndVelocity(closestLimit, jointVel);
-        }
-        setResponse(q,qd,res);
-        return true;
-    }
-    bool GymResetService(roboy_simulation_msgs::GymReset::Request &req,
-                        roboy_simulation_msgs::GymReset::Response &res){
-    	integration_time = 0.0;
-        VectorXd jointAngle, jointVel;
-        jointAngle.resize(number_of_dofs);
-        jointVel.resize(number_of_dofs);
-
-        jointAngle.setZero();
-        jointVel.setZero();
-
-        setJointAngleAndVelocity(jointAngle, jointVel);
-	    for(int i=0; i< number_of_cables; i++){
-	        //Set the commanded tendon velocity from RL agent to simulation 
-	        motor_state[i][0] = 0.0; 	//Length of the ith cable
-			motor_state[i][1] = 0.0;	//Velocity of the ith cable
-	    }
-
-	 	update();
-
-        for(int i=0; i< number_of_dofs; i++ ){
-        	res.q.push_back(q[i]);
-        	res.qdot.push_back(qd[i]);
-        }
-        return true;
-    }
 
 private:
 
