@@ -16,7 +16,7 @@ from roboy_simulation_msgs.msg import JointState
 from std_msgs.msg import Float32
 
 JSON_FILENAME = "captured_pedal_trajectory_03mar_with_joint_limits.json"  # "captured_trajectory_two_frames.json"
-TEMP_READFILE = "captured_pedal_trajectory_02mar_with_joint_limits.json" 
+TEMP_READFILE = "captured_pedal_trajectory_02mar_with_joint_limits.json"
 
 JOINT_ANGLE_TOLERANCE_FK = 0.002
 JOINT_KP = 750
@@ -269,7 +269,7 @@ def plotEverything(numSamples, jointAngleDict):
                 plt.plot(jointAngleDict["point_" + str(pointIter)]["Left"]["Pedal_actual"][0],
                          jointAngleDict["point_" + str(pointIter)]["Left"]["Pedal_actual"][1], 'rs',
                          label="Actual left")
-       
+
 
     plt.figure(2)
     plt.title('Hip positions left')
@@ -283,7 +283,7 @@ def plotEverything(numSamples, jointAngleDict):
                 z_values.append(jointAngleDict["point_" + str(pointIter)]["Left"]["Hip"])
     plt.plot(x_values, z_values)
 
-    
+
     plt.figure(4)
     plt.title('Knee positions left')
     x_values = []
@@ -309,7 +309,7 @@ def plotEverything(numSamples, jointAngleDict):
                 z_values.append(jointAngleDict["point_" + str(pointIter)]["Left"]["Ankle"])
     plt.plot(x_values, z_values)
 
-   
+
     plt.show()
 
 
@@ -362,19 +362,19 @@ def inverse_kinematics_multiple_frames_client(endeffector, frames, x, y, z, weig
 ###   MAIN   ###
 ################
 
-def main():
+def main_notnow():
     with open(TEMP_READFILE, "r") as read_file:
         jointAngleDict = json.load(read_file)
 
     plotEverything(72, jointAngleDict)
-	
-    
-    
-    
-    
-    
 
-def main_notnow():
+
+
+
+
+
+
+def main():
     if len(sys.argv) > 1:
         num_requested_points = int(sys.argv[1])
     else:
