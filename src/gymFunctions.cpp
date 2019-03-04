@@ -8,22 +8,48 @@ gymFunctions::gymFunctions(int id, cardsflow::kindyn::Robot* robot, bool respect
         char **argv = NULL;
         ros::init(argc, argv, "Gym functions", ros::init_options::NoSigintHandler);
     }
-    ros::NodeHandle nh;
+    nh = ros::NodeHandlePtr(new ros::NodeHandle);
     spinner.reset(new ros::AsyncSpinner(0));
     spinner->start();
     ROS_INFO("Gym functions");
     training_with_limits = respect_limits;
-    gym_step = nh.advertiseService("/instance" + to_string(id) + "/gym_step", &gymFunctions::GymStepService,this);
-    gym_read_state = nh.advertiseService("/instance" + to_string(id) + "/gym_read_state", &gymFunctions::GymReadStateService,this);
-    gym_reset = nh.advertiseService("/instance" + to_string(id) + "/gym_reset", &gymFunctions::GymResetService,this);
-    gym_goal = nh.advertiseService("/instance" + to_string(id) + "/gym_goal", &gymFunctions::GymGoalService,this);
+    gym_step = nh->advertiseService("/instance" + to_string(id) + "/gym_step", &gymFunctions::GymStepService,this);
+    gym_read_state = nh->advertiseService("/instance" + to_string(id) + "/gym_read_state", &gymFunctions::GymReadStateService,this);
+    gym_reset = nh->advertiseService("/instance" + to_string(id) + "/gym_reset", &gymFunctions::GymResetService,this);
+    gym_goal = nh->advertiseService("/instance" + to_string(id) + "/gym_goal", &gymFunctions::GymGoalService,this);
+    motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
     fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
 }
+
+void gymFunctions::write(){
+    roboy_middleware_msgs::MotorCommand msg;
+    msg.id = 5;
+//        stringstream str;
+//        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
+//            msg.motors.push_back(i);
+//            double l_change = l[i]-l_offset[i];
+//            msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
+//            str << l_change << "\t";
+//        }
+    for (int i = 0; i < 8; i++) {
+        msg.motors.push_back(i);
+//            double l_change = l_target[i]-l_offset[i];
+        msg.set_points.push_back(training_robot->l_target[i]); //
+//            str << l_target[i] << "\t";
+    }
+//        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
+//                msg.motors.push_back(i);
+//                msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(Ld[0][i]));
+//        }
+//		ROS_INFO_STREAM_THROTTLE(1,str.str());
+
+    motor_command.publish(msg);
+};
 
 
 bool gymFunctions::GymStepService(roboy_simulation_msgs::GymStep::Request &req,
                                   roboy_simulation_msgs::GymStep::Response &res){
-
+    training_robot->update();
     for(int i=0; i< training_robot->number_of_cables; i++){
         //Set the commanded tendon velocity from RL agent to simulation
         training_robot->Ld[0][i] = req.set_points[i];
@@ -33,6 +59,7 @@ bool gymFunctions::GymStepService(roboy_simulation_msgs::GymStep::Request &req,
         training_robot->forwardKinematics(req.step_size);
 
     ROS_INFO_STREAM_THROTTLE(5, "Ld = " << training_robot->Ld[0].format(fmt));
+    write();
     if(training_with_limits){
         res.feasible = isFeasible(training_robot->getLimitVector(0), training_robot->getLimitVector(1), training_robot->q[0], training_robot->q[1]);
         if(!res.feasible){
