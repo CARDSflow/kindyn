@@ -1,8 +1,6 @@
 #include "../include/kindyn/gymFunctions.h"
 
-gymFunctions::gymFunctions(int id, cardsflow::kindyn::Robot* robot, bool respect_limits){
-
-    training_robot = robot;
+gymFunctions::gymFunctions(cardsflow::kindyn::Robot* robot, int id, bool respect_limits){
     if (!ros::isInitialized()) {
         int argc = 0;
         char **argv = NULL;
@@ -13,6 +11,7 @@ gymFunctions::gymFunctions(int id, cardsflow::kindyn::Robot* robot, bool respect
     spinner->start();
     ROS_INFO("Gym functions");
 
+    training_robot = robot;
     training_with_limits = respect_limits;
 
     gym_step = nh->advertiseService("/instance" + to_string(id) + "/gym_step", &gymFunctions::GymStepService,this);
@@ -26,6 +25,7 @@ gymFunctions::gymFunctions(int id, cardsflow::kindyn::Robot* robot, bool respect
 bool gymFunctions::GymStepService(roboy_simulation_msgs::GymStep::Request &req,
                                   roboy_simulation_msgs::GymStep::Response &res){
     training_robot->update();
+
     for(int i=0; i< training_robot->number_of_cables; i++){
         //Set the commanded tendon velocity from RL agent to simulation
         training_robot->Ld[0][i] = req.set_points[i];
@@ -39,8 +39,8 @@ bool gymFunctions::GymStepService(roboy_simulation_msgs::GymStep::Request &req,
     if(training_with_limits){
         res.feasible = isFeasible(training_robot->getLimitVector(0), training_robot->getLimitVector(1), training_robot->q[0], training_robot->q[1]);
         if(!res.feasible){
-            VectorXd closestLimit = findClosestJointLimit(training_robot->q[0],training_robot->q[1],training_robot->q[2]); //Find closest boundary point where we can teleport
-            VectorXd jointVel;                                             //We hit the boundary so zero velocity.
+            VectorXd closestLimit = findClosestJointLimit(training_robot->q); //Find closest boundary point where we can teleport
+            VectorXd jointVel;                                                //Robot hit the boundary, set velocity to zero.
 
             jointVel.resize(training_robot->number_of_dofs);
             jointVel.setZero();
@@ -149,24 +149,20 @@ void gymFunctions::setJointAngleAndVelocity(VectorXd jointAngles, VectorXd joint
 }
 
 ///finds the closest limit point when the robot is in infeasible state
-VectorXd gymFunctions::findClosestJointLimit(double q0, double q1, double q3){
-
+VectorXd gymFunctions::findClosestJointLimit(VectorXd q){
     VectorXd closestLimit;
     closestLimit.resize(training_robot->number_of_dofs);
-    closestLimit.setZero();
-
     double smallestDistance = numeric_limits<double>::max();
-
+    
     for(int i=0; i < training_robot->getLimitVector(0).size(); i++){
-        VectorXd jointAngle = Vector2d::Zero(), jointLimits = Vector2d::Zero();
-        jointAngle << q0, q1;
-        jointLimits << training_robot->getLimit(0,i) ,training_robot->getLimit(1, i);
+        VectorXd jointAngle = q;
+        VectorXd jointLimits;
+        jointLimits.resize(training_robot->number_of_dofs);
+        jointLimits << training_robot->getLimit(0,i) , training_robot->getLimit(1, i), jointAngle[2];  //FIXME right now hard coded for msjplatform, make it general
         double distance = (jointAngle - jointLimits).norm();
         if (distance < smallestDistance){
             smallestDistance = distance;
-            closestLimit[0] = jointLimits[0];
-            closestLimit[1] = jointLimits[1];
-            closestLimit[2] = q3;
+            closestLimit = jointLimits;
         }
     }
     return closestLimit;

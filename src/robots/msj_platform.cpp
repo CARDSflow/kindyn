@@ -26,7 +26,7 @@ public:
      * @param urdf path to urdf
      * @param cardsflow_xml path to cardsflow xml
      */
-    MsjPlatform(string urdf, string cardsflow_xml, int id){
+    MsjPlatform(string urdf, string cardsflow_xml){
 
         if (!ros::isInitialized()) {
             int argc = 0;
@@ -54,7 +54,10 @@ public:
 
 
     };
-
+    /**
+     * Read joint limits of the robots which have the shoulder as part of their kinematics.
+     *
+     */
     void readJointLimits(){
         // Get the limits of joints
         string path = ros::package::getPath("robots");
@@ -178,13 +181,13 @@ int main(int argc, char *argv[]) {
     int workers = atoi( argv[1]);
     cout << "\nNUMBER OF WORKERS " << workers << endl;
 
-
     vector<boost::shared_ptr<MsjPlatform>> platforms;
     vector<boost::shared_ptr<gymFunctions>> gymFuncs;
+
     for(int id = 0; id < workers; id++) {
-        boost::shared_ptr<MsjPlatform> platform(new MsjPlatform(urdf, cardsflow_xml, id + 1));
+        boost::shared_ptr<MsjPlatform> platform(new MsjPlatform(urdf, cardsflow_xml));
         cardsflow::kindyn::Robot* ref = &*platform;
-        boost::shared_ptr<gymFunctions> gym(new gymFunctions(id + 1, ref, true));
+        boost::shared_ptr<gymFunctions> gym(new gymFunctions(ref, id + 1 ,true));
         platforms.push_back(platform);
         gymFuncs.push_back(gym);
     }

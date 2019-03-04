@@ -16,7 +16,7 @@ using namespace Eigen;
 class gymFunctions {
 public:
 
-    gymFunctions(int id, cardsflow::kindyn::Robot* training_robot, bool respect_limits = false);
+    gymFunctions(cardsflow::kindyn::Robot* training_robot, int id = 1, bool respect_limits = false);
 
     bool GymStepService(roboy_simulation_msgs::GymStep::Request &req,
                  roboy_simulation_msgs::GymStep::Response &res);
@@ -45,7 +45,7 @@ private:
     bool training_with_limits;
     void setResponse(VectorXd jointAngles,VectorXd jointVel,roboy_simulation_msgs::GymStep::Response &res);
     void setJointAngleAndVelocity(VectorXd jointAngles, VectorXd jointVel);
-    VectorXd findClosestJointLimit(double q0, double q1, double q3);
+    VectorXd findClosestJointLimit(VectorXd q);
     int isFeasible(vector<double> limits_x, vector<double> limits_y, double testx, double testy);
 };
 
