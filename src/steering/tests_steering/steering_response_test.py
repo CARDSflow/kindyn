@@ -21,6 +21,8 @@ from scipy import interpolate
 import rospy
 from roboy_simulation_msgs.msg import JointState
 from std_msgs.msg import Float32
+import numpy.polynomial.polynomial as poly
+
 
 PRINT_DEBUG = False
 
@@ -456,10 +458,11 @@ def main():
     rospy.Subscriber("joint_state", JointState, joint_state_callback)
     rospy.init_node('steering_test', anonymous=True)
     import_joint_trajectory_record()
-    interpolate_joint_angles()
+    regress_joint_positions_from_file("capture_trajectory/saved_coefficients.json")
     steering_test(pub)
 
 
 if __name__ == '__main__':
     main()
+
 

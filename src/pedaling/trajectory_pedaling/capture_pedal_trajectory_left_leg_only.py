@@ -5,6 +5,8 @@ import math
 import sys
 import time
 
+import numpy as np
+
 import matplotlib.pyplot as plt
 import rospy
 from geometry_msgs.msg import Pose, Point
@@ -13,11 +15,25 @@ from roboy_middleware_msgs.srv import InverseKinematics, InverseKinematicsMultip
 from roboy_simulation_msgs.msg import JointState
 from std_msgs.msg import Float32
 
-JSON_FILENAME = "captured_pedal_trajectory_22feb.json"  # "captured_trajectory_two_frames.json"
+JSON_FILENAME = "captured_pedal_trajectory_03mar_with_joint_limits.json"  # "captured_trajectory_two_frames.json"
+TEMP_READFILE = "captured_pedal_trajectory_02mar_with_joint_limits.json"
 
-JOINT_ANGLE_TOLERANCE_FK = 0.05
-JOINT_KP = 10
+JOINT_ANGLE_TOLERANCE_FK = 0.002
+JOINT_KP = 750
 JOINT_KD = 0
+POINT_REACHED_TOLERANCE = 0.02
+
+LEFT_HIP_JOINT_TEST_CONFIGURATIONS = np.linspace(-0.9, -0.75, 20)
+LEFT_KNEE_JOINT_TEST_CONFIGURATIONS = np.linspace(0.25, 0.35, 5)
+LEFT_ANKLE_JOINT_TEST_CONFIGURATIONS = np.linspace(0.4, 0.2, 5)
+
+LEFT_HIP_JOINT_LOWER_LIMIT = -1.9
+LEFT_KNEE_JOINT_LOWER_LIMIT = 0
+LEFT_ANKLE_JOINT_LOWER_LIMIT = -0.7
+
+LEFT_HIP_JOINT_UPPER_LIMIT = 0.5
+LEFT_KNEE_JOINT_UPPER_LIMIT = 2.0
+LEFT_ANKLE_JOINT_UPPER_LIMIT = 0.7
 
 ###############################
 ###   MEASURED PARAMETERS   ###
@@ -85,6 +101,15 @@ _jointsStatusData = {
 ##############################
 ###   UTILITY FUNCTIONS   ###
 ##############################
+
+## Documentation for a function
+#
+#  Return the distance between two points where points are a list of two coordinates.
+def get_distance(point1, point2):
+    x_diff = point2[ 0 ] - point1[ 0 ]
+    y_diff = point2[ 1 ] - point1[ 1 ]
+
+    return math.sqrt((x_diff * x_diff) + (y_diff * y_diff))
 
 def getPositionLeftFoot():
     fkJointNamesList = [ROS_JOINT_HIP_LEFT, ROS_JOINT_KNEE_LEFT, ROS_JOINT_ANKLE_LEFT]
@@ -244,13 +269,7 @@ def plotEverything(numSamples, jointAngleDict):
                 plt.plot(jointAngleDict["point_" + str(pointIter)]["Left"]["Pedal_actual"][0],
                          jointAngleDict["point_" + str(pointIter)]["Left"]["Pedal_actual"][1], 'rs',
                          label="Actual left")
-            if "Pedal" in jointAngleDict["point_" + str(pointIter)]["Right"]:
-                plt.plot(jointAngleDict["point_" + str(pointIter)]["Right"]["Pedal"][0],
-                         jointAngleDict["point_" + str(pointIter)]["Right"]["Pedal"][1], 'gs',
-                         label="IK recorded right")
-                plt.plot(jointAngleDict["point_" + str(pointIter)]["Right"]["Pedal_actual"][0],
-                         jointAngleDict["point_" + str(pointIter)]["Right"]["Pedal_actual"][1], 'rs',
-                         label="Actual right")
+
 
     plt.figure(2)
     plt.title('Hip positions left')
@@ -264,17 +283,6 @@ def plotEverything(numSamples, jointAngleDict):
                 z_values.append(jointAngleDict["point_" + str(pointIter)]["Left"]["Hip"])
     plt.plot(x_values, z_values)
 
-    plt.figure(3)
-    plt.title('Hip positions right')
-    x_values = []
-    z_values = []
-    tot_points = jointAngleDict["num_points"]
-    for pointIter in range(tot_points):
-        if "point_" + str(pointIter) in jointAngleDict:
-            if "Hip" in jointAngleDict["point_" + str(pointIter)]["Right"]:
-                x_values.append(pointIter * (2 * math.pi / tot_points))
-                z_values.append(jointAngleDict["point_" + str(pointIter)]["Right"]["Hip"])
-    plt.plot(x_values, z_values)
 
     plt.figure(4)
     plt.title('Knee positions left')
@@ -288,17 +296,6 @@ def plotEverything(numSamples, jointAngleDict):
                 z_values.append(jointAngleDict["point_" + str(pointIter)]["Left"]["Knee"])
     plt.plot(x_values, z_values)
 
-    plt.figure(5)
-    plt.title('Knee positions right')
-    x_values = []
-    z_values = []
-    tot_points = jointAngleDict["num_points"]
-    for pointIter in range(tot_points):
-        if "point_" + str(pointIter) in jointAngleDict:
-            if "Knee" in jointAngleDict["point_" + str(pointIter)]["Right"]:
-                x_values.append(pointIter * (2 * math.pi / tot_points))
-                z_values.append(jointAngleDict["point_" + str(pointIter)]["Right"]["Knee"])
-    plt.plot(x_values, z_values)
 
     plt.figure(6)
     plt.title('Ankle positions left')
@@ -312,17 +309,6 @@ def plotEverything(numSamples, jointAngleDict):
                 z_values.append(jointAngleDict["point_" + str(pointIter)]["Left"]["Ankle"])
     plt.plot(x_values, z_values)
 
-    plt.figure(7)
-    plt.title('Ankle positions right')
-    x_values = []
-    z_values = []
-    tot_points = jointAngleDict["num_points"]
-    for pointIter in range(tot_points):
-        if "point_" + str(pointIter) in jointAngleDict:
-            if "Ankle" in jointAngleDict["point_" + str(pointIter)]["Right"]:
-                x_values.append(pointIter * (2 * math.pi / tot_points))
-                z_values.append(jointAngleDict["point_" + str(pointIter)]["Right"]["Ankle"])
-    plt.plot(x_values, z_values)
 
     plt.show()
 
@@ -376,6 +362,18 @@ def inverse_kinematics_multiple_frames_client(endeffector, frames, x, y, z, weig
 ###   MAIN   ###
 ################
 
+def main_notnow():
+    with open(TEMP_READFILE, "r") as read_file:
+        jointAngleDict = json.load(read_file)
+
+    plotEverything(72, jointAngleDict)
+
+
+
+
+
+
+
 def main():
     if len(sys.argv) > 1:
         num_requested_points = int(sys.argv[1])
@@ -386,9 +384,9 @@ def main():
 
     rospy.init_node('pedal_simulation', anonymous=True)
     rospy.Subscriber("joint_state", JointState, jointStateCallback)
-    ros_right_hip_publisher = rospy.Publisher('joint_hip_right/joint_hip_right/target', Float32, queue_size=1)
-    ros_right_knee_publisher = rospy.Publisher('joint_knee_right/joint_knee_right/target', Float32, queue_size=1)
-    ros_right_ankle_publisher = rospy.Publisher('joint_foot_right/joint_foot_right/target', Float32, queue_size=1)
+    #ros_right_hip_publisher = rospy.Publisher('joint_hip_right/joint_hip_right/target', Float32, queue_size=1)
+    #ros_right_knee_publisher = rospy.Publisher('joint_knee_right/joint_knee_right/target', Float32, queue_size=1)
+    #ros_right_ankle_publisher = rospy.Publisher('joint_foot_right/joint_foot_right/target', Float32, queue_size=1)
     ros_left_hip_publisher = rospy.Publisher('joint_hip_left/joint_hip_left/target', Float32, queue_size=1)
     ros_left_knee_publisher = rospy.Publisher('joint_knee_left/joint_knee_left/target', Float32, queue_size=1)
     ros_left_ankle_publisher = rospy.Publisher('joint_foot_left/joint_foot_left/target', Float32, queue_size=1)
@@ -404,10 +402,10 @@ def main():
     frame_right_1 = "foot_right_tip"
     weight_right_1 = 1
     frame_right_2 = "thigh_right"
-    weight_right_2 = 0.01
-    frame_right_2_x_offset = 0
+    weight_right_2 = 1
+    frame_right_2_x_offset = -0.1
     frame_right_2_y_offset = 0
-    frame_right_2_z_offset = 0.4
+    frame_right_2_z_offset = 0.3
 
     endeffector_left = "foot_left_tip"
     frame_left = "foot_left_tip"
@@ -415,77 +413,185 @@ def main():
     frame_left_1 = "foot_left_tip"
     weight_left_1 = 1
     frame_left_2 = "thigh_left"
-    weight_left_2 = 0.01
-    frame_left_2_x_offset = 0
+    weight_left_2 = 1
+    frame_left_2_x_offset = -0.1
     frame_left_2_y_offset = 0
-    frame_left_2_z_offset = 0.4
+    frame_left_2_z_offset = 0.3
 
     jointAngleDict = {}
     jointAngleDict["num_points"] = num_requested_points
 
+    firstPointReached = False
     for pointIter in range(num_requested_points):
         print("Capturing point number ", pointIter)
         thisX = capturedPositions[pointIter][1]
         thisZ = capturedPositions[pointIter][3]
         thisPedalAngle = capturedPositions[pointIter][0]
-        # jointAngleResult_right = inverse_kinematics_client(endeffector_right, frame_right, thisX + BIKE_OFFSET_X, y_offset_right + BIKE_OFFSET_Y, thisZ + BIKE_OFFSET_Z)
-        # jointAngleResult_left = inverse_kinematics_client(endeffector_left, frame_left, thisX + BIKE_OFFSET_X, y_offset_left + BIKE_OFFSET_Y, thisZ + BIKE_OFFSET_Z)
-        jointAngleResult_right = inverse_kinematics_multiple_frames_client(endeffector_right, [frame_right_1, frame_right_2], [thisX + BIKE_OFFSET_X, thisX + BIKE_OFFSET_X + frame_right_2_x_offset], [y_offset_right + BIKE_OFFSET_Y, y_offset_right + BIKE_OFFSET_Y + frame_right_2_y_offset], [thisZ + BIKE_OFFSET_Z, thisZ + BIKE_OFFSET_Z + frame_right_2_z_offset], [weight_right_1, weight_right_2])
-        print("ik result fetched for foot_right_tip")
-        jointAngleResult_left = inverse_kinematics_multiple_frames_client(endeffector_left, [frame_left_1, frame_left_2],[thisX + BIKE_OFFSET_X, thisX + BIKE_OFFSET_X + frame_left_2_x_offset], [y_offset_left + BIKE_OFFSET_Y, y_offset_left + BIKE_OFFSET_Y + frame_left_2_y_offset], [thisZ + BIKE_OFFSET_Z, thisZ + BIKE_OFFSET_Z + frame_left_2_z_offset], [weight_left_1, weight_left_2])
 
-        print("ik result fetched for foot_left_tip")
-        if jointAngleResult_right and jointAngleResult_left:
-            jointAngleDict["point_" + str(pointIter)] = {}
-            jointAngleDict["point_" + str(pointIter)]["Left"] = {}
-            jointAngleDict["point_" + str(pointIter)]["Right"] = {}
-            jointAngleDict["point_" + str(pointIter)]["Left"]["Pedal"] = [thisX, thisZ]
-            jointAngleDict["point_" + str(pointIter)]["Left"]["Pedal_angle"] = thisPedalAngle
-            jointAngleDict["point_" + str(pointIter)]["Left"]["Hip"] = jointAngleResult_left["joint_hip_left"]
-            jointAngleDict["point_" + str(pointIter)]["Left"]["Knee"] = jointAngleResult_left["joint_knee_left"]
-            jointAngleDict["point_" + str(pointIter)]["Left"]["Ankle"] = jointAngleResult_left["joint_foot_left"]
-            jointAngleDict["point_" + str(pointIter)]["Right"]["Pedal"] = [thisX, thisZ]
-            jointAngleDict["point_" + str(pointIter)]["Right"]["Pedal_angle"] = thisPedalAngle
-            jointAngleDict["point_" + str(pointIter)]["Right"]["Hip"] = jointAngleResult_right["joint_hip_right"]
-            jointAngleDict["point_" + str(pointIter)]["Right"]["Knee"] = jointAngleResult_right["joint_knee_right"]
-            jointAngleDict["point_" + str(pointIter)]["Right"]["Ankle"] = jointAngleResult_right["joint_foot_right"]
+        reached_point = False
+        currBestDistance = 999
+        while (not reached_point):
 
-            print("Left: ", jointAngleResult_left)
-            print("Right: ", jointAngleResult_right)
-            ros_right_hip_publisher.publish(jointAngleResult_right["joint_hip_right"])
-            ros_right_knee_publisher.publish(jointAngleResult_right["joint_knee_right"])
-            ros_right_ankle_publisher.publish(jointAngleResult_right["joint_foot_right"])
-            ros_left_hip_publisher.publish(jointAngleResult_left["joint_hip_left"])
-            ros_left_knee_publisher.publish(jointAngleResult_left["joint_knee_left"])
-            ros_left_ankle_publisher.publish(jointAngleResult_left["joint_foot_left"])
-            print("Target angles published")
+            hip_test_position_iterator = 0
+            knee_test_position_iterator = 0
+            ankle_test_position_iterator = 0
 
-#            while ( abs(_jointsStatusData[RIGHT_HIP_JOINT]["Pos"] - jointAngleResult_right["joint_hip_right"]) > JOINT_ANGLE_TOLERANCE_FK):
-#                time.sleep(0.1)
-#            print("Right hip moved to new position")
-#            while ( abs(_jointsStatusData[RIGHT_KNEE_JOINT]["Pos"] - jointAngleResult_right["joint_knee_right"]) > JOINT_ANGLE_TOLERANCE_FK ):
-#                time.sleep(0.1)
-#            print("Right knee moved to new position")
-#            while ( abs(_jointsStatusData[RIGHT_ANKLE_JOINT]["Pos"] - jointAngleResult_right["joint_foot_right"]) > JOINT_ANGLE_TOLERANCE_FK ):
-#                time.sleep(0.1)
-#            print("Right ankle moved to new position")
-            while ( abs(_jointsStatusData[LEFT_HIP_JOINT]["Pos"] - jointAngleResult_left["joint_hip_left"]) > JOINT_ANGLE_TOLERANCE_FK ):
-                time.sleep(0.1)
-            print("Left hip moved to new position")
-            while abs(_jointsStatusData[LEFT_KNEE_JOINT]["Pos"] - jointAngleResult_left[
-                "joint_knee_left"]) > JOINT_ANGLE_TOLERANCE_FK:
-                time.sleep(0.1)
-            print("Left knee moved to new position")
-            while abs(_jointsStatusData[LEFT_ANKLE_JOINT]["Pos"] - jointAngleResult_left[
-                "joint_foot_left"]) > JOINT_ANGLE_TOLERANCE_FK:
-                time.sleep(0.1)
-            print("Left ankle moved to new position")
+            if firstPointReached:
 
-            jointAngleDict["point_" + str(pointIter)]["Right"]["Pedal_actual"] = getPositionRightFoot()
-            jointAngleDict["point_" + str(pointIter)]["Left"]["Pedal_actual"] = getPositionLeftFoot()
+                lastCorrectHipAngle = _jointsStatusData[LEFT_HIP_JOINT]["Pos"]
+                lastCorrectKneeAngle = _jointsStatusData[LEFT_KNEE_JOINT]["Pos"]
+                lastCorrectAnkleAngle = _jointsStatusData[LEFT_ANKLE_JOINT]["Pos"]
 
-        else:
-            jointAngleDict["num_points"] = jointAngleDict["num_points"] - 1
+                upperTestHipAngle = lastCorrectHipAngle+0.15
+                upperTestKneeAngle = lastCorrectKneeAngle+0.15
+                upperTestAnkleAngle = lastCorrectAnkleAngle+0.2
+
+                lowerTestAnkleAngle = lastCorrectAnkleAngle-0.2
+                lowerTestKneeAngle = lastCorrectKneeAngle-0.15
+                lowerTestHipAngle = lastCorrectHipAngle-0.15
+
+                if (upperTestHipAngle > LEFT_HIP_JOINT_UPPER_LIMIT):
+                    upperTestHipAngle = LEFT_HIP_JOINT_UPPER_LIMIT
+                elif (upperTestHipAngle < LEFT_HIP_JOINT_LOWER_LIMIT):
+                    upperTestHipAngle = LEFT_HIP_JOINT_LOWER_LIMIT
+
+                if (lowerTestHipAngle > LEFT_HIP_JOINT_UPPER_LIMIT):
+                    lowerTestHipAngle = LEFT_HIP_JOINT_UPPER_LIMIT
+                elif (lowerTestHipAngle < LEFT_HIP_JOINT_LOWER_LIMIT):
+                    lowerTestHipAngle = LEFT_HIP_JOINT_LOWER_LIMIT
+
+                if (upperTestKneeAngle > LEFT_KNEE_JOINT_UPPER_LIMIT):
+                    upperTestKneeAngle = LEFT_KNEE_JOINT_UPPER_LIMIT
+                elif (upperTestKneeAngle < LEFT_KNEE_JOINT_LOWER_LIMIT):
+                    upperTestKneeAngle = LEFT_KNEE_JOINT_LOWER_LIMIT
+
+                if (lowerTestKneeAngle > LEFT_KNEE_JOINT_UPPER_LIMIT):
+                    lowerTestKneeAngle = LEFT_KNEE_JOINT_UPPER_LIMIT
+                elif (lowerTestKneeAngle < LEFT_KNEE_JOINT_LOWER_LIMIT):
+                    lowerTestKneeAngle = LEFT_KNEE_JOINT_LOWER_LIMIT
+
+                if (upperTestAnkleAngle > LEFT_ANKLE_JOINT_UPPER_LIMIT):
+                    upperTestAnkleAngle = LEFT_ANKLE_JOINT_UPPER_LIMIT
+                elif (upperTestAnkleAngle < LEFT_ANKLE_JOINT_LOWER_LIMIT):
+                    upperTestAnkleAngle = LEFT_ANKLE_JOINT_LOWER_LIMIT
+
+                if (lowerTestAnkleAngle > LEFT_ANKLE_JOINT_UPPER_LIMIT):
+                    lowerTestAnkleAngle = LEFT_ANKLE_JOINT_UPPER_LIMIT
+                elif (lowerTestAnkleAngle < LEFT_ANKLE_JOINT_LOWER_LIMIT):
+                    lowerTestAnkleAngle = LEFT_ANKLE_JOINT_LOWER_LIMIT
+
+                ankleTestPositionsList = np.linspace(lowerTestAnkleAngle, upperTestAnkleAngle, 10)
+                kneeTestPositionsList = np.linspace(lowerTestKneeAngle, upperTestKneeAngle, 20)
+                hipTestPositionsList = np.linspace(lowerTestHipAngle, upperTestHipAngle, 20)
+
+                print("Inside firstPointReached, lastCorrectHipAngle:", lastCorrectHipAngle, "upperTestHipAngle", upperTestHipAngle, "lowerTestHipAngle", lowerTestHipAngle, "hipTestPositionsList:", hipTestPositionsList)
+                print("Inside firstPointReached, lastCorrectKneeAngle:", lastCorrectKneeAngle, "upperTestKneeAngle", upperTestKneeAngle, "lowerTestKneeAngle", lowerTestKneeAngle, "kneeTestPositionsList:", kneeTestPositionsList)
+                print("Inside firstPointReached, lastCorrectAnkleAngle:", lastCorrectAnkleAngle, "upperTestAnkleAngle", upperTestAnkleAngle, "lowerTestAnkleAngle", lowerTestAnkleAngle, "ankleTestPositionsList:", ankleTestPositionsList)
+
+                currBestDistance = 999
+                currBestHipAngle = 0
+                currBestKneeAngle = 0
+                currBestAnkleAngle = 0
+
+                for ankle_test_position_iterator in range(len(ankleTestPositionsList)):
+                    if reached_point:
+                        break
+
+                    if ankle_test_position_iterator % 2 is 0:
+                        ankle_test_position = ankleTestPositionsList[len(ankleTestPositionsList)/2 + ankle_test_position_iterator/2]
+                    else:
+                        ankle_test_position = ankleTestPositionsList[len(ankleTestPositionsList)/2 - int(ankle_test_position_iterator/2)]
+
+                    for knee_test_position_iterator in range(len(kneeTestPositionsList)):
+                        if reached_point:
+                            break
+
+                        if knee_test_position_iterator % 2 is 0:
+                            knee_test_position = kneeTestPositionsList[len(kneeTestPositionsList)/2 + knee_test_position_iterator/2]
+                        else:
+                            knee_test_position = kneeTestPositionsList[len(kneeTestPositionsList)/2 - int(knee_test_position_iterator/2)]
+
+
+                        for hip_test_position_iterator in range(len(hipTestPositionsList)):
+                            if reached_point:
+                                break
+
+                            if hip_test_position_iterator % 2 is 0:
+                                hip_test_position = hipTestPositionsList[len(hipTestPositionsList)/2 + hip_test_position_iterator/2]
+                            else:
+                                hip_test_position = hipTestPositionsList[len(hipTestPositionsList)/2 - int(hip_test_position_iterator/2)]
+
+                            ros_left_hip_publisher.publish(hip_test_position)
+                            ros_left_knee_publisher.publish(knee_test_position)
+                            ros_left_ankle_publisher.publish(ankle_test_position)
+                            print("Target angles for point number", pointIter, "published: hip=", hip_test_position, "knee=", knee_test_position, "ankle=", ankle_test_position)
+                            while abs(_jointsStatusData[LEFT_HIP_JOINT]["Pos"] - hip_test_position) > JOINT_ANGLE_TOLERANCE_FK:
+                                time.sleep(0.001)
+                            while abs(_jointsStatusData[LEFT_KNEE_JOINT]["Pos"] - knee_test_position) > JOINT_ANGLE_TOLERANCE_FK:
+                                time.sleep(0.001)
+                            while abs(_jointsStatusData[LEFT_ANKLE_JOINT]["Pos"] - ankle_test_position) > JOINT_ANGLE_TOLERANCE_FK:
+                                time.sleep(0.001)
+
+                            currDistanceToGoalPoint = get_distance(getPositionLeftFoot(), [thisX, thisZ])
+                            if currDistanceToGoalPoint < currBestDistance:
+                                currBestDistance = currDistanceToGoalPoint
+                                currBestHipAngle = hip_test_position
+                                currBestKneeAngle = knee_test_position
+                                currBestAnkleAngle = ankle_test_position
+                            print("best distance to goal point:", currBestDistance,"this distance:", currDistanceToGoalPoint, "tolerance:", POINT_REACHED_TOLERANCE)
+                            if (currDistanceToGoalPoint < POINT_REACHED_TOLERANCE):
+                                reached_point = True
+
+                ros_left_hip_publisher.publish(currBestHipAngle)
+                ros_left_knee_publisher.publish(currBestKneeAngle)
+                ros_left_ankle_publisher.publish(currBestAnkleAngle)
+                print("Target angles for point number", pointIter, "published: hip=", currBestHipAngle, "knee=", currBestKneeAngle, "ankle=", currBestAnkleAngle)
+                while abs(_jointsStatusData[LEFT_HIP_JOINT]["Pos"] - currBestHipAngle) > JOINT_ANGLE_TOLERANCE_FK:
+                    time.sleep(0.001)
+                while abs(_jointsStatusData[LEFT_KNEE_JOINT]["Pos"] - currBestKneeAngle) > JOINT_ANGLE_TOLERANCE_FK:
+                    time.sleep(0.001)
+                while abs(_jointsStatusData[LEFT_ANKLE_JOINT]["Pos"] - currBestAnkleAngle) > JOINT_ANGLE_TOLERANCE_FK:
+                    time.sleep(0.001)
+                reached_point = True
+            else:
+                for ankle_test_position in LEFT_ANKLE_JOINT_TEST_CONFIGURATIONS:
+                    if reached_point:
+                        break
+                    for knee_test_position in LEFT_KNEE_JOINT_TEST_CONFIGURATIONS:
+                        if reached_point:
+                            break
+                        for hip_test_position in LEFT_HIP_JOINT_TEST_CONFIGURATIONS:
+                            if reached_point:
+                                break
+
+                            ros_left_hip_publisher.publish(hip_test_position)
+                            ros_left_knee_publisher.publish(knee_test_position)
+                            ros_left_ankle_publisher.publish(ankle_test_position)
+                            print("Target angles for point number", pointIter, "published: hip=", hip_test_position, "knee=", knee_test_position, "ankle=", ankle_test_position)
+                            while abs(_jointsStatusData[LEFT_HIP_JOINT]["Pos"] - hip_test_position) > JOINT_ANGLE_TOLERANCE_FK:
+                                time.sleep(0.01)
+                            while abs(_jointsStatusData[LEFT_KNEE_JOINT]["Pos"] - knee_test_position) > JOINT_ANGLE_TOLERANCE_FK:
+                                time.sleep(0.01)
+                            while abs(_jointsStatusData[LEFT_ANKLE_JOINT]["Pos"] - ankle_test_position) > JOINT_ANGLE_TOLERANCE_FK:
+                                time.sleep(0.01)
+
+                            if (get_distance(getPositionLeftFoot(), [thisX, thisZ]) < POINT_REACHED_TOLERANCE):
+                                reached_point = True
+                                firstPointReached = True
+                                currBestDistance = get_distance(getPositionLeftFoot(), [thisX, thisZ])
+
+        jointAngleDict["point_" + str(pointIter)] = {}
+        jointAngleDict["point_" + str(pointIter)]["Left"] = {}
+        jointAngleDict["point_" + str(pointIter)]["Left"]["Pedal"] = [thisX, thisZ]
+        jointAngleDict["point_" + str(pointIter)]["Left"]["Pedal_angle"] = thisPedalAngle
+        jointAngleDict["point_" + str(pointIter)]["Left"]["Hip"] = _jointsStatusData[LEFT_HIP_JOINT]["Pos"]
+        jointAngleDict["point_" + str(pointIter)]["Left"]["Knee"] = _jointsStatusData[LEFT_KNEE_JOINT]["Pos"]
+        jointAngleDict["point_" + str(pointIter)]["Left"]["Ankle"] = _jointsStatusData[LEFT_ANKLE_JOINT]["Pos"]
+        jointAngleDict["point_" + str(pointIter)]["Left"]["Pedal_actual"] = getPositionLeftFoot()
+        jointAngleDict["point_" + str(pointIter)]["Left"]["Error"] = currBestDistance
+
+        with open(JSON_FILENAME, "w") as write_file:
+            json.dump(jointAngleDict, write_file, indent=4, sort_keys=True)
 
         print("Finished point ", pointIter)
 

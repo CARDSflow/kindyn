@@ -57,7 +57,7 @@
 #include <roboy_simulation_msgs/JointState.h>
 #include <roboy_middleware_msgs/ForwardKinematics.h>
 #include <roboy_middleware_msgs/InverseKinematics.h>
-#include <roboy_middleware_msgs/InverseKinematicsTwoFrames.h>
+#include <roboy_middleware_msgs/InverseKinematicsMultipleFrames.h>
 #include <roboy_middleware_msgs/MotorCommand.h>
 #include <roboy_middleware_msgs/MotorStatus.h>
 #include <roboy_control_msgs/MoveEndEffectorAction.h>
@@ -158,8 +158,8 @@ namespace cardsflow {
             bool InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::Request &req,
                                           roboy_middleware_msgs::InverseKinematics::Response &res);
 
-            bool InverseKinematicsTwoFramesService(roboy_middleware_msgs::InverseKinematicsTwoFrames::Request &req,
-                                          roboy_middleware_msgs::InverseKinematicsTwoFrames::Response &res);
+            bool InverseKinematicsMultipleFramesService(roboy_middleware_msgs::InverseKinematicsMultipleFrames::Request &req,
+                                          roboy_middleware_msgs::InverseKinematicsMultipleFrames::Response &res);
             /**
              * Callback for Interactive Marker Feedback of endeffectors. When the Interactive Marker is released in rviz,
              * the IK routine is called and the solution directly applied to the robot q_target angles

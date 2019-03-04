@@ -102,7 +102,7 @@ target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES
 		CableLengthController TorquePositionController ForcePositionController)
 
 # testing idyntree
-add_executable( test_idyntree src/test_idyntree.cpp)
+add_executable( test_idyntree src/utilities/test_idyntree.cpp)
 target_link_libraries(test_idyntree ${iDynTree_LIBRARIES} ${catkin_LIBRARIES})
 
 # test_robot
