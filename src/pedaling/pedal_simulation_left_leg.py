@@ -30,6 +30,7 @@ from roboy_middleware_msgs.srv import InverseKinematics, ForwardKinematics
 from roboy_simulation_msgs.msg import JointState
 from roboy_control_msgs.srv import SetControllerParameters
 from std_msgs.msg import Float32
+from geometry_msgs.msg import Twist
 
 
 PRINT_DEBUG = True
@@ -595,13 +596,13 @@ def publish_velocity(joint_name, next_joint_angle, current_joint_angle, end_time
 ## Documentation for a function
 #
 #  Updates the global variables @BIKE_VELOCITY, @PEDAL_SINGLE_ROTATION_DURATION and TRAJECTORY_POINT_DURATION
-#  when a bike-velocity gets published to the topic "cmd_velocity_rickshaw".
-def update_velocity(velocity_F32):
+#  when a bike-velocity gets published to the topic "cmd_vel".
+def update_velocity(velocity_Twist):
     global PEDAL_SINGLE_ROTATION_DURATION
     global TRAJECTORY_POINT_DURATION
     global BIKE_VELOCITY
 
-    velocity = velocity_F32.data
+    velocity = velocity_Twist.linear.x
 
     BIKE_VELOCITY = velocity
 
