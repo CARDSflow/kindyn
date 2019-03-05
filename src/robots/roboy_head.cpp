@@ -1,5 +1,6 @@
 #include "kindyn/robot.hpp"
 #include <thread>
+#include <std_msgs/Float32.h>
 #include <roboy_middleware_msgs/MotorCommand.h>
 #include <roboy_middleware_msgs/MotorConfig.h>
 #include <roboy_middleware_msgs/MotorStatus.h>
@@ -24,6 +25,10 @@ public:
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
+        sphere_head_axis0 = nh->advertise<std_msgs::Float32>("/sphere_head_axis0/sphere_head_axis0/target",1);
+        sphere_head_axis1 = nh->advertise<std_msgs::Float32>("/sphere_head_axis1/sphere_head_axis1/target",1);
+        sphere_head_axis2 = nh->advertise<std_msgs::Float32>("/sphere_head_axis2/sphere_head_axis2/target",1);
+        face_coordinates = nh->subscribe("/roboy/cognition/vision/face_coordinates",1, &RoboyHead::FaceCoordinates, this);
         motor_status = nh->subscribe("/roboy/middleware/MotorStatus", 1, &RoboyHead::MotorStatus, this);
         for(auto ef:endeffectors) {
             motor_control_mode[ef] = nh->serviceClient<roboy_middleware_msgs::ControlMode>(
@@ -71,7 +76,27 @@ public:
 //            if(!control.second.call(msg))
 //                ROS_WARN("failed to change control mode to position");
 //        }
+        roll.data = 0;
+        pitch.data = 0;
+        yaw.data = 0;
     };
+
+    void FaceCoordinates(const geometry_msgs::Point::ConstPtr &msg){
+        float gain;
+        nh->getParam("/face_coordinate/gain", gain);
+        pitch.data -= gain*msg->y;
+        yaw.data -= gain*msg->x;
+        if(pitch.data>=pitch_max)
+            pitch.data = pitch_max;
+        if(pitch.data<=pitch_min)
+            pitch.data = pitch_min;
+        if(yaw.data>=yaw_max)
+            yaw.data = yaw_max;
+        if(yaw.data<=yaw_min)
+            yaw.data = yaw_min;
+        sphere_head_axis1.publish(pitch);
+        sphere_head_axis2.publish(yaw);
+    }
 
     void MotorStatus( const roboy_middleware_msgs::MotorStatus::ConstPtr &msg){
         if(msg->id != SHOULDER_RIGHT)
@@ -127,14 +152,16 @@ public:
         ROS_INFO_STREAM_THROTTLE(1, str.str());
     };
     ros::NodeHandlePtr nh; /// ROS nodehandle
-    ros::Publisher motor_command; /// motor command publisher
-    ros::Subscriber motor_status;
+    ros::Publisher motor_command, sphere_head_axis0, sphere_head_axis1, sphere_head_axis2; /// motor command publisher
+    ros::Subscriber motor_status, face_coordinates;
     ros::ServiceClient sphere_left_axis0_params, sphere_left_axis1_params, sphere_left_axis2_params;
     map<string,ros::ServiceClient> motor_control_mode, motor_config;
     vector<string> endeffectors = {"shoulder_right"}; //"head", "shoulder_left", "shoulder_right",
     map<string, vector<string>> endeffector_jointnames;
     bool external_robot_state; /// indicates if we get the robot state externally
     bool status_received = false;
+    std_msgs::Float32 roll, pitch, yaw;
+    float err_x = 0, error_y = 0, pitch_max = 0.33, pitch_min = -0.50, yaw_min = -0.50, yaw_max = 0;
 //    map<string,vector<short unsigned int>> motors = {
 //            {"head",{9,10,11,12,13,14}},
 //            {"shoulder_left",{0,1,2,3,4,5,6,7,8,9,10}},
