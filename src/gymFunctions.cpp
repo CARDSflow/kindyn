@@ -14,9 +14,10 @@ gymFunctions::gymFunctions(cardsflow::kindyn::Robot* robot, int id, bool respect
 
     training_robot = robot;
     training_with_limits = respect_limits;
-    //for(int i=0; i< training_robot->number_of_cables; i++) last_action.push_back(0.0);
+
     last_action.resize(training_robot->number_of_cables);
     last_action.setZero();
+
     gym_step = nh->advertiseService("/instance" + to_string(id) + "/gym_step", &gymFunctions::GymStepService,this);
     gym_read_state = nh->advertiseService("/instance" + to_string(id) + "/gym_read_state", &gymFunctions::GymReadStateService,this);
     gym_reset = nh->advertiseService("/instance" + to_string(id) + "/gym_reset", &gymFunctions::GymResetService,this);
@@ -28,18 +29,9 @@ gymFunctions::gymFunctions(cardsflow::kindyn::Robot* robot, int id, bool respect
 bool gymFunctions::GymStepService(roboy_simulation_msgs::GymStep::Request &req,
                                   roboy_simulation_msgs::GymStep::Response &res){
     training_robot->update();
-/*
 
-    for(int i=0; i< training_robot->number_of_cables; i++){
-        //Set the commanded tendon velocity from RL agent to simulation
-        //training_robot->l[i] = req.set_points[i];     //Commanding cable length for hardware
-
-        training_robot->Ld[0][i] = (req.set_points[i] - last_action[i] ) / req.step_size; ;   //Commanding cable velocity for simulation
-        last_action[i] = req.set_points[i];
-    }
-*/
     Map<VectorXd> action(req.set_points.data()  , training_robot->number_of_cables);
-    training_robot->Ld[0]= (action - training_robot->l ) / req.step_size;  //Commanding cable velocity for simulation
+    training_robot->Ld[0]= (action - last_action) / req.step_size;  //Commanding cable velocity for simulation
     last_action = action;
 
 
@@ -78,7 +70,8 @@ bool gymFunctions::GymResetService(roboy_simulation_msgs::GymReset::Request &req
                                    roboy_simulation_msgs::GymReset::Response &res){
 
     training_robot->setIntegrationTime(0.0);
-
+    last_action.setZero();
+    
     VectorXd jointAngle, jointVel;
     jointAngle.resize(training_robot->number_of_dofs);
     jointVel.resize(training_robot->number_of_dofs);
