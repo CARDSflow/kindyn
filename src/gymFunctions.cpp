@@ -26,12 +26,9 @@ bool gymFunctions::GymStepService(roboy_simulation_msgs::GymStep::Request &req,
                                   roboy_simulation_msgs::GymStep::Response &res){
     training_robot->update();
 
-
-    for(int i=0; i< training_robot->number_of_cables; i++){
-        //Set the commanded tendon velocity from RL agent to simulation
-        //training_robot->l[i] = req.set_points[i];     //Commanding cable length for hardware
-        training_robot->Ld[0][i] = req.set_points[i];   //Commanding cable velocity for simulation
-    }
+    Map<VectorXd> action(req.set_points.data()  , training_robot->number_of_cables);
+    training_robot->Ld[0]= action;  //Commanding cable velocity for simulation
+    //training_robot->l[i] = action;     //Commanding cable length for hardware
 
     if(!training_robot->getExternalRobotState())
         training_robot->forwardKinematics(req.step_size);
