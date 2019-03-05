@@ -1,8 +1,10 @@
 #include "kindyn/GymServices.h"
+#include <iostream>
 
 GymServices::GymServices(cardsflow::kindyn::Robot* robot, int id, bool respect_limits){
     ros::NodeHandlePtr nh(new ros::NodeHandle);
     boost::shared_ptr <ros::AsyncSpinner> spinner;
+
     spinner.reset(new ros::AsyncSpinner(0));
     spinner->start();
     ROS_INFO("Gym functions");
@@ -14,6 +16,11 @@ GymServices::GymServices(cardsflow::kindyn::Robot* robot, int id, bool respect_l
     gym_read_state = nh->advertiseService("/instance" + to_string(id) + "/gym_read_state", &GymServices::gymReadStateHandler,this);
     gym_reset = nh->advertiseService("/instance" + to_string(id) + "/gym_reset", &GymServices::gymResetHandler,this);
     gym_goal = nh->advertiseService("/instance" + to_string(id) + "/gym_goal", &GymServices::gymGoalHandler,this);
+
+    //for(int i=0; i< training_robot->number_of_cables; i++) last_action.push_back(0.0);
+    last_action.resize(training_robot->number_of_cables);
+    last_action.setZero();
+
     fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
 }
 
@@ -23,10 +30,11 @@ bool GymServices::gymStepHandler(roboy_simulation_msgs::GymStep::Request &req,
     training_robot->update();
 
     Map<VectorXd> action(req.set_points.data()  , training_robot->number_of_cables);
-    training_robot->Ld[0]= action;  //Commanding cable velocity for simulation
-    //training_robot->l[i] = action;     //Commanding cable length for hardware
+    training_robot->Ld[0]= (action - last_action ) / req.step_size;  //Commanding cable velocity for simulation
+    last_action = action;
 
-    if(!training_robot->isExternalRobotExist())
+
+    if(!training_robot->getExternalRobotState())
         training_robot->forwardKinematics(req.step_size);
 
     ROS_INFO_STREAM_THROTTLE(5, "Ld = " << training_robot->Ld[0].format(fmt));
