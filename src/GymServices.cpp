@@ -30,7 +30,7 @@ bool GymServices::gymStepHandler(roboy_simulation_msgs::GymStep::Request &req,
     training_robot->update();
 
     Map<VectorXd> action(req.set_points.data()  , training_robot->number_of_cables);
-    training_robot->Ld[0]= (action - last_action ) / req.step_size;  //Commanding cable velocity for simulation
+    training_robot->Ld[0]= (action - training_robot->l ) / req.step_size;  //Commanding cable velocity for simulation
     last_action = action;
 
 
