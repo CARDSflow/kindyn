@@ -41,6 +41,7 @@ private:
     ros::ServiceServer gym_reset; /// OpenAI Gym training environment reset function, ros service instance
     ros::ServiceServer gym_goal; /// OpenAI Gym training environment sets new feasible goal function, ros service instance
 
+    VectorXd last_action;
     bool training_with_limits;
     void setResponse(VectorXd jointAngles,VectorXd jointVel,roboy_simulation_msgs::GymStep::Response &res);
     void setJointAngleAndVelocity(VectorXd jointAngles, VectorXd jointVel);
