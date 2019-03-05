@@ -139,15 +139,15 @@ namespace cardsflow {
             /**
              * Getter functions for gymFunctions class
              */
-            double getLimit(int index1, int index2);
+            virtual double getLimit(int index1, int index2) {};
 
-            vector<double> getLimitVector(int index);
+            virtual vector<double> getLimitVector(int index) {};
 
-            double getMax(int index);
+            virtual double getMax(int index) {};
 
-            double getMin(int index);
+            virtual double getMin(int index) {};
 
-            bool getExternalRobotState();
+            virtual bool getExternalRobotState() {};
 
         private:
 
@@ -285,7 +285,6 @@ namespace cardsflow {
             vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments
 
 
-
         protected:
             iDynTree::FreeFloatingGeneralizedTorques bias; /// Coriolis+Gravity term
             iDynTree::MatrixDynSize Mass; /// Mass matrix
@@ -314,9 +313,6 @@ namespace cardsflow {
             hardware_interface::CardsflowStateInterface cardsflow_state_interface; /// cardsflow state interface
             hardware_interface::CardsflowCommandInterface cardsflow_command_interface; /// cardsflow command interface
             bool first_update = true;
-            vector<double> limits[3];
-            double min[3] = {0,0,-1}, max[3] = {0,0,1};
-            bool external_robot_state; /// indicates if we get the robot state externally
         };
     }
 }

@@ -1,5 +1,5 @@
 #include "../include/kindyn/gymFunctions.h"
-
+#include <iostream>
 gymFunctions::gymFunctions(cardsflow::kindyn::Robot* robot, int id, bool respect_limits){
     if (!ros::isInitialized()) {
         int argc = 0;
@@ -26,9 +26,11 @@ bool gymFunctions::GymStepService(roboy_simulation_msgs::GymStep::Request &req,
                                   roboy_simulation_msgs::GymStep::Response &res){
     training_robot->update();
 
+
     for(int i=0; i< training_robot->number_of_cables; i++){
         //Set the commanded tendon velocity from RL agent to simulation
-        training_robot->Ld[0][i] = req.set_points[i];
+        //training_robot->l[i] = req.set_points[i];     //Commanding cable length for hardware
+        training_robot->Ld[0][i] = req.set_points[i];   //Commanding cable velocity for simulation
     }
 
     if(!training_robot->getExternalRobotState())
@@ -36,6 +38,7 @@ bool gymFunctions::GymStepService(roboy_simulation_msgs::GymStep::Request &req,
 
     ROS_INFO_STREAM_THROTTLE(5, "Ld = " << training_robot->Ld[0].format(fmt));
 
+    training_robot->write();
     if(training_with_limits){
         res.feasible = isFeasible(training_robot->getLimitVector(0), training_robot->getLimitVector(1), training_robot->q[0], training_robot->q[1]);
         if(!res.feasible){

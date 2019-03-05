@@ -1155,23 +1155,3 @@ void Robot::setJointState(int index1, int index2, double value){
 void Robot::setIntegrationTime(double gym_dt){
     integration_time = gym_dt;
 }
-
-double Robot::getLimit(int index1, int index2){
-    return limits[index1][index2];
-}
-
-vector<double> Robot::getLimitVector(int index){
-    return limits[index];
-}
-
-double Robot::getMax(int index){
-    return max[index];
-}
-
-double Robot::getMin(int index){
-    return min[index];
-}
-
-bool Robot::getExternalRobotState(){
-    return external_robot_state;
-}

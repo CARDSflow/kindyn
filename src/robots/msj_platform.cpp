@@ -54,6 +54,7 @@ public:
 
 
     };
+
     /**
      * Read joint limits of the robots which have the shoulder as part of their kinematics.
      *
@@ -103,27 +104,39 @@ public:
     void write(){
         roboy_middleware_msgs::MotorCommand msg;
         msg.id = 5;
-//        stringstream str;
-//        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
-//            msg.motors.push_back(i);
-//            double l_change = l[i]-l_offset[i];
-//            msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
-//            str << l_change << "\t";
-//        }
+        stringstream str;
         for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
             msg.motors.push_back(i);
-//            double l_change = l_target[i]-l_offset[i];
-            msg.set_points.push_back(l_target[i]); //
-//            str << l_target[i] << "\t";
+            double l_change = l[i]-l_offset[i];
+            msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
+            str << l_change << "\t";
         }
-//        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
-//                msg.motors.push_back(i);
-//                msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(Ld[0][i]));
-//        }
-//		ROS_INFO_STREAM_THROTTLE(1,str.str());
 
         motor_command.publish(msg);
     };
+
+    /**
+     * Virtual getter functions for ball joint limits and max
+     */
+    double getLimit(int index1, int index2){
+        return limits[index1][index2];
+    }
+
+    vector<double> getLimitVector(int index){
+        return limits[index];
+    }
+
+    double getMax(int index){
+        return max[index];
+    }
+
+    double getMin(int index){
+        return min[index];
+    }
+
+    bool getExternalRobotState(){
+        return external_robot_state;
+    }
 
 private:
 
@@ -134,11 +147,10 @@ private:
     ros::ServiceServer gym_read_state; //OpenAI Gym training environment observation function, returns q, qdot and feasbility
     ros::ServiceServer gym_reset; //OpenAI Gym training environment reset function, ros service instance
     ros::ServiceServer gym_goal; //OpenAI Gym training environment sets new feasible goal function, ros service instance
-    /*
-    bool external_robot_state; /// indicates if we get the robot state externally
+
     vector<double> limits[3];
     double min[3] = {0,0,-1}, max[3] = {0,0,1};
-     */
+    bool external_robot_state; /// indicates if we get the robot state externally
 
     double l_offset[NUMBER_OF_MOTORS];
     boost::shared_ptr <ros::AsyncSpinner> spinner;

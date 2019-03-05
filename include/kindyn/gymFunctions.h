@@ -5,7 +5,6 @@
 #include <roboy_simulation_msgs/GymStep.h>
 #include <roboy_simulation_msgs/GymReset.h>
 #include <roboy_simulation_msgs/GymGoal.h>
-#include <roboy_middleware_msgs/MotorCommand.h>
 #include <vector>
 #include <Eigen/Core>
 #include <Eigen/Dense>
