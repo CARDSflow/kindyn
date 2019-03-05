@@ -23,6 +23,8 @@ import json
 import math
 import time
 from threading import Thread
+
+from geometry_msgs.msg import Twist
 from scipy import interpolate
 import numpy as np
 import rospy
@@ -592,16 +594,16 @@ def publish_velocity(joint_name, next_joint_angle, current_joint_angle, end_time
     time.sleep(duration*SIMULATION_FACTOR)
 
 
-## Documentation for a function
+### Documentation for a function
 #
 #  Updates the global variables @BIKE_VELOCITY, @PEDAL_SINGLE_ROTATION_DURATION and TRAJECTORY_POINT_DURATION
-#  when a bike-velocity gets published to the topic "cmd_velocity_rickshaw".
-def update_velocity(velocity_F32):
+#  when a bike-velocity gets published to the topic "cmd_vel".
+def update_velocity(velocity_Twist):
     global PEDAL_SINGLE_ROTATION_DURATION
     global TRAJECTORY_POINT_DURATION
     global BIKE_VELOCITY
 
-    velocity = velocity_F32.data
+    velocity = velocity_Twist.linear.x
 
     BIKE_VELOCITY = velocity
 
@@ -617,7 +619,6 @@ def update_velocity(velocity_F32):
         PEDAL_SINGLE_ROTATION_DURATION = 2 * np.pi * (RADIUS_FRONT_CHAIN_RING / RADIUS_GEAR_CLUSTER /
                                                           (velocity / RADIUS_BACK_TIRE))
         TRAJECTORY_POINT_DURATION = PEDAL_SINGLE_ROTATION_DURATION / NUMBER_CIRCULATION_POINTS
-
 
 ## Documentation for a function
 #
@@ -806,7 +807,7 @@ def control_pedaling():
 def main():
     rospy.init_node('pedal_simulation', anonymous=True)
     rospy.Subscriber("joint_state", JointState, joint_state_callback)
-    rospy.Subscriber("/cmd_velocity_rickshaw", Float32, update_velocity)
+    rospy.Subscriber("/cmd_vel", Twist, update_velocity)
     control_pedaling()
 
     return 1
@@ -814,3 +815,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

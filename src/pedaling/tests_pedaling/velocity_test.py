@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 import rospy
 from roboy_middleware_msgs.srv import InverseKinematics, ForwardKinematics
 from std_msgs.msg import Float32
+from geometry_msgs.msg import Twist
 
 TIME_STEP_SIMULATION = 0.5
 TIME_STEP_REALITY = 0.5
@@ -77,16 +78,25 @@ joint_status_data = {
 
 ## Documentation for a function
 #
+#  Return a Twist-msg with the linear velocity #velocity
+def get_twist(velocity):
+    twist = Twist()
+    twist.linear.x = velocity
+    return twist
+
+
+## Documentation for a function
+#
 #  Return the position of the left foot of Roboy.
 def get_position_left_foot():
-    fkJointNamesList = [ ROS_JOINT_HIP_LEFT, ROS_JOINT_KNEE_LEFT, ROS_JOINT_ANKLE_LEFT ]
-    fkJointPositions = [ joint_status_data[ LEFT_HIP_JOINT ][ "Pos" ], joint_status_data[ LEFT_KNEE_JOINT ][ "Pos" ],
+    fk_joint_names_list = [ ROS_JOINT_HIP_LEFT, ROS_JOINT_KNEE_LEFT, ROS_JOINT_ANKLE_LEFT ]
+    fk_joint_positions = [ joint_status_data[ LEFT_HIP_JOINT ][ "Pos" ], joint_status_data[ LEFT_KNEE_JOINT ][ "Pos" ],
                          joint_status_data[ LEFT_ANKLE_JOINT ][ "Pos" ] ]
 
     rospy.wait_for_service('fk')
     try:
         fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
-        fk_result = fk_srv("foot_left_tip", "foot_left_tip", fkJointNamesList, fkJointPositions)
+        fk_result = fk_srv("foot_left_tip", "foot_left_tip", fk_joint_names_list, fk_joint_positions)
         return [ fk_result.pose.position.x, fk_result.pose.position.z ]
 
     except rospy.ServiceException, e:
@@ -108,7 +118,7 @@ def get_position_right_foot():
     rospy.wait_for_service('fk')
     try:
         fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
-        fk_result = fk_srv("foot_right_tip", "foot_right_tip", fkJointNamesList, fkJointPositions)
+        fk_result = fk_srv("foot_right_tip", "foot_right_tip", fk_joint_names_list, fk_joint_positions)
         return [ fk_result.pose.position.x, fk_result.pose.position.z ]
 
     except rospy.ServiceException, e:
@@ -186,7 +196,7 @@ def simulation_test(pub):
     error_results_left = [[]] * (MAX_VELOCITY / VELOCITY_STEP_SIMULATION)
 
     for i in range(1, MAX_VELOCITY, VELOCITY_STEP_SIMULATION):
-        pub.publish(i)
+        pub.publish(get_twist(i))
         for k in range(10):
             error_results_right[i].append(evaluate_error(i, "right"))
             error_results_left[i].append(evaluate_error(i, "left"))
@@ -240,7 +250,7 @@ def reality_test_acceleration(pub):
     for j in range(len(VELOCITY_STEPS_REALITY)):
         for i in range(1, MAX_VELOCITY, VELOCITY_STEPS_REALITY[i]):
             start_time = rospy.get_rostime()
-            pub.publish(i)
+            pub.publish(get_twist(i))
             while not velocity_reached(i):
                 pass
             end_time = rospy.get_rostime()
@@ -260,7 +270,7 @@ def reality_test_acceleration(pub):
 #
 #  Initializes the Test-Node for the velocity-tests
 def main():
-    pub = rospy.Publisher('/cmd_velocity_rickshaw', Float32, queue_size=10)
+    pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
     rospy.init_node('velocity_publisher', anonymous=True)
     simulation_test(pub)
     reality_test_acceleration(pub)
