@@ -13,27 +13,25 @@ from __future__ import print_function
 from threading import Thread
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+import numpy.polynomial.polynomial as poly
 import json
 import time
-
 import numpy as np
 from scipy import interpolate
 import rospy
 from roboy_simulation_msgs.msg import JointState
-from std_msgs.msg import Float32
-import numpy.polynomial.polynomial as poly
-
+from std_msgs.msg import Float32, Float64
 
 PRINT_DEBUG = False
 
-STEPS_DISTRIBUTION_TEST = [16]
+STEPS_DISTRIBUTION_TEST = [2, 4, 6, 8]
 SHOW_AVERAGE = True  # Display only average transition times of step-distributions
 
 UPDATE_FREQUENCY = 0.01
 ERROR_TOLERANCE = np.pi/36
 INITIAL_STARTING_TIME = 10
-
-MAX_TRANSITION_TIME = 10
+ 
+MAX_TRANSITION_TIME = 5
 
 JOINT_SHOULDER_AXIS0_RIGHT = "right_shoulder_axis0"
 JOINT_SHOULDER_AXIS1_RIGHT = "right_shoulder_axis1"
@@ -135,7 +133,7 @@ _regressedWrist1Right = None
 _regressedWrist0Left = None
 _regressedWrist1Left = None
 
-RECORDED_TRAJECTORY_FILENAME = "capture_trajectory/steering_trajectory.json"
+RECORDED_TRAJECTORY_FILENAME = "trajectory_steering/steering_trajectory.json"
 
 
 ## Documentation for a function.
@@ -387,7 +385,7 @@ def steering_test(pub):
 
     min_angle = min(_trajectorySteering)+0.01
     max_angle = max(_trajectorySteering)-0.01
-    d = max_angle - min_angle
+    max_angle_difference = max_angle - min_angle
     pub.publish(min_angle)
     time.sleep(INITIAL_STARTING_TIME)
 
@@ -396,7 +394,7 @@ def steering_test(pub):
         print("\nStarting with amount of steps from min to max: ", STEPS_DISTRIBUTION_TEST[j])
         for i in range(STEPS_DISTRIBUTION_TEST[j]):
             start_time = time.time()
-            target_angle = min_angle+(d/STEPS_DISTRIBUTION_TEST[j]*i)
+            target_angle = min_angle+(max_angle_difference/STEPS_DISTRIBUTION_TEST[j]*i)
             print("Step ", i, ": target_angle = ", target_angle)
             increasing_angles[j].append(target_angle)
             pub.publish(target_angle)
@@ -409,7 +407,7 @@ def steering_test(pub):
         print("\nStarting with amount of steps from max to min: ", 2 ** j)
         for i in range(STEPS_DISTRIBUTION_TEST[j]):
             start_time = time.time()
-            target_angle = max_angle-(d/STEPS_DISTRIBUTION_TEST[j]*i)
+            target_angle = max_angle-(max_angle_difference/STEPS_DISTRIBUTION_TEST[j]*i)
             print("Step ", i, ": target_angle = ", target_angle)
             decreasing_angles[j].append(target_angle)
             pub.publish(target_angle)
@@ -422,9 +420,9 @@ def steering_test(pub):
     if not SHOW_AVERAGE:
         for i in range(len(STEPS_DISTRIBUTION_TEST)):
             plt.plot(increasing_angles[i], transition_times_increasing[i],
-                     label="transition times with increasing step-length :"+str(d/STEPS_DISTRIBUTION_TEST[i]))
+                     label="transition times with increasing step-length :"+str(max_angle_difference/STEPS_DISTRIBUTION_TEST[i]))
             plt.plot(decreasing_angles[ i ], transition_times_decreasing[ i ],
-                     label="transition times with decreasing step-length :" + str(d / STEPS_DISTRIBUTION_TEST[i]))
+                     label="transition times with decreasing step-length :" + str(max_angle_difference / STEPS_DISTRIBUTION_TEST[i]))
 
         plt.xlabel("target_angle")
         plt.ylabel("transition time in s")
@@ -432,7 +430,7 @@ def steering_test(pub):
     else:
         step_lengths = []
         for i in range(len(STEPS_DISTRIBUTION_TEST)):
-            step_lengths.append(d/STEPS_DISTRIBUTION_TEST[i])
+            step_lengths.append(max_angle_difference/STEPS_DISTRIBUTION_TEST[i])
         avg_times_increasing = []
         avg_times_decreasing = []
         for transition_times in transition_times_increasing:
@@ -454,15 +452,16 @@ def steering_test(pub):
 #
 #  Initializes the Test-Node for the steering-test
 def main():
-    pub = rospy.Publisher('/cmd_steering_angle_rickshaw', Float32, queue_size=10)
+    pub = rospy.Publisher('/target_angle', Float64, queue_size=10)
     rospy.Subscriber("joint_state", JointState, joint_state_callback)
     rospy.init_node('steering_test', anonymous=True)
     import_joint_trajectory_record()
-    regress_joint_positions_from_file("capture_trajectory/saved_coefficients.json")
+    regress_joint_positions_from_file("trajectory_steering/saved_coefficients.json")
     steering_test(pub)
 
 
 if __name__ == '__main__':
     main()
+
 
 

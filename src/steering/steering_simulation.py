@@ -22,7 +22,7 @@ import rospy
 from roboy_control_msgs.srv import SetControllerParameters
 from roboy_simulation_msgs.msg import JointState
 from scipy import interpolate
-from std_msgs.msg import Float32, String
+from std_msgs.msg import Float32, String, Float64
 
 
 PRINT_DEBUG = True
@@ -573,7 +573,7 @@ def publish_joint_angle(joint_name, steering_angle):
 #
 #   current_steering_angle = target_steering_angle
 def steering_control():
-    rospy.Subscriber("/cmd_steering_angle_rickshaw", Float32, update_steering_angle)
+    rospy.Subscriber("/target_angle", Float64, update_steering_angle)
 
     current_steering_angle = 0
 
@@ -655,4 +655,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
