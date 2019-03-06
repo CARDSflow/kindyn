@@ -33,9 +33,11 @@ public:
             char **argv = NULL;
             ros::init(argc, argv, "msj_platform");
         }
-        nh = ros::NodeHandlePtr(new ros::NodeHandle);
+        ros::NodeHandlePtr nh(new ros::NodeHandle);
+        boost::shared_ptr <ros::AsyncSpinner> spinner;
         spinner.reset(new ros::AsyncSpinner(0));
         spinner->start();
+
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
 
         readJointLimits();
@@ -118,42 +120,35 @@ public:
     /**
      * Virtual getter functions for ball joint limits and max
      */
-    double getLimit(int index1, int index2){
-        return limits[index1][index2];
+    double getBallJointLimit(int joint_index, int limit_index){
+        return limits[joint_index][limit_index];
     }
 
-    vector<double> getLimitVector(int index){
-        return limits[index];
+    vector<double> getBallJointLimitVector(int joint_index){
+        return limits[joint_index];
     }
 
-    double getMax(int index){
-        return max[index];
+    double getMaxBallJointLimit(int joint_index){
+        return max[joint_index];
     }
 
-    double getMin(int index){
-        return min[index];
+    double getMinBallJointLimit(int joint_index){
+        return min[joint_index];
     }
 
-    bool getExternalRobotState(){
+    bool isExternalRobotExist(){
         return external_robot_state;
     }
 
 private:
 
-    ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
-
-    ros::ServiceServer gym_step; //OpenAI Gym training environment step function, ros service instance
-    ros::ServiceServer gym_read_state; //OpenAI Gym training environment observation function, returns q, qdot and feasbility
-    ros::ServiceServer gym_reset; //OpenAI Gym training environment reset function, ros service instance
-    ros::ServiceServer gym_goal; //OpenAI Gym training environment sets new feasible goal function, ros service instance
 
     vector<double> limits[3];
     double min[3] = {0,0,-1}, max[3] = {0,0,1};
     bool external_robot_state; /// indicates if we get the robot state externally
 
     double l_offset[NUMBER_OF_MOTORS];
-    boost::shared_ptr <ros::AsyncSpinner> spinner;
 
 };
 

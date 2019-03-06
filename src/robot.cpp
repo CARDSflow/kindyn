@@ -1143,13 +1143,24 @@ bool Robot::parseViapoints(const string &viapoints_file_path, vector<Cable> &cab
     }
     return true;
 }
-
-void Robot::setMotorState(int index1, int index2, double value){
-    motor_state[index1][index2] = value;
+void Robot::setMotorCableLengths(VectorXd cable_length){
+    for(int i=0; i < number_of_cables; i++)
+        motor_state[i][0] = cable_length[i];
 }
 
-void Robot::setJointState(int index1, int index2, double value){
-    joint_state[index1][index2] = value;
+void Robot::setMotorCableVelocities(VectorXd cable_vels){
+    for(int i=0; i < number_of_cables; i++)
+        motor_state[i][1] = cable_vels[i];
+}
+
+void Robot::setJointPositions(VectorXd joint_pos){
+    for(int i=0; i < number_of_dofs; i++)
+        joint_state[i][0] = joint_pos[i];
+}
+
+void Robot::setJointVelocities(VectorXd joint_vels){
+    for(int i=0; i < number_of_dofs; i++)
+        joint_state[i][1] = joint_vels[i];
 }
 
 void Robot::setIntegrationTime(double gym_dt){

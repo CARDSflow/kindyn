@@ -130,24 +130,28 @@ namespace cardsflow {
             /**
              * Setter functions for gymFunctions class.
              */
-            void setMotorState(int index1, int index2, double value);
+            void setMotorCableLengths(VectorXd cable_length);
 
-            void setJointState(int index1, int index2, double value);
+            void setMotorCableVelocities(VectorXd cable_vels);
+
+            void setJointPositions(VectorXd joint_pos);
+
+            void setJointVelocities(VectorXd joint_vels);
 
             void setIntegrationTime(double dt);
 
             /**
              * Getter functions for gymFunctions class
              */
-            virtual double getLimit(int index1, int index2) {};
+            virtual double getBallJointLimit(int joint_index, int limit_index) {};
 
-            virtual vector<double> getLimitVector(int index) {};
+            virtual vector<double> getBallJointLimitVector(int joint_index) {};
 
-            virtual double getMax(int index) {};
+            virtual double getMaxBallJointLimit(int joint_index) {};
 
-            virtual double getMin(int index) {};
+            virtual double getMinBallJointLimit(int joint_index) {};
 
-            virtual bool getExternalRobotState() {};
+            virtual bool isExternalRobotExist() {};
 
         private:
 

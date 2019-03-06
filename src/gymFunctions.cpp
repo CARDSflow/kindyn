@@ -1,12 +1,13 @@
 #include "../include/kindyn/gymFunctions.h"
-#include <iostream>
+
 gymFunctions::gymFunctions(cardsflow::kindyn::Robot* robot, int id, bool respect_limits){
     if (!ros::isInitialized()) {
         int argc = 0;
         char **argv = NULL;
         ros::init(argc, argv, "Gym functions", ros::init_options::NoSigintHandler);
     }
-    nh = ros::NodeHandlePtr(new ros::NodeHandle);
+    ros::NodeHandlePtr nh(new ros::NodeHandle);
+    boost::shared_ptr <ros::AsyncSpinner> spinner;
     spinner.reset(new ros::AsyncSpinner(0));
     spinner->start();
     ROS_INFO("Gym functions");
@@ -14,15 +15,15 @@ gymFunctions::gymFunctions(cardsflow::kindyn::Robot* robot, int id, bool respect
     training_robot = robot;
     training_with_limits = respect_limits;
 
-    gym_step = nh->advertiseService("/instance" + to_string(id) + "/gym_step", &gymFunctions::GymStepService,this);
-    gym_read_state = nh->advertiseService("/instance" + to_string(id) + "/gym_read_state", &gymFunctions::GymReadStateService,this);
-    gym_reset = nh->advertiseService("/instance" + to_string(id) + "/gym_reset", &gymFunctions::GymResetService,this);
-    gym_goal = nh->advertiseService("/instance" + to_string(id) + "/gym_goal", &gymFunctions::GymGoalService,this);
+    gym_step = nh->advertiseService("/instance" + to_string(id) + "/gym_step", &gymFunctions::gymStepHandler,this);
+    gym_read_state = nh->advertiseService("/instance" + to_string(id) + "/gym_read_state", &gymFunctions::gymReadStateHandler,this);
+    gym_reset = nh->advertiseService("/instance" + to_string(id) + "/gym_reset", &gymFunctions::gymResetHandler,this);
+    gym_goal = nh->advertiseService("/instance" + to_string(id) + "/gym_goal", &gymFunctions::gymGoalHandler,this);
     fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
 }
 
 
-bool gymFunctions::GymStepService(roboy_simulation_msgs::GymStep::Request &req,
+bool gymFunctions::gymStepHandler(roboy_simulation_msgs::GymStep::Request &req,
                                   roboy_simulation_msgs::GymStep::Response &res){
     training_robot->update();
 
@@ -30,55 +31,59 @@ bool gymFunctions::GymStepService(roboy_simulation_msgs::GymStep::Request &req,
     training_robot->Ld[0]= action;  //Commanding cable velocity for simulation
     //training_robot->l[i] = action;     //Commanding cable length for hardware
 
-    if(!training_robot->getExternalRobotState())
+    if(!training_robot->isExternalRobotExist())
         training_robot->forwardKinematics(req.step_size);
 
     ROS_INFO_STREAM_THROTTLE(5, "Ld = " << training_robot->Ld[0].format(fmt));
 
     training_robot->write();
+
     if(training_with_limits){
-        res.feasible = isFeasible(training_robot->getLimitVector(0), training_robot->getLimitVector(1), training_robot->q[0], training_robot->q[1]);
+        res.feasible = isFeasible(training_robot->getBallJointLimitVector(0), training_robot->getBallJointLimitVector(1), training_robot->q[0], training_robot->q[1]);
         if(!res.feasible){
-            VectorXd closestLimit = findClosestJointLimit(training_robot->q); //Find closest boundary point where we can teleport
+            VectorXd closestLimitPos = findClosestJointLimit(training_robot->q); //Find closest boundary point where we can teleport
             VectorXd jointVel;                                                //Robot hit the boundary, set velocity to zero.
 
             jointVel.resize(training_robot->number_of_dofs);
             jointVel.setZero();
 
-            setJointAngleAndVelocity(closestLimit, jointVel);
+            setJointAngleAndVelocity(closestLimitPos, jointVel);
         }
     }
     setResponse(training_robot->q,training_robot->qd,res);
     return true;
 }
 
-bool gymFunctions::GymReadStateService(roboy_simulation_msgs::GymStep::Request &req,
+bool gymFunctions::gymReadStateHandler(roboy_simulation_msgs::GymStep::Request &req,
                                        roboy_simulation_msgs::GymStep::Response &res){
-
     setResponse(training_robot->q,training_robot->qd,res);
     if(training_with_limits)
-        res.feasible = isFeasible(training_robot->getLimitVector(0),training_robot->getLimitVector(1),training_robot->q[0],training_robot->q[1]);
+        res.feasible = isFeasible(training_robot->getBallJointLimitVector(0),training_robot->getBallJointLimitVector(1),training_robot->q[0],training_robot->q[1]);
     return true;
 }
 
-bool gymFunctions::GymResetService(roboy_simulation_msgs::GymReset::Request &req,
+bool gymFunctions::gymResetHandler(roboy_simulation_msgs::GymReset::Request &req,
                                    roboy_simulation_msgs::GymReset::Response &res){
+    VectorXd jointAngle, jointVel, zeroTendonLength, zeroTendonVels;
 
     training_robot->setIntegrationTime(0.0);
 
-    VectorXd jointAngle, jointVel;
     jointAngle.resize(training_robot->number_of_dofs);
     jointVel.resize(training_robot->number_of_dofs);
+    zeroTendonLength.resize(training_robot->number_of_cables);
+    zeroTendonVels.resize(training_robot->number_of_cables);
+
+    zeroTendonLength.setZero();
+    zeroTendonVels.setZero();
 
     jointAngle.setZero();
     jointVel.setZero();
 
     setJointAngleAndVelocity(jointAngle, jointVel);
 
-    for(int i=0; i< training_robot->number_of_cables; i++){
-        training_robot->setMotorState(i, 0, 0.0);   //Length of the ith cable
-        training_robot->setMotorState(i, 1, 0.0);   //Velocity of the ith cable
-    }
+    training_robot->setMotorCableLengths(zeroTendonLength);   //Length of the ith cable
+    training_robot->setMotorCableVelocities(zeroTendonVels);   //Velocity of the ith cable
+
 
     for(int i=0; i< training_robot->number_of_dofs; i++ ){
         res.q.push_back(training_robot->q[i]);
@@ -88,7 +93,7 @@ bool gymFunctions::GymResetService(roboy_simulation_msgs::GymReset::Request &req
     return true;
 }
 
-bool gymFunctions::GymGoalService(roboy_simulation_msgs::GymGoal::Request &req,
+bool gymFunctions::gymGoalHandler(roboy_simulation_msgs::GymGoal::Request &req,
                                   roboy_simulation_msgs::GymGoal::Response &res){
     bool not_feasible = true;
     VectorXd target_q;
@@ -97,9 +102,9 @@ bool gymFunctions::GymGoalService(roboy_simulation_msgs::GymGoal::Request &req,
     if(training_with_limits) {
         while (not_feasible) {
             for (int i = 0; i < training_robot->number_of_dofs; i++) {
-                target_q[i] = training_robot->getMin(i) + rand() / (static_cast<float> (RAND_MAX /  (training_robot->getMax(i) - training_robot->getMin(i))));
+                target_q[i] = training_robot->getMinBallJointLimit(i) + rand() / (static_cast<float> (RAND_MAX /  (training_robot->getMaxBallJointLimit(i) - training_robot->getMinBallJointLimit(i))));
             }
-            not_feasible = !isFeasible(training_robot->getLimitVector(0), training_robot->getLimitVector(1), target_q[0], target_q[1]);
+            not_feasible = !isFeasible(training_robot->getBallJointLimitVector(0), training_robot->getBallJointLimitVector(1), target_q[0], target_q[1]);
         }
     }
     else {  //Create random goals with respecting model limits
@@ -110,12 +115,11 @@ bool gymFunctions::GymGoalService(roboy_simulation_msgs::GymGoal::Request &req,
 
     training_robot->q_target = target_q;
     training_robot->update();
-
     for (int i = 0; i < training_robot->number_of_dofs; i++) {
         res.q.push_back(target_q[i]);
     }
-    return true;
 
+    return true;
 }
 
 int gymFunctions::isFeasible(vector<double> limits_x, vector<double> limits_y, double testx, double testy){
@@ -139,13 +143,12 @@ void gymFunctions::setResponse(VectorXd jointAngles, VectorXd jointVel,
 }
 
 ///sets the given joint angle and veloctiy  for each joint
-void gymFunctions::setJointAngleAndVelocity(VectorXd jointAngles, VectorXd jointVel){
-    for(int i=0; i< training_robot->number_of_dofs; i++){
-        training_robot->setJointState(i,1,jointVel[i]);
-        training_robot->setJointState(i,0,jointAngles[i]);
-        training_robot->qd[i] = jointVel[i];
-        training_robot->q[i] = jointAngles[i];
-    }
+void gymFunctions::setJointAngleAndVelocity(VectorXd jointAngles, VectorXd jointVels){
+    training_robot->setJointPositions(jointAngles);
+    training_robot->setJointVelocities(jointVels);
+
+    training_robot->qd = jointVels;
+    training_robot->q = jointAngles;
 }
 
 ///finds the closest limit point when the robot is in infeasible state
@@ -154,11 +157,11 @@ VectorXd gymFunctions::findClosestJointLimit(VectorXd q){
     closestLimit.resize(training_robot->number_of_dofs);
     double smallestDistance = numeric_limits<double>::max();
     
-    for(int i=0; i < training_robot->getLimitVector(0).size(); i++){
+    for(int i=0; i < training_robot->getBallJointLimitVector(0).size(); i++){
         VectorXd jointAngle = q;
         VectorXd jointLimits;
         jointLimits.resize(training_robot->number_of_dofs);
-        jointLimits << training_robot->getLimit(0,i) , training_robot->getLimit(1, i), jointAngle[2];  //FIXME right now hard coded for msjplatform, make it general
+        jointLimits << training_robot->getBallJointLimit(0,i) , training_robot->getBallJointLimit(1, i), jointAngle[2];  //FIXME right now hard coded for msjplatform, make it general
         double distance = (jointAngle - jointLimits).norm();
         if (distance < smallestDistance){
             smallestDistance = distance;
