@@ -36,7 +36,7 @@ from geometry_msgs.msg import Twist
 PRINT_DEBUG = True
 SIMULATION_FACTOR = 100.0  # factor to slow down the motion for better simulation
 NUMBER_CIRCULATION_POINTS = 30  # number of points for controlling
-RECORDED_TRAJECTORY_FILENAME = "trajectory_pedaling/captured_trajectory_03mar_with_joint_limits.json"
+RECORDED_TRAJECTORY_FILENAME = "trajectory_pedaling/captured_pedal_trajectory_03mar_with_joint_limits.json"
 JOINT_VELOCITY_FACTOR_SIMULATION = 0.01  # publish 1 => velocity = 0.01 rad/s  for Kp = 0.1 and simulation-step-length = 0.01
 
 
@@ -807,7 +807,7 @@ def control_pedaling():
 def main():
     rospy.init_node('pedal_simulation', anonymous=True)
     rospy.Subscriber("joint_state", JointState, joint_state_callback)
-    rospy.Subscriber("/cmd_velocity_rickshaw", Float32, update_velocity)
+    rospy.Subscriber("/cmd_vel", Twist, update_velocity)
     control_pedaling()
 
     return 1
