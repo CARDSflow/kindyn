@@ -1,11 +1,6 @@
 #include "../include/kindyn/gymFunctions.h"
 
 gymFunctions::gymFunctions(cardsflow::kindyn::Robot* robot, int id, bool respect_limits){
-    if (!ros::isInitialized()) {
-        int argc = 0;
-        char **argv = NULL;
-        ros::init(argc, argv, "Gym functions", ros::init_options::NoSigintHandler);
-    }
     ros::NodeHandlePtr nh(new ros::NodeHandle);
     boost::shared_ptr <ros::AsyncSpinner> spinner;
     spinner.reset(new ros::AsyncSpinner(0));
