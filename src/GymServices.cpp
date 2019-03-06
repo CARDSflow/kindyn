@@ -24,6 +24,7 @@ bool GymServices::gymStepHandler(roboy_simulation_msgs::GymStep::Request &req,
 
     Map<VectorXd> action(req.set_points.data()  , training_robot->number_of_cables);
     //training_robot->Ld[0]= action;  //Commanding cable velocity for simulation
+    cout << "Actions: " << action<< endl;
     training_robot->l = action;     //Commanding cable length for hardware
 
     if(!training_robot->isExternalRobotExist())

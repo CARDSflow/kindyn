@@ -44,7 +44,7 @@ public:
 
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
         tracker_sub = nh->subscribe("/tf", 100, &MsjPlatform::trackerTf, this);
-        joint_states_pub = nh->advertise<sensor_msgs::JointStateConstPtr>("/joint_states",1);
+        joint_states_pub = nh->advertise<sensor_msgs::JointState>("/joint_states",1);
         readJointLimits();
         prev_joint_pos.setZero();
         vector<string> joint_names; // first we retrieve the active joint names from the parameter server
@@ -63,10 +63,10 @@ public:
     };
 
     void trackerTf(const tf2_msgs::TFMessage &msg){
-        ROS_INFO("TF subscriber");
-        cout << "Child frame id of msg" <<msg.transforms[0].child_frame_id<< endl;
-        if(msg.transforms[0].child_frame_id == "tracker_2") {
-            cout << "hey ho" << endl;
+        //ROS_INFO("TF subscriber");
+        //cout << "Child frame id of msg" <<msg.transforms[0].child_frame_id<< endl;
+        if(msg.transforms[0].child_frame_id == "tracker_1") {
+            //cout << "hey ho" << endl;
             float x = msg.transforms[0].transform.rotation.x;
             float y = msg.transforms[0].transform.rotation.y;
             float z = msg.transforms[0].transform.rotation.z;
@@ -77,18 +77,19 @@ public:
             cout << "euler " << euler << endl;
 
             joint_state_publisher(euler);
+            update();
         }
 
     }
 
     void joint_state_publisher(Vector3f joint_pos){
-        sensor_msgs::JointStateConstPtr msg;
+        sensor_msgs::JointState msg;
         Vector3f joint_vel = (joint_pos - prev_joint_pos) / 0.0001; //numeric derivation
         int i= 0;
         for(string joint_name: joint_names){
-            msg->name.push_back(joint_name);
-            msg->position.push_back(joint_pos[i]);
-            msg->velocity.push_back(joint_vel[i]);
+            msg.name.push_back(joint_name);
+            msg.position.push_back(joint_pos[i]);
+            msg.velocity.push_back(joint_vel[i]);
             i++;
         }
         joint_states_pub.publish(msg);
@@ -96,15 +97,19 @@ public:
     }
 
     Vector3f quatToeuler(tf::Quaternion quat){
-        tf::Matrix3x3 m(quat);
+        cout << "quaternion " << quat << endl;
+        tf::Matrix3x3 rot_mat(quat);
         double roll, pitch, yaw;
-        m.getRPY(roll, pitch, yaw);
+        rot_mat.getRPY(roll, pitch, yaw);
         Vector3f euler;
-
+        /*
+        euler[0] = roll;
+        euler[1] =-yaw;
+        euler[2] = pitch;
+        */
         euler[0] = roll;
         euler[1] = pitch;
         euler[2] = yaw;
-
         return euler;
     }
 
