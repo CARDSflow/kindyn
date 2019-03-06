@@ -1,4 +1,3 @@
-
 ## @package pedaling
 #  Documentation for this module.
 #
@@ -33,13 +32,11 @@ from roboy_simulation_msgs.msg import JointState
 from roboy_control_msgs.srv import SetControllerParameters
 from std_msgs.msg import Float32
 
-
 PRINT_DEBUG = True
 SIMULATION_FACTOR = 100.0  # factor to slow down the motion for better simulation
 NUMBER_CIRCULATION_POINTS = 30  # number of points for controlling
 RECORDED_TRAJECTORY_FILENAME = "trajectory_pedaling/captured_trajectory_old.json"
 JOINT_VELOCITY_FACTOR_SIMULATION = 0.01  # publish 1 => velocity = 0.01 rad/s  for Kp = 0.1 and simulation-step-length = 0.01
-
 
 PEDAL_POSITION_ERROR_TOLERANCE = 0.02  # [meters]
 JOINT_TRAJECTORY_ERROR_TOLERANCE = 0.02
@@ -84,6 +81,7 @@ f_interpolated_pedal_angle = None
 velocity_error_factor_hip = 1.0
 velocity_error_factor_knee = 1.0
 velocity_error_factor_ankle = 1.0
+velocity_error_counter = 0
 
 ros_right_hip_publisher = rospy.Publisher('/joint_hip_right/joint_hip_right/target', Float32, queue_size=2)
 ros_right_knee_publisher = rospy.Publisher('/joint_knee_right/joint_knee_right/target', Float32, queue_size=2)
@@ -230,7 +228,7 @@ number_imported_trajectory_points = -1
 trajectoryStartingPoint = 0
 
 pedalTrajectoryRight = [ ]
-pedalAngleTrajectoryRight = []
+pedalAngleTrajectoryRight = [ ]
 pedalTrajectoryLeft = [ ]
 hipTrajectoryRight = [ ]
 kneeTrajectoryRight = [ ]
@@ -306,7 +304,7 @@ def import_joint_trajectory_record():
         if "point_" + str(pointIterator) in loaded_data:
             pedalTrajectoryLeft.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Pedal" ])
             pedalTrajectoryRight.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Pedal" ])
-            pedalAngleTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Pedal_angle"])
+            pedalAngleTrajectoryRight.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Pedal_angle" ])
             hipTrajectoryRight.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Hip" ])
             kneeTrajectoryRight.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Knee" ])
             ankleTrajectoryRight.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Ankle" ])
@@ -365,7 +363,6 @@ def get_position(endeffector, frame):
 #  Sets Kp of joint-controller to  @proportional_value
 #  Sets Kd of joint-controller to  @derivative_value
 def set_joint_controller_parameters(proportionalVal, derivativeVal):
-
     for thisJointName in _jointsList:
         rospy.wait_for_service(thisJointName + '/' + thisJointName + '/params')
         try:
@@ -451,7 +448,6 @@ def check_output_limits(inputVal):
 #
 #  ideal_velocity = joint_angle_difference / (end_time - current_time)
 def compute_velocity(joint_name, next_joint_angle, current_joint_angle, end_time):
-
     joint_angle_difference = next_joint_angle - current_joint_angle
 
     current_time = time.time()
@@ -467,7 +463,7 @@ def compute_velocity(joint_name, next_joint_angle, current_joint_angle, end_time
         log_string += ("\nd = " + str(joint_angle_difference))
         log_string += ("\npublish_time = " + str(publish_time))
         log_string += ("\nideal_velocity = " + str(ideal_velocity))
-        print (log_string)
+        print(log_string)
 
     return ideal_velocity
 
@@ -479,7 +475,6 @@ def compute_velocity(joint_name, next_joint_angle, current_joint_angle, end_time
 #  The functions can be used by calling "<function_name>(<pedal_angle>)"
 #  ==> returns <joint_angle>
 def get_joint_angle(joint_name, pedal_angle):
-
     if joint_name == RIGHT_HIP_JOINT:
         return f_interpolated_hip_right(pedal_angle)
     elif joint_name == RIGHT_KNEE_JOINT:
@@ -555,7 +550,6 @@ def evaluate_current_pedal_angle(current_point):
 #  - Multiply value with @error_factor (global variable) of correspondent joint to erase joint-error
 #  - Publish velocity to joint-controller and sleep until end-time of transition
 def publish_velocity(joint_name, next_joint_angle, current_joint_angle, end_time):
-
     ideal_velocity = compute_velocity(joint_name, next_joint_angle, current_joint_angle, end_time)
     publisher = None
     error_factor = 1
@@ -585,16 +579,17 @@ def publish_velocity(joint_name, next_joint_angle, current_joint_angle, end_time
     published_velocity = ideal_velocity * error_factor / JOINT_VELOCITY_FACTOR_SIMULATION / SIMULATION_FACTOR
 
     if PRINT_DEBUG:
-        log_msg = "publishing velocity "+str(published_velocity*JOINT_VELOCITY_FACTOR_SIMULATION)," rad/s to ", joint_name
+        log_msg = "publishing velocity " + str(
+            published_velocity * JOINT_VELOCITY_FACTOR_SIMULATION), " rad/s to ", joint_name
         print(log_msg)
 
     duration = end_time - time.time()
 
     publisher.publish(published_velocity)
-    time.sleep(duration*SIMULATION_FACTOR)
+    time.sleep(duration * SIMULATION_FACTOR)
 
 
-### Documentation for a function
+## Documentation for a function
 #
 #  Updates the global variables @BIKE_VELOCITY, @PEDAL_SINGLE_ROTATION_DURATION and TRAJECTORY_POINT_DURATION
 #  when a bike-velocity gets published to the topic "cmd_vel".
@@ -617,8 +612,9 @@ def update_velocity(velocity_Twist):
 
     else:
         PEDAL_SINGLE_ROTATION_DURATION = 2 * np.pi * (RADIUS_FRONT_CHAIN_RING / RADIUS_GEAR_CLUSTER /
-                                                          (velocity / RADIUS_BACK_TIRE))
+                                                      (velocity / RADIUS_BACK_TIRE))
         TRAJECTORY_POINT_DURATION = PEDAL_SINGLE_ROTATION_DURATION / NUMBER_CIRCULATION_POINTS
+
 
 ## Documentation for a function
 #
@@ -691,7 +687,7 @@ def control_pedaling():
     _currState = INIT
     _currTrajectoryPoint = get_position_left_foot()
     current_pedal_angle = evaluate_current_pedal_angle(_currTrajectoryPoint)
-    next_pedal_angle = (current_pedal_angle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)) % (np.pi*2)
+    next_pedal_angle = (current_pedal_angle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)) % (np.pi * 2)
 
     _startTime = 0.0
     _endTime = 0.0
@@ -739,7 +735,7 @@ def control_pedaling():
 
             _startTime = time.time()
             _endTime = _startTime + TRAJECTORY_POINT_DURATION
-            next_pedal_angle = (current_pedal_angle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)) % (2*np.pi)
+            next_pedal_angle = (current_pedal_angle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)) % (2 * np.pi)
 
             trajectory_points += 1
 
@@ -753,17 +749,17 @@ def control_pedaling():
                 print("d = ", get_angle_difference(current_pedal_angle, next_pedal_angle))
 
             # Iterate through joints and update setpoints
-            publisher_threads = []
+            publisher_threads = [ ]
             i = 0
             for thisJointName in _jointsList:
-                current_joint_angle = joint_status_data[thisJointName ][ "Pos" ]
+                current_joint_angle = joint_status_data[ thisJointName ][ "Pos" ]
                 next_joint_angle = get_joint_angle(thisJointName, next_pedal_angle)
 
                 _currTime = time.time()
 
                 publisher_threads.append(Thread(target=publish_velocity, args=(thisJointName, next_joint_angle,
                                                                                current_joint_angle, _endTime)))
-                publisher_threads[i].start()
+                publisher_threads[ i ].start()
                 i += 1
 
             for thread in publisher_threads:
@@ -771,34 +767,41 @@ def control_pedaling():
 
             for joint in _jointsList:
 
-
                 actual_joint_angle = get_joint_angle(joint, evaluate_current_pedal_angle(get_position_left_foot()))
                 error = get_angle_difference(actual_joint_angle, next_joint_angle)
 
                 new_factor = get_angle_difference(current_joint_angle, next_joint_angle) \
                              / get_angle_difference(current_joint_angle, actual_joint_angle)
 
-
-                if np.abs(new_factor-1) <=0.1:
+                if np.abs(new_factor - 1) <= 0.1:
 
                     if thisJointName == RIGHT_HIP_JOINT:
-
-                        velocity_error_factor_hip = new_factor
+                        velocity_error_factor_hip = ((velocity_error_factor_hip * velocity_error_counter)
+                                                       + (new_factor * velocity_error_factor_hip)) / (
+                                                                  velocity_error_counter + 1)
                     elif thisJointName == RIGHT_KNEE_JOINT:
-
-                        velocity_error_factor_knee = new_factor
+                        velocity_error_factor_knee = ((velocity_error_factor_knee * velocity_error_counter)
+                                                       + (new_factor * velocity_error_factor_knee)) / (
+                                                                  velocity_error_counter + 1)
                     elif thisJointName == RIGHT_ANKLE_JOINT:
-
-                        velocity_error_factor_ankle = new_factor
+                        velocity_error_factor_ankle = ((velocity_error_factor_ankle * velocity_error_counter)
+                                                       + (new_factor * velocity_error_factor_ankle)) / (
+                                                                  velocity_error_counter + 1)
                     elif thisJointName == LEFT_HIP_JOINT:
-
-                        velocity_error_factor_hip = new_factor
+                        velocity_error_factor_hip = ((velocity_error_factor_hip * velocity_error_counter)
+                                                       + (new_factor * velocity_error_factor_hip)) / (
+                                                                  velocity_error_counter + 1)
                     elif thisJointName == LEFT_KNEE_JOINT:
-
-                        velocity_error_factor_knee = new_factor
+                        velocity_error_factor_knee = ((velocity_error_factor_knee * velocity_error_counter)
+                                                       + (new_factor * velocity_error_factor_knee)) / (
+                                                                  velocity_error_counter + 1)
                     elif thisJointName == LEFT_ANKLE_JOINT:
+                        velocity_error_factor_ankle = ((velocity_error_factor_ankle * velocity_error_counter)
+                                                       + (new_factor * velocity_error_factor_ankle)) / (
+                                                                  velocity_error_counter + 1)
 
-                        velocity_error_factor_ankle = new_factor
+            global velocity_error_counter
+            velocity_error_counter += 1
 
 
 ## Documentation for a function.
