@@ -1,5 +1,5 @@
-#ifndef PROJECT_GYMFUNCTIONS_H
-#define PROJECT_GYMFUNCTIONS_H
+#ifndef PROJECT_GYMSERVICES_H
+#define PROJECT_GYMSERVICES_H
 
 #include "kindyn/robot.hpp"
 #include <roboy_simulation_msgs/GymStep.h>
@@ -12,10 +12,10 @@
 using namespace std;
 using namespace Eigen;
 
-class gymFunctions {
+class GymServices {
 public:
 
-    gymFunctions(cardsflow::kindyn::Robot* training_robot, int id = 1, bool respect_limits = false);
+    GymServices(cardsflow::kindyn::Robot* training_robot, int id = 1, bool respect_limits = false);
 
     bool gymStepHandler(roboy_simulation_msgs::GymStep::Request &req,
                         roboy_simulation_msgs::GymStep::Response &res);
@@ -47,4 +47,4 @@ private:
 };
 
 
-#endif //PROJECT_GYMFUNCTIONS_H
+#endif //PROJECT_GYMSERVICES_H

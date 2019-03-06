@@ -1156,11 +1156,13 @@ void Robot::setMotorCableVelocities(VectorXd cable_vels){
 void Robot::setJointPositions(VectorXd joint_pos){
     for(int i=0; i < number_of_dofs; i++)
         joint_state[i][0] = joint_pos[i];
+    q = joint_pos;
 }
 
 void Robot::setJointVelocities(VectorXd joint_vels){
     for(int i=0; i < number_of_dofs; i++)
         joint_state[i][1] = joint_vels[i];
+    qd = joint_vels;
 }
 
 void Robot::setIntegrationTime(double gym_dt){

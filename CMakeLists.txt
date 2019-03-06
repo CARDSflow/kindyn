@@ -101,7 +101,7 @@ add_dependencies(kindyn roboy_simulation_msgs_generate_messages_cpp roboy_simula
 target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CardsflowHardwareInterface
 		CableLengthController TorquePositionController ForcePositionController)
 
-add_library(gym src/gymFunctions.cpp)
+add_library(gym src/GymServices.cpp)
 target_link_libraries(gym ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
 # testing idyntree

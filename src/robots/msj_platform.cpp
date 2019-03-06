@@ -1,6 +1,6 @@
 #include "kindyn/robot.hpp"
 #include <thread>
-#include "../../include/kindyn/gymFunctions.h"
+#include "kindyn/GymServices.h"
 #include <roboy_middleware_msgs/MotorCommand.h>
 #include <roboy_simulation_msgs/GymStep.h>
 #include <roboy_simulation_msgs/GymReset.h>
@@ -52,7 +52,7 @@ public:
         update();
 
         for(int i=0;i<NUMBER_OF_MOTORS;i++)
-            l_offset[i] = l[i];
+            l_initial[i] = l[i];
 
 
     };
@@ -109,7 +109,7 @@ public:
         stringstream str;
         for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
             msg.motors.push_back(i);
-            double l_change = l[i]-l_offset[i];
+            double l_change = l[i]-l_initial[i];
             msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
             str << l_change << "\t";
         }
@@ -148,7 +148,7 @@ private:
     double min[3] = {0,0,-1}, max[3] = {0,0,1};
     bool external_robot_state; /// indicates if we get the robot state externally
 
-    double l_offset[NUMBER_OF_MOTORS];
+    double l_initial[NUMBER_OF_MOTORS];
 
 };
 
@@ -189,12 +189,12 @@ int main(int argc, char *argv[]) {
     cout << "\nNUMBER OF WORKERS " << workers << endl;
 
     vector<boost::shared_ptr<MsjPlatform>> platforms;
-    vector<boost::shared_ptr<gymFunctions>> gymFuncs;
+    vector<boost::shared_ptr<GymServices>> gymFuncs;
 
     for(int id = 0; id < workers; id++) {
         boost::shared_ptr<MsjPlatform> platform(new MsjPlatform(urdf, cardsflow_xml));
         cardsflow::kindyn::Robot* ref = &*platform;
-        boost::shared_ptr<gymFunctions> gym(new gymFunctions(ref, id + 1 ,true));
+        boost::shared_ptr<GymServices> gym(new GymServices(ref, id + 1 ,true));
         platforms.push_back(platform);
         gymFuncs.push_back(gym);
     }
