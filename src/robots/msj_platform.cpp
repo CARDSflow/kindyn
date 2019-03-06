@@ -5,10 +5,14 @@
 #include <roboy_simulation_msgs/GymStep.h>
 #include <roboy_simulation_msgs/GymReset.h>
 #include <roboy_simulation_msgs/GymGoal.h>
+
 #include <common_utilities/CommonDefinitions.h>
 #include <stdlib.h> /* atoi*/
 #include <limits>
-
+#include <tf/transform_datatypes.h>
+#include <tf2_msgs/TFMessage.h>
+#include <iostream>
+#include <sensor_msgs/JointState.h>
 
 #define NUMBER_OF_MOTORS 8
 #define SPINDLERADIUS 0.00575
@@ -39,9 +43,10 @@ public:
         spinner->start();
 
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
-
+        tracker_sub = nh->subscribe("/tf", 100, &MsjPlatform::trackerTf, this);
+        joint_states_pub = nh->advertise<sensor_msgs::JointStateConstPtr>("/joint_states",1);
         readJointLimits();
-
+        prev_joint_pos.setZero();
         vector<string> joint_names; // first we retrieve the active joint names from the parameter server
         nh->getParam("joint_names", joint_names);
 
@@ -56,6 +61,52 @@ public:
 
 
     };
+
+    void trackerTf(const tf2_msgs::TFMessage &msg){
+        ROS_INFO("TF subscriber");
+        cout << "Child frame id of msg" <<msg.transforms[0].child_frame_id<< endl;
+        if(msg.transforms[0].child_frame_id == "tracker_2") {
+            cout << "hey ho" << endl;
+            float x = msg.transforms[0].transform.rotation.x;
+            float y = msg.transforms[0].transform.rotation.y;
+            float z = msg.transforms[0].transform.rotation.z;
+            float w = msg.transforms[0].transform.rotation.w;
+
+            tf::Quaternion quat(x, y, z, w);
+            Vector3f euler = quatToeuler(quat);
+            cout << "euler " << euler << endl;
+
+            joint_state_publisher(euler);
+        }
+
+    }
+
+    void joint_state_publisher(Vector3f joint_pos){
+        sensor_msgs::JointStateConstPtr msg;
+        Vector3f joint_vel = (joint_pos - prev_joint_pos) / 0.0001; //numeric derivation
+        int i= 0;
+        for(string joint_name: joint_names){
+            msg->name.push_back(joint_name);
+            msg->position.push_back(joint_pos[i]);
+            msg->velocity.push_back(joint_vel[i]);
+            i++;
+        }
+        joint_states_pub.publish(msg);
+        prev_joint_pos = joint_pos;
+    }
+
+    Vector3f quatToeuler(tf::Quaternion quat){
+        tf::Matrix3x3 m(quat);
+        double roll, pitch, yaw;
+        m.getRPY(roll, pitch, yaw);
+        Vector3f euler;
+
+        euler[0] = roll;
+        euler[1] = pitch;
+        euler[2] = yaw;
+
+        return euler;
+    }
 
     /**
      * Read joint limits of the robots which have the shoulder as part of their kinematics.
@@ -143,6 +194,8 @@ public:
 private:
 
     ros::Publisher motor_command; /// motor command publisher
+
+    Vector3f prev_joint_pos;
 
     vector<double> limits[3];
     double min[3] = {0,0,-1}, max[3] = {0,0,1};
