@@ -199,6 +199,8 @@ public:
 private:
 
     ros::Publisher motor_command; /// motor command publisher
+    ros::Publisher joint_states_pub;
+    ros::Subscriber tracker_sub;
 
     Vector3f prev_joint_pos;
 
