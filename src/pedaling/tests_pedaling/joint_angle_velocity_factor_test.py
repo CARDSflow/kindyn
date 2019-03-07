@@ -4,6 +4,9 @@ from __future__ import print_function
 #roslaunch kindyn robot.launch robot_name:=rikshaw start_controllers:='joint_hip_left joint_hip_right joint_wheel_right joint_wheel_back joint_pedal spine_joint joint_wheel_left joint_front joint_pedal_right joint_pedal_left elbow_right_rot1 joint_foot_left joint_knee_right joint_knee_left joint_foot_right left_shoulder_axis0 left_shoulder_axis1 left_shoulder_axis2 elbow_left_rot1 elbow_left_rot0 left_wrist_0 left_wrist_1 right_shoulder_axis0 right_shoulder_axis2 right_shoulder_axis1 elbow_right_rot0 right_wrist_0 right_wrist_1 head_axis0 head_axis1 head_axis2'
 
 
+# Measurements:
+# Lennards Computer: publish 1.0 ==> ~0.0018 rad/s with Kp: 0.1 & Forward Kinematics: 0.01
+
 import json
 import math
 import time
@@ -600,11 +603,11 @@ def FSM():
     _currTime = 0.0
     _prevTime = 0.0
 
-    velocity = -5
+    velocity = 55.55 
     publisher = ros_left_hip_publisher
 
     begin_time = rospy.get_rostime()
-    duration = rospy.Duration(20)
+    duration = rospy.Duration(10)
     end_time = duration + begin_time
 
     while rospy.get_rostime() < end_time:
