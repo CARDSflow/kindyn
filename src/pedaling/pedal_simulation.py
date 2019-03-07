@@ -579,8 +579,8 @@ def publish_velocity(joint_name, next_joint_angle, current_joint_angle, end_time
     published_velocity = ideal_velocity * error_factor / JOINT_VELOCITY_FACTOR_SIMULATION / SIMULATION_FACTOR
 
     if PRINT_DEBUG:
-        log_msg = "publishing velocity " + str(
-            published_velocity * JOINT_VELOCITY_FACTOR_SIMULATION), " rad/s to ", joint_name
+	log_msg = "error_factor = " + str(error_factor) + "\njoint_velocity_factor_simulation = " + str(JOINT_VELOCITY_FACTOR_SIMULATION) + "\nsimulation_factor = " + str(SIMULATION_FACTOR)
+        log_msg += "\npublishing velocity "+str(published_velocity*JOINT_VELOCITY_FACTOR_SIMULATION)+" rad/s to "+joint_name
         print(log_msg)
 
     duration = end_time - time.time()
@@ -773,32 +773,36 @@ def control_pedaling():
                 new_factor = get_angle_difference(current_joint_angle, next_joint_angle) \
                              / get_angle_difference(current_joint_angle, actual_joint_angle)
 
-                if np.abs(new_factor - 1) <= 0.1:
+                if np.abs(new_factor - 1) >= 0.5:
+                    if new_factor < 1:
+                        new_factor = 0.5
+                    else:
+                        new_factor = 1.5
 
-                    if thisJointName == RIGHT_HIP_JOINT:
-                        velocity_error_factor_hip = ((velocity_error_factor_hip * velocity_error_counter)
-                                                       + (new_factor * velocity_error_factor_hip)) / (
-                                                                  velocity_error_counter + 1)
-                    elif thisJointName == RIGHT_KNEE_JOINT:
-                        velocity_error_factor_knee = ((velocity_error_factor_knee * velocity_error_counter)
-                                                       + (new_factor * velocity_error_factor_knee)) / (
-                                                                  velocity_error_counter + 1)
-                    elif thisJointName == RIGHT_ANKLE_JOINT:
-                        velocity_error_factor_ankle = ((velocity_error_factor_ankle * velocity_error_counter)
-                                                       + (new_factor * velocity_error_factor_ankle)) / (
-                                                                  velocity_error_counter + 1)
-                    elif thisJointName == LEFT_HIP_JOINT:
-                        velocity_error_factor_hip = ((velocity_error_factor_hip * velocity_error_counter)
-                                                       + (new_factor * velocity_error_factor_hip)) / (
-                                                                  velocity_error_counter + 1)
-                    elif thisJointName == LEFT_KNEE_JOINT:
-                        velocity_error_factor_knee = ((velocity_error_factor_knee * velocity_error_counter)
-                                                       + (new_factor * velocity_error_factor_knee)) / (
-                                                                  velocity_error_counter + 1)
-                    elif thisJointName == LEFT_ANKLE_JOINT:
-                        velocity_error_factor_ankle = ((velocity_error_factor_ankle * velocity_error_counter)
-                                                       + (new_factor * velocity_error_factor_ankle)) / (
-                                                                  velocity_error_counter + 1)
+                if thisJointName == RIGHT_HIP_JOINT:
+                    velocity_error_factor_hip = ((velocity_error_factor_hip * velocity_error_counter)
+                                                   + (new_factor * velocity_error_factor_hip)) / (
+                                                              velocity_error_counter + 1)
+                elif thisJointName == RIGHT_KNEE_JOINT:
+                    velocity_error_factor_knee = ((velocity_error_factor_knee * velocity_error_counter)
+                                                   + (new_factor * velocity_error_factor_knee)) / (
+                                                              velocity_error_counter + 1)
+                elif thisJointName == RIGHT_ANKLE_JOINT:
+                    velocity_error_factor_ankle = ((velocity_error_factor_ankle * velocity_error_counter)
+                                                   + (new_factor * velocity_error_factor_ankle)) / (
+                                                              velocity_error_counter + 1)
+                elif thisJointName == LEFT_HIP_JOINT:
+                    velocity_error_factor_hip = ((velocity_error_factor_hip * velocity_error_counter)
+                                                   + (new_factor * velocity_error_factor_hip)) / (
+                                                              velocity_error_counter + 1)
+                elif thisJointName == LEFT_KNEE_JOINT:
+                    velocity_error_factor_knee = ((velocity_error_factor_knee * velocity_error_counter)
+                                                   + (new_factor * velocity_error_factor_knee)) / (
+                                                              velocity_error_counter + 1)
+                elif thisJointName == LEFT_ANKLE_JOINT:
+                    velocity_error_factor_ankle = ((velocity_error_factor_ankle * velocity_error_counter)
+                                                   + (new_factor * velocity_error_factor_ankle)) / (
+                                                              velocity_error_counter + 1)
 
             global velocity_error_counter
             velocity_error_counter += 1
