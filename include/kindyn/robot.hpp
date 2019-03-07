@@ -126,6 +126,33 @@ namespace cardsflow {
                 ROS_WARN_STREAM_THROTTLE(1, "writing virtual, "
                         "you probably forgot to implement your own write function?!");
             };
+
+            /**
+             * Setter functions for gymFunctions class.
+             */
+            void setMotorCableLengths(VectorXd cable_length);
+
+            void setMotorCableVelocities(VectorXd cable_vels);
+
+            void setJointPositions(VectorXd joint_pos);
+
+            void setJointVelocities(VectorXd joint_vels);
+
+            void setIntegrationTime(double dt);
+
+            /**
+             * Getter functions for gymFunctions class
+             */
+            virtual double getBallJointLimit(int joint_index, int limit_index) {};
+
+            virtual vector<double> getBallJointLimitVector(int joint_index) {};
+
+            virtual double getMaxBallJointLimit(int joint_index) {};
+
+            virtual double getMinBallJointLimit(int joint_index) {};
+
+            virtual bool isExternalRobotExist() {};
+
         private:
 
             /**
@@ -228,6 +255,7 @@ namespace cardsflow {
                 iDynTree::VectorDynSize jointVel;
                 iDynTree::Vector3       gravity;
             }robotstate;
+
         public:
             /**
              * Integrates the robot equation of motions using odeint
@@ -257,9 +285,10 @@ namespace cardsflow {
             VectorXd cable_forces; /// the cable forces in Newton
             vector<VectorXd> ld; /// tendon length changes for each controller
             MatrixXd L, L_t; /// L and -L^T
-
             MatrixXd S, P, V, W; /// matrices of cable model
             vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments
+
+
         protected:
             iDynTree::FreeFloatingGeneralizedTorques bias; /// Coriolis+Gravity term
             iDynTree::MatrixDynSize Mass; /// Mass matrix
