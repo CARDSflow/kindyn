@@ -600,7 +600,7 @@ def FSM():
     _currTime = 0.0
     _prevTime = 0.0
 
-    velocity = -5
+    velocity = -25
     publisher = ros_left_hip_publisher
 
     begin_time = rospy.get_rostime()
@@ -616,7 +616,7 @@ def FSM():
     final_angle_knee = _jointsStatusData[ LEFT_KNEE_JOINT ][ "Pos" ]
     final_angle_ankle = _jointsStatusData[ LEFT_ANKLE_JOINT ][ "Pos" ]
 
-    print ("velocity = ", velocity, "\ntime (s) = ", duration,
+    print ("velocity = ", velocity, "\ntime (ns) = ", duration,
            "\n\nangle 1 = ", current_angle_hip, "\nangle 2 = ", final_angle_hip, "\nd = ", final_angle_hip - current_angle_hip)
 
 
