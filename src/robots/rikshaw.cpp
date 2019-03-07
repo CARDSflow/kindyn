@@ -53,7 +53,7 @@ public:
     void read(){
         update();
         if(!external_robot_state)
-            forwardKinematics(0.005);
+            forwardKinematics(0.01);
     };
     /**
      * Sends motor commands to the real robot

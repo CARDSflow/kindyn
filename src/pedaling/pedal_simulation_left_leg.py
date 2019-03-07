@@ -37,7 +37,7 @@ PRINT_DEBUG = True
 SIMULATION_FACTOR = 100.0  # factor to slow down the motion for better simulation
 NUMBER_CIRCULATION_POINTS = 30  # number of points for controlling
 RECORDED_TRAJECTORY_FILENAME = "trajectory_pedaling/captured_pedal_trajectory_03mar_with_joint_limits.json"
-JOINT_VELOCITY_FACTOR_SIMULATION = 0.01  # publish 1 => velocity = 0.01 rad/s  for Kp = 0.1 and simulation-step-length = 0.01
+JOINT_VELOCITY_FACTOR_SIMULATION = 0.008  # publish 1 => velocity = 0.0018 rad/s  for Kp = 0.1 and simulation-step-length = 0.01
 
 
 PEDAL_POSITION_ERROR_TOLERANCE = 0.02  # [meters]
@@ -83,6 +83,7 @@ f_interpolated_pedal_angle = None
 velocity_error_factor_hip = 1.0
 velocity_error_factor_knee = 1.0
 velocity_error_factor_ankle = 1.0
+velocity_error_counter = 0
 
 ros_right_hip_publisher = rospy.Publisher('/joint_hip_right/joint_hip_right/target', Float32, queue_size=2)
 ros_right_knee_publisher = rospy.Publisher('/joint_knee_right/joint_knee_right/target', Float32, queue_size=2)
@@ -92,9 +93,9 @@ ros_left_hip_publisher = rospy.Publisher('/joint_hip_left/joint_hip_left/target'
 ros_left_knee_publisher = rospy.Publisher('/joint_knee_left/joint_knee_left/target', Float32, queue_size=2)
 ros_left_ankle_publisher = rospy.Publisher('/joint_foot_left/joint_foot_left/target', Float32, queue_size=2)
 
-PEDAL_CENTER_OFFSET_X = 0.20421
-PEDAL_CENTER_OFFSET_Y = -0.00062
-PEDAL_CENTER_OFFSET_Z = 0.2101
+PEDAL_CENTER_OFFSET_X = 0.0002782913867391912
+PEDAL_CENTER_OFFSET_Y = -0.035131649555820536
+PEDAL_CENTER_OFFSET_Z = 0.0010093313481022886
 
 _jointsList = [ LEFT_HIP_JOINT, LEFT_KNEE_JOINT,
                 LEFT_ANKLE_JOINT ] # RIGHT_HIP_JOINT, RIGHT_KNEE_JOINT, RIGHT_ANKLE_JOINT,
@@ -387,7 +388,7 @@ def get_position_left_foot():
     rospy.wait_for_service('fk')
     try:
         fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
-        fk_result = fk_srv("foot_left_tip", "foot_left_tip", fkJointNamesList, fkJointPositions)
+        fk_result = fk_srv("left_leg", "left_leg", fkJointNamesList, fkJointPositions)
         return [ fk_result.pose.position.x, fk_result.pose.position.z ]
 
     except rospy.ServiceException as e:
@@ -408,7 +409,7 @@ def get_position_right_foot():
     rospy.wait_for_service('fk')
     try:
         fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
-        fk_result = fk_srv("foot_right_tip", "foot_right_tip", fkJointNamesList, fkJointPositions)
+        fk_result = fk_srv("right_leg", "right_leg", fkJointNamesList, fkJointPositions)
         return [ fk_result.pose.position.x, fk_result.pose.position.z ]
 
     except rospy.ServiceException as e:
@@ -584,7 +585,8 @@ def publish_velocity(joint_name, next_joint_angle, current_joint_angle, end_time
     published_velocity = ideal_velocity * error_factor / JOINT_VELOCITY_FACTOR_SIMULATION / SIMULATION_FACTOR
 
     if PRINT_DEBUG:
-        log_msg = "publishing velocity "+str(published_velocity*JOINT_VELOCITY_FACTOR_SIMULATION)," rad/s to ", joint_name
+	log_msg = "error_factor = " + str(error_factor) + "\njoint_velocity_factor_simulation = " + str(JOINT_VELOCITY_FACTOR_SIMULATION) + "\nsimulation_factor = " + str(SIMULATION_FACTOR)
+        log_msg += "\npublishing velocity "+str(published_velocity*JOINT_VELOCITY_FACTOR_SIMULATION* error_factor / JOINT_VELOCITY_FACTOR_SIMULATION)+" to "+joint_name
         print(log_msg)
 
     duration = end_time - time.time()
@@ -728,7 +730,7 @@ def control_pedaling():
             # Regulate update frequency
             _currTime = time.time()
             while float(float(_currTime) - float(_prevTime)) < (1 / CONTROLLER_FREQUENCY):
-                time.sleep(1)
+                time.sleep(0.01)
                 x_pedal_record.append(_currTrajectoryPoint[ 0 ])
                 y_pedal_record.append(_currTrajectoryPoint[ 1 ])
                 _currTime = time.time()
@@ -778,27 +780,41 @@ def control_pedaling():
                 new_factor = get_angle_difference(current_joint_angle, next_joint_angle) \
                              / get_angle_difference(current_joint_angle, actual_joint_angle)
 
+		print("new error = "+str(new_factor))
 
-                if np.abs(new_factor-1) <=0.1:
+   		if np.abs(new_factor - 1) >= 0.5:
+                    if new_factor < 1:
+                        new_factor = 0.5
+                    else:
+                        new_factor = 1.5
+		print("new error = "+str(new_factor))
+                if thisJointName == RIGHT_HIP_JOINT:
+                    velocity_error_factor_hip = ((velocity_error_factor_hip * velocity_error_counter)
+                                                   + (new_factor * velocity_error_factor_hip)) / (
+                                                              velocity_error_counter + 1)
+                elif thisJointName == RIGHT_KNEE_JOINT:
+                    velocity_error_factor_knee = ((velocity_error_factor_knee * velocity_error_counter)
+                                                   + (new_factor * velocity_error_factor_knee)) / (
+                                                              velocity_error_counter + 1)
+                elif thisJointName == RIGHT_ANKLE_JOINT:
+                    velocity_error_factor_ankle = ((velocity_error_factor_ankle * velocity_error_counter)
+                                                   + (new_factor * velocity_error_factor_ankle)) / (
+                                                              velocity_error_counter + 1)
+                elif thisJointName == LEFT_HIP_JOINT:
+                    velocity_error_factor_hip = ((velocity_error_factor_hip * velocity_error_counter)
+                                                   + (new_factor * velocity_error_factor_hip)) / (
+                                                              velocity_error_counter + 1)
+                elif thisJointName == LEFT_KNEE_JOINT:
+                    velocity_error_factor_knee = ((velocity_error_factor_knee * velocity_error_counter)
+                                                   + (new_factor * velocity_error_factor_knee)) / (
+                                                              velocity_error_counter + 1)
+                elif thisJointName == LEFT_ANKLE_JOINT:
+                    velocity_error_factor_ankle = ((velocity_error_factor_ankle * velocity_error_counter)
+                                                   + (new_factor * velocity_error_factor_ankle)) / (
+                                                              velocity_error_counter + 1)
 
-                    if thisJointName == RIGHT_HIP_JOINT:
-
-                        velocity_error_factor_hip = new_factor
-                    elif thisJointName == RIGHT_KNEE_JOINT:
-
-                        velocity_error_factor_knee = new_factor
-                    elif thisJointName == RIGHT_ANKLE_JOINT:
-
-                        velocity_error_factor_ankle = new_factor
-                    elif thisJointName == LEFT_HIP_JOINT:
-
-                        velocity_error_factor_hip = new_factor
-                    elif thisJointName == LEFT_KNEE_JOINT:
-
-                        velocity_error_factor_knee = new_factor
-                    elif thisJointName == LEFT_ANKLE_JOINT:
-
-                        velocity_error_factor_ankle = new_factor
+            global velocity_error_counter
+            velocity_error_counter += 1
 
 
 ## Documentation for a function.
