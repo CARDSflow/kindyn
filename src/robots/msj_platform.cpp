@@ -72,7 +72,7 @@ public:
             float z = msg.transforms[0].transform.rotation.z;
             float w = msg.transforms[0].transform.rotation.w;
 
-            tf::Quaternion quat(x, y, z, w);
+            tf::Quaternion quat(x,-z, y, w);
             Vector3f euler = quatToeuler(quat);
             cout << "euler " << euler << endl;
 
@@ -107,9 +107,9 @@ public:
         euler[1] =-yaw;
         euler[2] = pitch;
         */
-        euler[0] = roll;
+        euler[0] = yaw;
         euler[1] = pitch;
-        euler[2] = yaw;
+        euler[2] = roll;
         return euler;
     }
 
