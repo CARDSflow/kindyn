@@ -12,15 +12,14 @@ GymServices::GymServices(cardsflow::kindyn::Robot* robot, int id, bool respect_l
     training_robot = robot;
     training_with_limits = respect_limits;
 
+
+    last_tendon_length.resize(training_robot->number_of_cables);
+    last_tendon_length.setZero();
+
     gym_step = nh->advertiseService("/instance" + to_string(id) + "/gym_step", &GymServices::gymStepHandler,this);
     gym_read_state = nh->advertiseService("/instance" + to_string(id) + "/gym_read_state", &GymServices::gymReadStateHandler,this);
     gym_reset = nh->advertiseService("/instance" + to_string(id) + "/gym_reset", &GymServices::gymResetHandler,this);
     gym_goal = nh->advertiseService("/instance" + to_string(id) + "/gym_goal", &GymServices::gymGoalHandler,this);
-
-    //for(int i=0; i< training_robot->number_of_cables; i++) last_action.push_back(0.0);
-    last_action.resize(training_robot->number_of_cables);
-    last_action.setZero();
-
     fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
 }
 
@@ -29,17 +28,33 @@ bool GymServices::gymStepHandler(roboy_simulation_msgs::GymStep::Request &req,
                                   roboy_simulation_msgs::GymStep::Response &res){
     training_robot->update();
 
-    Map<VectorXd> action(req.set_points.data()  , training_robot->number_of_cables);
-    training_robot->Ld[0]= (action - last_action) / req.step_size;  //Commanding cable velocity for simulation
-    last_action = action;
+    Map<VectorXd> tendon_length(req.set_points.data()  , training_robot->number_of_cables);
+    if(!training_robot->isExternalRobotExist()) {
 
+        VectorXd vel = (tendon_length - last_tendon_length) / req.step_size;
 
-    if(!training_robot->getExternalRobotState())
+        double min = -0.02;
+        double max = 0.02;
+
+        for (int i = 0; i < training_robot->number_of_cables; i++) {
+            vel[i] = vel[i] > 0.02 ? 0.02 : vel[i];
+            vel[i] = vel[i] < -0.02 ? -0.02 : vel[i];
+        }
+
+        training_robot->Ld[0] = vel;  //Commanding cable velocity for simulation
+        last_tendon_length = tendon_length;
+
         training_robot->forwardKinematics(req.step_size);
+    }
+    else{
+
+        training_robot->l = tendon_length;
+        training_robot->write();
+    }
+
 
     ROS_INFO_STREAM_THROTTLE(5, "Ld = " << training_robot->Ld[0].format(fmt));
 
-    training_robot->write();
 
     if(training_with_limits){
         res.feasible = isFeasible(training_robot->getBallJointLimitVector(0), training_robot->getBallJointLimitVector(1), training_robot->q[0], training_robot->q[1]);
@@ -64,12 +79,13 @@ bool GymServices::gymReadStateHandler(roboy_simulation_msgs::GymStep::Request &r
         res.feasible = isFeasible(training_robot->getBallJointLimitVector(0),training_robot->getBallJointLimitVector(1),training_robot->q[0],training_robot->q[1]);
     return true;
 }
-
-bool GymServices::gymResetHandler(roboy_simulation_msgs::GymReset::Request &req,
+    bool GymServices::gymResetHandler(roboy_simulation_msgs::GymReset::Request &req,
                                    roboy_simulation_msgs::GymReset::Response &res){
     VectorXd jointAngle, jointVel, zeroTendonLength, zeroTendonVels;
 
     training_robot->setIntegrationTime(0.0);
+
+    last_tendon_length.setZero();
 
     jointAngle.resize(training_robot->number_of_dofs);
     jointVel.resize(training_robot->number_of_dofs);

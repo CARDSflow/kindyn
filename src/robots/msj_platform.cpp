@@ -14,6 +14,7 @@
 #define SPINDLERADIUS 0.00575
 #define msjMeterPerEncoderTick(encoderTicks) (((encoderTicks)/(4096.0)*(2.0*M_PI*SPINDLERADIUS)))
 #define msjEncoderTicksPerMeter(meter) ((meter)*(4096.0)/(2.0*M_PI*SPINDLERADIUS))
+#define MAX_TENDON_VEL 0.02
 
 using namespace std;
 using namespace Eigen;
@@ -139,6 +140,7 @@ public:
     bool isExternalRobotExist(){
         return external_robot_state;
     }
+
 
 private:
 
