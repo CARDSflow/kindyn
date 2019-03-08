@@ -71,12 +71,20 @@ public:
             float y = msg.transforms[0].transform.rotation.y;
             float z = msg.transforms[0].transform.rotation.z;
             float w = msg.transforms[0].transform.rotation.w;
-
-            tf::Quaternion quat(x,-z, y, w);
+        /*
+            tf::Quaternion quat(x,z , -y, w);
             Vector3f euler = quatToeuler(quat);
             cout << "euler " << euler << endl;
+          */
+            Quaternionf q;
+            q.x() = x;
+            q.y() = y;
+            q.z() = z;
+            q.w() = w;
+            Vector3f eulerEig = qToeuler(q);
+            cout <<"euler" <<  eulerEig<< endl;
 
-            joint_state_publisher(euler);
+            joint_state_publisher(eulerEig);
             update();
         }
 
@@ -107,10 +115,16 @@ public:
         euler[1] =-yaw;
         euler[2] = pitch;
         */
-        euler[0] = yaw;
-        euler[1] = pitch;
-        euler[2] = roll;
+        euler[0] = roll;
+        euler[1] = yaw;
+        euler[2] = pitch;
         return euler;
+    }
+    Vector3f qToeuler(Quaternionf quat){
+
+        auto euler = quat.toRotationMatrix().eulerAngles(-1,0,2);
+
+        return -euler;
     }
 
     /**
@@ -253,10 +267,10 @@ int main(int argc, char *argv[]) {
 
     for(int id = 0; id < workers; id++) {
         boost::shared_ptr<MsjPlatform> platform(new MsjPlatform(urdf, cardsflow_xml));
-        cardsflow::kindyn::Robot* ref = &*platform;
-        boost::shared_ptr<GymServices> gym(new GymServices(ref, id + 1 ,true));
+        //cardsflow::kindyn::Robot* ref = &*platform;
+        //boost::shared_ptr<GymServices> gym(new GymServices(ref, id + 1 ,true));
         platforms.push_back(platform);
-        gymFuncs.push_back(gym);
+        //gymFuncs.push_back(gym);
     }
 
     ros::waitForShutdown();
