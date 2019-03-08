@@ -362,7 +362,7 @@ def get_joint_position(jointName):
 
 def plot_measured_trajectories(input_float):
 
-    print("PRINTING JOINT TRAJECTORIES")
+    print("PRINTING JOINT TRAJECTORIES. Length pedal record:", len(x_pedal_record), "length joint_trajectories pedal angle:", len(joint_trajectories_recorded["pedal_angle"]))
 
     plt.figure(1)
     plt.plot(x_pedal_record, y_pedal_record)
