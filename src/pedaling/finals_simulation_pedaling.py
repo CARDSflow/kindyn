@@ -36,8 +36,8 @@ from geometry_msgs.msg import Twist
 
 
 PRINT_DEBUG = True
-SIMULATION_FACTOR = 100.0  # factor to slow down the motion for better simulation
-NUMBER_CIRCULATION_POINTS = 30  # number of points for controlling
+SIMULATION_FACTOR = 1.0  # factor to slow down the motion for better simulation
+NUMBER_CIRCULATION_POINTS = 10  # number of points for controlling
 RECORDED_TRAJECTORY_FILENAME = "trajectory_pedaling/captured_pedal_trajectory_08mar_with_joint_limits.json"
 JOINT_VELOCITY_FACTOR_SIMULATION = 0.008  # publish 1 => velocity = 0.0018 rad/s  for Kp = 0.1 and simulation-step-length = 0.01
 
@@ -511,6 +511,7 @@ def compute_velocity(joint_name, next_joint_angle, current_joint_angle, end_time
         publish_time = 1
 
     ideal_velocity = joint_angle_difference / publish_time
+    ideal_velocity = check_output_limits(ideal_velocity)
 
     if PRINT_DEBUG:
         log_string = "\n"
@@ -522,7 +523,7 @@ def compute_velocity(joint_name, next_joint_angle, current_joint_angle, end_time
         log_string += ("\nideal_velocity = " + str(ideal_velocity))
         print (log_string)
 
-    ideal_velocity = check_output_limits(ideal_velocity)
+
     return ideal_velocity
 
 def check_pedal_angle_valid(pedal_angle):
