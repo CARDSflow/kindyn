@@ -60,9 +60,6 @@ BIKE_VELOCITY = 0.0
 PEDAL_SINGLE_ROTATION_DURATION = 0.0  # [seconds]
 TRAJECTORY_POINT_DURATION = 0.0
 
-x_pedal_record = [ ]
-y_pedal_record = [ ]
-
 ROS_JOINT_HIP_RIGHT = "joint_hip_right"
 ROS_JOINT_KNEE_RIGHT = "joint_knee_right"
 ROS_JOINT_ANKLE_RIGHT = "joint_foot_right"
@@ -76,6 +73,17 @@ RIGHT_ANKLE_JOINT = "right_ankle"
 LEFT_HIP_JOINT = "left_hip"
 LEFT_KNEE_JOINT = "left_knee"
 LEFT_ANKLE_JOINT = "left_ankle"
+
+
+x_pedal_record = [ ]
+y_pedal_record = [ ]
+
+joint_trajectories_recorded = {
+    "pedal_angle": [],
+    LEFT_HIP_JOINT: [],
+    LEFT_KNEE_JOINT: [],
+    LEFT_ANKLE_JOINT: []
+}
 
 f_interpolated_hip_right = None
 f_interpolated_hip_left = None
@@ -351,6 +359,25 @@ def import_joint_trajectory_record():
 def get_joint_position(jointName):
     global joint_status_data
     return joint_status_data[ jointName ][ "Pos" ]
+
+def plot_measured_trajectories(input_float):
+
+    print("PRINTING JOINT TRAJECTORIES")
+    
+    plt.figure(1)
+    plt.plot(x_pedal_record, y_pedal_record)
+
+    plt.figure(2)
+    plt.plot(joint_trajectories_recorded["pedal_angle"], joint_trajectories_recorded[LEFT_HIP_JOINT])
+
+    plt.figure(3)
+    plt.plot(joint_trajectories_recorded["pedal_angle"], joint_trajectories_recorded[LEFT_KNEE_JOINT])
+
+    plt.figure(4)
+    plt.plot(joint_trajectories_recorded["pedal_angle"], joint_trajectories_recorded[LEFT_ANKLE_JOINT])
+
+    plt.show()
+
 
 
 ## Documentation for a function.
@@ -790,21 +817,19 @@ def control_pedaling():
             _startTime = time.time()
             _endTime = _startTime + TRAJECTORY_POINT_DURATION
 
-            x_pedal_record.append(_currTrajectoryPoint[ 0 ])
-            y_pedal_record.append(_currTrajectoryPoint[ 1 ])
-
             # Regulate update frequency
             _currTime = time.time()
             while float(float(_currTime) - float(_prevTime)) < (1 / CONTROLLER_FREQUENCY):
                 time.sleep(0.01)
-                x_pedal_record.append(_currTrajectoryPoint[ 0 ])
-                y_pedal_record.append(_currTrajectoryPoint[ 1 ])
                 _currTime = time.time()
             _prevTime = _currTime
 
             _currTrajectoryPoint = get_position_left_foot()
             prevCurrPedalAngle = current_pedal_angle
             current_pedal_angle = evaluate_current_pedal_angle(_currTrajectoryPoint)
+
+            x_pedal_record.append(_currTrajectoryPoint[ 0 ])
+            y_pedal_record.append(_currTrajectoryPoint[ 1 ])
 
             _startTime = time.time()
             _endTime = _startTime + TRAJECTORY_POINT_DURATION
@@ -840,7 +865,13 @@ def control_pedaling():
             # Iterate through joints and update setpoints
             publisher_threads = []
             i = 0
+
+            joint_trajectories_recorded["pedal_angle"].append(current_pedal_angle)
+
             for thisJointName in _jointsList:
+
+                joint_trajectories_recorded[thisJointName].append(current_joint_angle)
+
                 current_joint_angle = joint_status_data[thisJointName ][ "Pos" ]
                 next_joint_angle = get_joint_angle(thisJointName, next_pedal_angle)
 
@@ -907,6 +938,10 @@ def main():
     rospy.init_node('pedal_simulation', anonymous=True)
     rospy.Subscriber("joint_state", JointState, joint_state_callback)
     rospy.Subscriber("/cmd_vel", Twist, update_velocity)
+
+    rospy.Subscriber("/print_joint_trajectories", Float32, plot_measured_trajectories)
+
+
     control_pedaling()
 
     return 1
