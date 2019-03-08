@@ -15,17 +15,17 @@ from roboy_middleware_msgs.srv import InverseKinematics, InverseKinematicsMultip
 from roboy_simulation_msgs.msg import JointState
 from std_msgs.msg import Float32
 
-JSON_FILENAME = "captured_pedal_trajectory_03mar_with_joint_limits.json"  # "captured_trajectory_two_frames.json"
-TEMP_READFILE = "captured_pedal_trajectory_02mar_with_joint_limits.json"
+JSON_FILENAME = "captured_pedal_trajectory_08mar_with_joint_limits.json"  # "captured_trajectory_two_frames.json"
+TEMP_READFILE = "captured_pedal_trajectory_07mar_with_joint_limits.json"
 
 JOINT_ANGLE_TOLERANCE_FK = 0.002
-JOINT_KP = 750
+JOINT_KP = 200
 JOINT_KD = 0
 POINT_REACHED_TOLERANCE = 0.02
 
-LEFT_HIP_JOINT_TEST_CONFIGURATIONS = np.linspace(-0.9, -0.75, 20)
-LEFT_KNEE_JOINT_TEST_CONFIGURATIONS = np.linspace(0.25, 0.35, 5)
-LEFT_ANKLE_JOINT_TEST_CONFIGURATIONS = np.linspace(0.4, 0.2, 5)
+LEFT_HIP_JOINT_TEST_CONFIGURATIONS = np.linspace(-0.9, -0.8, 20)
+LEFT_KNEE_JOINT_TEST_CONFIGURATIONS = np.linspace(1.9, 1.8, 5)
+LEFT_ANKLE_JOINT_TEST_CONFIGURATIONS = np.linspace(0.2, 0.0, 5)
 
 LEFT_HIP_JOINT_LOWER_LIMIT = -1.9
 LEFT_KNEE_JOINT_LOWER_LIMIT = 0
@@ -39,9 +39,9 @@ LEFT_ANKLE_JOINT_UPPER_LIMIT = 0.7
 ###   MEASURED PARAMETERS   ###
 ###############################
 
-PEDAL_CENTER_OFFSET_X = 0.09223  # 0.20421
-PEDAL_CENTER_OFFSET_Y = 0.00013  # -0.00062
-PEDAL_CENTER_OFFSET_Z = 0.00426  # 0.2101
+PEDAL_CENTER_OFFSET_X = 0.09222872619138603  # 0.20421
+PEDAL_CENTER_OFFSET_Y = 0.00013171801209023543  # -0.00062
+PEDAL_CENTER_OFFSET_Z = 0.0042772834965418725  # 0.2101
 
 BIKE_OFFSET_X = 0  # -0.83471
 BIKE_OFFSET_Y = 0  # 0.03437
@@ -49,8 +49,8 @@ BIKE_OFFSET_Z = 0  # 0.037
 
 PEDAL_RADIUS = 0.16924  # [meters]
 
-RIGHT_LEG_OFFSET_Y = 0.15796
-LEFT_LEG_OFFSET_Y = -0.18736
+RIGHT_LEG_OFFSET_Y = 0.1579606226770175 - 0.00013171801209023543
+LEFT_LEG_OFFSET_Y = -0.1873561275007122 - 0.00013171801209023543
 
 ############################
 ###   GLOBAL VARIABLES   ###
@@ -119,7 +119,7 @@ def getPositionLeftFoot():
     rospy.wait_for_service('fk')
     try:
         fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
-        fk_result = fk_srv("foot_left_tip", "foot_left_tip", fkJointNamesList, fkJointPositions)
+        fk_result = fk_srv("left_leg", "foot_left_tip", fkJointNamesList, fkJointPositions)
         return [fk_result.pose.position.x, fk_result.pose.position.z]
 
     except rospy.ServiceException as e:
@@ -137,7 +137,7 @@ def getPositionRightFoot():
     rospy.wait_for_service('fk')
     try:
         fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
-        fk_result = fk_srv("foot_right_tip", "foot_right_tip", fkJointNamesList, fkJointPositions)
+        fk_result = fk_srv("right_leg", "foot_right_tip", fkJointNamesList, fkJointPositions)
         return [fk_result.pose.position.x, fk_result.pose.position.z]
 
     except rospy.ServiceException as e:
@@ -378,7 +378,7 @@ def main():
     if len(sys.argv) > 1:
         num_requested_points = int(sys.argv[1])
     else:
-        num_requested_points = 72
+        num_requested_points = 36
 
     global JOINT_ANGLE_TOLERANCE_FK
 
@@ -392,11 +392,11 @@ def main():
     ros_left_ankle_publisher = rospy.Publisher('joint_foot_left/joint_foot_left/target', Float32, queue_size=1)
     time.sleep(2)
 
-    setJointControllerParameters(JOINT_KP, JOINT_KD)
+    #setJointControllerParameters(JOINT_KP, JOINT_KD)
 
     capturedPositions = getPedalPositions(num_requested_points)
 
-    endeffector_right = "foot_right_tip"
+    endeffector_right = "right_leg"
     frame_right = "foot_right_tip"
     y_offset_right = RIGHT_LEG_OFFSET_Y
     frame_right_1 = "foot_right_tip"
@@ -407,7 +407,7 @@ def main():
     frame_right_2_y_offset = 0
     frame_right_2_z_offset = 0.3
 
-    endeffector_left = "foot_left_tip"
+    endeffector_left = "left_leg"
     frame_left = "foot_left_tip"
     y_offset_left = LEFT_LEG_OFFSET_Y
     frame_left_1 = "foot_left_tip"
@@ -524,7 +524,7 @@ def main():
                             ros_left_hip_publisher.publish(hip_test_position)
                             ros_left_knee_publisher.publish(knee_test_position)
                             ros_left_ankle_publisher.publish(ankle_test_position)
-                            print("Target angles for point number", pointIter, "published: hip=", hip_test_position, "knee=", knee_test_position, "ankle=", ankle_test_position)
+                            print("Target angles for point number", pointIter, "out of", num_requested_points, "published: hip=", hip_test_position, "knee=", knee_test_position, "ankle=", ankle_test_position, "worst case positions left to try: ", (len(hipTestPositionsList)-hip_test_position_iterator)+ (len(hipTestPositionsList))*(len(kneeTestPositionsList)-knee_test_position_iterator) +(len(kneeTestPositionsList))*(len(hipTestPositionsList))*(len(ankleTestPositionsList)-ankle_test_position_iterator) )
                             while abs(_jointsStatusData[LEFT_HIP_JOINT]["Pos"] - hip_test_position) > JOINT_ANGLE_TOLERANCE_FK:
                                 time.sleep(0.001)
                             while abs(_jointsStatusData[LEFT_KNEE_JOINT]["Pos"] - knee_test_position) > JOINT_ANGLE_TOLERANCE_FK:
@@ -554,6 +554,9 @@ def main():
                     time.sleep(0.001)
                 reached_point = True
             else:
+
+                currBestDistance = 999
+
                 for ankle_test_position in LEFT_ANKLE_JOINT_TEST_CONFIGURATIONS:
                     if reached_point:
                         break
@@ -574,6 +577,11 @@ def main():
                                 time.sleep(0.01)
                             while abs(_jointsStatusData[LEFT_ANKLE_JOINT]["Pos"] - ankle_test_position) > JOINT_ANGLE_TOLERANCE_FK:
                                 time.sleep(0.01)
+
+                            currDistanceToGoalPoint = get_distance(getPositionLeftFoot(), [thisX, thisZ])
+                            if currDistanceToGoalPoint < currBestDistance:
+                                currBestDistance = currDistanceToGoalPoint
+                            print("best distance to goal point:", currBestDistance,"this distance:", currDistanceToGoalPoint, "tolerance:", POINT_REACHED_TOLERANCE)
 
                             if (get_distance(getPositionLeftFoot(), [thisX, thisZ]) < POINT_REACHED_TOLERANCE):
                                 reached_point = True
