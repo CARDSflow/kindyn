@@ -36,9 +36,9 @@ JSON_FILENAME = "new_hand_steering_trajectory.json"
 JOINT_ANGLE_TOLERANCE_FK = 0.01
 
 ENDEFFECTOR_RIGHT = "right_arm"
-FRAME_RIGHT = "right_arm"
+FRAME_RIGHT = "wrist_right_sphere_link1"
 ENDEFFECTOR_LEFT = "left_arm"
-FRAME_LEFT = "left_arm"
+FRAME_LEFT = "wrist_left_sphere_link1"
 
 ###############################
 ###   MEASURED PARAMETERS   ###
@@ -271,7 +271,7 @@ def inverse_kinematics_client(endeffector, frame, x, y, z, roll, pitch, yaw):
         requested_pose.orientation.y = quaternion[1]
         requested_pose.orientation.z = quaternion[2]
         requested_pose.orientation.w = quaternion[3]
-        requested_ik_type = 0  # Position and orientation
+        requested_ik_type = 1 # Pos only #0 Position and orientation
         ik_result = ik_srv(endeffector, requested_ik_type, frame, requested_pose)
 
         jointDict = {}
@@ -441,10 +441,10 @@ def main():
                 time.sleep(0.1)
             print("JOINT_ELBOW_RIGHT moved to new position")
 
-            while abs(_jointsStatusData[JOINT_WRIST_LEFT_SPHERE_AXIS0]["Pos"] - jointAngleResult_left[
-                JOINT_WRIST_LEFT_SPHERE_AXIS0]) > JOINT_ANGLE_TOLERANCE_FK:
-                time.sleep(0.1)
-            print("JOINT_WRIST_LEFT_SPHERE_AXIS0 moved to new position")
+            # while abs(_jointsStatusData[JOINT_WRIST_LEFT_SPHERE_AXIS0]["Pos"] - jointAngleResult_left[
+            #     JOINT_WRIST_LEFT_SPHERE_AXIS0]) > JOINT_ANGLE_TOLERANCE_FK:
+            #     time.sleep(0.1)
+            # print("JOINT_WRIST_LEFT_SPHERE_AXIS0 moved to new position")
             #while abs(_jointsStatusData[JOINT_WRIST_LEFT_SPHERE_AXIS1]["Pos"] - jointAngleResult_left[
             #    JOINT_WRIST_LEFT_SPHERE_AXIS1]) > JOINT_ANGLE_TOLERANCE_FK:
             #    time.sleep(0.1)
@@ -454,10 +454,10 @@ def main():
             #    time.sleep(0.1)
             #print("JOINT_WRIST_LEFT_SPHERE_AXIS2 moved to new position")
 
-            while abs(_jointsStatusData[JOINT_WRIST_RIGHT_SPHERE_AXIS0]["Pos"] - jointAngleResult_right[
-                JOINT_WRIST_RIGHT_SPHERE_AXIS0]) > JOINT_ANGLE_TOLERANCE_FK:
-                time.sleep(0.1)
-            print("JOINT_WRIST_RIGHT_SPHERE_AXIS0 moved to new position")
+            # while abs(_jointsStatusData[JOINT_WRIST_RIGHT_SPHERE_AXIS0]["Pos"] - jointAngleResult_right[
+            #     JOINT_WRIST_RIGHT_SPHERE_AXIS0]) > JOINT_ANGLE_TOLERANCE_FK:
+            #     time.sleep(0.1)
+            # print("JOINT_WRIST_RIGHT_SPHERE_AXIS0 moved to new position")
             # while abs(_jointsStatusData[JOINT_WRIST_RIGHT_SPHERE_AXIS1]["Pos"] - jointAngleResult_right[
             #     JOINT_WRIST_RIGHT_SPHERE_AXIS1]) > JOINT_ANGLE_TOLERANCE_FK:
             #     time.sleep(0.1)

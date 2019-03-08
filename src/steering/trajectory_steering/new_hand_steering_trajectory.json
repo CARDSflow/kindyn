@@ -1,0 +1,1711 @@
+{
+    "num_points": 61, 
+    "point_0": {
+        "Left": {
+            "Hand_actual": [
+                -0.3565709907319637, 
+                0.6011088834744186, 
+                0.5322405647407228
+            ], 
+            "Steering_angle": -0.20943951023931953, 
+            "elbow_left": -0.6693834253310335, 
+            "left_shoulder_axis0": 0.27869573923585717, 
+            "left_shoulder_axis1": 2.904004914063441, 
+            "left_shoulder_axis2": 0.47360087622236247, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.13383109255375528, 
+                0.05055664031939816, 
+                0.817470898638692
+            ], 
+            "Steering_angle": -0.20943951023931953, 
+            "elbow_right": -6.420752699521406e-08, 
+            "right_shoulder_axis0": -1.4109547236815392, 
+            "right_shoulder_axis1": 0.7571025614385655, 
+            "right_shoulder_axis2": -0.3971132795418266, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_1": {
+        "Left": {
+            "Hand_actual": [
+                -0.3607420604026589, 
+                0.5968979872591618, 
+                0.5300848299049747
+            ], 
+            "Steering_angle": -0.2024581932313422, 
+            "elbow_left": -0.6732064579596091, 
+            "left_shoulder_axis0": 0.2940966823281911, 
+            "left_shoulder_axis1": 2.904238681402116, 
+            "left_shoulder_axis2": 0.4870074431949586, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.1303210162209928, 
+                0.04336298894489643, 
+                0.8188696970578839
+            ], 
+            "Steering_angle": -0.2024581932313422, 
+            "elbow_right": -5.9215498828619465e-09, 
+            "right_shoulder_axis0": -1.4285315121277757, 
+            "right_shoulder_axis1": 0.7482635172109893, 
+            "right_shoulder_axis2": -0.3773799694783792, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_10": {
+        "Left": {
+            "Hand_actual": [
+                -0.38738321640318274, 
+                0.5692216929808269, 
+                0.517495944296121
+            ], 
+            "Steering_angle": -0.13962634015954634, 
+            "elbow_left": -0.6353383898741428, 
+            "left_shoulder_axis0": -0.016993086496971496, 
+            "left_shoulder_axis1": 2.8056931820674853, 
+            "left_shoulder_axis2": 0.32430686664650454, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.11272944365327137, 
+                0.016331817984280933, 
+                0.822024094820079
+            ], 
+            "Steering_angle": -0.13962634015954634, 
+            "elbow_right": -0.01220631511477609, 
+            "right_shoulder_axis0": -1.4821884018841114, 
+            "right_shoulder_axis1": 0.7025913864583864, 
+            "right_shoulder_axis2": -0.3985435620011301, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_11": {
+        "Left": {
+            "Hand_actual": [
+                -0.3924890622171634, 
+                0.5653504337161928, 
+                0.517297882415469
+            ], 
+            "Steering_angle": -0.13264502315156904, 
+            "elbow_left": -0.629451742189869, 
+            "left_shoulder_axis0": 0.03280287921523004, 
+            "left_shoulder_axis1": 2.8109848759318425, 
+            "left_shoulder_axis2": 0.3667641962759082, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.10966157736734111, 
+                0.011518275681035875, 
+                0.8226336037934877
+            ], 
+            "Steering_angle": -0.13264502315156904, 
+            "elbow_right": -1.8690476673511798e-05, 
+            "right_shoulder_axis0": -1.4969434804843336, 
+            "right_shoulder_axis1": 0.6992223240237435, 
+            "right_shoulder_axis2": -0.3510132334289287, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_12": {
+        "Left": {
+            "Hand_actual": [
+                -0.3966806134593922, 
+                0.5615961530030997, 
+                0.5164444267709668
+            ], 
+            "Steering_angle": -0.1256637061435917, 
+            "elbow_left": -0.6228973499814636, 
+            "left_shoulder_axis0": -0.06393641746292442, 
+            "left_shoulder_axis1": 2.7918458723924453, 
+            "left_shoulder_axis2": 0.3036925962209661, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.10801876674031316, 
+                0.0081250245081783, 
+                0.82380009101921
+            ], 
+            "Steering_angle": -0.1256637061435917, 
+            "elbow_right": -6.0625953762364574e-05, 
+            "right_shoulder_axis0": -1.5045396113084235, 
+            "right_shoulder_axis1": 0.6955482473942014, 
+            "right_shoulder_axis2": -0.35667611906365115, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_13": {
+        "Left": {
+            "Hand_actual": [
+                -0.39931480249198725, 
+                0.5585121104916135, 
+                0.5149213840496055
+            ], 
+            "Steering_angle": -0.1186823891356144, 
+            "elbow_left": -0.6214228745815435, 
+            "left_shoulder_axis0": -0.0360865463384186, 
+            "left_shoulder_axis1": 2.792781157544588, 
+            "left_shoulder_axis2": 0.327025891643304, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.10484802016922812, 
+                0.004413026032508607, 
+                0.8238725977832385
+            ], 
+            "Steering_angle": -0.1186823891356144, 
+            "elbow_right": -6.5206138682795445e-09, 
+            "right_shoulder_axis0": -1.5113480472520087, 
+            "right_shoulder_axis1": 0.6883456080036243, 
+            "right_shoulder_axis2": -0.3592067624382073, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_14": {
+        "Left": {
+            "Hand_actual": [
+                -0.402665141490701, 
+                0.5547810147306387, 
+                0.5134082273443314
+            ], 
+            "Steering_angle": -0.11170107212763708, 
+            "elbow_left": -0.6127565633476509, 
+            "left_shoulder_axis0": -0.03283705431259796, 
+            "left_shoulder_axis1": 2.7897012312757297, 
+            "left_shoulder_axis2": 0.33530220743659606, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.10773734022267473, 
+                0.00526667789305553, 
+                0.8258308491245355
+            ], 
+            "Steering_angle": -0.11170107212763708, 
+            "elbow_right": -1.4344767777629793e-05, 
+            "right_shoulder_axis0": -1.5132307584739417, 
+            "right_shoulder_axis1": 0.6947187705837237, 
+            "right_shoulder_axis2": -0.3454783220095946, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_15": {
+        "Left": {
+            "Hand_actual": [
+                -0.4067623422071273, 
+                0.5508492538536698, 
+                0.512253465246904
+            ], 
+            "Steering_angle": -0.10471975511965977, 
+            "elbow_left": -0.6123345975692657, 
+            "left_shoulder_axis0": -0.016602963437224342, 
+            "left_shoulder_axis1": 2.7884162626526097, 
+            "left_shoulder_axis2": 0.3515690486416629, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.10176272325500785, 
+                -0.00091376663813314, 
+                0.8254204446326555
+            ], 
+            "Steering_angle": -0.10471975511965977, 
+            "elbow_right": -1.2359152740046232e-05, 
+            "right_shoulder_axis0": -1.5213840936352536, 
+            "right_shoulder_axis1": 0.6820415442793427, 
+            "right_shoulder_axis2": -0.3936764453328677, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_16": {
+        "Left": {
+            "Hand_actual": [
+                -0.40715538158759473, 
+                0.5494244078534891, 
+                0.5111011394806978
+            ], 
+            "Steering_angle": -0.09773843811168245, 
+            "elbow_left": -0.5962201070371792, 
+            "left_shoulder_axis0": -0.036495592300915765, 
+            "left_shoulder_axis1": 2.784110389148758, 
+            "left_shoulder_axis2": 0.3419249991614245, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.09796651328229461, 
+                -0.00747631318987757, 
+                0.8275743480672486
+            ], 
+            "Steering_angle": -0.09773843811168245, 
+            "elbow_right": -0.0034326733487555585, 
+            "right_shoulder_axis0": -1.535672113327967, 
+            "right_shoulder_axis1": 0.6720480165631723, 
+            "right_shoulder_axis2": -0.39118266810869445, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_17": {
+        "Left": {
+            "Hand_actual": [
+                -0.41360061067511267, 
+                0.5433817474817715, 
+                0.5094723153902472
+            ], 
+            "Steering_angle": -0.09075712110370512, 
+            "elbow_left": -0.6013215587954891, 
+            "left_shoulder_axis0": 0.0347184789305971, 
+            "left_shoulder_axis1": 2.7899729862850164, 
+            "left_shoulder_axis2": 0.39928525964611294, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.09833572666951501, 
+                -0.006520711484896052, 
+                0.8270174302166438
+            ], 
+            "Steering_angle": -0.09075712110370512, 
+            "elbow_right": -4.166142779748676e-09, 
+            "right_shoulder_axis0": -1.5332727247119358, 
+            "right_shoulder_axis1": 0.6744560787251277, 
+            "right_shoulder_axis2": -0.4018126223435093, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_18": {
+        "Left": {
+            "Hand_actual": [
+                -0.41360061067511267, 
+                0.5433817474817715, 
+                0.5094723153902472
+            ], 
+            "Steering_angle": -0.08377580409572781, 
+            "elbow_left": -0.6032595827562969, 
+            "left_shoulder_axis0": 0.03761992479008568, 
+            "left_shoulder_axis1": 2.787039156707008, 
+            "left_shoulder_axis2": 0.4053731335295534, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.09833572666951501, 
+                -0.006520711484896052, 
+                0.8270174302166438
+            ], 
+            "Steering_angle": -0.08377580409572781, 
+            "elbow_right": -2.7368132191033157e-05, 
+            "right_shoulder_axis0": -1.5365929122316921, 
+            "right_shoulder_axis1": 0.6709737426782268, 
+            "right_shoulder_axis2": -0.3992398386223448, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_19": {
+        "Left": {
+            "Hand_actual": [
+                -0.4176805785594253, 
+                0.5397814413322086, 
+                0.5088235415145076
+            ], 
+            "Steering_angle": -0.0767944870877505, 
+            "elbow_left": -0.6104788122766907, 
+            "left_shoulder_axis0": 0.028502611840543975, 
+            "left_shoulder_axis1": 2.7803548510718605, 
+            "left_shoulder_axis2": 0.40262205145282787, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.0968271488127748, 
+                -0.008234739547456238, 
+                0.827120820574814
+            ], 
+            "Steering_angle": -0.0767944870877505, 
+            "elbow_right": -1.2105227342539608e-09, 
+            "right_shoulder_axis0": -1.5412631830310524, 
+            "right_shoulder_axis1": 0.6648974659978049, 
+            "right_shoulder_axis2": -0.40182643690576797, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_2": {
+        "Left": {
+            "Hand_actual": [
+                -0.36436258410231515, 
+                0.5931811301847716, 
+                0.5281608262101792
+            ], 
+            "Steering_angle": -0.1954768762233649, 
+            "elbow_left": -0.6782414326665073, 
+            "left_shoulder_axis0": 0.3215069698693155, 
+            "left_shoulder_axis1": 2.9088924833627123, 
+            "left_shoulder_axis2": 0.5064026743552954, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.12729647727802457, 
+                0.03925531397585541, 
+                0.8187714130870358
+            ], 
+            "Steering_angle": -0.1954768762233649, 
+            "elbow_right": -1.1195763355172922e-08, 
+            "right_shoulder_axis0": -1.4339877492389306, 
+            "right_shoulder_axis1": 0.7421646503977619, 
+            "right_shoulder_axis2": -0.42744583197057145, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_20": {
+        "Left": {
+            "Hand_actual": [
+                -0.4297512085304603, 
+                0.5291061551824087, 
+                0.5069660175211104
+            ], 
+            "Steering_angle": -0.06981317007977317, 
+            "elbow_left": -0.6183512357879977, 
+            "left_shoulder_axis0": 0.0642118009999806, 
+            "left_shoulder_axis1": 2.7814724964635746, 
+            "left_shoulder_axis2": 0.4340170204228755, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.09497326081800825, 
+                -0.01007681152095967, 
+                0.8270417653660345
+            ], 
+            "Steering_angle": -0.06981317007977317, 
+            "elbow_right": -2.4430938300652218e-05, 
+            "right_shoulder_axis0": -1.539953111050166, 
+            "right_shoulder_axis1": 0.6666954945930934, 
+            "right_shoulder_axis2": -0.39508603140828563, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_21": {
+        "Left": {
+            "Hand_actual": [
+                -0.42995519348952765, 
+                0.5279751592256962, 
+                0.5058943019303624
+            ], 
+            "Steering_angle": -0.06283185307179585, 
+            "elbow_left": -0.6100478721899434, 
+            "left_shoulder_axis0": 0.04956647278901237, 
+            "left_shoulder_axis1": 2.777456762398379, 
+            "left_shoulder_axis2": 0.42597007487772476, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.09117025693440928, 
+                -0.017113691482823823, 
+                0.8297978302113365
+            ], 
+            "Steering_angle": -0.06283185307179585, 
+            "elbow_right": -2.2072029239396704e-09, 
+            "right_shoulder_axis0": -1.55453390474511, 
+            "right_shoulder_axis1": 0.6589207120161948, 
+            "right_shoulder_axis2": -0.4276003500916414, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_22": {
+        "Left": {
+            "Hand_actual": [
+                -0.43624364530790516, 
+                0.5221575670677651, 
+                0.5047864022080911
+            ], 
+            "Steering_angle": -0.05585053606381854, 
+            "elbow_left": -0.6175373174976998, 
+            "left_shoulder_axis0": 0.03935220903211155, 
+            "left_shoulder_axis1": 2.769708156967886, 
+            "left_shoulder_axis2": 0.4235052402706816, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.09043515368459581, 
+                -0.02066761905779803, 
+                0.8323220228488498
+            ], 
+            "Steering_angle": -0.05585053606381854, 
+            "elbow_right": -2.7490194638648565e-07, 
+            "right_shoulder_axis0": -1.5641603768226333, 
+            "right_shoulder_axis1": 0.6573650113411149, 
+            "right_shoulder_axis2": -0.4303275655766594, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_23": {
+        "Left": {
+            "Hand_actual": [
+                -0.437670094738226, 
+                0.518721150085403, 
+                0.5020947924788826
+            ], 
+            "Steering_angle": -0.048869219055841226, 
+            "elbow_left": -0.6092261033895606, 
+            "left_shoulder_axis0": 0.03496748867054731, 
+            "left_shoulder_axis1": 2.764978329327268, 
+            "left_shoulder_axis2": 0.4242608600650849, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.08452961529257835, 
+                -0.02505918672873074, 
+                0.8311201295067036
+            ], 
+            "Steering_angle": -0.048869219055841226, 
+            "elbow_right": -1.6755338859541643e-06, 
+            "right_shoulder_axis0": -1.5679521244854784, 
+            "right_shoulder_axis1": 0.6451519328667952, 
+            "right_shoulder_axis2": -0.47044943743530926, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_24": {
+        "Left": {
+            "Hand_actual": [
+                -0.44370312101039305, 
+                0.5141551256713516, 
+                0.5025337072198867
+            ], 
+            "Steering_angle": -0.041887902047863905, 
+            "elbow_left": -0.6114691443199628, 
+            "left_shoulder_axis0": 0.029170625361421763, 
+            "left_shoulder_axis1": 2.759980661224657, 
+            "left_shoulder_axis2": 0.42612936758968933, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.08649906725885353, 
+                -0.026384898477664787, 
+                0.8340604705026082
+            ], 
+            "Steering_angle": -0.041887902047863905, 
+            "elbow_right": -8.31924518558034e-06, 
+            "right_shoulder_axis0": -1.5720734832174867, 
+            "right_shoulder_axis1": 0.6508654080811773, 
+            "right_shoulder_axis2": -0.5202149133057795, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_25": {
+        "Left": {
+            "Hand_actual": [
+                -0.44749914803274893, 
+                0.5093545412689352, 
+                0.5005906401434759
+            ], 
+            "Steering_angle": -0.034906585039886584, 
+            "elbow_left": -0.6071011540714187, 
+            "left_shoulder_axis0": 0.05547028975886286, 
+            "left_shoulder_axis1": 2.7598592509560866, 
+            "left_shoulder_axis2": 0.4513199220632089, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.08403499832046063, 
+                -0.02717894978692781, 
+                0.8326354792242081
+            ], 
+            "Steering_angle": -0.034906585039886584, 
+            "elbow_right": -4.286873964255606e-08, 
+            "right_shoulder_axis0": -1.5734212902584241, 
+            "right_shoulder_axis1": 0.6442322956523849, 
+            "right_shoulder_axis2": -0.47684154483449637, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_26": {
+        "Left": {
+            "Hand_actual": [
+                -0.45152242367830886, 
+                0.5052194693218353, 
+                0.4997759328440521
+            ], 
+            "Steering_angle": -0.02792526803190927, 
+            "elbow_left": -0.6019007209869857, 
+            "left_shoulder_axis0": 0.06378046624548975, 
+            "left_shoulder_axis1": 2.757568617134352, 
+            "left_shoulder_axis2": 0.46363711511765726, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.08141100797966042, 
+                -0.03361138717400203, 
+                0.8363831263573418
+            ], 
+            "Steering_angle": -0.02792526803190927, 
+            "elbow_right": -8.932916708800642e-08, 
+            "right_shoulder_axis0": -1.5921479551432902, 
+            "right_shoulder_axis1": 0.6372156308769633, 
+            "right_shoulder_axis2": -0.4257700332150786, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_27": {
+        "Left": {
+            "Hand_actual": [
+                -0.4483876594313786, 
+                0.48723585423160787, 
+                0.5109955180911189
+            ], 
+            "Steering_angle": -0.020943951023931952, 
+            "elbow_left": 0.0, 
+            "left_shoulder_axis0": 0.025947895883239244, 
+            "left_shoulder_axis1": 2.8145287219184194, 
+            "left_shoulder_axis2": 0.5784356088880168, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.07975822399785476, 
+                -0.032431249218739355, 
+                0.8338327687632106
+            ], 
+            "Steering_angle": -0.020943951023931952, 
+            "elbow_right": -2.4627557877902065e-08, 
+            "right_shoulder_axis0": -1.5892496261234519, 
+            "right_shoulder_axis1": 0.632304271502434, 
+            "right_shoulder_axis2": -0.3698605169208626, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_28": {
+        "Left": {
+            "Hand_actual": [
+                -0.4617132526475564, 
+                0.495407319788303, 
+                0.49816682578719584
+            ], 
+            "Steering_angle": -0.013962634015954635, 
+            "elbow_left": -0.6176222383974559, 
+            "left_shoulder_axis0": 0.11104586100487422, 
+            "left_shoulder_axis1": 2.757033724315004, 
+            "left_shoulder_axis2": 0.5063977632868335, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.07810265510233841, 
+                -0.03694719563227325, 
+                0.8367120855938184
+            ], 
+            "Steering_angle": -0.013962634015954635, 
+            "elbow_right": -3.565508668293958e-05, 
+            "right_shoulder_axis0": -1.5982062160444, 
+            "right_shoulder_axis1": 0.6298644757686658, 
+            "right_shoulder_axis2": -0.42405825688126186, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_29": {
+        "Left": {
+            "Hand_actual": [
+                -0.4613690436740936, 
+                0.47324386227939097, 
+                0.5078633560968845
+            ], 
+            "Steering_angle": -0.0069813170079773175, 
+            "elbow_left": -4.317554178284772e-08, 
+            "left_shoulder_axis0": 0.17162966665485874, 
+            "left_shoulder_axis1": 2.836343291812818, 
+            "left_shoulder_axis2": 0.6972549739188918, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.07671649499064359, 
+                -0.03651536604916972, 
+                0.8351057264370348
+            ], 
+            "Steering_angle": -0.0069813170079773175, 
+            "elbow_right": -6.290335535216904e-08, 
+            "right_shoulder_axis0": -1.5948403455822788, 
+            "right_shoulder_axis1": 0.6269536472913004, 
+            "right_shoulder_axis2": -0.43014772395486844, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_3": {
+        "Left": {
+            "Hand_actual": [
+                -0.36632188078728395, 
+                0.5911289506499414, 
+                0.5273877393291377
+            ], 
+            "Steering_angle": -0.18849555921538758, 
+            "elbow_left": -0.6551698237306701, 
+            "left_shoulder_axis0": 0.32538275378844184, 
+            "left_shoulder_axis1": 2.9085719716454173, 
+            "left_shoulder_axis2": 0.5177196473384598, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.12459947541567143, 
+                0.03491858464095898, 
+                0.8192225460783792
+            ], 
+            "Steering_angle": -0.18849555921538758, 
+            "elbow_right": -4.140680444952357e-09, 
+            "right_shoulder_axis0": -1.4439274050759283, 
+            "right_shoulder_axis1": 0.7354665445547425, 
+            "right_shoulder_axis2": -0.41446735543702373, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_30": {
+        "Left": {
+            "Hand_actual": [
+                -0.4704100266745179, 
+                0.4853296412783381, 
+                0.49543683541657246
+            ], 
+            "Steering_angle": 0.0, 
+            "elbow_left": -0.6088528668665686, 
+            "left_shoulder_axis0": 0.15705342594205166, 
+            "left_shoulder_axis1": 2.757106428235982, 
+            "left_shoulder_axis2": 0.5536107312510329, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.07862546383635063, 
+                -0.03769231583361951, 
+                0.8378846687988714
+            ], 
+            "Steering_angle": 0.0, 
+            "elbow_right": -9.51683756857603e-06, 
+            "right_shoulder_axis0": -1.600094246831124, 
+            "right_shoulder_axis1": 0.6315554679127053, 
+            "right_shoulder_axis2": -0.44592441666126154, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_31": {
+        "Left": {
+            "Hand_actual": [
+                -0.4758078662634728, 
+                0.48046795891789124, 
+                0.4954465424993524
+            ], 
+            "Steering_angle": 0.0069813170079773175, 
+            "elbow_left": -0.6072240113383616, 
+            "left_shoulder_axis0": 0.18611469162383515, 
+            "left_shoulder_axis1": 2.7597230925563188, 
+            "left_shoulder_axis2": 0.5819571841804393, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.07406427808529101, 
+                -0.043547811670688774, 
+                0.8396975310206686
+            ], 
+            "Steering_angle": 0.0069813170079773175, 
+            "elbow_right": -2.3047757153795783e-09, 
+            "right_shoulder_axis0": -1.6125962934627074, 
+            "right_shoulder_axis1": 0.6214107890773581, 
+            "right_shoulder_axis2": -0.43977464341845235, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_32": {
+        "Left": {
+            "Hand_actual": [
+                -0.47188309144289875, 
+                0.46250499704895376, 
+                0.5064366342679607
+            ], 
+            "Steering_angle": 0.013962634015954635, 
+            "elbow_left": 0.0, 
+            "left_shoulder_axis0": 0.10821425391259848, 
+            "left_shoulder_axis1": 2.8093189217264363, 
+            "left_shoulder_axis2": 0.6652866144996353, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.07264641633757146, 
+                -0.045657226364139325, 
+                0.8405878297314395
+            ], 
+            "Steering_angle": 0.013962634015954635, 
+            "elbow_right": -2.211831277456092e-07, 
+            "right_shoulder_axis0": -1.616519193775665, 
+            "right_shoulder_axis1": 0.6187135715100837, 
+            "right_shoulder_axis2": -0.4561637230194323, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_33": {
+        "Left": {
+            "Hand_actual": [
+                -0.4759751569980592, 
+                0.45767335286857636, 
+                0.5052181501503421
+            ], 
+            "Steering_angle": 0.020943951023931952, 
+            "elbow_left": 0.0, 
+            "left_shoulder_axis0": 0.109854279461312, 
+            "left_shoulder_axis1": 2.8048078722137406, 
+            "left_shoulder_axis2": 0.6714685673388473, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.06813862027192266, 
+                -0.05034698159737916, 
+                0.841498178094219
+            ], 
+            "Steering_angle": 0.020943951023931952, 
+            "elbow_right": -1.6879885024522891e-06, 
+            "right_shoulder_axis0": -1.6269485122375915, 
+            "right_shoulder_axis1": 0.608101060891533, 
+            "right_shoulder_axis2": -0.422735431266548, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_34": {
+        "Left": {
+            "Hand_actual": [
+                -0.490511424336857, 
+                0.4644744837025784, 
+                0.49253277301480713
+            ], 
+            "Steering_angle": 0.02792526803190927, 
+            "elbow_left": -0.6115669985913648, 
+            "left_shoulder_axis0": 0.1131135302426372, 
+            "left_shoulder_axis1": 2.7263070928212216, 
+            "left_shoulder_axis2": 0.5453200429507221, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.06844944717071799, 
+                -0.05026134065572396, 
+                0.8416735545511242
+            ], 
+            "Steering_angle": 0.02792526803190927, 
+            "elbow_right": 0.0, 
+            "right_shoulder_axis0": -1.6270885637077335, 
+            "right_shoulder_axis1": 0.6087739617607958, 
+            "right_shoulder_axis2": -0.42250730605642195, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_35": {
+        "Left": {
+            "Hand_actual": [
+                -0.4942484419959551, 
+                0.4596839649754325, 
+                0.4911510078490149
+            ], 
+            "Steering_angle": 0.034906585039886584, 
+            "elbow_left": -0.6089333436237556, 
+            "left_shoulder_axis0": 0.13514713596980157, 
+            "left_shoulder_axis1": 2.7259161824743803, 
+            "left_shoulder_axis2": 0.5676590386754712, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.06716266435787338, 
+                -0.053021925164683265, 
+                0.8434216984666523
+            ], 
+            "Steering_angle": 0.034906585039886584, 
+            "elbow_right": -1.4535015593042984e-09, 
+            "right_shoulder_axis0": -1.63371120544478, 
+            "right_shoulder_axis1": 0.6061619611572869, 
+            "right_shoulder_axis2": -0.429639679443945, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_36": {
+        "Left": {
+            "Hand_actual": [
+                -0.5012595979145575, 
+                0.4529405262443462, 
+                0.49112118279767014
+            ], 
+            "Steering_angle": 0.041887902047863905, 
+            "elbow_left": -0.6100786529376666, 
+            "left_shoulder_axis0": 0.12326124990786004, 
+            "left_shoulder_axis1": 2.7167774605263744, 
+            "left_shoulder_axis2": 0.5670999274547733, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.06668213935405673, 
+                -0.054794367004214556, 
+                0.8448577208150048
+            ], 
+            "Steering_angle": 0.041887902047863905, 
+            "elbow_right": -2.6599791178096257e-09, 
+            "right_shoulder_axis0": -1.6396278487226343, 
+            "right_shoulder_axis1": 0.6046730177037095, 
+            "right_shoulder_axis2": -0.4095591732021726, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_37": {
+        "Left": {
+            "Hand_actual": [
+                -0.4964180980198621, 
+                0.43475398120733955, 
+                0.5014285381657393
+            ], 
+            "Steering_angle": 0.048869219055841226, 
+            "elbow_left": 0.0, 
+            "left_shoulder_axis0": 0.027363191161117777, 
+            "left_shoulder_axis1": 2.763518906260886, 
+            "left_shoulder_axis2": 0.6344324878549464, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.0649603484376235, 
+                -0.05506477862371695, 
+                0.8436851697112867
+            ], 
+            "Steering_angle": 0.048869219055841226, 
+            "elbow_right": -9.605936654145353e-10, 
+            "right_shoulder_axis0": -1.637803804991751, 
+            "right_shoulder_axis1": 0.6011469989878796, 
+            "right_shoulder_axis2": -0.4191162331109565, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_38": {
+        "Left": {
+            "Hand_actual": [
+                -0.5016048562538005, 
+                0.42903241009032755, 
+                0.5008003851922147
+            ], 
+            "Steering_angle": 0.05585053606381854, 
+            "elbow_left": 0.0, 
+            "left_shoulder_axis0": 0.07195215235994448, 
+            "left_shoulder_axis1": 2.7675288948974632, 
+            "left_shoulder_axis2": 0.6745319346979942, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.0627440799804952, 
+                -0.0593478365678031, 
+                0.8463333875155717
+            ], 
+            "Steering_angle": 0.05585053606381854, 
+            "elbow_right": -2.9007526919550064e-09, 
+            "right_shoulder_axis0": -1.6495219050817442, 
+            "right_shoulder_axis1": 0.5958829666566, 
+            "right_shoulder_axis2": -0.39684575579028936, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_39": {
+        "Left": {
+            "Hand_actual": [
+                -0.516547774672269, 
+                0.4342810144289631, 
+                0.48729558292622155
+            ], 
+            "Steering_angle": 0.06283185307179585, 
+            "elbow_left": -0.6071509703645867, 
+            "left_shoulder_axis0": 0.10901567941486981, 
+            "left_shoulder_axis1": 2.6939663244717025, 
+            "left_shoulder_axis2": 0.5766997648088324, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.06084143095892289, 
+                -0.06110133567931056, 
+                0.8466110738173515
+            ], 
+            "Steering_angle": 0.06283185307179585, 
+            "elbow_right": -8.378088169651126e-09, 
+            "right_shoulder_axis0": -1.650755959014907, 
+            "right_shoulder_axis1": 0.5926622083580252, 
+            "right_shoulder_axis2": -0.4354371333013103, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_4": {
+        "Left": {
+            "Hand_actual": [
+                -0.37006308132553967, 
+                0.5876099022810874, 
+                0.5259947368015562
+            ], 
+            "Steering_angle": -0.18151424220741025, 
+            "elbow_left": -0.6542460522031136, 
+            "left_shoulder_axis0": 0.1381482033690523, 
+            "left_shoulder_axis1": 2.854221226606978, 
+            "left_shoulder_axis2": 0.40626902074791454, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.12293738432820561, 
+                0.030299524674526762, 
+                0.8209383134975581
+            ], 
+            "Steering_angle": -0.18151424220741025, 
+            "elbow_right": -1.0117163891972516e-09, 
+            "right_shoulder_axis0": -1.4542010303350528, 
+            "right_shoulder_axis1": 0.7320457352219746, 
+            "right_shoulder_axis2": -0.43533217860100315, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_40": {
+        "Left": {
+            "Hand_actual": [
+                -0.5113934161823589, 
+                0.4180887818418533, 
+                0.4997023293969908
+            ], 
+            "Steering_angle": 0.06981317007977317, 
+            "elbow_left": 0.0, 
+            "left_shoulder_axis0": 0.12409371395633441, 
+            "left_shoulder_axis1": 2.7691918003155878, 
+            "left_shoulder_axis2": 0.7258838924004597, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.060060285235470745, 
+                -0.06347421704378883, 
+                0.8485153465926234
+            ], 
+            "Steering_angle": 0.06981317007977317, 
+            "elbow_right": -5.008231490307597e-07, 
+            "right_shoulder_axis0": -1.6568373602959194, 
+            "right_shoulder_axis1": 0.5912180125577551, 
+            "right_shoulder_axis2": -0.4446291559269741, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_41": {
+        "Left": {
+            "Hand_actual": [
+                -0.5147219080406081, 
+                0.41451867180643204, 
+                0.499567217877945
+            ], 
+            "Steering_angle": 0.0767944870877505, 
+            "elbow_left": 0.0, 
+            "left_shoulder_axis0": 0.0639887824604616, 
+            "left_shoulder_axis1": 2.7515525630025843, 
+            "left_shoulder_axis2": 0.6844116362671329, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.05915841287773621, 
+                -0.06461143585683513, 
+                0.8489975579475341
+            ], 
+            "Steering_angle": 0.0767944870877505, 
+            "elbow_right": -1.7176497585042335e-05, 
+            "right_shoulder_axis0": -1.6609993988172387, 
+            "right_shoulder_axis1": 0.5884516005586398, 
+            "right_shoulder_axis2": -0.4091239148075083, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_42": {
+        "Left": {
+            "Hand_actual": [
+                -0.5309123662962468, 
+                0.4175034083318767, 
+                0.48543312821871665
+            ], 
+            "Steering_angle": 0.08377580409572781, 
+            "elbow_left": -0.5980983854451302, 
+            "left_shoulder_axis0": 0.06067756946595188, 
+            "left_shoulder_axis1": 2.6678581610827035, 
+            "left_shoulder_axis2": 0.5588598461922434, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.05752555802893461, 
+                -0.06988616415608137, 
+                0.8534626053450143
+            ], 
+            "Steering_angle": 0.08377580409572781, 
+            "elbow_right": 0.0, 
+            "right_shoulder_axis0": -1.6727314892531573, 
+            "right_shoulder_axis1": 0.5865309160985596, 
+            "right_shoulder_axis2": -0.473520869235318, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_43": {
+        "Left": {
+            "Hand_actual": [
+                -0.5377860305166651, 
+                0.4094085552820754, 
+                0.4843837593823279
+            ], 
+            "Steering_angle": 0.09075712110370512, 
+            "elbow_left": -0.6111636673616531, 
+            "left_shoulder_axis0": 0.07011784405674214, 
+            "left_shoulder_axis1": 2.660408092503316, 
+            "left_shoulder_axis2": 0.5717269114320132, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.056353249615124945, 
+                -0.0698680742928326, 
+                0.8524576344438416
+            ], 
+            "Steering_angle": 0.09075712110370512, 
+            "elbow_right": -1.3308641532746596e-07, 
+            "right_shoulder_axis0": -1.67157724978252, 
+            "right_shoulder_axis1": 0.5837774623640001, 
+            "right_shoulder_axis2": -0.4643131227796558, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_44": {
+        "Left": {
+            "Hand_actual": [
+                -0.5427070655928804, 
+                0.4037322132329166, 
+                0.48392278350768714
+            ], 
+            "Steering_angle": 0.09773843811168245, 
+            "elbow_left": -0.6177515561195067, 
+            "left_shoulder_axis0": 0.06405936552053101, 
+            "left_shoulder_axis1": 2.653186025625207, 
+            "left_shoulder_axis2": 0.5712348051002918, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.05503870107040548, 
+                -0.07201918132703719, 
+                0.8537786234925977
+            ], 
+            "Steering_angle": 0.09773843811168245, 
+            "elbow_right": 0.0, 
+            "right_shoulder_axis0": -1.6776539657960567, 
+            "right_shoulder_axis1": 0.580538821684103, 
+            "right_shoulder_axis2": -0.4464071937470979, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_45": {
+        "Left": {
+            "Hand_actual": [
+                -0.5477004670697815, 
+                0.39748146453406746, 
+                0.48307184601285313
+            ], 
+            "Steering_angle": 0.10471975511965977, 
+            "elbow_left": -0.6224895401733906, 
+            "left_shoulder_axis0": 0.04640985190109657, 
+            "left_shoulder_axis1": 2.6434721100141494, 
+            "left_shoulder_axis2": 0.5616833845521093, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.053228037257266825, 
+                -0.0762880544593712, 
+                0.8571464372119495
+            ], 
+            "Steering_angle": 0.10471975511965977, 
+            "elbow_right": 0.0, 
+            "right_shoulder_axis0": -1.6897765644288611, 
+            "right_shoulder_axis1": 0.5763937482980269, 
+            "right_shoulder_axis2": -0.43343579096499, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_46": {
+        "Left": {
+            "Hand_actual": [
+                -0.5374115901914314, 
+                0.3858245926751666, 
+                0.4950650061841476
+            ], 
+            "Steering_angle": 0.11170107212763708, 
+            "elbow_left": -8.306348170098761e-10, 
+            "left_shoulder_axis0": -0.003329022367713469, 
+            "left_shoulder_axis1": 2.7087167008275865, 
+            "left_shoulder_axis2": 0.6588431190872285, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.054988669184222155, 
+                -0.07357596361290686, 
+                0.8555068205242052
+            ], 
+            "Steering_angle": 0.11170107212763708, 
+            "elbow_right": -1.6830409961604933e-05, 
+            "right_shoulder_axis0": -1.6825217353611353, 
+            "right_shoulder_axis1": 0.5804988055145046, 
+            "right_shoulder_axis2": -0.44876335570432846, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_47": {
+        "Left": {
+            "Hand_actual": [
+                -0.5607948613755948, 
+                0.38110508484268574, 
+                0.48142027648011776
+            ], 
+            "Steering_angle": 0.1186823891356144, 
+            "elbow_left": -0.6286577034848009, 
+            "left_shoulder_axis0": 0.027812646326605545, 
+            "left_shoulder_axis1": 2.623078414392527, 
+            "left_shoulder_axis2": 0.5610551678731459, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.04952300032462753, 
+                -0.07921021261874728, 
+                0.8574556808128729
+            ], 
+            "Steering_angle": 0.1186823891356144, 
+            "elbow_right": 0.0, 
+            "right_shoulder_axis0": -1.692370300638656, 
+            "right_shoulder_axis1": 0.5696116128415531, 
+            "right_shoulder_axis2": -0.478736157051007, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_48": {
+        "Left": {
+            "Hand_actual": [
+                -0.5664408304175865, 
+                0.37345349613467416, 
+                0.48032622975219375
+            ], 
+            "Steering_angle": 0.1256637061435917, 
+            "elbow_left": -0.6310618428161923, 
+            "left_shoulder_axis0": 0.014688838448102086, 
+            "left_shoulder_axis1": 2.6129286740518354, 
+            "left_shoulder_axis2": 0.5563741553483746, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.047241568675083834, 
+                -0.08117688982966309, 
+                0.8578805327616822
+            ], 
+            "Steering_angle": 0.1256637061435917, 
+            "elbow_right": -5.251723215903699e-05, 
+            "right_shoulder_axis0": -1.6935699604929733, 
+            "right_shoulder_axis1": 0.5660839222651066, 
+            "right_shoulder_axis2": -0.5291601839767008, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_49": {
+        "Left": {
+            "Hand_actual": [
+                -0.569459650600993, 
+                0.3688567013130941, 
+                0.47924927101645354
+            ], 
+            "Steering_angle": 0.13264502315156904, 
+            "elbow_left": -0.6354550653521274, 
+            "left_shoulder_axis0": 0.014283928971355116, 
+            "left_shoulder_axis1": 2.6076472042049934, 
+            "left_shoulder_axis2": 0.5586757273226928, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.048239726494251844, 
+                -0.08157891806540674, 
+                0.859177012918306
+            ], 
+            "Steering_angle": 0.13264502315156904, 
+            "elbow_right": -2.0623016775078934e-07, 
+            "right_shoulder_axis0": -1.694956698364093, 
+            "right_shoulder_axis1": 0.5690155179449515, 
+            "right_shoulder_axis2": -0.5571305224853255, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_5": {
+        "Left": {
+            "Hand_actual": [
+                -0.37197252585753415, 
+                0.5849414386074321, 
+                0.5241885839832586
+            ], 
+            "Steering_angle": -0.17453292519943295, 
+            "elbow_left": -0.6464864692325499, 
+            "left_shoulder_axis0": 0.13329495112522455, 
+            "left_shoulder_axis1": 2.850220095598392, 
+            "left_shoulder_axis2": 0.4075943803510262, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.12243068729906317, 
+                0.030919566505181878, 
+                0.8200097898920863
+            ], 
+            "Steering_angle": -0.17453292519943295, 
+            "elbow_right": -6.063080266123584e-05, 
+            "right_shoulder_axis0": -1.4538063137254562, 
+            "right_shoulder_axis1": 0.7299236631137003, 
+            "right_shoulder_axis2": -0.3965498312858802, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_50": {
+        "Left": {
+            "Hand_actual": [
+                -0.5761301154568496, 
+                0.360385030610369, 
+                0.4787965810673519
+            ], 
+            "Steering_angle": 0.13962634015954634, 
+            "elbow_left": -0.6369330755134639, 
+            "left_shoulder_axis0": 0.006074390213743553, 
+            "left_shoulder_axis1": 2.5975783857225525, 
+            "left_shoulder_axis2": 0.5596886815819501, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.04769136247203698, 
+                -0.08409778420915223, 
+                0.8617232297979804
+            ], 
+            "Steering_angle": 0.13962634015954634, 
+            "elbow_right": -7.215472962630532e-10, 
+            "right_shoulder_axis0": -1.70176984435359, 
+            "right_shoulder_axis1": 0.5684041686483068, 
+            "right_shoulder_axis2": -0.5754325717934725, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_51": {
+        "Left": {
+            "Hand_actual": [
+                -0.5815224775078569, 
+                0.3528658549493686, 
+                0.47795915239201203
+            ], 
+            "Steering_angle": 0.14660765716752366, 
+            "elbow_left": -0.634910708399169, 
+            "left_shoulder_axis0": -0.008986545801734826, 
+            "left_shoulder_axis1": 2.587741975238552, 
+            "left_shoulder_axis2": 0.5539403337468052, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.04691096997476005, 
+                -0.08553038901480423, 
+                0.8627995290186289
+            ], 
+            "Steering_angle": 0.14660765716752366, 
+            "elbow_right": -4.051921391981505e-10, 
+            "right_shoulder_axis0": -1.703597364021063, 
+            "right_shoulder_axis1": 0.5681162765950578, 
+            "right_shoulder_axis2": -0.6205528397086946, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_52": {
+        "Left": {
+            "Hand_actual": [
+                -0.5876051678223754, 
+                0.3453875430013695, 
+                0.47801666226909445
+            ], 
+            "Steering_angle": 0.153588974175501, 
+            "elbow_left": -0.6392491052379204, 
+            "left_shoulder_axis0": -0.02419673859187561, 
+            "left_shoulder_axis1": 2.5781361550919843, 
+            "left_shoulder_axis2": 0.5469871341888412, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.04581428481558297, 
+                -0.08902727995594781, 
+                0.8661574874947044
+            ], 
+            "Steering_angle": 0.153588974175501, 
+            "elbow_right": 0.0, 
+            "right_shoulder_axis0": -1.7150544653905873, 
+            "right_shoulder_axis1": 0.5649552139655761, 
+            "right_shoulder_axis2": -0.5919582116917685, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_53": {
+        "Left": {
+            "Hand_actual": [
+                -0.5919500130671069, 
+                0.3388835652365302, 
+                0.4770619895354631
+            ], 
+            "Steering_angle": 0.1605702911834783, 
+            "elbow_left": -0.6414596200627316, 
+            "left_shoulder_axis0": -0.05044275618990311, 
+            "left_shoulder_axis1": 2.5684411235229065, 
+            "left_shoulder_axis2": 0.5282936727318467, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.04453244457218987, 
+                -0.08980210341494815, 
+                0.8660421334656319
+            ], 
+            "Steering_angle": 0.1605702911834783, 
+            "elbow_right": -1.210595276460039e-06, 
+            "right_shoulder_axis0": -1.7182514091898367, 
+            "right_shoulder_axis1": 0.5607105632188455, 
+            "right_shoulder_axis2": -0.5388406158306597, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_54": {
+        "Left": {
+            "Hand_actual": [
+                -0.5978638932918414, 
+                0.3296924471701244, 
+                0.4755709390393438
+            ], 
+            "Steering_angle": 0.16755160819145562, 
+            "elbow_left": -0.6462622038808878, 
+            "left_shoulder_axis0": -0.044337156787949084, 
+            "left_shoulder_axis1": 2.5589470499832867, 
+            "left_shoulder_axis2": 0.5398872724214397, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.04278106751997074, 
+                -0.0903884150630149, 
+                0.8653146385362551
+            ], 
+            "Steering_angle": 0.16755160819145562, 
+            "elbow_right": -0.00011655275305854067, 
+            "right_shoulder_axis0": -1.7178709236550014, 
+            "right_shoulder_axis1": 0.5569694740906636, 
+            "right_shoulder_axis2": -0.5391034888896443, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_55": {
+        "Left": {
+            "Hand_actual": [
+                -0.6026882814312007, 
+                0.3226351227876795, 
+                0.47500563407824414
+            ], 
+            "Steering_angle": 0.17453292519943295, 
+            "elbow_left": -0.6417949682028652, 
+            "left_shoulder_axis0": -0.07931832270198683, 
+            "left_shoulder_axis1": 2.5486398717101526, 
+            "left_shoulder_axis2": 0.5152462916051795, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.0425225733713438, 
+                -0.0930979691981697, 
+                0.8684778098649278
+            ], 
+            "Steering_angle": 0.17453292519943295, 
+            "elbow_right": -1.057316108009803e-08, 
+            "right_shoulder_axis0": -1.7279955136997178, 
+            "right_shoulder_axis1": 0.5557021656140876, 
+            "right_shoulder_axis2": -0.5099268823912456, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_56": {
+        "Left": {
+            "Hand_actual": [
+                -0.6084339157282774, 
+                0.3144165489695345, 
+                0.47449844657797935
+            ], 
+            "Steering_angle": 0.18151424220741025, 
+            "elbow_left": -0.6464333521147978, 
+            "left_shoulder_axis0": -0.10229059241900015, 
+            "left_shoulder_axis1": 2.538264498742999, 
+            "left_shoulder_axis2": 0.49981781475050274, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.041109542261729304, 
+                -0.09707262324169458, 
+                0.8723579222942283
+            ], 
+            "Steering_angle": 0.18151424220741025, 
+            "elbow_right": -3.2214205802532704e-06, 
+            "right_shoulder_axis0": -1.7366075419470135, 
+            "right_shoulder_axis1": 0.5547202121339615, 
+            "right_shoulder_axis2": -0.5799759233932827, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_57": {
+        "Left": {
+            "Hand_actual": [
+                -0.613625345962864, 
+                0.3065573878361194, 
+                0.47387733243193364
+            ], 
+            "Steering_angle": 0.18849555921538758, 
+            "elbow_left": -0.6437687014578313, 
+            "left_shoulder_axis0": -0.10900583169406992, 
+            "left_shoulder_axis1": 2.5296861148535963, 
+            "left_shoulder_axis2": 0.5006634271640886, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.04024737717515969, 
+                -0.0967872356593576, 
+                0.8712677295843824
+            ], 
+            "Steering_angle": 0.18849555921538758, 
+            "elbow_right": -7.595550589245666e-07, 
+            "right_shoulder_axis0": -1.733443379883999, 
+            "right_shoulder_axis1": 0.5536175454619228, 
+            "right_shoulder_axis2": -0.6041665141689806, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_58": {
+        "Left": {
+            "Hand_actual": [
+                -0.6187355975932668, 
+                0.29875904087693267, 
+                0.47339159680538234
+            ], 
+            "Steering_angle": 0.1954768762233649, 
+            "elbow_left": -0.6375451909230516, 
+            "left_shoulder_axis0": -0.14593503286589274, 
+            "left_shoulder_axis1": 2.5196614359633798, 
+            "left_shoulder_axis2": 0.4739540456681984, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.04009770335945664, 
+                -0.0976067828362222, 
+                0.8721974658065014
+            ], 
+            "Steering_angle": 0.1954768762233649, 
+            "elbow_right": -4.561314179966565e-10, 
+            "right_shoulder_axis0": -1.7378236223540888, 
+            "right_shoulder_axis1": 0.5520824542502445, 
+            "right_shoulder_axis2": -0.5625120263954333, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_59": {
+        "Left": {
+            "Hand_actual": [
+                -0.6236192522596632, 
+                0.2906236900699451, 
+                0.472347751599955
+            ], 
+            "Steering_angle": 0.2024581932313422, 
+            "elbow_left": -0.6389841618141501, 
+            "left_shoulder_axis0": -0.16594816325706954, 
+            "left_shoulder_axis1": 2.510262118447904, 
+            "left_shoulder_axis2": 0.46031042542119405, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.03813576320040721, 
+                -0.10027218963870799, 
+                0.8740189475598535
+            ], 
+            "Steering_angle": 0.2024581932313422, 
+            "elbow_right": -5.394161696965875e-10, 
+            "right_shoulder_axis0": -1.743700313591424, 
+            "right_shoulder_axis1": 0.5484247771972085, 
+            "right_shoulder_axis2": -0.5780258196351732, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_6": {
+        "Left": {
+            "Hand_actual": [
+                -0.37717292750172454, 
+                0.5812359968534689, 
+                0.5245062419280057
+            ], 
+            "Steering_angle": -0.16755160819145562, 
+            "elbow_left": -0.6162865980737299, 
+            "left_shoulder_axis0": 0.0933360827312241, 
+            "left_shoulder_axis1": 2.839660958468086, 
+            "left_shoulder_axis2": 0.3951596712482961, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.1190947540747776, 
+                0.02578598340932685, 
+                0.8205882653206376
+            ], 
+            "Steering_angle": -0.16755160819145562, 
+            "elbow_right": -1.1972665557561103e-05, 
+            "right_shoulder_axis0": -1.4637474136435795, 
+            "right_shoulder_axis1": 0.7224666477816779, 
+            "right_shoulder_axis2": -0.4127087001593794, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_60": {
+        "Left": {
+            "Hand_actual": [
+                -0.6289667462625712, 
+                0.28130717361802526, 
+                0.47110398113804497
+            ], 
+            "Steering_angle": 0.20943951023931953, 
+            "elbow_left": -0.6342422489049732, 
+            "left_shoulder_axis0": -0.18623407469008174, 
+            "left_shoulder_axis1": 2.5000144084161993, 
+            "left_shoulder_axis2": 0.44843778117781624, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.03750502271495061, 
+                -0.10186889504642643, 
+                0.875589563617424
+            ], 
+            "Steering_angle": 0.20943951023931953, 
+            "elbow_right": 0.0, 
+            "right_shoulder_axis0": -1.7494206175699123, 
+            "right_shoulder_axis1": 0.5464183668820375, 
+            "right_shoulder_axis2": -0.5538634284559041, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_7": {
+        "Left": {
+            "Hand_actual": [
+                -0.37835773416325547, 
+                0.5791476462546263, 
+                0.5225323317645281
+            ], 
+            "Steering_angle": -0.1605702911834783, 
+            "elbow_left": -0.6280806286580346, 
+            "left_shoulder_axis0": 0.03657614157863601, 
+            "left_shoulder_axis1": 2.8256371893312155, 
+            "left_shoulder_axis2": 0.354427004280701, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.1166112388495675, 
+                0.023293972329452142, 
+                0.8201004778386443
+            ], 
+            "Steering_angle": -0.1605702911834783, 
+            "elbow_right": -1.1977758419227362e-08, 
+            "right_shoulder_axis0": -1.4687738361728593, 
+            "right_shoulder_axis1": 0.716290933127256, 
+            "right_shoulder_axis2": -0.39657183371084503, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_8": {
+        "Left": {
+            "Hand_actual": [
+                -0.37835773416325547, 
+                0.5791476462546263, 
+                0.5225323317645281
+            ], 
+            "Steering_angle": -0.153588974175501, 
+            "elbow_left": -0.6276546255064349, 
+            "left_shoulder_axis0": 0.037362729118623365, 
+            "left_shoulder_axis1": 2.822015106432132, 
+            "left_shoulder_axis2": 0.35827360287739907, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.1166112388495675, 
+                0.023293972329452142, 
+                0.8201004778386443
+            ], 
+            "Steering_angle": -0.153588974175501, 
+            "elbow_right": -6.824321944670356e-09, 
+            "right_shoulder_axis0": -1.473219869688463, 
+            "right_shoulder_axis1": 0.7157189249561579, 
+            "right_shoulder_axis2": -0.38715073645611325, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }, 
+    "point_9": {
+        "Left": {
+            "Hand_actual": [
+                -0.3852682734224842, 
+                0.5720869039480054, 
+                0.5194094039974194
+            ], 
+            "Steering_angle": -0.14660765716752366, 
+            "elbow_left": -0.6319427822203089, 
+            "left_shoulder_axis0": 0.03976699791937421, 
+            "left_shoulder_axis1": 2.8188023292519424, 
+            "left_shoulder_axis2": 0.3630709993659097, 
+            "wrist_left_sphere_axis0": 0.0
+        }, 
+        "Right": {
+            "Hand_actual": [
+                -0.11384863864964281, 
+                0.017459268075159823, 
+                0.8219168504211023
+            ], 
+            "Steering_angle": -0.14660765716752366, 
+            "elbow_right": -2.023485599944811e-08, 
+            "right_shoulder_axis0": -1.481321135047221, 
+            "right_shoulder_axis1": 0.710326759452903, 
+            "right_shoulder_axis2": -0.4164791499444681, 
+            "wrist_right_sphere_axis0": 0.0
+        }
+    }
+}

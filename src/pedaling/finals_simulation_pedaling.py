@@ -604,25 +604,25 @@ def publish_velocity(joint_name, next_joint_angle, current_joint_angle, end_time
 
     if joint_name == RIGHT_HIP_JOINT:
         publisher = ros_right_hip_publisher
-        #error_factor = velocity_error_factor_hip
+        error_factor = velocity_error_factor_hip
         return
     elif joint_name == RIGHT_KNEE_JOINT:
         publisher = ros_right_knee_publisher
-        #error_factor = velocity_error_factor_knee
+        error_factor = velocity_error_factor_knee
         return
     elif joint_name == RIGHT_ANKLE_JOINT:
         publisher = ros_right_ankle_publisher
-        #error_factor = velocity_error_factor_ankle
+        error_factor = velocity_error_factor_ankle
         return
     elif joint_name == LEFT_HIP_JOINT:
         publisher = ros_left_hip_publisher
-        #error_factor = velocity_error_factor_hip
+        error_factor = velocity_error_factor_hip
     elif joint_name == LEFT_KNEE_JOINT:
         publisher = ros_left_knee_publisher
-        #error_factor = velocity_error_factor_knee
+        error_factor = velocity_error_factor_knee
     elif joint_name == LEFT_ANKLE_JOINT:
         publisher = ros_left_ankle_publisher
-        #error_factor = velocity_error_factor_ankle
+        error_factor = velocity_error_factor_ankle
 
     published_velocity = ideal_velocity * error_factor / JOINT_VELOCITY_FACTOR_SIMULATION / SIMULATION_FACTOR
 

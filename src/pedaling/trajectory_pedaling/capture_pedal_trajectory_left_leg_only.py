@@ -378,7 +378,7 @@ def main():
     if len(sys.argv) > 1:
         num_requested_points = int(sys.argv[1])
     else:
-        num_requested_points = 36
+        num_requested_points = 72
 
     global JOINT_ANGLE_TOLERANCE_FK
 
