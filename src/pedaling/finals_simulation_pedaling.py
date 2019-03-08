@@ -364,17 +364,27 @@ def plot_measured_trajectories(input_float):
 
     print("PRINTING JOINT TRAJECTORIES. Length pedal record:", len(x_pedal_record), "length joint_trajectories pedal angle:", len(joint_trajectories_recorded["pedal_angle"]))
 
+    highDefPlotRange = np.linspace(MIN_PEDAL_ANGLE, MAX_PEDAL_ANGLE, 500)
+
+    for thisElement in pedalTrajectoryLeft:
+        pedal_x_ideal = thisElement[0]
+        pedal_y_ideal = thisElement[1]
+
     plt.figure(1)
-    plt.plot(x_pedal_record, y_pedal_record)
+    plt.plot(x_pedal_record, y_pedal_record, '*')
+    plt.plot(pedal_x_ideal, pedal_y_ideal, '-')
 
     plt.figure(2)
-    plt.plot(joint_trajectories_recorded["pedal_angle"], joint_trajectories_recorded[LEFT_HIP_JOINT])
+    plt.plot(joint_trajectories_recorded["pedal_angle"], joint_trajectories_recorded[LEFT_HIP_JOINT], '*')
+    plt.plot(highDefPlotRange, f_interpolated_hip_left(highDefPlotRange), '-')
 
     plt.figure(3)
-    plt.plot(joint_trajectories_recorded["pedal_angle"], joint_trajectories_recorded[LEFT_KNEE_JOINT])
+    plt.plot(joint_trajectories_recorded["pedal_angle"], joint_trajectories_recorded[LEFT_KNEE_JOINT], '*')
+    plt.plot(highDefPlotRange, f_interpolated_knee_left(highDefPlotRange), '-')
 
     plt.figure(4)
-    plt.plot(joint_trajectories_recorded["pedal_angle"], joint_trajectories_recorded[LEFT_ANKLE_JOINT])
+    plt.plot(joint_trajectories_recorded["pedal_angle"], joint_trajectories_recorded[LEFT_ANKLE_JOINT], '*')
+    plt.plot(highDefPlotRange, f_interpolated_ankle_left(highDefPlotRange), '-')
 
     plt.show()
 
