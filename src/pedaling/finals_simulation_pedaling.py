@@ -363,7 +363,7 @@ def get_joint_position(jointName):
 def plot_measured_trajectories(input_float):
 
     print("PRINTING JOINT TRAJECTORIES")
-    
+
     plt.figure(1)
     plt.plot(x_pedal_record, y_pedal_record)
 
@@ -870,10 +870,10 @@ def control_pedaling():
 
             for thisJointName in _jointsList:
 
-                joint_trajectories_recorded[thisJointName].append(current_joint_angle)
-
                 current_joint_angle = joint_status_data[thisJointName ][ "Pos" ]
                 next_joint_angle = get_joint_angle(thisJointName, next_pedal_angle)
+
+                joint_trajectories_recorded[thisJointName].append(current_joint_angle)
 
                 _currTime = time.time()
 
