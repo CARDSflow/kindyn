@@ -15,8 +15,8 @@ from roboy_middleware_msgs.srv import InverseKinematics, InverseKinematicsMultip
 from roboy_simulation_msgs.msg import JointState
 from std_msgs.msg import Float32
 
-JSON_FILENAME = "captured_pedal_trajectory_08mar_with_joint_limits.json"  # "captured_trajectory_two_frames.json"
-TEMP_READFILE = "captured_pedal_trajectory_07mar_with_joint_limits.json"
+JSON_FILENAME = "captured_pedal_trajectory_09mar_with_joint_limits.json"  # "captured_trajectory_two_frames.json"
+TEMP_READFILE = "captured_pedal_trajectory_WHATmar_with_joint_limits.json"
 
 JOINT_ANGLE_TOLERANCE_FK = 0.002
 JOINT_KP = 200

@@ -24,7 +24,9 @@ import math
 import time
 from threading import Thread
 from scipy import interpolate
+import matplotlib.pyplot as plt
 import numpy as np
+import numpy.polynomial.polynomial as poly
 import rospy
 from roboy_middleware_msgs.srv import InverseKinematics, ForwardKinematics
 from roboy_simulation_msgs.msg import JointState
@@ -36,16 +38,19 @@ from geometry_msgs.msg import Twist
 PRINT_DEBUG = True
 SIMULATION_FACTOR = 100.0  # factor to slow down the motion for better simulation
 NUMBER_CIRCULATION_POINTS = 30  # number of points for controlling
-RECORDED_TRAJECTORY_FILENAME = "trajectory_pedaling/captured_pedal_trajectory_03mar_with_joint_limits.json"
+RECORDED_TRAJECTORY_FILENAME = "trajectory_pedaling/captured_pedal_trajectory_08mar_with_joint_limits.json"
 JOINT_VELOCITY_FACTOR_SIMULATION = 0.008  # publish 1 => velocity = 0.0018 rad/s  for Kp = 0.1 and simulation-step-length = 0.01
 
 
-PEDAL_POSITION_ERROR_TOLERANCE = 0.02  # [meters]
-JOINT_TRAJECTORY_ERROR_TOLERANCE = 0.02
+#PEDAL_POSITION_ERROR_TOLERANCE = 0.02  # [meters]
+#JOINT_TRAJECTORY_ERROR_TOLERANCE = 0.02
 CONTROLLER_FREQUENCY = 100  # [Hz]
 
 MIN_JOINT_VEL = -500.0
 MAX_JOINT_VEL = 500.0
+
+MIN_PEDAL_ANGLE = 0
+MIN_PEDAL_ANGLE = 2*math.pi
 
 RADIUS_BACK_TIRE = 0.294398  # in m
 RADIUS_GEAR_CLUSTER = 0.06  # in m
@@ -93,9 +98,9 @@ ros_left_hip_publisher = rospy.Publisher('/joint_hip_left/joint_hip_left/target'
 ros_left_knee_publisher = rospy.Publisher('/joint_knee_left/joint_knee_left/target', Float32, queue_size=2)
 ros_left_ankle_publisher = rospy.Publisher('/joint_foot_left/joint_foot_left/target', Float32, queue_size=2)
 
-PEDAL_CENTER_OFFSET_X = 0.0002782913867391912
-PEDAL_CENTER_OFFSET_Y = -0.035131649555820536
-PEDAL_CENTER_OFFSET_Z = 0.0010093313481022886
+PEDAL_CENTER_OFFSET_X = 0.09222872619138603
+PEDAL_CENTER_OFFSET_Y = 0.00013171801209023543
+PEDAL_CENTER_OFFSET_Z = 0.0042772834965418725
 
 _jointsList = [ LEFT_HIP_JOINT, LEFT_KNEE_JOINT,
                 LEFT_ANKLE_JOINT ] # RIGHT_HIP_JOINT, RIGHT_KNEE_JOINT, RIGHT_ANKLE_JOINT,
@@ -283,6 +288,8 @@ def import_joint_trajectory_record():
     global kneeTrajectoryLeft
     global ankleTrajectoryLeft
     global PRINT_DEBUG
+    global MIN_PEDAL_ANGLE
+    global MAX_PEDAL_ANGLE
 
     with open(RECORDED_TRAJECTORY_FILENAME, "r") as read_file:
         loaded_data = json.load(read_file)
@@ -302,8 +309,18 @@ def import_joint_trajectory_record():
     del hipTrajectoryLeft[ : ]
     del kneeTrajectoryLeft[ : ]
     del ankleTrajectoryLeft[ : ]
+
+    curr_max_pedal_angle = 0
+    curr_min_pedal_angle = 999
+
     for pointIterator in range(number_imported_trajectory_points):
         if "point_" + str(pointIterator) in loaded_data:
+            thisPedalAngle = loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Pedal_angle" ]
+            if thisPedalAngle < curr_min_pedal_angle:
+                curr_min_pedal_angle = thisPedalAngle
+            if thisPedalAngle > curr_max_pedal_angle:
+                curr_max_pedal_angle = thisPedalAngle
+
             pedalTrajectoryLeft.append(loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ "Pedal" ])
             #pedalTrajectoryRight.append(loaded_data[ "point_" + str(pointIterator) ][ "Right" ][ "Pedal" ])
             pedalAngleTrajectoryLeft.append(loaded_data["point_"+str(pointIterator)]["Left"]["Pedal_angle"])
@@ -316,6 +333,12 @@ def import_joint_trajectory_record():
         else:
             print("WARNING: No point_%s in trajectory" % pointIterator)
             number_imported_trajectory_points -= 1
+
+    MAX_PEDAL_ANGLE = curr_max_pedal_angle
+    MIN_PEDAL_ANGLE = curr_min_pedal_angle
+
+    print("Max pedal angle:", MAX_PEDAL_ANGLE)
+    print("Min pedal angle:", MIN_PEDAL_ANGLE)
 
     if PRINT_DEBUG:
         print("--------- Num trajectory points:")
@@ -388,7 +411,7 @@ def get_position_left_foot():
     rospy.wait_for_service('fk')
     try:
         fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
-        fk_result = fk_srv("left_leg", "left_leg", fkJointNamesList, fkJointPositions)
+        fk_result = fk_srv("left_leg", "foot_left_tip", fkJointNamesList, fkJointPositions)
         return [ fk_result.pose.position.x, fk_result.pose.position.z ]
 
     except rospy.ServiceException as e:
@@ -409,7 +432,7 @@ def get_position_right_foot():
     rospy.wait_for_service('fk')
     try:
         fk_srv = rospy.ServiceProxy('fk', ForwardKinematics)
-        fk_result = fk_srv("right_leg", "right_leg", fkJointNamesList, fkJointPositions)
+        fk_result = fk_srv("right_leg", "foot_right_tip", fkJointNamesList, fkJointPositions)
         return [ fk_result.pose.position.x, fk_result.pose.position.z ]
 
     except rospy.ServiceException as e:
@@ -455,7 +478,10 @@ def compute_velocity(joint_name, next_joint_angle, current_joint_angle, end_time
     joint_angle_difference = next_joint_angle - current_joint_angle
 
     current_time = time.time()
-    publish_time = end_time - current_time
+    if current_time < end_time:
+        publish_time = end_time - current_time
+    else:
+        publish_time = 1
 
     ideal_velocity = joint_angle_difference / publish_time
 
@@ -469,8 +495,19 @@ def compute_velocity(joint_name, next_joint_angle, current_joint_angle, end_time
         log_string += ("\nideal_velocity = " + str(ideal_velocity))
         print (log_string)
 
+    ideal_velocity = check_output_limits(ideal_velocity)
     return ideal_velocity
 
+def check_pedal_angle_valid(pedal_angle):
+
+    if pedal_angle < MIN_PEDAL_ANGLE:
+        print("PEDAL ANGLE REQUESTED TO INTERPOLATE WAS TOO LOW")
+        return MAX_PEDAL_ANGLE
+    elif pedal_angle > MAX_PEDAL_ANGLE:
+        print("PEDAL ANGLE REQUESTED TO INTERPOLATE WAS TOO HIGH")
+        return MIN_PEDAL_ANGLE
+
+    return pedal_angle
 
 ## Documentation for a function
 #
@@ -480,6 +517,7 @@ def compute_velocity(joint_name, next_joint_angle, current_joint_angle, end_time
 #  ==> returns <joint_angle>
 def get_joint_angle(joint_name, pedal_angle):
 
+    pedal_angle = check_pedal_angle_valid(pedal_angle)
     if joint_name == RIGHT_HIP_JOINT:
         return f_interpolated_hip_right(pedal_angle)
     elif joint_name == RIGHT_KNEE_JOINT:
@@ -513,9 +551,13 @@ def interpolate_functions():
     #f_interpolated_hip_right = interpolate.interp1d(pedalAngleTrajectoryLeft, hipTrajectoryRight, kind="cubic")
     #f_interpolated_knee_right = interpolate.interp1d(pedalAngleTrajectoryLeft, kneeTrajectoryRight, kind="cubic")
     #f_interpolated_ankle_right = interpolate.interp1d(pedalAngleTrajectoryLeft, ankleTrajectoryRight, kind="cubic")
-    f_interpolated_hip_left = interpolate.interp1d(pedalAngleTrajectoryLeft, hipTrajectoryLeft, kind="cubic")
-    f_interpolated_knee_left = interpolate.interp1d(pedalAngleTrajectoryLeft, kneeTrajectoryLeft, kind="cubic")
-    f_interpolated_ankle_left = interpolate.interp1d(pedalAngleTrajectoryLeft, ankleTrajectoryLeft, kind="cubic")
+
+    f_interpolated_hip_left = poly.Polynomial(poly.polyfit(pedalAngleTrajectoryLeft, hipTrajectoryLeft, 4))
+    #f_interpolated_hip_left = interpolate.interp1d(pedalAngleTrajectoryLeft, hipTrajectoryLeft, kind="cubic")
+    f_interpolated_knee_left = poly.Polynomial(poly.polyfit(pedalAngleTrajectoryLeft, kneeTrajectoryLeft, 4))
+    #f_interpolated_knee_left = interpolate.interp1d(pedalAngleTrajectoryLeft, kneeTrajectoryLeft, kind="cubic")
+    f_interpolated_ankle_left = poly.Polynomial(poly.polyfit(pedalAngleTrajectoryLeft, ankleTrajectoryLeft, 4))
+    #f_interpolated_ankle_left = interpolate.interp1d(pedalAngleTrajectoryLeft, ankleTrajectoryLeft, kind="cubic")
 
 
 ## Documentation for a function
@@ -562,25 +604,25 @@ def publish_velocity(joint_name, next_joint_angle, current_joint_angle, end_time
 
     if joint_name == RIGHT_HIP_JOINT:
         publisher = ros_right_hip_publisher
-        error_factor = velocity_error_factor_hip
+        #error_factor = velocity_error_factor_hip
         return
     elif joint_name == RIGHT_KNEE_JOINT:
         publisher = ros_right_knee_publisher
-        error_factor = velocity_error_factor_knee
+        #error_factor = velocity_error_factor_knee
         return
     elif joint_name == RIGHT_ANKLE_JOINT:
         publisher = ros_right_ankle_publisher
-        error_factor = velocity_error_factor_ankle
+        #error_factor = velocity_error_factor_ankle
         return
     elif joint_name == LEFT_HIP_JOINT:
         publisher = ros_left_hip_publisher
-        error_factor = velocity_error_factor_hip
+        #error_factor = velocity_error_factor_hip
     elif joint_name == LEFT_KNEE_JOINT:
         publisher = ros_left_knee_publisher
-        error_factor = velocity_error_factor_knee
+        #error_factor = velocity_error_factor_knee
     elif joint_name == LEFT_ANKLE_JOINT:
         publisher = ros_left_ankle_publisher
-        error_factor = velocity_error_factor_ankle
+        #error_factor = velocity_error_factor_ankle
 
     published_velocity = ideal_velocity * error_factor / JOINT_VELOCITY_FACTOR_SIMULATION / SIMULATION_FACTOR
 
@@ -590,6 +632,8 @@ def publish_velocity(joint_name, next_joint_angle, current_joint_angle, end_time
         print(log_msg)
 
     duration = end_time - time.time()
+    if duration < 0:
+        duration = 0.01
 
     publisher.publish(published_velocity)
     time.sleep(duration*SIMULATION_FACTOR)
@@ -690,6 +734,10 @@ def control_pedaling():
 
     _runFSM = True
 
+    pedalAngleNoMomentumCounter = 0
+    prevCurrPedalAngle = 0
+    prevNextPedalAngle = 0
+
     _currState = INIT
     _currTrajectoryPoint = get_position_left_foot()
     current_pedal_angle = evaluate_current_pedal_angle(_currTrajectoryPoint)
@@ -708,6 +756,24 @@ def control_pedaling():
 
             import_joint_trajectory_record()
             interpolate_functions()
+
+            highDefPlotRange = np.linspace(MIN_PEDAL_ANGLE, MAX_PEDAL_ANGLE, 500)
+
+            plt.figure(1)
+            plt.plot(pedalAngleTrajectoryLeft, hipTrajectoryLeft, '*')
+            plt.plot(highDefPlotRange, f_interpolated_hip_left(highDefPlotRange), '-')
+
+            plt.figure(2)
+            plt.plot(pedalAngleTrajectoryLeft, kneeTrajectoryLeft, '*')
+            plt.plot(highDefPlotRange, f_interpolated_knee_left(highDefPlotRange), '-')
+
+            plt.figure(3)
+            plt.plot(pedalAngleTrajectoryLeft, ankleTrajectoryLeft, '*')
+            plt.plot(highDefPlotRange, f_interpolated_ankle_left(highDefPlotRange), '-')
+
+            plt.show()
+
+
             _currState = PEDAL
 
             while PEDAL_SINGLE_ROTATION_DURATION == 0:
@@ -737,11 +803,28 @@ def control_pedaling():
             _prevTime = _currTime
 
             _currTrajectoryPoint = get_position_left_foot()
+            prevCurrPedalAngle = current_pedal_angle
             current_pedal_angle = evaluate_current_pedal_angle(_currTrajectoryPoint)
 
             _startTime = time.time()
             _endTime = _startTime + TRAJECTORY_POINT_DURATION
+            prevNextPedalAngle = next_pedal_angle
             next_pedal_angle = (current_pedal_angle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)) % (2*np.pi)
+
+            if((abs(next_pedal_angle - prevNextPedalAngle) < 0.001) and (abs(current_pedal_angle - prevCurrPedalAngle) < 0.001) and BIKE_VELOCITY):
+                pedalAngleNoMomentumCounter = pedalAngleNoMomentumCounter+1
+
+            if pedalAngleNoMomentumCounter:
+                old_next_pedal_angle = next_pedal_angle
+                next_pedal_angle = (next_pedal_angle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)) % (2*np.pi)
+                next_pedal_angle = (next_pedal_angle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)) % (2*np.pi)
+                next_pedal_angle = (next_pedal_angle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)) % (2*np.pi)
+                next_pedal_angle = (next_pedal_angle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)) % (2*np.pi)
+                pedalAngleNoMomentumCounter = 0
+
+                print("\n**********************************************")
+                print("NEXT PEDAL ANGLE INCREASED BY MOMENTUM COUNTER. Old:", old_next_pedal_angle, "new:", next_pedal_angle)
+                print("**********************************************\n")
 
             trajectory_points += 1
 
