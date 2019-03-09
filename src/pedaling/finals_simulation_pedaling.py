@@ -35,9 +35,10 @@ from std_msgs.msg import Float32
 from geometry_msgs.msg import Twist
 
 
+
 PRINT_DEBUG = True
-SIMULATION_FACTOR = 1.0  # factor to slow down the motion for better simulation
-NUMBER_CIRCULATION_POINTS = 10  # number of points for controlling
+SIMULATION_FACTOR = 100  # factor to slow down the motion for better simulation
+NUMBER_CIRCULATION_POINTS = 15  # number of points for controlling
 RECORDED_TRAJECTORY_FILENAME = "trajectory_pedaling/captured_pedal_trajectory_08mar_with_joint_limits.json"
 JOINT_VELOCITY_FACTOR_SIMULATION = 0.008  # publish 1 => velocity = 0.0018 rad/s  for Kp = 0.1 and simulation-step-length = 0.01
 
@@ -366,25 +367,20 @@ def plot_measured_trajectories(input_float):
 
     highDefPlotRange = np.linspace(MIN_PEDAL_ANGLE, MAX_PEDAL_ANGLE, 500)
 
+    pedal_x_ideal = []
+    pedal_y_ideal = []
     for thisElement in pedalTrajectoryLeft:
-        pedal_x_ideal = thisElement[0]
-        pedal_y_ideal = thisElement[1]
+        pedal_x_ideal.append(thisElement[0])
+        pedal_y_ideal.append(thisElement[1])
 
-    plt.figure(1)
-    plt.plot(x_pedal_record, y_pedal_record, '*')
-    plt.plot(pedal_x_ideal, pedal_y_ideal, '-')
+    fig = plt.figure()
+    ax = fig.gca()
+    ax.set_title(label = "Pedal trajectory recorded")
+    ax.plot(x_pedal_record, y_pedal_record, '*', label='Recorded')
+    ax.plot(pedal_x_ideal, pedal_y_ideal, '-', label='Ideal')
 
-    plt.figure(2)
-    plt.plot(joint_trajectories_recorded["pedal_angle"], joint_trajectories_recorded[LEFT_HIP_JOINT], '*')
-    plt.plot(highDefPlotRange, f_interpolated_hip_left(highDefPlotRange), '-')
+    ax.legend()
 
-    plt.figure(3)
-    plt.plot(joint_trajectories_recorded["pedal_angle"], joint_trajectories_recorded[LEFT_KNEE_JOINT], '*')
-    plt.plot(highDefPlotRange, f_interpolated_knee_left(highDefPlotRange), '-')
-
-    plt.figure(4)
-    plt.plot(joint_trajectories_recorded["pedal_angle"], joint_trajectories_recorded[LEFT_ANKLE_JOINT], '*')
-    plt.plot(highDefPlotRange, f_interpolated_ankle_left(highDefPlotRange), '-')
 
     plt.show()
 
@@ -590,11 +586,25 @@ def interpolate_functions():
     #f_interpolated_knee_right = interpolate.interp1d(pedalAngleTrajectoryLeft, kneeTrajectoryRight, kind="cubic")
     #f_interpolated_ankle_right = interpolate.interp1d(pedalAngleTrajectoryLeft, ankleTrajectoryRight, kind="cubic")
 
+
+    avg_val_hipTrajectoryLeft = (hipTrajectoryLeft[0]+hipTrajectoryLeft[-1])/2
+    hipTrajectoryLeft[0] = avg_val_hipTrajectoryLeft
+    hipTrajectoryLeft[-1] = avg_val_hipTrajectoryLeft
+
+    avg_val_kneeTrajectoryLeft = (kneeTrajectoryLeft[0]+kneeTrajectoryLeft[-1])/2
+    kneeTrajectoryLeft[0] = avg_val_kneeTrajectoryLeft
+    kneeTrajectoryLeft[-1] = avg_val_kneeTrajectoryLeft
+
+    avg_val_ankleTrajectoryLeft = (ankleTrajectoryLeft[0]+ankleTrajectoryLeft[-1])/2
+    ankleTrajectoryLeft[0] = avg_val_ankleTrajectoryLeft
+    ankleTrajectoryLeft[1] = avg_val_ankleTrajectoryLeft
+    ankleTrajectoryLeft[-1] = avg_val_ankleTrajectoryLeft
+
     f_interpolated_hip_left = poly.Polynomial(poly.polyfit(pedalAngleTrajectoryLeft, hipTrajectoryLeft, 4))
     #f_interpolated_hip_left = interpolate.interp1d(pedalAngleTrajectoryLeft, hipTrajectoryLeft, kind="cubic")
     f_interpolated_knee_left = poly.Polynomial(poly.polyfit(pedalAngleTrajectoryLeft, kneeTrajectoryLeft, 4))
     #f_interpolated_knee_left = interpolate.interp1d(pedalAngleTrajectoryLeft, kneeTrajectoryLeft, kind="cubic")
-    f_interpolated_ankle_left = poly.Polynomial(poly.polyfit(pedalAngleTrajectoryLeft, ankleTrajectoryLeft, 4))
+    f_interpolated_ankle_left = poly.Polynomial(poly.polyfit(pedalAngleTrajectoryLeft, ankleTrajectoryLeft, 6))
     #f_interpolated_ankle_left = interpolate.interp1d(pedalAngleTrajectoryLeft, ankleTrajectoryLeft, kind="cubic")
 
 
@@ -662,11 +672,11 @@ def publish_velocity(joint_name, next_joint_angle, current_joint_angle, end_time
         publisher = ros_left_ankle_publisher
         error_factor = velocity_error_factor_ankle
 
-    published_velocity = ideal_velocity * error_factor / JOINT_VELOCITY_FACTOR_SIMULATION / SIMULATION_FACTOR
+    published_velocity = ideal_velocity / JOINT_VELOCITY_FACTOR_SIMULATION / SIMULATION_FACTOR # * error_factor
 
     if PRINT_DEBUG:
 	log_msg = "error_factor = " + str(error_factor) + "\njoint_velocity_factor_simulation = " + str(JOINT_VELOCITY_FACTOR_SIMULATION) + "\nsimulation_factor = " + str(SIMULATION_FACTOR)
-        log_msg += "\npublishing velocity "+str(published_velocity*JOINT_VELOCITY_FACTOR_SIMULATION* error_factor / JOINT_VELOCITY_FACTOR_SIMULATION)+" to "+joint_name
+        log_msg += "\npublishing velocity "+str(published_velocity)+" to "+joint_name
         print(log_msg)
 
     duration = end_time - time.time()
@@ -797,18 +807,22 @@ def control_pedaling():
 
             highDefPlotRange = np.linspace(MIN_PEDAL_ANGLE, MAX_PEDAL_ANGLE, 500)
 
-            plt.figure(1)
-            plt.plot(pedalAngleTrajectoryLeft, hipTrajectoryLeft, '*')
-            plt.plot(highDefPlotRange, f_interpolated_hip_left(highDefPlotRange), '-')
+            fig = plt.figure()
+            ax = fig.gca()
 
-            plt.figure(2)
-            plt.plot(pedalAngleTrajectoryLeft, kneeTrajectoryLeft, '*')
-            plt.plot(highDefPlotRange, f_interpolated_knee_left(highDefPlotRange), '-')
+            #ax.set_title(label = "Hip trajectory regressed")
+            #ax.plot(pedalAngleTrajectoryLeft, hipTrajectoryLeft, '*', label='From JSON')
+            #ax.plot(highDefPlotRange, f_interpolated_hip_left(highDefPlotRange), '-', label='Regressed')
 
-            plt.figure(3)
-            plt.plot(pedalAngleTrajectoryLeft, ankleTrajectoryLeft, '*')
-            plt.plot(highDefPlotRange, f_interpolated_ankle_left(highDefPlotRange), '-')
+            #ax.set_title(label="Knee trajectory regressed")
+            #ax.plot(pedalAngleTrajectoryLeft, kneeTrajectoryLeft, '*', label='From JSON')
+            #ax.plot(highDefPlotRange, f_interpolated_knee_left(highDefPlotRange), '-', label='Regressed')
 
+            ax.set_title(label = "Ankle trajectory regressed")
+            ax.plot(pedalAngleTrajectoryLeft, ankleTrajectoryLeft, '*', label='From JSON')
+            ax.plot(highDefPlotRange, f_interpolated_ankle_left(highDefPlotRange), '-', label='Regressed')
+
+            ax.legend()
             plt.show()
 
 
@@ -848,15 +862,12 @@ def control_pedaling():
             next_pedal_angle = (current_pedal_angle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)) % (2*np.pi)
 
             if((abs(next_pedal_angle - prevNextPedalAngle) < 0.001) and (abs(current_pedal_angle - prevCurrPedalAngle) < 0.001) and BIKE_VELOCITY):
-                pedalAngleNoMomentumCounter = pedalAngleNoMomentumCounter+1
+                pedalAngleNoMomentumCounter = pedalAngleNoMomentumCounter+2
 
-            if pedalAngleNoMomentumCounter:
+            if 0: #pedalAngleNoMomentumCounter
                 old_next_pedal_angle = next_pedal_angle
                 next_pedal_angle = (next_pedal_angle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)) % (2*np.pi)
-                next_pedal_angle = (next_pedal_angle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)) % (2*np.pi)
-                next_pedal_angle = (next_pedal_angle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)) % (2*np.pi)
-                next_pedal_angle = (next_pedal_angle + (2 * np.pi / NUMBER_CIRCULATION_POINTS)) % (2*np.pi)
-                pedalAngleNoMomentumCounter = 0
+                pedalAngleNoMomentumCounter = pedalAngleNoMomentumCounter - 1
 
                 print("\n**********************************************")
                 print("NEXT PEDAL ANGLE INCREASED BY MOMENTUM COUNTER. Old:", old_next_pedal_angle, "new:", next_pedal_angle)
