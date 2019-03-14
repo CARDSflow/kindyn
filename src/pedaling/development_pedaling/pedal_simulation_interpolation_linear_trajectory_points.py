@@ -275,10 +275,10 @@ def importJointTrajectoryRecord():
     for pointIterator in range(numTrajectoryPoints):
         if "point_"+str(pointIterator) in loaded_data:
             pedalTrajectoryLeft.append(loaded_data["point_"+str(pointIterator)]["Left"]["Pedal"])
-            pedalTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Pedal"])
-            hipTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Hip"])
-            kneeTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Knee"])
-            ankleTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Right"]["Ankle"])
+            pedalTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Left"]["Pedal"])
+            hipTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Left"]["Hip"])
+            kneeTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Left"]["Knee"])
+            ankleTrajectoryRight.append(loaded_data["point_"+str(pointIterator)]["Left"]["Ankle"])
             hipTrajectoryLeft.append(loaded_data["point_"+str(pointIterator)]["Left"]["Hip"])
             kneeTrajectoryLeft.append(loaded_data["point_"+str(pointIterator)]["Left"]["Knee"])
             ankleTrajectoryLeft.append(loaded_data["point_"+str(pointIterator)]["Left"]["Ankle"])
@@ -407,43 +407,45 @@ def computeVelocitySetpoint(jointName, endPos, startTime, currTime, endTime):
     global JOINT_TRAJECTORY_ERROR_TOLERANCE
     global JOINT_VELOCITY_FACTOR
 
-    currPos = getJointPosition(jointName)
-    goalPos = interpolateTrajectoryPoints(_jointsControlData[jointName]["trajectory_startpoint"], endPos, startTime, currTime, endTime)
-    jointError = goalPos - currPos
+    
 
-    if _jointsControlData[jointName]["bool_update_iv"]:
-        if currTime < endTime:
-            jointTravelTime = endTime - currTime
-            jointTravelDistance = endPos - currPos
-            jointIdealVelocity = float(jointTravelDistance) / jointTravelTime
-            _jointsControlData[jointName]["ideal_velocity"] = jointIdealVelocity
-            _jointsControlData[jointName]["bool_update_iv"] = False
-        else:
-            print("ERROR in compute ideal joint velocity: currTime > endTime")
-
-    thisPosErrorDerivative = float(jointError - _jointsControlData[jointName]["prev_error"])/CONTROLLER_FREQUENCY
-
-    #print("COMPUTED %s VELOCITY SETPOINT: %s (jointTravelTime: %s, jointTravelDistance: %s)" % (jointName, jointVelocityReachGoal, jointTravelTime, jointTravelDistance))
-
-    thisReturnVal = _jointsControlData[jointName]["ideal_velocity"]
-    thisReturnVal = thisReturnVal*JOINT_VELOCITY_FACTOR
-    # SWITCH CONTROL MODE IF STATEMENT IS TRUE (FROM IDEAL VELOCITY TO PID POSITION ERROR)
-    if currTime > endTime:  # jointError > JOINT_TRAJECTORY_ERROR_TOLERANCE or
-        if PRINT_DEBUG:
-            print("Switching control to PID for joint %s" % jointName)
-        _jointsControlData[jointName]["pos_error_integral"] += float(jointError)/CONTROLLER_FREQUENCY
-        _jointsControlData[jointName]["prev_time"] = currTime
-        _jointsControlData[jointName]["prev_pos"] = currPos
-        _jointsControlData[jointName]["prev_error"] = jointError
-        thisReturnVal = _jointsControlData[jointName]["param_p"]*jointError + _jointsControlData[jointName]["param_i"]*_jointsControlData[jointName]["pos_error_integral"] + _jointsControlData[jointName]["param_d"]*thisPosErrorDerivative
-
-    thisReturnVal = checkOutputLimits(thisReturnVal)
-
-    if PRINT_DEBUG:
-        if jointName == RIGHT_HIP_JOINT:
-            print("\t\t\t\t%0.5f\t\t\t\t%0.5f" % (jointError, thisReturnVal), end='\r')
-        elif jointName == RIGHT_KNEE_JOINT:
-            print("\t\t\t\t\t\t\t\t\t\t\t\t%0.5f\t\t\t\t%0.5f" % (jointError, thisReturnVal), end='\r')
+    # currPos = getJointPosition(jointName)
+    # goalPos = interpolateTrajectoryPoints(_jointsControlData[jointName]["trajectory_startpoint"], endPos, startTime, currTime, endTime)
+    # jointError = goalPos - currPos
+    #
+    # if _jointsControlData[jointName]["bool_update_iv"]:
+    #     if currTime < endTime:
+    #         jointTravelTime = endTime - currTime
+    #         jointTravelDistance = endPos - currPos
+    #         jointIdealVelocity = float(jointTravelDistance) / jointTravelTime
+    #         _jointsControlData[jointName]["ideal_velocity"] = jointIdealVelocity
+    #         _jointsControlData[jointName]["bool_update_iv"] = False
+    #     else:
+    #         print("ERROR in compute ideal joint velocity: currTime > endTime")
+    #
+    # thisPosErrorDerivative = float(jointError - _jointsControlData[jointName]["prev_error"])/CONTROLLER_FREQUENCY
+    #
+    # #print("COMPUTED %s VELOCITY SETPOINT: %s (jointTravelTime: %s, jointTravelDistance: %s)" % (jointName, jointVelocityReachGoal, jointTravelTime, jointTravelDistance))
+    #
+    # thisReturnVal = _jointsControlData[jointName]["ideal_velocity"]
+    # thisReturnVal = thisReturnVal*JOINT_VELOCITY_FACTOR
+    # # SWITCH CONTROL MODE IF STATEMENT IS TRUE (FROM IDEAL VELOCITY TO PID POSITION ERROR)
+    # if currTime > endTime:  # jointError > JOINT_TRAJECTORY_ERROR_TOLERANCE or
+    #     if PRINT_DEBUG:
+    #         print("Switching control to PID for joint %s" % jointName)
+    #     _jointsControlData[jointName]["pos_error_integral"] += float(jointError)/CONTROLLER_FREQUENCY
+    #     _jointsControlData[jointName]["prev_time"] = currTime
+    #     _jointsControlData[jointName]["prev_pos"] = currPos
+    #     _jointsControlData[jointName]["prev_error"] = jointError
+    #     thisReturnVal = _jointsControlData[jointName]["param_p"]*jointError + _jointsControlData[jointName]["param_i"]*_jointsControlData[jointName]["pos_error_integral"] + _jointsControlData[jointName]["param_d"]*thisPosErrorDerivative
+    #
+    # thisReturnVal = checkOutputLimits(thisReturnVal)
+    #
+    # if PRINT_DEBUG:
+    #     if jointName == RIGHT_HIP_JOINT:
+    #         print("\t\t\t\t%0.5f\t\t\t\t%0.5f" % (jointError, thisReturnVal), end='\r')
+    #     elif jointName == RIGHT_KNEE_JOINT:
+    #         print("\t\t\t\t\t\t\t\t\t\t\t\t%0.5f\t\t\t\t%0.5f" % (jointError, thisReturnVal), end='\r')
 
     return thisReturnVal
 
@@ -544,7 +546,7 @@ def FSM():
             if PRINT_DEBUG:
                 print("%0.5f" % (getDistance(getPositionRightFoot(), pedalTrajectoryRight[_currTrajectoryPoint])), end='\r')
 
-            if getDistance(getPositionRightFoot(), pedalTrajectoryRight[_currTrajectoryPoint]) <= PEDAL_POSITION_ERROR_TOLERANCE:  # and _currTime >= _endTime
+            if jointsReachedGoal(_currTrajectoryPoint): #getDistance(getPositionRightFoot(), pedalTrajectoryRight[_currTrajectoryPoint]) <= PEDAL_POSITION_ERROR_TOLERANCE:  # and _currTime >= _endTime
                 # getDistance(getPositionLeftFoot(), pedalTrajectoryLeft[_currTrajectoryPoint]) <= PEDAL_POSITION_ERROR_TOLERANCE and
                 past_initial_trajectory_point = True
                 if _currTrajectoryPoint < (numTrajectoryPoints - 1):
@@ -589,12 +591,12 @@ def FSM():
                         ros_right_knee_publisher.publish(thisJointVelocitySetpoint)
                     elif thisJointName == RIGHT_ANKLE_JOINT:
                         ros_right_ankle_publisher.publish(thisJointVelocitySetpoint)
-#                    elif thisJointName == LEFT_HIP_JOINT:
-#                        ros_left_hip_publisher.publish(thisJointVelocitySetpoint)
-#                    elif thisJointName == LEFT_KNEE_JOINT:
-#                        ros_left_knee_publisher.publish(thisJointVelocitySetpoint)
-#                    elif thisJointName == LEFT_ANKLE_JOINT:
-#                        ros_left_ankle_publisher.publish(thisJointVelocitySetpoint)
+                    elif thisJointName == LEFT_HIP_JOINT:
+                        ros_left_hip_publisher.publish(thisJointVelocitySetpoint)
+                    elif thisJointName == LEFT_KNEE_JOINT:
+                        ros_left_knee_publisher.publish(thisJointVelocitySetpoint)
+                    elif thisJointName == LEFT_ANKLE_JOINT:
+                        ros_left_ankle_publisher.publish(thisJointVelocitySetpoint)
 
         ##############################################
         #if _currState == UPDATE_PARAMETERS:
