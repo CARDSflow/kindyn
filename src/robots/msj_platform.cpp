@@ -18,6 +18,8 @@
 #define SPINDLERADIUS 0.00575
 #define msjMeterPerEncoderTick(encoderTicks) (((encoderTicks)/(4096.0)*(2.0*M_PI*SPINDLERADIUS)))
 #define msjEncoderTicksPerMeter(meter) ((meter)*(4096.0)/(2.0*M_PI*SPINDLERADIUS))
+#define MAX_TENDON_VEL 0.02
+#define LIMIT_SCALE 0.5
 
 using namespace std;
 using namespace Eigen;
@@ -141,8 +143,8 @@ public:
             float qx,qy;
             int i =0;
             while(fscanf(file,"%f %f\n",&qx,&qy) == 2){
-                limits[0].push_back(qx);
-                limits[1].push_back(qy);
+                limits[0].push_back(qx*LIMIT_SCALE);        // Smaller limits for hardware live demo
+                limits[1].push_back(qy*LIMIT_SCALE);
                 i++;
             }
             printf("read %d joint limit values\n", i);
@@ -176,13 +178,16 @@ public:
     void write(){
         roboy_middleware_msgs::MotorCommand msg;
         msg.id = 5;
-        stringstream str;
+        stringstream str, str2;
         for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
             msg.motors.push_back(i);
-            double l_change = l[i]-l_initial[i];
+            double l_change = l_initial[i]-l[i];
             msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
             str << l_change << "\t";
+            str2 << l_initial << "\t";
         }
+        //ROS_INFO_STREAM_THROTTLE(1,str.str());
+        //ROS_INFO_STREAM_THROTTLE(1,"ınital" << str2.str());
 
         motor_command.publish(msg);
     };
@@ -209,6 +214,7 @@ public:
     bool isExternalRobotExist(){
         return external_robot_state;
     }
+
 
 private:
 
@@ -267,10 +273,10 @@ int main(int argc, char *argv[]) {
 
     for(int id = 0; id < workers; id++) {
         boost::shared_ptr<MsjPlatform> platform(new MsjPlatform(urdf, cardsflow_xml));
-        //cardsflow::kindyn::Robot* ref = &*platform;
-        //boost::shared_ptr<GymServices> gym(new GymServices(ref, id + 1 ,true));
+        cardsflow::kindyn::Robot* ref = &*platform;
+        boost::shared_ptr<GymServices> gym(new GymServices(ref, id + 1 ,true));
         platforms.push_back(platform);
-        //gymFuncs.push_back(gym);
+        gymFuncs.push_back(gym);
     }
 
     ros::waitForShutdown();
