@@ -6,7 +6,7 @@
 #include <common_utilities/CommonDefinitions.h>
 
 #define NUMBER_OF_MOTORS 8
-#define SPINDLERADIUS 0.00575
+#define SPINDLERADIUS 0.00675
 #define msjMeterPerEncoderTick(encoderTicks) (((encoderTicks)/(4096.0)*(2.0*M_PI*SPINDLERADIUS)))
 #define msjEncoderTicksPerMeter(meter) ((meter)*(4096.0)/(2.0*M_PI*SPINDLERADIUS))
 
@@ -59,18 +59,18 @@ public:
         roboy_middleware_msgs::MotorCommand msg;
         msg.id = 5;
 //        stringstream str;
-//        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
-//            msg.motors.push_back(i);
-//            double l_change = l[i]-l_offset[i];
-//            msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
-//            str << l_change << "\t";
-//        }
         for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
             msg.motors.push_back(i);
-//            double l_change = l_target[i]-l_offset[i];
-            msg.set_points.push_back(l_target[i]); //
-//            str << l_target[i] << "\t";
+            double l_change = l[i]-l_offset[i];
+            msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
+//            str << l_change << "\t";
         }
+//        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
+//            msg.motors.push_back(i);
+////            double l_change = l_target[i]-l_offset[i];
+//            msg.set_points.push_back(l_target[i]); //
+////            str << l_target[i] << "\t";
+//        }
 //        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
 //                msg.motors.push_back(i);
 //                msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(Ld[0][i]));
