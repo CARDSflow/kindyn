@@ -7,18 +7,18 @@
 
 using namespace std;
 
-class Rikshaw: public cardsflow::kindyn::Robot{
+class Human: public cardsflow::kindyn::Robot{
 public:
     /**
      * Constructor
      * @param urdf path to urdf
      * @param cardsflow_xml path to cardsflow xml
      */
-    Rikshaw(string urdf, string cardsflow_xml){
+    Human(string urdf, string cardsflow_xml){
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
-            ros::init(argc, argv, "rikshaw");
+            ros::init(argc, argv, "Human");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
@@ -53,7 +53,7 @@ public:
     void read(){
         update();
         if(!external_robot_state)
-            forwardKinematics(0.01);
+            forwardKinematics(0.001);
     };
     /**
      * Sends motor commands to the real robot
@@ -148,7 +148,7 @@ int main(int argc, char *argv[]) {
     }
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
-    Rikshaw robot(urdf, cardsflow_xml);
+    Human robot(urdf, cardsflow_xml);
 
     controller_manager::ControllerManager cm(&robot);
 

@@ -141,6 +141,10 @@ target_link_libraries(rikshaw ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 add_executable( roboy_head src/robots/roboy_head.cpp)
 target_link_libraries(roboy_head ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
+# human
+add_executable( human src/robots/human.cpp)
+target_link_libraries(human ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+
 #==============================================================================
 # Installation
 #==============================================================================

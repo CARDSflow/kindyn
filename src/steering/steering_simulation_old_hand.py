@@ -39,21 +39,20 @@ JOINT_SHOULDER_AXIS2_RIGHT = "right_shoulder_axis2"
 JOINT_SHOULDER_AXIS0_LEFT = "left_shoulder_axis0"
 JOINT_SHOULDER_AXIS1_LEFT = "left_shoulder_axis1"
 JOINT_SHOULDER_AXIS2_LEFT = "left_shoulder_axis2"
-JOINT_ELBOW_RIGHT = "elbow_right"
-JOINT_ELBOW_LEFT = "elbow_left"
-JOINT_WRIST_RIGHT_SPHERE_AXIS0 = "wrist_right_sphere_axis0"
-JOINT_WRIST_RIGHT_SPHERE_AXIS1 = "wrist_right_sphere_axis1"
-JOINT_WRIST_RIGHT_SPHERE_AXIS2 = "wrist_right_sphere_axis2"
-JOINT_WRIST_LEFT_SPHERE_AXIS0 = "wrist_left_sphere_axis0"
-JOINT_WRIST_LEFT_SPHERE_AXIS1 = "wrist_left_sphere_axis1"
-JOINT_WRIST_LEFT_SPHERE_AXIS2 = "wrist_left_sphere_axis2"
+JOINT_ELBOW_ROT0_RIGHT = "elbow_right_rot0"
+JOINT_ELBOW_ROT1_RIGHT = "elbow_right_rot1"
+JOINT_ELBOW_ROT0_LEFT = "elbow_left_rot0"
+JOINT_ELBOW_ROT1_LEFT = "elbow_left_rot1"
+JOINT_WRIST_0_RIGHT = "right_wrist_0"
+JOINT_WRIST_1_RIGHT = "right_wrist_1"
+JOINT_WRIST_0_LEFT = "left_wrist_0"
+JOINT_WRIST_1_LEFT = "left_wrist_1"
 JOINT_BIKE_FRONT = "joint_front"
 
 _joints_list = [JOINT_SHOULDER_AXIS0_RIGHT, JOINT_SHOULDER_AXIS1_RIGHT, JOINT_SHOULDER_AXIS2_RIGHT,
                 JOINT_SHOULDER_AXIS0_LEFT, JOINT_SHOULDER_AXIS1_LEFT, JOINT_SHOULDER_AXIS2_LEFT,
-                JOINT_ELBOW_RIGHT, JOINT_ELBOW_LEFT, JOINT_WRIST_RIGHT_SPHERE_AXIS0, JOINT_WRIST_RIGHT_SPHERE_AXIS1,
-                JOINT_WRIST_RIGHT_SPHERE_AXIS2, JOINT_WRIST_LEFT_SPHERE_AXIS0, JOINT_WRIST_LEFT_SPHERE_AXIS1,
-                JOINT_WRIST_LEFT_SPHERE_AXIS2, JOINT_BIKE_FRONT]
+                JOINT_ELBOW_ROT0_RIGHT, JOINT_ELBOW_ROT1_RIGHT, JOINT_ELBOW_ROT0_LEFT, JOINT_ELBOW_ROT1_LEFT,
+                JOINT_WRIST_0_RIGHT, JOINT_WRIST_1_RIGHT, JOINT_WRIST_0_LEFT, JOINT_WRIST_1_LEFT, JOINT_BIKE_FRONT]
 
 _numTrajectoryPoints = 0
 
@@ -64,14 +63,14 @@ _trajectoryShoulder2Right = []
 _trajectoryShoulder0Left = []
 _trajectoryShoulder1Left = []
 _trajectoryShoulder2Left = []
-_trajectoryElbowRight = []
-_trajectoryElbowLeft = []
+_trajectoryElbow0Right = []
+_trajectoryElbow1Right = []
+_trajectoryElbow0Left = []
+_trajectoryElbow1Left = []
 _trajectoryWrist0Right = []
 _trajectoryWrist1Right = []
-_trajectoryWrist2Right = []
 _trajectoryWrist0Left = []
 _trajectoryWrist1Left = []
-_trajectoryWrist2Left = []
 
 _interpolatedShoulder0Right = None
 _interpolatedShoulder1Right = None
@@ -79,14 +78,14 @@ _interpolatedShoulder2Right = None
 _interpolatedShoulder0Left = None
 _interpolatedShoulder1Left = None
 _interpolatedShoulder2Left = None
-_interpolatedElbowRight = None
-_interpolatedElbowLeft = None
+_interpolatedElbow0Right = None
+_interpolatedElbow1Right = None
+_interpolatedElbow0Left = None
+_interpolatedElbow1Left = None
 _interpolatedWrist0Right = None
 _interpolatedWrist1Right = None
-_interpolatedWrist2Right = None
 _interpolatedWrist0Left = None
 _interpolatedWrist1Left = None
-_interpolatedWrist2Left = None
 
 _regressedShoulder0Right = None
 _regressedShoulder1Right = None
@@ -94,14 +93,14 @@ _regressedShoulder2Right = None
 _regressedShoulder0Left = None
 _regressedShoulder1Left = None
 _regressedShoulder2Left = None
-_regressedElbowRight = None
-_regressedElbowLeft = None
+_regressedElbow0Right = None
+_regressedElbow1Right = None
+_regressedElbow0Left = None
+_regressedElbow1Left = None
 _regressedWrist0Right = None
 _regressedWrist1Right = None
-_regressedWrist2Right = None
 _regressedWrist0Left = None
 _regressedWrist1Left = None
-_regressedWrist2Left = None
 
 _jointsStatusData = {
     JOINT_SHOULDER_AXIS0_RIGHT: {
@@ -128,35 +127,35 @@ _jointsStatusData = {
         "Pos": 0.0,
         "Vel": 0.0
     },
-    JOINT_ELBOW_RIGHT: {
+    JOINT_ELBOW_ROT0_RIGHT: {
         "Pos": 0.0,
         "Vel": 0.0
     },
-    JOINT_ELBOW_LEFT: {
+    JOINT_ELBOW_ROT1_RIGHT: {
         "Pos": 0.0,
         "Vel": 0.0
     },
-    JOINT_WRIST_RIGHT_SPHERE_AXIS0: {
+    JOINT_ELBOW_ROT0_LEFT: {
         "Pos": 0.0,
         "Vel": 0.0
     },
-    JOINT_WRIST_RIGHT_SPHERE_AXIS1: {
+    JOINT_ELBOW_ROT1_LEFT: {
         "Pos": 0.0,
         "Vel": 0.0
     },
-    JOINT_WRIST_RIGHT_SPHERE_AXIS2: {
+    JOINT_WRIST_0_RIGHT: {
         "Pos": 0.0,
         "Vel": 0.0
     },
-    JOINT_WRIST_LEFT_SPHERE_AXIS0: {
+    JOINT_WRIST_1_RIGHT: {
         "Pos": 0.0,
         "Vel": 0.0
     },
-    JOINT_WRIST_LEFT_SPHERE_AXIS1: {
+    JOINT_WRIST_0_LEFT: {
         "Pos": 0.0,
         "Vel": 0.0
     },
-    JOINT_WRIST_LEFT_SPHERE_AXIS2: {
+    JOINT_WRIST_1_LEFT: {
         "Pos": 0.0,
         "Vel": 0.0
     }
@@ -171,14 +170,14 @@ ros_right_shoulder_axis2_pub = rospy.Publisher('/right_shoulder_axis2/right_shou
 ros_left_shoulder_axis0_pub = rospy.Publisher('/left_shoulder_axis0/left_shoulder_axis0/target', Float32, queue_size=2)
 ros_left_shoulder_axis1_pub = rospy.Publisher('/left_shoulder_axis1/left_shoulder_axis1/target', Float32, queue_size=2)
 ros_left_shoulder_axis2_pub = rospy.Publisher('/left_shoulder_axis2/left_shoulder_axis2/target', Float32, queue_size=2)
-ros_elbow_right_pub = rospy.Publisher('/elbow_right/elbow_right/target', Float32, queue_size=2)
-ros_elbow_left_pub = rospy.Publisher('/elbow_left/elbow_left/target', Float32, queue_size=2)
-ros_right_wrist_0_pub = rospy.Publisher('/wrist_right_sphere_axis0/wrist_right_sphere_axis0/target', Float32, queue_size=2)
-ros_right_wrist_1_pub = rospy.Publisher('/wrist_right_sphere_axis1/wrist_right_sphere_axis1/target', Float32, queue_size=2)
-ros_right_wrist_2_pub = rospy.Publisher('/wrist_right_sphere_axis2/wrist_right_sphere_axis2/target', Float32, queue_size=2)
-ros_left_wrist_0_pub = rospy.Publisher('/wrist_left_sphere_axis0/wrist_left_sphere_axis0/target', Float32, queue_size=2)
-ros_left_wrist_1_pub = rospy.Publisher('/wrist_left_sphere_axis1/wrist_left_sphere_axis1/target', Float32, queue_size=2)
-ros_left_wrist_2_pub = rospy.Publisher('/wrist_left_sphere_axis2/wrist_left_sphere_axis2/target', Float32, queue_size=2)
+ros_elbow_right_rot0_pub = rospy.Publisher('/elbow_right_rot0/elbow_right_rot0/target', Float32, queue_size=2)
+ros_elbow_right_rot1_pub = rospy.Publisher('/elbow_right_rot1/elbow_right_rot1/target', Float32, queue_size=2)
+ros_elbow_left_rot0_pub = rospy.Publisher('/elbow_left_rot0/elbow_left_rot0/target', Float32, queue_size=2)
+ros_elbow_left_rot1_pub = rospy.Publisher('/elbow_left_rot1/elbow_left_rot1/target', Float32, queue_size=2)
+ros_right_wrist_0_pub = rospy.Publisher('/right_wrist_0/right_wrist_0/target', Float32, queue_size=2)
+ros_right_wrist_1_pub = rospy.Publisher('/right_wrist_1/right_wrist_1/target', Float32, queue_size=2)
+ros_left_wrist_0_pub = rospy.Publisher('/left_wrist_0/left_wrist_0/target', Float32, queue_size=2)
+ros_left_wrist_1_pub = rospy.Publisher('/left_wrist_1/left_wrist_1/target', Float32, queue_size=2)
 
 ros_bike_front_pub = rospy.Publisher('/joint_front/joint_front/target', Float32, queue_size=2)
 
@@ -225,14 +224,14 @@ def regress_joint_positions_from_file(filename):
     global _trajectoryShoulder0Left
     global _trajectoryShoulder1Left
     global _trajectoryShoulder2Left
-    global _trajectoryElbowRight
-    global _trajectoryElbowLeft
+    global _trajectoryElbow0Right
+    global _trajectoryElbow1Right
+    global _trajectoryElbow0Left
+    global _trajectoryElbow1Left
     global _trajectoryWrist0Right
     global _trajectoryWrist1Right
-    global _trajectoryWrist2Right
     global _trajectoryWrist0Left
     global _trajectoryWrist1Left
-    global _trajectoryWrist2Left
 
     global _regressedShoulder0Right
     global _regressedShoulder1Right
@@ -240,14 +239,14 @@ def regress_joint_positions_from_file(filename):
     global _regressedShoulder0Left
     global _regressedShoulder1Left
     global _regressedShoulder2Left
-    global _regressedElbowRight
-    global _regressedElbowLeft
+    global _regressedElbow0Right
+    global _regressedElbow1Right
+    global _regressedElbow0Left
+    global _regressedElbow1Left
     global _regressedWrist0Right
     global _regressedWrist1Right
-    global _regressedWrist2Right
     global _regressedWrist0Left
     global _regressedWrist1Left
-    global _regressedWrist2Left
 
     loaded_data = None
     with open(filename, "r") as read_file:
@@ -256,18 +255,18 @@ def regress_joint_positions_from_file(filename):
     _regressedShoulder0Right = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS0_RIGHT])
     _regressedShoulder1Right = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS1_RIGHT])
     _regressedShoulder2Right = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS2_RIGHT])
-    _regressedElbowRight = poly.Polynomial(loaded_data[JOINT_ELBOW_RIGHT])
-    _regressedWrist0Right = poly.Polynomial(loaded_data[JOINT_WRIST_RIGHT_SPHERE_AXIS0])
-    _regressedWrist1Right = poly.Polynomial(loaded_data[JOINT_WRIST_RIGHT_SPHERE_AXIS1])
-    _regressedWrist1Right = poly.Polynomial(loaded_data[JOINT_WRIST_RIGHT_SPHERE_AXIS2])
+    _regressedElbow0Right = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT0_RIGHT])
+    _regressedElbow1Right = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT1_RIGHT])
+    _regressedWrist0Right = poly.Polynomial(loaded_data[JOINT_WRIST_0_RIGHT])
+    _regressedWrist1Right = poly.Polynomial(loaded_data[JOINT_WRIST_1_RIGHT])
 
     _regressedShoulder0Left = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS0_LEFT])
     _regressedShoulder1Left = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS1_LEFT])
     _regressedShoulder2Left = poly.Polynomial(loaded_data[JOINT_SHOULDER_AXIS2_LEFT])
-    _regressedElbowLeft = poly.Polynomial(loaded_data[JOINT_ELBOW_LEFT])
-    _regressedWrist0Left = poly.Polynomial(loaded_data[JOINT_WRIST_LEFT_SPHERE_AXIS0])
-    _regressedWrist1Left = poly.Polynomial(loaded_data[JOINT_WRIST_LEFT_SPHERE_AXIS1])
-    _regressedWrist2Left = poly.Polynomial(loaded_data[JOINT_WRIST_LEFT_SPHERE_AXIS2])
+    _regressedElbow0Left = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT0_LEFT])
+    _regressedElbow1Left = poly.Polynomial(loaded_data[JOINT_ELBOW_ROT1_LEFT])
+    _regressedWrist0Left = poly.Polynomial(loaded_data[JOINT_WRIST_0_LEFT])
+    _regressedWrist1Left = poly.Polynomial(loaded_data[JOINT_WRIST_1_LEFT])
 
     return 1
 
@@ -284,14 +283,14 @@ def import_joint_trajectory_record():
     global _trajectoryShoulder0Left
     global _trajectoryShoulder1Left
     global _trajectoryShoulder2Left
-    global _trajectoryElbowRight
-    global _trajectoryElbowLeft
+    global _trajectoryElbow0Right
+    global _trajectoryElbow1Right
+    global _trajectoryElbow0Left
+    global _trajectoryElbow1Left
     global _trajectoryWrist0Right
     global _trajectoryWrist1Right
-    global _trajectoryWrist2Right
     global _trajectoryWrist0Left
     global _trajectoryWrist1Left
-    global _trajectoryWrist2Left
 
     global PRINT_DEBUG
 
@@ -313,14 +312,14 @@ def import_joint_trajectory_record():
                 loaded_data["point_" + str(pointIterator)]["Right"][JOINT_SHOULDER_AXIS1_RIGHT])
             _trajectoryShoulder2Right.append(
                 loaded_data["point_" + str(pointIterator)]["Right"][JOINT_SHOULDER_AXIS2_RIGHT])
-            _trajectoryElbowRight.append(
-                loaded_data["point_" + str(pointIterator)]["Right"][JOINT_ELBOW_RIGHT])
+            _trajectoryElbow0Right.append(
+                loaded_data["point_" + str(pointIterator)]["Right"][JOINT_ELBOW_ROT0_RIGHT])
+            _trajectoryElbow1Right.append(
+                loaded_data["point_" + str(pointIterator)]["Right"][JOINT_ELBOW_ROT1_RIGHT])
             _trajectoryWrist0Right.append(
-                loaded_data["point_" + str(pointIterator)]["Right"][JOINT_WRIST_RIGHT_SPHERE_AXIS0])
+                loaded_data["point_" + str(pointIterator)]["Right"][JOINT_WRIST_0_RIGHT])
             _trajectoryWrist1Right.append(
-                loaded_data["point_" + str(pointIterator)]["Right"][JOINT_WRIST_RIGHT_SPHERE_AXIS1])
-            _trajectoryWrist2Right.append(
-                loaded_data["point_" + str(pointIterator)]["Right"][JOINT_WRIST_RIGHT_SPHERE_AXIS2])
+                loaded_data["point_" + str(pointIterator)]["Right"][JOINT_WRIST_1_RIGHT])
 
             _trajectoryShoulder0Left.append(
                 loaded_data["point_" + str(pointIterator)]["Left"][JOINT_SHOULDER_AXIS0_LEFT])
@@ -328,12 +327,12 @@ def import_joint_trajectory_record():
                 loaded_data["point_" + str(pointIterator)]["Left"][JOINT_SHOULDER_AXIS1_LEFT])
             _trajectoryShoulder2Left.append(
                 loaded_data["point_" + str(pointIterator)]["Left"][JOINT_SHOULDER_AXIS2_LEFT])
-            _trajectoryElbowLeft.append(
-                loaded_data["point_" + str(pointIterator)]["Left"][JOINT_ELBOW_LEFT])
-            _trajectoryWrist0Left.append(loaded_data["point_" + str(pointIterator)]["Left"][JOINT_WRIST_LEFT_SPHERE_AXIS0])
-            _trajectoryWrist1Left.append(loaded_data["point_" + str(pointIterator)]["Left"][JOINT_WRIST_LEFT_SPHERE_AXIS1])
-            _trajectoryWrist2Left.append(
-                loaded_data[ "point_" + str(pointIterator) ][ "Left" ][ JOINT_WRIST_LEFT_SPHERE_AXIS2 ])
+            _trajectoryElbow0Left.append(
+                loaded_data["point_" + str(pointIterator)]["Left"][JOINT_ELBOW_ROT0_LEFT])
+            _trajectoryElbow1Left.append(
+                loaded_data["point_" + str(pointIterator)]["Left"][JOINT_ELBOW_ROT1_LEFT])
+            _trajectoryWrist0Left.append(loaded_data["point_" + str(pointIterator)]["Left"][JOINT_WRIST_0_LEFT])
+            _trajectoryWrist1Left.append(loaded_data["point_" + str(pointIterator)]["Left"][JOINT_WRIST_1_LEFT])
 
         else:
             print("WARNING: No point_%s in trajectory" % pointIterator)
@@ -362,30 +361,30 @@ def interpolate_joint_angles():
     global _interpolatedShoulder0Left
     global _interpolatedShoulder1Left
     global _interpolatedShoulder2Left
-    global _interpolatedElbowRight
-    global _interpolatedElbowLeft
+    global _interpolatedElbow0Right
+    global _interpolatedElbow1Right
+    global _interpolatedElbow0Left
+    global _interpolatedElbow1Left
     global _interpolatedWrist0Right
     global _interpolatedWrist1Right
-    global _interpolatedWrist2Right
     global _interpolatedWrist0Left
     global _interpolatedWrist1Left
-    global _interpolatedWrist2Left
 
     _interpolatedShoulder0Right = interpolate.interp1d(_trajectorySteering, _trajectoryShoulder0Right, kind="cubic")
     _interpolatedShoulder1Right = interpolate.interp1d(_trajectorySteering, _trajectoryShoulder1Right, kind="cubic")
     _interpolatedShoulder2Right = interpolate.interp1d(_trajectorySteering, _trajectoryShoulder2Right, kind="cubic")
-    _interpolatedElbow0Right = interpolate.interp1d(_trajectorySteering, _trajectoryElbowRight, kind="cubic")
+    _interpolatedElbow0Right = interpolate.interp1d(_trajectorySteering, _trajectoryElbow0Right, kind="cubic")
+    _interpolatedElbow1Right = interpolate.interp1d(_trajectorySteering, _trajectoryElbow1Right, kind="cubic")
     _interpolatedWrist0Right = interpolate.interp1d(_trajectorySteering, _trajectoryWrist0Right, kind="cubic")
     _interpolatedWrist1Right = interpolate.interp1d(_trajectorySteering, _trajectoryWrist1Right, kind="cubic")
-    _interpolatedWrist2Right = interpolate.interp1d(_trajectorySteering, _trajectoryWrist2Right, kind="cubic")
 
     _interpolatedShoulder0Left = interpolate.interp1d(_trajectorySteering, _trajectoryShoulder0Left, kind="cubic")
     _interpolatedShoulder1Left = interpolate.interp1d(_trajectorySteering, _trajectoryShoulder1Left, kind="cubic")
     _interpolatedShoulder2Left = interpolate.interp1d(_trajectorySteering, _trajectoryShoulder2Left, kind="cubic")
-    _interpolatedElbowLeft = interpolate.interp1d(_trajectorySteering, _trajectoryElbowLeft, kind="cubic")
+    _interpolatedElbow0Left = interpolate.interp1d(_trajectorySteering, _trajectoryElbow0Left, kind="cubic")
+    _interpolatedElbow1Left = interpolate.interp1d(_trajectorySteering, _trajectoryElbow1Left, kind="cubic")
     _interpolatedWrist0Left = interpolate.interp1d(_trajectorySteering, _trajectoryWrist0Left, kind="cubic")
     _interpolatedWrist1Left = interpolate.interp1d(_trajectorySteering, _trajectoryWrist1Left, kind="cubic")
-    _interpolatedWrist2Left = interpolate.interp1d(_trajectorySteering, _trajectoryWrist2Left, kind="cubic")
 
 
 ## Documentation for a function
@@ -479,38 +478,38 @@ def publish_joint_angle(joint_name, steering_angle):
             pub = ros_right_shoulder_axis2_pub
             f_interpolated = _interpolatedShoulder2Right
             f_regressed = _regressedShoulder2Right
-        elif joint_name == JOINT_ELBOW_LEFT:
-            pub = ros_elbow_left_pub
-            f_interpolated = _interpolatedElbowLeft
-            f_regressed = _regressedElbowLeft
-        elif joint_name == JOINT_ELBOW_RIGHT:
-            pub = ros_elbow_right_pub
-            f_interpolated = _interpolatedElbowRight
-            f_regressed = _regressedElbowRight
-        elif joint_name == JOINT_WRIST_LEFT_SPHERE_AXIS0:
+        elif joint_name == JOINT_ELBOW_ROT0_LEFT:
+            pub = ros_elbow_left_rot0_pub
+            f_interpolated = _interpolatedElbow0Left
+            f_regressed = _regressedElbow0Left
+        elif joint_name == JOINT_ELBOW_ROT1_LEFT:
+            pub = ros_elbow_left_rot1_pub
+            f_interpolated = _interpolatedElbow1Left
+            f_regressed = _regressedElbow1Left
+        elif joint_name == JOINT_ELBOW_ROT0_RIGHT:
+            pub = ros_elbow_right_rot0_pub
+            f_interpolated = _interpolatedElbow0Right
+            f_regressed = _regressedElbow0Right
+        elif joint_name == JOINT_ELBOW_ROT1_RIGHT:
+            pub = ros_elbow_right_rot1_pub
+            f_interpolated = _interpolatedElbow1Right
+            f_regressed = _regressedElbow1Right
+        elif joint_name == JOINT_WRIST_0_LEFT:
             pub = ros_left_wrist_0_pub
             f_interpolated = _interpolatedWrist0Left
             f_regressed = _regressedWrist0Left
-        elif joint_name == JOINT_WRIST_LEFT_SPHERE_AXIS1:
+        elif joint_name == JOINT_WRIST_1_LEFT:
             pub = ros_left_wrist_1_pub
             f_interpolated = _interpolatedWrist1Left
             f_regressed = _regressedWrist1Left
-        elif joint_name == JOINT_WRIST_LEFT_SPHERE_AXIS2:
-            pub = ros_left_wrist_2_pub
-            f_interpolated = _interpolatedWrist2Left
-            f_regressed = _regressedWrist2Left
-        elif joint_name == JOINT_WRIST_RIGHT_SPHERE_AXIS0:
+        elif joint_name == JOINT_WRIST_0_RIGHT:
             pub = ros_right_wrist_0_pub
             f_interpolated = _interpolatedWrist0Right
             f_regressed = _regressedWrist0Right
-        elif joint_name == JOINT_WRIST_RIGHT_SPHERE_AXIS1:
+        elif joint_name == JOINT_WRIST_1_RIGHT:
             pub = ros_right_wrist_1_pub
             f_interpolated = _interpolatedWrist1Right
             f_regressed = _regressedWrist1Right
-        elif joint_name == JOINT_WRIST_RIGHT_SPHERE_AXIS2:
-            pub = ros_right_wrist_2_pub
-            f_interpolated = _interpolatedWrist2Right
-            f_regressed = _regressedWrist2Right
         elif joint_name == JOINT_BIKE_FRONT:
             pub = ros_bike_front_pub
         else:
@@ -656,3 +655,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
