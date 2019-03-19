@@ -32,8 +32,9 @@ bool GymServices::gymStepHandler(roboy_simulation_msgs::GymStep::Request &req,
     training_robot->Ld[0] = tendon_velocity;  //Commanding cable velocity to simulation
 
     training_robot->forwardKinematics(req.step_size);
-
-    training_robot->write();
+    
+    if(training_robot->isExternalRobotExist())
+        training_robot->write();
 
     ROS_INFO_STREAM_THROTTLE(5, "Ld = " << training_robot->Ld[0].format(fmt));
 
