@@ -65,8 +65,6 @@ bool GymServices::gymResetHandler(roboy_simulation_msgs::GymReset::Request &req,
 
         training_robot->setIntegrationTime(0.0);
 
-        last_tendon_length.setZero();
-
         jointAngle.resize(training_robot->number_of_dofs);
         jointVel.resize(training_robot->number_of_dofs);
         zeroTendonLength.resize(training_robot->number_of_cables);

@@ -58,7 +58,6 @@ public:
 
 
     };
-
     /**
      * Read joint limits of the robots which have the shoulder as part of their kinematics.
      *
@@ -73,8 +72,13 @@ public:
             float qx,qy;
             int i =0;
             while(fscanf(file,"%f %f\n",&qx,&qy) == 2){
-                limits[0].push_back(qx*LIMIT_SCALE);        // Smaller limits for hardware live demo
-                limits[1].push_back(qy*LIMIT_SCALE);
+                if(external_robot_state) {
+                    limits[0].push_back(qx * LIMIT_SCALE);        // Smaller limits for hardware live demo
+                    limits[1].push_back(qy * LIMIT_SCALE);
+                } else{
+                    limits[0].push_back(qx);
+                    limits[1].push_back(qy);
+                }
                 i++;
             }
             printf("read %d joint limit values\n", i);
