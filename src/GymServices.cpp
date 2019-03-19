@@ -1,5 +1,4 @@
 #include "kindyn/GymServices.h"
-#include <iostream>
 
 GymServices::GymServices(cardsflow::kindyn::Robot* robot, int id, bool respect_limits){
     ros::NodeHandlePtr nh(new ros::NodeHandle);
@@ -11,10 +10,6 @@ GymServices::GymServices(cardsflow::kindyn::Robot* robot, int id, bool respect_l
 
     training_robot = robot;
     training_with_limits = respect_limits;
-
-
-    last_tendon_length.resize(training_robot->number_of_cables);
-    last_tendon_length.setZero();
 
     gym_step = nh->advertiseService("/instance" + to_string(id) + "/gym_step", &GymServices::gymStepHandler,this);
     gym_read_state = nh->advertiseService("/instance" + to_string(id) + "/gym_read_state", &GymServices::gymReadStateHandler,this);
@@ -32,9 +27,9 @@ bool GymServices::gymStepHandler(roboy_simulation_msgs::GymStep::Request &req,
     training_robot->Ld[0] = tendon_velocity;  //Commanding cable velocity to simulation
 
     training_robot->forwardKinematics(req.step_size);
-    
+
     if(training_robot->isExternalRobotExist())
-        training_robot->write();
+        training_robot->write();             //Publish the resulting tendon lengths from forwardKinematics to motors.
 
     ROS_INFO_STREAM_THROTTLE(5, "Ld = " << training_robot->Ld[0].format(fmt));
 
