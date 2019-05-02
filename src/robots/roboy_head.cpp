@@ -3,6 +3,7 @@
 #include <std_msgs/Float32.h>
 #include <roboy_middleware_msgs/MotorCommand.h>
 #include <roboy_middleware_msgs/MotorConfig.h>
+#include <roboy_middleware_msgs/MotorConfigService.h>
 #include <roboy_middleware_msgs/MotorStatus.h>
 #include <roboy_middleware_msgs/ControlMode.h>
 #include <common_utilities/CommonDefinitions.h>
@@ -33,7 +34,7 @@ public:
         for(auto ef:endeffectors) {
             motor_control_mode[ef] = nh->serviceClient<roboy_middleware_msgs::ControlMode>(
                     "/roboy/" + ef + "/middleware/ControlMode");
-            motor_config[ef] = nh->serviceClient<roboy_middleware_msgs::ControlMode>(
+            motor_config[ef] = nh->serviceClient<roboy_middleware_msgs::MotorConfigService>(
                     "/roboy/" + ef + "/middleware/MotorConfig");
             nh->getParam((ef+"/joints").c_str(),endeffector_jointnames[ef]);
         }
@@ -48,34 +49,53 @@ public:
             ROS_INFO("waiting for head MotorStatus to be received");
             rate.sleep();
         }
-        for(auto ef:endeffectors) {
-            roboy_middleware_msgs::MotorConfig msg;
-            for(int i=0;i<sim_motors[ef].size();i++) {
-                msg.motors.push_back(motors[ef][i]);
-                msg.control_mode.push_back(POSITION);
-                msg.output_pos_max.push_back(300);
-                msg.output_neg_max.push_back(-300);
-                msg.sp_pos_max.push_back(100000);
-                msg.sp_neg_max.push_back(-100000);
-                msg.kp.push_back(1);
-                msg.kd.push_back(0);
-                msg.ki.push_back(0);
-                msg.forward_gain.push_back(0);
-                msg.dead_band.push_back(0);
-                msg.integral_pos_max.push_back(0);
-                msg.integral_neg_max.push_back(0);
-                msg.output_divider.push_back(5);
-                msg.setpoint.push_back(encoder_offset[ef][i]);
-                l_offset[ef][i] += l[sim_motors[ef][i]];
+        if(!external_robot_state) {
+            for (auto ef:endeffectors) {
+                roboy_middleware_msgs::MotorConfigService msg;
+                for (int i = 0; i < sim_motors[ef].size(); i++) {
+                    msg.request.config.motors.push_back(motors[ef][i]);
+                    msg.request.config.control_mode.push_back(POSITION);
+                    msg.request.config.output_pos_max.push_back(300);
+                    msg.request.config.output_neg_max.push_back(-300);
+                    msg.request.config.sp_pos_max.push_back(100000);
+                    msg.request.config.sp_neg_max.push_back(-100000);
+                    msg.request.config.kp.push_back(1);
+                    msg.request.config.kd.push_back(0);
+                    msg.request.config.ki.push_back(0);
+                    msg.request.config.forward_gain.push_back(0);
+                    msg.request.config.dead_band.push_back(0);
+                    msg.request.config.integral_pos_max.push_back(0);
+                    msg.request.config.integral_neg_max.push_back(0);
+                    msg.request.config.output_divider.push_back(5);
+                    msg.request.config.setpoint.push_back(encoder_offset[ef][i]);
+                    l_offset[ef][i] += l[sim_motors[ef][i]];
+                    motor_config[ef].call(msg);
+                }
+            }
+        }else{
+            for (auto ef:endeffectors) {
+                roboy_middleware_msgs::MotorConfigService msg;
+                for (int i = 0; i < sim_motors[ef].size(); i++) {
+                    msg.request.config.motors.push_back(motors[ef][i]);
+                    msg.request.config.control_mode.push_back(DIRECT_PWM);
+                    msg.request.config.output_pos_max.push_back(1000);
+                    msg.request.config.output_neg_max.push_back(-100);
+                    msg.request.config.sp_pos_max.push_back(100000);
+                    msg.request.config.sp_neg_max.push_back(-100000);
+                    msg.request.config.kp.push_back(1);
+                    msg.request.config.kd.push_back(0);
+                    msg.request.config.ki.push_back(0);
+                    msg.request.config.forward_gain.push_back(0);
+                    msg.request.config.dead_band.push_back(0);
+                    msg.request.config.integral_pos_max.push_back(0);
+                    msg.request.config.integral_neg_max.push_back(0);
+                    msg.request.config.output_divider.push_back(5);
+                    msg.request.config.setpoint.push_back(0);
+                    l_offset[ef][i] += l[sim_motors[ef][i]];
+                    motor_config[ef].call(msg);
+                }
             }
         }
-//        roboy_middleware_msgs::ControlMode msg;
-//        msg.request.control_mode = POSITION;
-//        msg.request.set_point = 0;
-//        for(auto control:motor_control_mode){
-//            if(!control.second.call(msg))
-//                ROS_WARN("failed to change control mode to position");
-//        }
         roll.data = 0;
         pitch.data = 0;
         yaw.data = 0;
@@ -122,34 +142,72 @@ public:
      * Sends motor commands to the real robot
      */
     void write(){
-        stringstream str;
-        for(auto ef:endeffectors) {
-            str << ef << ": ";
-            roboy_middleware_msgs::MotorCommand msg;
-            msg.id = bodyPartIDs[ef];
-            msg.motors = motors[ef];
-            for (int i = 0; i < sim_motors[ef].size(); i++) {
-                double l_meter = l_offset[ef][i] - l[sim_motors[ef][i]];
-                str  <<  l_meter << "\t";
-                switch(motor_type[msg.id][i]){
-                    case MYOBRICK100N:{
-                        msg.set_points.push_back(myoBrick100NEncoderTicksPerMeter(l_meter)+encoder_offset[ef][i]);
-                        break;
-                    }
-                    case MYOBRICK300N:{
-                        msg.set_points.push_back(myoBrick300NEncoderTicksPerMeter(l_meter)+encoder_offset[ef][i]);
-                        break;
-                    }
-                    case MYOMUSCLE500N:{
-                        msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(l_meter)+encoder_offset[ef][i]);
-                        break;
+        if(!external_robot_state) {
+            stringstream str;
+            for (auto ef:endeffectors) {
+                str << ef << ": ";
+                roboy_middleware_msgs::MotorCommand msg;
+                msg.id = bodyPartIDs[ef];
+                msg.motors = motors[ef];
+                for (int i = 0; i < sim_motors[ef].size(); i++) {
+                    double l_meter = l_offset[ef][i] - l[sim_motors[ef][i]];
+                    str << l_meter << "\t";
+                    switch (motor_type[msg.id][i]) {
+                        case MYOBRICK100N: {
+                            msg.set_points.push_back(myoBrick100NEncoderTicksPerMeter(l_meter) + encoder_offset[ef][i]);
+                            break;
+                        }
+                        case MYOBRICK300N: {
+                            msg.set_points.push_back(myoBrick300NEncoderTicksPerMeter(l_meter) + encoder_offset[ef][i]);
+                            break;
+                        }
+                        case MYOMUSCLE500N: {
+                            msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(l_meter) + encoder_offset[ef][i]);
+                            break;
+                        }
                     }
                 }
+                str << endl;
+                motor_command.publish(msg);
             }
-            str << endl;
-            motor_command.publish(msg);
+            ROS_INFO_STREAM_THROTTLE(1, str.str());
+        }else{
+            stringstream str;
+            float Kp, pretension;
+            nh->getParam("Kp_pwm", Kp);
+            nh->getParam("pretension", pretension);
+            for(auto ef:endeffectors) {
+                roboy_middleware_msgs::MotorCommand msg;
+                msg.id = bodyPartIDs[ef];
+                msg.motors = motors[ef];
+                for (int i = 0; i < sim_motors[ef].size(); i++) {
+
+                    switch (motor_type[msg.id][motors[ef][i]]) {
+                        case MYOBRICK100N: {
+                            l_change[ef][i] += Kp*(l_target[i]-l[i]);
+                            if(l_change[ef][i]>1000)
+                                l_change[ef][i] = 1000;
+                            if(l_change[ef][i]<pretension)
+                                l_change[ef][i] = pretension;
+                            break;
+                        }
+                        case MYOBRICK300N: {
+                            l_change[ef][i] += 0.3*Kp*(l_target[i]-l[i]);
+                            if(l_change[ef][i]>500)
+                                l_change[ef][i] = 500;
+                            if(l_change[ef][i]<0.3*pretension)
+                                l_change[ef][i] = 0.3*pretension;
+                            break;
+                        }
+                    }
+
+                    msg.set_points.push_back(l_change[ef][i]);
+                    str << l_change[ef][i] << "\t";
+                }
+                ROS_INFO_STREAM_THROTTLE(1, str.str());
+                motor_command.publish(msg);
+            }
         }
-        ROS_INFO_STREAM_THROTTLE(1, str.str());
     };
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command, sphere_head_axis0, sphere_head_axis1, sphere_head_axis2; /// motor command publisher
@@ -178,7 +236,11 @@ public:
 //            {"spine_right",{11,10,13,14,12,9}}
 //    };
     map<string,vector<short unsigned int>> sim_motors = {
-            {"shoulder_right",{0,1,2,5,4,3}}
+            {"shoulder_right",{0,1,2,3,4,5}}
+    };
+
+    map<string,vector<float>> l_change = {
+            {"shoulder_right",{0,0,0,0,0,0}}
     };
 
     map<string,vector<double>> l_offset = {
