@@ -59,23 +59,22 @@ public:
         roboy_middleware_msgs::MotorCommand msg;
         msg.id = 5;
 //        stringstream str;
-        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
-            msg.motors.push_back(i);
-            double l_change = l[i]-l_offset[i];
-            msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
-//            str << l_change << "\t";
+        if(!external_robot_state) {
+            for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
+                msg.motors.push_back(i);
+                double l_change = l[i] - l_offset[i];
+                msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
+        //            str << l_change << "\t";
+            }
+        }else {
+            static double l_change[NUMBER_OF_MOTORS] = {0};
+            for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
+                msg.motors.push_back(i);
+                l_change[i] += Kp*(l_target[i]-l[i]);
+                msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change[i])); //
+        //            str << l_change << "\t";
+            }
         }
-//        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
-//            msg.motors.push_back(i);
-////            double l_change = l_target[i]-l_offset[i];
-//            msg.set_points.push_back(l_target[i]); //
-////            str << l_target[i] << "\t";
-//        }
-//        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
-//                msg.motors.push_back(i);
-//                msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(Ld[0][i]));
-//        }
-//		ROS_INFO_STREAM_THROTTLE(1,str.str());
 
         motor_command.publish(msg);
     };
@@ -138,6 +137,7 @@ public:
     ros::ServiceServer gym_step; //OpenAI Gym training environment step function, ros service instance
     ros::ServiceServer gym_reset; //OpenAI Gym training environment reset function, ros service instance
     double l_offset[NUMBER_OF_MOTORS];
+    float Kp = 0.001;
 };
 
 /**
