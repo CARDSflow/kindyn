@@ -7,18 +7,18 @@
 
 using namespace std;
 
-class Human: public cardsflow::kindyn::Robot{
+class VRpuppet: public cardsflow::kindyn::Robot{
 public:
     /**
      * Constructor
      * @param urdf path to urdf
      * @param cardsflow_xml path to cardsflow xml
      */
-    Human(string urdf, string cardsflow_xml){
+    VRpuppet(string urdf, string cardsflow_xml){
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
-            ros::init(argc, argv, "Human");
+            ros::init(argc, argv, "VRpuppet");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
@@ -121,7 +121,7 @@ public:
  */
 void update(controller_manager::ControllerManager *cm) {
     ros::Time prev_time = ros::Time::now();
-    ros::Rate rate(300); // changing this value affects the control speed of your running controllers
+    ros::Rate rate(100); // changing this value affects the control speed of your running controllers
     while (ros::ok()) {
         const ros::Time time = ros::Time::now();
         const ros::Duration period = time - prev_time;
@@ -148,7 +148,7 @@ int main(int argc, char *argv[]) {
     }
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
-    Human robot(urdf, cardsflow_xml);
+    VRpuppet robot(urdf, cardsflow_xml);
 
     controller_manager::ControllerManager cm(&robot);
 
