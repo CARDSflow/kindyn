@@ -56,6 +56,14 @@ include_directories(${iDynTree_INCLUDE_DIRS})
 find_package(qpOASES REQUIRED)
 include_directories(${qpOASES_INCLUDE_DIRS})
 
+# find openmp support
+find_package(OpenMP)
+if (OPENMP_FOUND)
+	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+	set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+endif()
+
 include_directories(
 		include/
         ${catkin_INCLUDE_DIRS}
@@ -99,10 +107,10 @@ add_library(kindyn SHARED
 		include/kindyn/cable.hpp)
 add_dependencies(kindyn roboy_simulation_msgs_generate_messages_cpp roboy_simulation_msgs_msgs_generate_messages_cpp)
 target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CardsflowHardwareInterface
-		CableLengthController TorquePositionController ForcePositionController)
+		CableLengthController TorquePositionController ForcePositionController ${OpenMP_CXX_libraries})
 
 # testing idyntree
-add_executable( test_idyntree src/test_idyntree.cpp)
+add_executable( test_idyntree src/utilities/test_idyntree.cpp)
 target_link_libraries(test_idyntree ${iDynTree_LIBRARIES} ${catkin_LIBRARIES})
 
 # test_robot
@@ -137,13 +145,13 @@ target_link_libraries(yatr ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 add_executable( rikshaw src/robots/rikshaw.cpp)
 target_link_libraries(rikshaw ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
-# capture_trajectory
-catkin_install_python(PROGRAMS
-  src/capture_trajectory/capture_trajectory.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-#add_executable( capture_trajectory src/capture_trajectory.py)
-#target_link_libraries(capture_trajectory ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+# roboy_head
+add_executable( roboy_head src/robots/roboy_head.cpp)
+target_link_libraries(roboy_head ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+
+# VRpuppet
+add_executable( VRpuppet src/robots/VRpuppet.cpp)
+target_link_libraries(VRpuppet ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
 #==============================================================================
 # Installation

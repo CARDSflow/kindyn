@@ -3,9 +3,10 @@
 #include <roboy_middleware_msgs/MotorCommand.h>
 #include <roboy_simulation_msgs/GymStep.h>
 #include <roboy_simulation_msgs/GymReset.h>
+#include <common_utilities/CommonDefinitions.h>
 
 #define NUMBER_OF_MOTORS 8
-#define SPINDLERADIUS 0.00575
+#define SPINDLERADIUS 0.00675
 #define msjMeterPerEncoderTick(encoderTicks) (((encoderTicks)/(4096.0)*(2.0*M_PI*SPINDLERADIUS)))
 #define msjEncoderTicksPerMeter(meter) ((meter)*(4096.0)/(2.0*M_PI*SPINDLERADIUS))
 
@@ -57,14 +58,23 @@ public:
     void write(){
         roboy_middleware_msgs::MotorCommand msg;
         msg.id = 5;
-        stringstream str;
-        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
-            msg.motors.push_back(i);
-            double l_change = l[i]-l_offset[i];
-            msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
-            str << l_change << "\t";
+//        stringstream str;
+        if(!external_robot_state) {
+            for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
+                msg.motors.push_back(i);
+                double l_change = l[i] - l_offset[i];
+                msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
+        //            str << l_change << "\t";
+            }
+        }else {
+            static double l_change[NUMBER_OF_MOTORS] = {0};
+            for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
+                msg.motors.push_back(i);
+                l_change[i] += Kp*(l_target[i]-l[i]);
+                msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change[i])); //
+        //            str << l_change << "\t";
+            }
         }
-		//ROS_INFO_STREAM_THROTTLE(1,str.str());
 
         motor_command.publish(msg);
     };
@@ -127,6 +137,7 @@ public:
     ros::ServiceServer gym_step; //OpenAI Gym training environment step function, ros service instance
     ros::ServiceServer gym_reset; //OpenAI Gym training environment reset function, ros service instance
     double l_offset[NUMBER_OF_MOTORS];
+    float Kp = 0.001;
 };
 
 /**

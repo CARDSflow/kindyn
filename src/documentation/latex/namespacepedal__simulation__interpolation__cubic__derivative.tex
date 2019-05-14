@@ -1,0 +1,1660 @@
+\hypertarget{namespacepedal__simulation__interpolation__cubic__derivative}{}\section{pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative Namespace Reference}
+\label{namespacepedal__simulation__interpolation__cubic__derivative}\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a8ba7e664349c21ee2d4c3b9ed4444863}{joint\+State\+Callback}} (joint\+\_\+data)
+\begin{DoxyCompactList}\small\item\em U\+T\+I\+L\+I\+TY F\+U\+N\+C\+T\+I\+O\+NS \#\#\#. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a14a03067c9be857e5286ea14d3ea5e95}{set\+Joint\+Controller\+Parameters}} (proportional\+Val, derivative\+Val)
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a76e080940025a1563491de2d9879590c}{import\+Joint\+Trajectory\+Record}} ()
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a315fe4c5bd2622f2d56a0fc6c3c5e143}{get\+Joint\+Position}} (joint\+Name)
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a24deb6472cb7522ba7982e8b0d12a4cf}{get\+Joint\+Velocity}} (joint\+Name)
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_af5b9d5c7d073c5699b72c7e341bccc95}{get\+Position\+Left\+Foot}} ()
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a9053f001263fc33a7c91b58ad1cab5ee}{get\+Position\+Right\+Foot}} ()
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a33404154e9fedd4c5bb116bcf60dfe70}{get\+Distance}} (point1, point2)
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a4f6620c14991a28592c3f3dbed06d47d}{set\+Pedal\+Single\+Rotation\+Duration}} (new\+\_\+duration\+\_\+seconds)
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ac9f7dfe56632b8e7d44453f45ce5ed12}{set\+Trajectory\+Point\+Duration}} ()
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a528056c565ba9114579b889deb90665e}{set\+Pedal\+Angular\+Velocity}} ()
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ae47142ba2072466092d5ba91b5660336}{get\+Current\+Angle}} (current\+\_\+point)
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ae85970b5189470f76d1d2b0d709557e4}{interpolate\+All\+Joint\+Positions}} ()
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a8a5d48b5475d75a026db3db0f5fe8d9e}{print\+Interpolated\+Functions}} ()
+\item 
+def \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a3ddde17d9f15cda662ed533aeee486b2}{check\+Output\+Limits}} (input\+Val)
+\begin{DoxyCompactList}\small\item\em C\+O\+N\+T\+R\+OL F\+U\+N\+C\+T\+I\+O\+NS \#\#\#. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a27598c0b1a95f3043035dc3740c4a421}{F\+SM}} ()
+\begin{DoxyCompactList}\small\item\em S\+T\+A\+TE M\+A\+C\+H\+I\+NE \#\#\#. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_aec58f843befdd05ee5e003884eb17cba}{main}} ()
+\begin{DoxyCompactList}\small\item\em M\+A\+IN \#\#\#. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a3733bb593f2459fbde63dd7d7b41c527}{P\+R\+I\+N\+T\+\_\+\+D\+E\+B\+UG}} = True
+\begin{DoxyCompactList}\small\item\em M\+O\+D\+U\+LE P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ab65f0e2364123ac236825cbeb227e37d}{R\+E\+C\+O\+R\+D\+E\+D\+\_\+\+T\+R\+A\+J\+E\+C\+T\+O\+R\+Y\+\_\+\+F\+I\+L\+E\+N\+A\+ME}} = \char`\"{}capture\+\_\+trajectory/desember\+\_\+pedal\+\_\+trajectory.\+json\char`\"{}
+\item 
+float \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ab063ba2202081ff4fa968e4912f31659}{P\+E\+D\+A\+L\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+\_\+\+E\+R\+R\+O\+R\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE}} = 0.\+02
+\item 
+float \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a44e03116b859bfe3a98ec6b62cde504d}{P\+E\+D\+A\+L\+\_\+\+A\+N\+G\+L\+E\+\_\+\+E\+R\+R\+O\+R\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE}} = 0.\+02
+\item 
+float \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_acbd3977fd006563df4cc4215a26f093b}{J\+O\+I\+N\+T\+\_\+\+T\+R\+A\+J\+E\+C\+T\+O\+R\+Y\+\_\+\+E\+R\+R\+O\+R\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE}} = 0.\+02
+\item 
+int \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a7577c34d4e434144075b99b4a6a28a23}{P\+E\+D\+A\+L\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+R\+O\+T\+A\+T\+I\+O\+N\+\_\+\+D\+U\+R\+A\+T\+I\+ON}} = 40
+\item 
+int \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_af77cf3846b9b03940b42346d5e5d33a1}{C\+O\+N\+T\+R\+O\+L\+L\+E\+R\+\_\+\+F\+R\+E\+Q\+U\+E\+N\+CY}} = 100
+\item 
+int \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_aafe823b244143b02fb3e39fa531eca6a}{M\+I\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+V\+EL}} = -\/50
+\item 
+int \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a79dd90d8e01df7b26eb98b2af65f2dee}{M\+A\+X\+\_\+\+J\+O\+I\+N\+T\+\_\+\+V\+EL}} = 50
+\item 
+int \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_aacc5dbcfea4d8101bbb33668b9557625}{J\+O\+I\+N\+T\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y\+\_\+\+F\+A\+C\+T\+OR}} = 1
+\item 
+float \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a2b3980e4612b64ca1859deec1eea428a}{P\+E\+D\+A\+L\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+X}} = 0.\+20421
+\item 
+float \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a2bfa0ad4dbbe7114dca00aeea126663f}{P\+E\+D\+A\+L\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Y}} = -\/0.\+00062
+\item 
+float \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_afeff8e75c707e34c08ef81847545421e}{P\+E\+D\+A\+L\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Z}} = 0.\+2101
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a15cdfa21f373ce0948d66b64f98eae22}{x\+\_\+pedal\+\_\+record}} = \mbox{[}$\,$\mbox{]}
+\begin{DoxyCompactList}\small\item\em G\+L\+O\+B\+AL V\+A\+R\+I\+A\+B\+L\+ES \#\#\#. \end{DoxyCompactList}\item 
+list \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a237b936a014f1444eea759e6081f5d4f}{y\+\_\+pedal\+\_\+record}} = \mbox{[}$\,$\mbox{]}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_aa6d7a9892d82d31f98321841f5682f02}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+H\+I\+P\+\_\+\+R\+I\+G\+HT}} = \char`\"{}joint\+\_\+hip\+\_\+right\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a2cf09e42ef98b38f9f321007cc4d1040}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+K\+N\+E\+E\+\_\+\+R\+I\+G\+HT}} = \char`\"{}joint\+\_\+knee\+\_\+right\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a6f9c7c09e4cedc7a787240de28dcc011}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+R\+I\+G\+HT}} = \char`\"{}joint\+\_\+foot\+\_\+right\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a6f9e3fd503a3e458136397662c906500}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+H\+I\+P\+\_\+\+L\+E\+FT}} = \char`\"{}joint\+\_\+hip\+\_\+left\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a5c57e261203d61b137f8c0f63dd70358}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+K\+N\+E\+E\+\_\+\+L\+E\+FT}} = \char`\"{}joint\+\_\+knee\+\_\+left\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_abc7f6cec05b87f791fee83eb74980f62}{R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+L\+E\+FT}} = \char`\"{}joint\+\_\+foot\+\_\+left\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ab7526d770fd7644fb4ae9877e2e5a0a4}{R\+I\+G\+H\+T\+\_\+\+H\+I\+P\+\_\+\+J\+O\+I\+NT}} = \char`\"{}right\+\_\+hip\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_aa114b9878d6a2c2217f63815a71b8947}{R\+I\+G\+H\+T\+\_\+\+K\+N\+E\+E\+\_\+\+J\+O\+I\+NT}} = \char`\"{}right\+\_\+knee\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_aa168535cfe5c5c0f1d238d2558fa1431}{R\+I\+G\+H\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+J\+O\+I\+NT}} = \char`\"{}right\+\_\+ankle\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ab0985b6c554bba4c51460ccc2e72409a}{L\+E\+F\+T\+\_\+\+H\+I\+P\+\_\+\+J\+O\+I\+NT}} = \char`\"{}left\+\_\+hip\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ab75a384144342f49e9b0a6607162902f}{L\+E\+F\+T\+\_\+\+K\+N\+E\+E\+\_\+\+J\+O\+I\+NT}} = \char`\"{}left\+\_\+knee\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_afb5c7e31d8be3b45d589b829782a7aa1}{L\+E\+F\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+J\+O\+I\+NT}} = \char`\"{}left\+\_\+ankle\char`\"{}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a46585eccb2f61bf4492924b1491a63c3}{\+\_\+joints\+List}} = \mbox{[}\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ab7526d770fd7644fb4ae9877e2e5a0a4}{R\+I\+G\+H\+T\+\_\+\+H\+I\+P\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_aa114b9878d6a2c2217f63815a71b8947}{R\+I\+G\+H\+T\+\_\+\+K\+N\+E\+E\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_aa168535cfe5c5c0f1d238d2558fa1431}{R\+I\+G\+H\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ab0985b6c554bba4c51460ccc2e72409a}{L\+E\+F\+T\+\_\+\+H\+I\+P\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ab75a384144342f49e9b0a6607162902f}{L\+E\+F\+T\+\_\+\+K\+N\+E\+E\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_afb5c7e31d8be3b45d589b829782a7aa1}{L\+E\+F\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+J\+O\+I\+NT}}\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a8ca3a1d78a7f1dff1d8a0b63c510463e}{\+\_\+joints\+List\+R\+OS}}
+\item 
+dictionary \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_acf30248ba78ced8eef7a7c47610d08f1}{\+\_\+parameters\+Right\+Hip}}
+\item 
+dictionary \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a639f362959fe622515eb7683d1b5aeb6}{\+\_\+parameters\+Right\+Knee}}
+\item 
+dictionary \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_aa0679a4877ce46951c4c8653d79678bd}{\+\_\+parameters\+Right\+Ankle}}
+\item 
+dictionary \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ad516fcf5abb6ce486ab5c433b2c16ade}{\+\_\+parameters\+Left\+Hip}}
+\item 
+dictionary \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a56278512442581d350526ec9e3d614e2}{\+\_\+parameters\+Left\+Knee}}
+\item 
+dictionary \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a1f065e4e4892997d87b96f78a988e28c}{\+\_\+parameters\+Left\+Ankle}}
+\item 
+dictionary \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_afe341eacadbca8ed8ec34c084404d076}{\+\_\+joints\+Control\+Data}}
+\item 
+dictionary \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a0d3d97a903596a53147e1f823df15873}{\+\_\+joints\+Status\+Data}}
+\item 
+int \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ab1ef4a3ec1402d9bff71b6c5a75379e2}{\+\_\+num\+Trajectory\+Points}} = -\/1
+\item 
+int \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ad905ea34d738ed17f547cfa2bd9b557d}{\+\_\+trajectory\+Starting\+Point}} = 0
+\item 
+float \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a56a959649f16afc93fb4433e0f5a93eb}{\+\_\+trajectory\+Point\+Duration}} = 1.\+0
+\item 
+float \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a7b9a111c5470b09869921f18055cedb3}{\+\_\+pedal\+Angular\+Velocity}} = 0.\+1
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a7c5c3aac0cf25f452f6f8fd01efd2c51}{\+\_\+pedal\+Trajectory\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a5f925ce028f87694d403712a55ef3b2a}{\+\_\+pedal\+Angle\+Trajectory\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_adf4d214e4436371c65ac2fbb88bcd8fe}{\+\_\+hip\+Trajectory\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a65c12062058d7f61d97409ce66bd8f04}{\+\_\+knee\+Trajectory\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a13a4270ffe37d5e466022d50c1719475}{\+\_\+ankle\+Trajectory\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ab9d3e6181986dcc0819fc283eca0ebdc}{\+\_\+pedal\+Trajectory\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a3035d159a582fb3b717d1992efb069d5}{\+\_\+pedal\+Angle\+Trajectory\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a65edc5212dc70634c0cf8a16fbe1ba9a}{\+\_\+hip\+Trajectory\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a6524f7e52a09b325a00e98b860666f7b}{\+\_\+knee\+Trajectory\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_aa24a6508fd81e17faaf36ef2f5f28ffb}{\+\_\+ankle\+Trajectory\+Left}} = \mbox{[}$\,$\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a3ddde17d9f15cda662ed533aeee486b2}\label{namespacepedal__simulation__interpolation__cubic__derivative_a3ddde17d9f15cda662ed533aeee486b2}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!checkOutputLimits@{checkOutputLimits}}
+\index{checkOutputLimits@{checkOutputLimits}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{checkOutputLimits()}{checkOutputLimits()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+check\+Output\+Limits (\begin{DoxyParamCaption}\item[{}]{input\+Val }\end{DoxyParamCaption})}
+
+
+
+C\+O\+N\+T\+R\+OL F\+U\+N\+C\+T\+I\+O\+NS \#\#\#. 
+
+
+
+Definition at line 469 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{469 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a3ddde17d9f15cda662ed533aeee486b2}{checkOutputLimits}}(inputVal):}
+\DoxyCodeLine{470     returnVal = inputVal}
+\DoxyCodeLine{471 }
+\DoxyCodeLine{472     \textcolor{keywordflow}{if} inputVal > MAX\_JOINT\_VEL:}
+\DoxyCodeLine{473         returnVal = MAX\_JOINT\_VEL}
+\DoxyCodeLine{474     \textcolor{keywordflow}{elif} inputVal < MIN\_JOINT\_VEL:}
+\DoxyCodeLine{475         returnVal = MIN\_JOINT\_VEL}
+\DoxyCodeLine{476 }
+\DoxyCodeLine{477     \textcolor{keywordflow}{return} returnVal}
+\DoxyCodeLine{478 }
+\DoxyCodeLine{479 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacepedal__simulation__interpolation__cubic__derivative_a3ddde17d9f15cda662ed533aeee486b2_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a27598c0b1a95f3043035dc3740c4a421}\label{namespacepedal__simulation__interpolation__cubic__derivative_a27598c0b1a95f3043035dc3740c4a421}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!FSM@{FSM}}
+\index{FSM@{FSM}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{FSM()}{FSM()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+F\+SM (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+S\+T\+A\+TE M\+A\+C\+H\+I\+NE \#\#\#. 
+
+
+
+Definition at line 484 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{484 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a27598c0b1a95f3043035dc3740c4a421}{FSM}}():}
+\DoxyCodeLine{485     \textcolor{keyword}{global} \_numTrajectoryPoints}
+\DoxyCodeLine{486     \textcolor{keyword}{global} \_jointsControlData}
+\DoxyCodeLine{487     \textcolor{keyword}{global} \_jointsList}
+\DoxyCodeLine{488     \textcolor{keyword}{global} PRINT\_DEBUG}
+\DoxyCodeLine{489 }
+\DoxyCodeLine{490     \textcolor{comment}{\# Params for inspection of performance (temp)}}
+\DoxyCodeLine{491     \textcolor{keyword}{global} x\_pedal\_record}
+\DoxyCodeLine{492     \textcolor{keyword}{global} y\_pedal\_record}
+\DoxyCodeLine{493     \textcolor{keyword}{global} \_pedalTrajectoryRight}
+\DoxyCodeLine{494     initialTrajectoryPoint = 0}
+\DoxyCodeLine{495     pastInitialTrajectoryPoint = \textcolor{keyword}{False}}
+\DoxyCodeLine{496 }
+\DoxyCodeLine{497     \textcolor{keyword}{global} PEDAL\_SINGLE\_ROTATION\_DURATION}
+\DoxyCodeLine{498     \textcolor{keyword}{global} \_pedalAngularVelocity}
+\DoxyCodeLine{499 }
+\DoxyCodeLine{500     INIT = \textcolor{stringliteral}{"INIT"}}
+\DoxyCodeLine{501     PEDAL = \textcolor{stringliteral}{"PEDAL"}}
+\DoxyCodeLine{502     UPDATE\_PARAMETERS = \textcolor{stringliteral}{"UPDATE\_PARAMETERS"}}
+\DoxyCodeLine{503 }
+\DoxyCodeLine{504     runFSM = \textcolor{keyword}{True}}
+\DoxyCodeLine{505     currState = INIT}
+\DoxyCodeLine{506     currTrajectoryPoint = \textcolor{keywordtype}{None}}
+\DoxyCodeLine{507     prevTrajectoryPoint = \textcolor{keywordtype}{None}}
+\DoxyCodeLine{508 }
+\DoxyCodeLine{509     startTime = 0.0}
+\DoxyCodeLine{510     endTime = 0.0}
+\DoxyCodeLine{511     currTime = 0.0}
+\DoxyCodeLine{512     prevTime = 0.0}
+\DoxyCodeLine{513 }
+\DoxyCodeLine{514     ros\_right\_hip\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/joint\_hip\_right/joint\_hip\_right/target'}, Float32, queue\_size=2)}
+\DoxyCodeLine{515     ros\_right\_knee\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/joint\_knee\_right/joint\_knee\_right/target'}, Float32, queue\_size=2)}
+\DoxyCodeLine{516     ros\_right\_ankle\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/joint\_foot\_right/joint\_foot\_right/target'}, Float32, queue\_size=2)}
+\DoxyCodeLine{517 }
+\DoxyCodeLine{518     ros\_left\_hip\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/joint\_hip\_left/joint\_hip\_left/target'}, Float32, queue\_size=2)}
+\DoxyCodeLine{519     ros\_left\_knee\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/joint\_knee\_left/joint\_knee\_left/target'}, Float32, queue\_size=2)}
+\DoxyCodeLine{520     ros\_left\_ankle\_publisher = rospy.Publisher(\textcolor{stringliteral}{'/joint\_foot\_left/joint\_foot\_left/target'}, Float32, queue\_size=2)}
+\DoxyCodeLine{521 }
+\DoxyCodeLine{522     \textcolor{keywordflow}{while} runFSM:}
+\DoxyCodeLine{523 }
+\DoxyCodeLine{524         }
+\DoxyCodeLine{525         \textcolor{keywordflow}{if} currState == INIT:}
+\DoxyCodeLine{526             }
+\DoxyCodeLine{527 }
+\DoxyCodeLine{528             \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a5ecaa1f0c7b7379d5d217b69ecbcfafc}{importJointTrajectoryRecord}}()}
+\DoxyCodeLine{529             \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a4f6620c14991a28592c3f3dbed06d47d}{setPedalSingleRotationDuration}}(PEDAL\_SINGLE\_ROTATION\_DURATION)}
+\DoxyCodeLine{530             \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a528056c565ba9114579b889deb90665e}{setPedalAngularVelocity}}()}
+\DoxyCodeLine{531             \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ae85970b5189470f76d1d2b0d709557e4}{interpolateAllJointPositions}}()}
+\DoxyCodeLine{532 }
+\DoxyCodeLine{533             \textcolor{comment}{\# printInterpolatedFunctions()}}
+\DoxyCodeLine{534 }
+\DoxyCodeLine{535             \textcolor{comment}{\# Find starting point on the trajectory}}
+\DoxyCodeLine{536 }
+\DoxyCodeLine{537             currState = PEDAL}
+\DoxyCodeLine{538 }
+\DoxyCodeLine{539         }
+\DoxyCodeLine{540         \textcolor{keywordflow}{if} currState == PEDAL:}
+\DoxyCodeLine{541             }
+\DoxyCodeLine{542 }
+\DoxyCodeLine{543             \textcolor{comment}{\# Initialize state}}
+\DoxyCodeLine{544             \textcolor{keywordflow}{if} currTrajectoryPoint == \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{545                 currTrajectoryPoint = \_trajectoryStartingPoint}
+\DoxyCodeLine{546                 prevTrajectoryPoint = currTrajectoryPoint}
+\DoxyCodeLine{547                 initialTrajectoryPoint = currTrajectoryPoint}
+\DoxyCodeLine{548             \textcolor{keywordflow}{if} startTime == 0.0:}
+\DoxyCodeLine{549                 startTime = time.time()}
+\DoxyCodeLine{550             \textcolor{keywordflow}{if} endTime == 0.0:}
+\DoxyCodeLine{551                 endTime = startTime + \_trajectoryPointDuration}
+\DoxyCodeLine{552             \textcolor{keywordflow}{if} prevTime == 0.0:}
+\DoxyCodeLine{553                 prevTime = time.time()}
+\DoxyCodeLine{554 }
+\DoxyCodeLine{555             currPedalPosXY = \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a9053f001263fc33a7c91b58ad1cab5ee}{getPositionRightFoot}}()}
+\DoxyCodeLine{556             x\_pedal\_record.append(currPedalPosXY[0])}
+\DoxyCodeLine{557             y\_pedal\_record.append(currPedalPosXY[1])}
+\DoxyCodeLine{558 }
+\DoxyCodeLine{559             \textcolor{keywordflow}{if} currTrajectoryPoint == initialTrajectoryPoint \textcolor{keywordflow}{and} pastInitialTrajectoryPoint:}
+\DoxyCodeLine{560                 print(len(\_pedalTrajectoryRight))}
+\DoxyCodeLine{561                 print(\textcolor{stringliteral}{"Reached starting point"})}
+\DoxyCodeLine{562                 \textcolor{keywordflow}{for} pedal\_pos \textcolor{keywordflow}{in} \_pedalTrajectoryRight:}
+\DoxyCodeLine{563                     plt.plot(pedal\_pos[0], pedal\_pos[1], \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{564                 plt.plot(x\_pedal\_record, y\_pedal\_record)}
+\DoxyCodeLine{565                 plt.show()}
+\DoxyCodeLine{566                 pastInitialTrajectoryPoint = \textcolor{keyword}{False}}
+\DoxyCodeLine{567 }
+\DoxyCodeLine{568             \textcolor{comment}{\# Regulate update frequency}}
+\DoxyCodeLine{569             currTime = time.time()}
+\DoxyCodeLine{570             \textcolor{keywordflow}{while} float(float(currTime) - float(prevTime)) < (1 / CONTROLLER\_FREQUENCY):}
+\DoxyCodeLine{571                 time.sleep(1)}
+\DoxyCodeLine{572                 currPedalPosXY = \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a9053f001263fc33a7c91b58ad1cab5ee}{getPositionRightFoot}}()}
+\DoxyCodeLine{573                 x\_pedal\_record.append(currPedalPosXY[0])}
+\DoxyCodeLine{574                 y\_pedal\_record.append(currPedalPosXY[1])}
+\DoxyCodeLine{575                 currTime = time.time()}
+\DoxyCodeLine{576             prevTime = currTime}
+\DoxyCodeLine{577 }
+\DoxyCodeLine{578             \textcolor{comment}{\# Check if trajectory point reached and act accordingly}}
+\DoxyCodeLine{579             \textcolor{keywordflow}{if} PRINT\_DEBUG:}
+\DoxyCodeLine{580                 print(\textcolor{stringliteral}{"Distance to target: Right foot \%0.5f, left foot \%0.5f"} \% (}
+\DoxyCodeLine{581                     \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a33404154e9fedd4c5bb116bcf60dfe70}{getDistance}}(\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a9053f001263fc33a7c91b58ad1cab5ee}{getPositionRightFoot}}(), \_pedalTrajectoryRight[currTrajectoryPoint]),}
+\DoxyCodeLine{582                     \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a33404154e9fedd4c5bb116bcf60dfe70}{getDistance}}(\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_af5b9d5c7d073c5699b72c7e341bccc95}{getPositionLeftFoot}}(), \_pedalTrajectoryLeft[currTrajectoryPoint])), end=\textcolor{stringliteral}{'\(\backslash\)r'})}
+\DoxyCodeLine{583 }
+\DoxyCodeLine{584             \textcolor{keywordflow}{if} (\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a33404154e9fedd4c5bb116bcf60dfe70}{getDistance}}(\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a9053f001263fc33a7c91b58ad1cab5ee}{getPositionRightFoot}}(), \_pedalTrajectoryRight[}
+\DoxyCodeLine{585                 currTrajectoryPoint]) <= PEDAL\_POSITION\_ERROR\_TOLERANCE \textcolor{keywordflow}{and} \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a33404154e9fedd4c5bb116bcf60dfe70}{getDistance}}(\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_af5b9d5c7d073c5699b72c7e341bccc95}{getPositionLeftFoot}}(),}
+\DoxyCodeLine{586                                                                                         \_pedalTrajectoryLeft[}
+\DoxyCodeLine{587                                                                                             currTrajectoryPoint]) <= PEDAL\_POSITION\_ERROR\_TOLERANCE \textcolor{keywordflow}{and} currTime >= endTime):}
+\DoxyCodeLine{588                 pastInitialTrajectoryPoint = \textcolor{keyword}{True}}
+\DoxyCodeLine{589                 prevTrajectoryPoint = currTrajectoryPoint}
+\DoxyCodeLine{590                 \textcolor{keywordflow}{if} currTrajectoryPoint < (\_numTrajectoryPoints - 1):}
+\DoxyCodeLine{591                     currTrajectoryPoint += 1}
+\DoxyCodeLine{592                 \textcolor{keywordflow}{elif} currTrajectoryPoint >= (\_numTrajectoryPoints - 1):}
+\DoxyCodeLine{593                     currTrajectoryPoint = 0}
+\DoxyCodeLine{594                 \textcolor{keywordflow}{if} PRINT\_DEBUG:}
+\DoxyCodeLine{595                     print(\textcolor{stringliteral}{"UPDATING TRAJECTORY POINT. NEW POINT: \%s"} \% currTrajectoryPoint)}
+\DoxyCodeLine{596                 startTime = time.time()}
+\DoxyCodeLine{597                 endTime = startTime + \_trajectoryPointDuration}
+\DoxyCodeLine{598                 \textcolor{keywordflow}{for} thisJointName \textcolor{keywordflow}{in} \_jointsList:}
+\DoxyCodeLine{599                     \_jointsControlData[thisJointName][\textcolor{stringliteral}{"pos\_error\_integral"}] = 0}
+\DoxyCodeLine{600 }
+\DoxyCodeLine{601             \textcolor{comment}{\# Iterate through joints and update setpoints}}
+\DoxyCodeLine{602             \textcolor{keywordflow}{for} thisJointName \textcolor{keywordflow}{in} \_jointsList:}
+\DoxyCodeLine{603 }
+\DoxyCodeLine{604                 rightSide = \textcolor{keyword}{False}}
+\DoxyCodeLine{605                 leftSide = \textcolor{keyword}{False}}
+\DoxyCodeLine{606 }
+\DoxyCodeLine{607                 thisJointPositionGoalpoint = \textcolor{keywordtype}{None}}
+\DoxyCodeLine{608                 prevJointPositionGoalpoint = \textcolor{keywordtype}{None}}
+\DoxyCodeLine{609                 \textcolor{keywordflow}{if} thisJointName == RIGHT\_HIP\_JOINT:}
+\DoxyCodeLine{610                     thisJointPositionGoalpoint = \_hipTrajectoryRight[currTrajectoryPoint]}
+\DoxyCodeLine{611                     prevJointPositionGoalpoint = \_hipTrajectoryRight[prevTrajectoryPoint]}
+\DoxyCodeLine{612                     rightSide = \textcolor{keyword}{True}}
+\DoxyCodeLine{613                 \textcolor{keywordflow}{elif} thisJointName == RIGHT\_KNEE\_JOINT:}
+\DoxyCodeLine{614                     thisJointPositionGoalpoint = \_kneeTrajectoryRight[currTrajectoryPoint]}
+\DoxyCodeLine{615                     prevJointPositionGoalpoint = \_kneeTrajectoryRight[prevTrajectoryPoint]}
+\DoxyCodeLine{616                     rightSide = \textcolor{keyword}{True}}
+\DoxyCodeLine{617                 \textcolor{keywordflow}{elif} thisJointName == RIGHT\_ANKLE\_JOINT:}
+\DoxyCodeLine{618                     thisJointPositionGoalpoint = \_ankleTrajectoryRight[currTrajectoryPoint]}
+\DoxyCodeLine{619                     prevJointPositionGoalpoint = \_ankleTrajectoryRight[prevTrajectoryPoint]}
+\DoxyCodeLine{620                     rightSide = \textcolor{keyword}{True}}
+\DoxyCodeLine{621                 \textcolor{keywordflow}{elif} thisJointName == LEFT\_HIP\_JOINT:}
+\DoxyCodeLine{622                     thisJointPositionGoalpoint = \_hipTrajectoryLeft[currTrajectoryPoint]}
+\DoxyCodeLine{623                     prevJointPositionGoalpoint = \_hipTrajectoryLeft[prevTrajectoryPoint]}
+\DoxyCodeLine{624                     leftSide = \textcolor{keyword}{True}}
+\DoxyCodeLine{625                 \textcolor{keywordflow}{elif} thisJointName == LEFT\_KNEE\_JOINT:}
+\DoxyCodeLine{626                     thisJointPositionGoalpoint = \_kneeTrajectoryLeft[currTrajectoryPoint]}
+\DoxyCodeLine{627                     prevJointPositionGoalpoint = \_kneeTrajectoryLeft[prevTrajectoryPoint]}
+\DoxyCodeLine{628                     leftSide = \textcolor{keyword}{True}}
+\DoxyCodeLine{629                 \textcolor{keywordflow}{elif} thisJointName == LEFT\_ANKLE\_JOINT:}
+\DoxyCodeLine{630                     thisJointPositionGoalpoint = \_ankleTrajectoryLeft[currTrajectoryPoint]}
+\DoxyCodeLine{631                     prevJointPositionGoalpoint = \_ankleTrajectoryLeft[prevTrajectoryPoint]}
+\DoxyCodeLine{632                     leftSide = \textcolor{keyword}{True}}
+\DoxyCodeLine{633 }
+\DoxyCodeLine{634                 thisJointVelocitySetpoint = \textcolor{keywordtype}{None}}
+\DoxyCodeLine{635                 \textcolor{comment}{\# USE DERIVATIVE OF INTERPOLATED JOINT ANGLE FUNCTION}}
+\DoxyCodeLine{636                 \textcolor{keywordflow}{if} rightSide:}
+\DoxyCodeLine{637                     \textcolor{comment}{\# currGoalPedalAngle = \_pedalTrajectoryRight[currTrajectoryPoint] + (time.time() - startTime)*\_pedalAngularVelocity}}
+\DoxyCodeLine{638                     \textcolor{comment}{\# currPedalError = currGoalPedalAngle - getCurrentAngle(getPositionRightFoot())}}
+\DoxyCodeLine{639                     timeSpent = (time.time() - startTime)}
+\DoxyCodeLine{640                     \textcolor{keywordflow}{if} timeSpent > endTime - startTime:}
+\DoxyCodeLine{641                         timeSpent = endTime - startTime}
+\DoxyCodeLine{642                     currGoalJointAngle = prevJointPositionGoalpoint + timeSpent * \_pedalAngularVelocity}
+\DoxyCodeLine{643                     currJointError = currGoalJointAngle - \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a315fe4c5bd2622f2d56a0fc6c3c5e143}{getJointPosition}}(thisJointName)}
+\DoxyCodeLine{644                     \textcolor{keywordflow}{if} abs(currJointError) > JOINT\_TRAJECTORY\_ERROR\_TOLERANCE:}
+\DoxyCodeLine{645                         thisJointVelocitySetpoint = \_jointsControlData[thisJointName][\textcolor{stringliteral}{"param\_p"}] * currJointError}
+\DoxyCodeLine{646                     \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{647                         thisJointVelocitySetpoint = derivative(func=\_jointsControlData[thisJointName][\textcolor{stringliteral}{"pos\_function"}],}
+\DoxyCodeLine{648                                                                x0=float(\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ae47142ba2072466092d5ba91b5660336}{getCurrentAngle}}(\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a9053f001263fc33a7c91b58ad1cab5ee}{getPositionRightFoot}}())),}
+\DoxyCodeLine{649                                                                dx=1e-6) * \_pedalAngularVelocity}
+\DoxyCodeLine{650                 \textcolor{keywordflow}{elif} leftSide:}
+\DoxyCodeLine{651                     currGoalJointAngle = prevJointPositionGoalpoint + (time.time() - startTime) * \_pedalAngularVelocity}
+\DoxyCodeLine{652                     currJointError = currGoalJointAngle - \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a315fe4c5bd2622f2d56a0fc6c3c5e143}{getJointPosition}}(thisJointName)}
+\DoxyCodeLine{653                     \textcolor{keywordflow}{if} abs(currJointError) > JOINT\_TRAJECTORY\_ERROR\_TOLERANCE:}
+\DoxyCodeLine{654                         thisJointVelocitySetpoint = \_jointsControlData[thisJointName][\textcolor{stringliteral}{"param\_p"}] * currJointError}
+\DoxyCodeLine{655                     \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{656                         thisJointVelocitySetpoint = derivative(func=\_jointsControlData[thisJointName][\textcolor{stringliteral}{"pos\_function"}],}
+\DoxyCodeLine{657                                                                x0=float(\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ae47142ba2072466092d5ba91b5660336}{getCurrentAngle}}(\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_af5b9d5c7d073c5699b72c7e341bccc95}{getPositionLeftFoot}}())),}
+\DoxyCodeLine{658                                                                dx=1e-6) * \_pedalAngularVelocity}
+\DoxyCodeLine{659 }
+\DoxyCodeLine{660                 thisJointVelocitySetpoint = \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a3ddde17d9f15cda662ed533aeee486b2}{checkOutputLimits}}(thisJointVelocitySetpoint)}
+\DoxyCodeLine{661                 \textcolor{comment}{\# thisJointVelocitySetpoint = thisJointVelocitySetpoint*(-1)}}
+\DoxyCodeLine{662 }
+\DoxyCodeLine{663                 \textcolor{comment}{\# print("Velocity setpoint for ", thisJointName, ": ", thisJointVelocitySetpoint)}}
+\DoxyCodeLine{664 }
+\DoxyCodeLine{665                 \textcolor{keywordflow}{if} thisJointName == RIGHT\_HIP\_JOINT:}
+\DoxyCodeLine{666                     ros\_right\_hip\_publisher.publish(thisJointVelocitySetpoint)}
+\DoxyCodeLine{667                 \textcolor{keywordflow}{elif} thisJointName == RIGHT\_KNEE\_JOINT:}
+\DoxyCodeLine{668                     ros\_right\_knee\_publisher.publish(thisJointVelocitySetpoint)}
+\DoxyCodeLine{669                 \textcolor{keywordflow}{elif} thisJointName == RIGHT\_ANKLE\_JOINT:}
+\DoxyCodeLine{670                     ros\_right\_ankle\_publisher.publish(thisJointVelocitySetpoint)}
+\DoxyCodeLine{671                 \textcolor{keywordflow}{elif} thisJointName == LEFT\_HIP\_JOINT:}
+\DoxyCodeLine{672                     ros\_left\_hip\_publisher.publish(thisJointVelocitySetpoint)}
+\DoxyCodeLine{673                 \textcolor{keywordflow}{elif} thisJointName == LEFT\_KNEE\_JOINT:}
+\DoxyCodeLine{674                     ros\_left\_knee\_publisher.publish(thisJointVelocitySetpoint)}
+\DoxyCodeLine{675                 \textcolor{keywordflow}{elif} thisJointName == LEFT\_ANKLE\_JOINT:}
+\DoxyCodeLine{676                     ros\_left\_ankle\_publisher.publish(thisJointVelocitySetpoint)}
+\DoxyCodeLine{677 }
+\DoxyCodeLine{678         }
+\DoxyCodeLine{681 }
+\DoxyCodeLine{682         \textcolor{comment}{\# Reload trajectory and PID parameters}}
+\DoxyCodeLine{683 }
+\DoxyCodeLine{684     \textcolor{keywordflow}{return} 1}
+\DoxyCodeLine{685 }
+\DoxyCodeLine{686 }
+
+\end{DoxyCode}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacepedal__simulation__interpolation__cubic__derivative_a27598c0b1a95f3043035dc3740c4a421_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacepedal__simulation__interpolation__cubic__derivative_a27598c0b1a95f3043035dc3740c4a421_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_ae47142ba2072466092d5ba91b5660336}\label{namespacepedal__simulation__interpolation__cubic__derivative_ae47142ba2072466092d5ba91b5660336}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!getCurrentAngle@{getCurrentAngle}}
+\index{getCurrentAngle@{getCurrentAngle}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{getCurrentAngle()}{getCurrentAngle()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+get\+Current\+Angle (\begin{DoxyParamCaption}\item[{}]{current\+\_\+point }\end{DoxyParamCaption})}
+
+
+
+Definition at line 371 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{371 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ae47142ba2072466092d5ba91b5660336}{getCurrentAngle}}(current\_point):}
+\DoxyCodeLine{372     current\_x = current\_point[0] - PEDAL\_CENTER\_OFFSET\_X}
+\DoxyCodeLine{373     current\_y = current\_point[1] - PEDAL\_CENTER\_OFFSET\_Y}
+\DoxyCodeLine{374 }
+\DoxyCodeLine{375     \textcolor{keywordflow}{if} current\_x > 0 \textcolor{keywordflow}{and} current\_y > 0:}
+\DoxyCodeLine{376         \textcolor{keywordflow}{return} np.arctan(current\_y / current\_x)}
+\DoxyCodeLine{377     \textcolor{keywordflow}{elif} current\_x < 0 < current\_y:}
+\DoxyCodeLine{378         \textcolor{keywordflow}{return} np.arctan(current\_y / current\_x) + np.pi}
+\DoxyCodeLine{379     \textcolor{keywordflow}{elif} current\_x < 0 \textcolor{keywordflow}{and} current\_y < 0:}
+\DoxyCodeLine{380         \textcolor{keywordflow}{return} np.arctan(current\_y / current\_x) + np.pi}
+\DoxyCodeLine{381     \textcolor{keywordflow}{elif} current\_x > 0 > current\_y:}
+\DoxyCodeLine{382         \textcolor{keywordflow}{return} np.arctan(current\_y / current\_x) + 2 * np.pi}
+\DoxyCodeLine{383 }
+\DoxyCodeLine{384     \textcolor{keywordflow}{elif} current\_x == 0 \textcolor{keywordflow}{and} current\_y > 0:}
+\DoxyCodeLine{385         \textcolor{keywordflow}{return} np.pi / 2}
+\DoxyCodeLine{386     \textcolor{keywordflow}{elif} current\_x == 0 \textcolor{keywordflow}{and} current\_y < 0:}
+\DoxyCodeLine{387         \textcolor{keywordflow}{return} np.pi * 3 / 2}
+\DoxyCodeLine{388     \textcolor{keywordflow}{elif} current\_x > 0 \textcolor{keywordflow}{and} current\_y == 0:}
+\DoxyCodeLine{389         \textcolor{keywordflow}{return} 0}
+\DoxyCodeLine{390     \textcolor{keywordflow}{elif} current\_x < 0 \textcolor{keywordflow}{and} current\_y == 0:}
+\DoxyCodeLine{391         \textcolor{keywordflow}{return} np.pi}
+\DoxyCodeLine{392 }
+\DoxyCodeLine{393 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacepedal__simulation__interpolation__cubic__derivative_ae47142ba2072466092d5ba91b5660336_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a33404154e9fedd4c5bb116bcf60dfe70}\label{namespacepedal__simulation__interpolation__cubic__derivative_a33404154e9fedd4c5bb116bcf60dfe70}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!getDistance@{getDistance}}
+\index{getDistance@{getDistance}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{getDistance()}{getDistance()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+get\+Distance (\begin{DoxyParamCaption}\item[{}]{point1,  }\item[{}]{point2 }\end{DoxyParamCaption})}
+
+
+
+Definition at line 332 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{332 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a33404154e9fedd4c5bb116bcf60dfe70}{getDistance}}(point1, point2):}
+\DoxyCodeLine{333     x\_diff = point2[0] - point1[0]}
+\DoxyCodeLine{334     y\_diff = point2[1] - point1[1]}
+\DoxyCodeLine{335 }
+\DoxyCodeLine{336     \textcolor{keywordflow}{return} math.sqrt((x\_diff * x\_diff) + (y\_diff * y\_diff))}
+\DoxyCodeLine{337 }
+\DoxyCodeLine{338 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacepedal__simulation__interpolation__cubic__derivative_a33404154e9fedd4c5bb116bcf60dfe70_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a315fe4c5bd2622f2d56a0fc6c3c5e143}\label{namespacepedal__simulation__interpolation__cubic__derivative_a315fe4c5bd2622f2d56a0fc6c3c5e143}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!getJointPosition@{getJointPosition}}
+\index{getJointPosition@{getJointPosition}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{getJointPosition()}{getJointPosition()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+get\+Joint\+Position (\begin{DoxyParamCaption}\item[{}]{joint\+Name }\end{DoxyParamCaption})}
+
+
+
+Definition at line 286 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{286 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a315fe4c5bd2622f2d56a0fc6c3c5e143}{getJointPosition}}(jointName):}
+\DoxyCodeLine{287     \textcolor{keyword}{global} \_jointsStatusData}
+\DoxyCodeLine{288     \textcolor{keywordflow}{return} \_jointsStatusData[jointName][\textcolor{stringliteral}{"Pos"}]}
+\DoxyCodeLine{289 }
+\DoxyCodeLine{290 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacepedal__simulation__interpolation__cubic__derivative_a315fe4c5bd2622f2d56a0fc6c3c5e143_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a24deb6472cb7522ba7982e8b0d12a4cf}\label{namespacepedal__simulation__interpolation__cubic__derivative_a24deb6472cb7522ba7982e8b0d12a4cf}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!getJointVelocity@{getJointVelocity}}
+\index{getJointVelocity@{getJointVelocity}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{getJointVelocity()}{getJointVelocity()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+get\+Joint\+Velocity (\begin{DoxyParamCaption}\item[{}]{joint\+Name }\end{DoxyParamCaption})}
+
+
+
+Definition at line 291 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{291 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a24deb6472cb7522ba7982e8b0d12a4cf}{getJointVelocity}}(jointName):}
+\DoxyCodeLine{292     \textcolor{keyword}{global} \_jointsStatusData}
+\DoxyCodeLine{293     \textcolor{keywordflow}{return} \_jointsStatusData[jointName][\textcolor{stringliteral}{"Vel"}]}
+\DoxyCodeLine{294 }
+\DoxyCodeLine{295 }
+
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_af5b9d5c7d073c5699b72c7e341bccc95}\label{namespacepedal__simulation__interpolation__cubic__derivative_af5b9d5c7d073c5699b72c7e341bccc95}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!getPositionLeftFoot@{getPositionLeftFoot}}
+\index{getPositionLeftFoot@{getPositionLeftFoot}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{getPositionLeftFoot()}{getPositionLeftFoot()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+get\+Position\+Left\+Foot (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 296 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{296 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_af5b9d5c7d073c5699b72c7e341bccc95}{getPositionLeftFoot}}():}
+\DoxyCodeLine{297     fkJointNamesList = [ROS\_JOINT\_HIP\_LEFT, ROS\_JOINT\_KNEE\_LEFT, ROS\_JOINT\_ANKLE\_LEFT]}
+\DoxyCodeLine{298     fkJointPositions = [\_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}],}
+\DoxyCodeLine{299                         \_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}]]}
+\DoxyCodeLine{300 }
+\DoxyCodeLine{301     rospy.wait\_for\_service(\textcolor{stringliteral}{'fk'})}
+\DoxyCodeLine{302     \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{303         fk\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'fk'}, ForwardKinematics)}
+\DoxyCodeLine{304         fk\_result = fk\_srv(\textcolor{stringliteral}{"foot\_left\_tip"}, \textcolor{stringliteral}{"foot\_left\_tip"}, fkJointNamesList, fkJointPositions)}
+\DoxyCodeLine{305         \textcolor{keywordflow}{return} [fk\_result.pose.position.x, fk\_result.pose.position.z]}
+\DoxyCodeLine{306 }
+\DoxyCodeLine{307     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
+\DoxyCodeLine{308         print(\textcolor{stringliteral}{"Service call failed:"}, e)}
+\DoxyCodeLine{309 }
+\DoxyCodeLine{310     print(\textcolor{stringliteral}{"ERROR fk foot\_left failed"})}
+\DoxyCodeLine{311     \textcolor{keywordflow}{return} [0.0, 0.0]  \textcolor{comment}{\# [x, z]}}
+\DoxyCodeLine{312 }
+\DoxyCodeLine{313 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacepedal__simulation__interpolation__cubic__derivative_af5b9d5c7d073c5699b72c7e341bccc95_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a9053f001263fc33a7c91b58ad1cab5ee}\label{namespacepedal__simulation__interpolation__cubic__derivative_a9053f001263fc33a7c91b58ad1cab5ee}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!getPositionRightFoot@{getPositionRightFoot}}
+\index{getPositionRightFoot@{getPositionRightFoot}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{getPositionRightFoot()}{getPositionRightFoot()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+get\+Position\+Right\+Foot (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 314 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{314 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a9053f001263fc33a7c91b58ad1cab5ee}{getPositionRightFoot}}():}
+\DoxyCodeLine{315     fkJointNamesList = [ROS\_JOINT\_HIP\_RIGHT, ROS\_JOINT\_KNEE\_RIGHT, ROS\_JOINT\_ANKLE\_RIGHT]}
+\DoxyCodeLine{316     fkJointPositions = [\_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}], \_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}],}
+\DoxyCodeLine{317                         \_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}]]}
+\DoxyCodeLine{318 }
+\DoxyCodeLine{319     rospy.wait\_for\_service(\textcolor{stringliteral}{'fk'})}
+\DoxyCodeLine{320     \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{321         fk\_srv = rospy.ServiceProxy(\textcolor{stringliteral}{'fk'}, ForwardKinematics)}
+\DoxyCodeLine{322         fk\_result = fk\_srv(\textcolor{stringliteral}{"foot\_right\_tip"}, \textcolor{stringliteral}{"foot\_right\_tip"}, fkJointNamesList, fkJointPositions)}
+\DoxyCodeLine{323         \textcolor{keywordflow}{return} [fk\_result.pose.position.x, fk\_result.pose.position.z]}
+\DoxyCodeLine{324 }
+\DoxyCodeLine{325     \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
+\DoxyCodeLine{326         print(\textcolor{stringliteral}{"Service call failed:"}, e)}
+\DoxyCodeLine{327 }
+\DoxyCodeLine{328     print(\textcolor{stringliteral}{"ERROR fk foot\_right failed"})}
+\DoxyCodeLine{329     \textcolor{keywordflow}{return} [0.0, 0.0]  \textcolor{comment}{\# [x, z]}}
+\DoxyCodeLine{330 }
+\DoxyCodeLine{331 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacepedal__simulation__interpolation__cubic__derivative_a9053f001263fc33a7c91b58ad1cab5ee_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a76e080940025a1563491de2d9879590c}\label{namespacepedal__simulation__interpolation__cubic__derivative_a76e080940025a1563491de2d9879590c}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!importJointTrajectoryRecord@{importJointTrajectoryRecord}}
+\index{importJointTrajectoryRecord@{importJointTrajectoryRecord}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{importJointTrajectoryRecord()}{importJointTrajectoryRecord()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+import\+Joint\+Trajectory\+Record (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 229 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{229 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a5ecaa1f0c7b7379d5d217b69ecbcfafc}{importJointTrajectoryRecord}}():}
+\DoxyCodeLine{230     \textcolor{keyword}{global} \_numTrajectoryPoints}
+\DoxyCodeLine{231     \textcolor{keyword}{global} \_pedalTrajectoryRight}
+\DoxyCodeLine{232     \textcolor{keyword}{global} \_pedalAngleTrajectoryRight}
+\DoxyCodeLine{233     \textcolor{keyword}{global} \_hipTrajectoryRight}
+\DoxyCodeLine{234     \textcolor{keyword}{global} \_kneeTrajectoryRight}
+\DoxyCodeLine{235     \textcolor{keyword}{global} \_ankleTrajectoryRight}
+\DoxyCodeLine{236     \textcolor{keyword}{global} \_pedalTrajectoryLeft}
+\DoxyCodeLine{237     \textcolor{keyword}{global} \_pedalAngleTrajectoryLeft}
+\DoxyCodeLine{238     \textcolor{keyword}{global} \_hipTrajectoryLeft}
+\DoxyCodeLine{239     \textcolor{keyword}{global} \_kneeTrajectoryLeft}
+\DoxyCodeLine{240     \textcolor{keyword}{global} \_ankleTrajectoryLeft}
+\DoxyCodeLine{241     \textcolor{keyword}{global} PRINT\_DEBUG}
+\DoxyCodeLine{242 }
+\DoxyCodeLine{243     \textcolor{keyword}{with} open(RECORDED\_TRAJECTORY\_FILENAME, \textcolor{stringliteral}{"r"}) \textcolor{keyword}{as} read\_file:}
+\DoxyCodeLine{244         loaded\_data = json.load(read\_file)}
+\DoxyCodeLine{245 }
+\DoxyCodeLine{246     \textcolor{keywordflow}{if} loaded\_data[\textcolor{stringliteral}{"num\_points"}] \textcolor{keywordflow}{is} \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{247         \textcolor{keywordflow}{return} 0}
+\DoxyCodeLine{248     \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{249         \_numTrajectoryPoints = loaded\_data[\textcolor{stringliteral}{"num\_points"}]}
+\DoxyCodeLine{250 }
+\DoxyCodeLine{251     \textcolor{comment}{\# Deleting previous trajectory before loading new}}
+\DoxyCodeLine{252     del \_pedalTrajectoryRight[:]}
+\DoxyCodeLine{253     del \_pedalAngleTrajectoryRight[:]}
+\DoxyCodeLine{254     del \_hipTrajectoryRight[:]}
+\DoxyCodeLine{255     del \_kneeTrajectoryRight[:]}
+\DoxyCodeLine{256     del \_ankleTrajectoryRight[:]}
+\DoxyCodeLine{257     del \_pedalTrajectoryLeft[:]}
+\DoxyCodeLine{258     del \_pedalAngleTrajectoryLeft[:]}
+\DoxyCodeLine{259     del \_hipTrajectoryLeft[:]}
+\DoxyCodeLine{260     del \_kneeTrajectoryLeft[:]}
+\DoxyCodeLine{261     del \_ankleTrajectoryLeft[:]}
+\DoxyCodeLine{262 }
+\DoxyCodeLine{263     \textcolor{keywordflow}{for} pointIterator \textcolor{keywordflow}{in} range(\_numTrajectoryPoints):}
+\DoxyCodeLine{264         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"} + str(pointIterator) \textcolor{keywordflow}{in} loaded\_data:}
+\DoxyCodeLine{265             \_pedalTrajectoryRight.append(loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Pedal"}])}
+\DoxyCodeLine{266             \textcolor{comment}{\# \_pedalAngleTrajectoryRight.append(loaded\_data["point\_"+str(pointIterator)]["Pedal\_angle"])}}
+\DoxyCodeLine{267             \_pedalAngleTrajectoryRight.append((2 * math.pi / \_numTrajectoryPoints) * pointIterator)}
+\DoxyCodeLine{268             \_hipTrajectoryRight.append(loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Hip"}])}
+\DoxyCodeLine{269             \_kneeTrajectoryRight.append((-1) * loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Knee"}])}
+\DoxyCodeLine{270             \_ankleTrajectoryRight.append(loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Ankle"}])}
+\DoxyCodeLine{271             \_pedalTrajectoryLeft.append(loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Pedal"}])}
+\DoxyCodeLine{272             \textcolor{comment}{\# \_pedalAngleTrajectoryLeft.append(loaded\_data["point\_"+str(pointIterator)]["Pedal\_angle"])}}
+\DoxyCodeLine{273             \_pedalAngleTrajectoryLeft.append((2 * math.pi / \_numTrajectoryPoints) * pointIterator)}
+\DoxyCodeLine{274             \_hipTrajectoryLeft.append(loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Hip"}])}
+\DoxyCodeLine{275             \_kneeTrajectoryLeft.append((-1) * loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Knee"}])}
+\DoxyCodeLine{276             \_ankleTrajectoryLeft.append(loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Ankle"}])}
+\DoxyCodeLine{277         \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{278             print(\textcolor{stringliteral}{"WARNING: No point\_\%s in trajectory"} \% pointIterator)}
+\DoxyCodeLine{279             \_numTrajectoryPoints -= 1}
+\DoxyCodeLine{280 }
+\DoxyCodeLine{281     \textcolor{keywordflow}{if} PRINT\_DEBUG:}
+\DoxyCodeLine{282         print(\textcolor{stringliteral}{"--------- Num trajectory points:"})}
+\DoxyCodeLine{283         print(\_numTrajectoryPoints)}
+\DoxyCodeLine{284 }
+\DoxyCodeLine{285 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacepedal__simulation__interpolation__cubic__derivative_a76e080940025a1563491de2d9879590c_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_ae85970b5189470f76d1d2b0d709557e4}\label{namespacepedal__simulation__interpolation__cubic__derivative_ae85970b5189470f76d1d2b0d709557e4}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!interpolateAllJointPositions@{interpolateAllJointPositions}}
+\index{interpolateAllJointPositions@{interpolateAllJointPositions}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{interpolateAllJointPositions()}{interpolateAllJointPositions()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+interpolate\+All\+Joint\+Positions (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 394 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{394 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ae85970b5189470f76d1d2b0d709557e4}{interpolateAllJointPositions}}():}
+\DoxyCodeLine{395     \textcolor{keyword}{global} \_pedalAngleTrajectoryRight}
+\DoxyCodeLine{396     \textcolor{keyword}{global} \_hipTrajectoryRight}
+\DoxyCodeLine{397     \textcolor{keyword}{global} \_kneeTrajectoryRight}
+\DoxyCodeLine{398     \textcolor{keyword}{global} \_ankleTrajectoryRight}
+\DoxyCodeLine{399 }
+\DoxyCodeLine{400     \textcolor{keyword}{global} \_pedalAngleTrajectoryLeft}
+\DoxyCodeLine{401     \textcolor{keyword}{global} \_hipTrajectoryLeft}
+\DoxyCodeLine{402     \textcolor{keyword}{global} \_kneeTrajectoryLeft}
+\DoxyCodeLine{403     \textcolor{keyword}{global} \_ankleTrajectoryLeft}
+\DoxyCodeLine{404 }
+\DoxyCodeLine{405     \textcolor{keyword}{global} \_jointsControlData}
+\DoxyCodeLine{406     \textcolor{keyword}{global} RIGHT\_HIP\_JOINT}
+\DoxyCodeLine{407     \textcolor{keyword}{global} RIGHT\_KNEE\_JOINT}
+\DoxyCodeLine{408     \textcolor{keyword}{global} RIGHT\_ANKLE\_JOINT}
+\DoxyCodeLine{409     \textcolor{keyword}{global} LEFT\_HIP\_JOINT}
+\DoxyCodeLine{410     \textcolor{keyword}{global} LEFT\_KNEE\_JOINT}
+\DoxyCodeLine{411     \textcolor{keyword}{global} LEFT\_ANKLE\_JOINT}
+\DoxyCodeLine{412 }
+\DoxyCodeLine{413     \_jointsControlData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"pos\_function"}] = interpolate.interp1d(\_pedalAngleTrajectoryRight,}
+\DoxyCodeLine{414                                                                                \_hipTrajectoryRight, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{415     \_jointsControlData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"pos\_function"}] = interpolate.interp1d(\_pedalAngleTrajectoryRight,}
+\DoxyCodeLine{416                                                                                 \_kneeTrajectoryRight, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{417     \_jointsControlData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"pos\_function"}] = interpolate.interp1d(\_pedalAngleTrajectoryRight,}
+\DoxyCodeLine{418                                                                                  \_ankleTrajectoryRight, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{419     \_jointsControlData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"pos\_function"}] = interpolate.interp1d(\_pedalAngleTrajectoryRight,}
+\DoxyCodeLine{420                                                                               \_hipTrajectoryLeft, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{421     \_jointsControlData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"pos\_function"}] = interpolate.interp1d(\_pedalAngleTrajectoryRight,}
+\DoxyCodeLine{422                                                                                \_kneeTrajectoryLeft, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{423     \_jointsControlData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"pos\_function"}] = interpolate.interp1d(\_pedalAngleTrajectoryRight,}
+\DoxyCodeLine{424                                                                                 \_ankleTrajectoryLeft, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{425 }
+\DoxyCodeLine{426     \textcolor{keywordflow}{return} 1}
+\DoxyCodeLine{427 }
+\DoxyCodeLine{428 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacepedal__simulation__interpolation__cubic__derivative_ae85970b5189470f76d1d2b0d709557e4_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a8ba7e664349c21ee2d4c3b9ed4444863}\label{namespacepedal__simulation__interpolation__cubic__derivative_a8ba7e664349c21ee2d4c3b9ed4444863}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!jointStateCallback@{jointStateCallback}}
+\index{jointStateCallback@{jointStateCallback}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{jointStateCallback()}{jointStateCallback()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+joint\+State\+Callback (\begin{DoxyParamCaption}\item[{}]{joint\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+U\+T\+I\+L\+I\+TY F\+U\+N\+C\+T\+I\+O\+NS \#\#\#. 
+
+
+
+Definition at line 193 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{193 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a8ba7e664349c21ee2d4c3b9ed4444863}{jointStateCallback}}(joint\_data):}
+\DoxyCodeLine{194     \textcolor{keyword}{global} \_jointsStatusData}
+\DoxyCodeLine{195     \textcolor{comment}{\# Assert order of joints}}
+\DoxyCodeLine{196     \textcolor{keywordflow}{for} stringIter \textcolor{keywordflow}{in} range(len(joint\_data.names)):}
+\DoxyCodeLine{197         \textcolor{keywordflow}{if} joint\_data.names[stringIter] == ROS\_JOINT\_HIP\_RIGHT:}
+\DoxyCodeLine{198             \_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{199             \_jointsStatusData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
+\DoxyCodeLine{200         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_HIP\_LEFT:}
+\DoxyCodeLine{201             \_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{202             \_jointsStatusData[LEFT\_HIP\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
+\DoxyCodeLine{203         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_KNEE\_RIGHT:}
+\DoxyCodeLine{204             \_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{205             \_jointsStatusData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
+\DoxyCodeLine{206         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_KNEE\_LEFT:}
+\DoxyCodeLine{207             \_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{208             \_jointsStatusData[LEFT\_KNEE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
+\DoxyCodeLine{209         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_ANKLE\_RIGHT:}
+\DoxyCodeLine{210             \_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{211             \_jointsStatusData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
+\DoxyCodeLine{212         \textcolor{keywordflow}{elif} joint\_data.names[stringIter] == ROS\_JOINT\_ANKLE\_LEFT:}
+\DoxyCodeLine{213             \_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{214             \_jointsStatusData[LEFT\_ANKLE\_JOINT][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
+\DoxyCodeLine{215 }
+\DoxyCodeLine{216 }
+
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_aec58f843befdd05ee5e003884eb17cba}\label{namespacepedal__simulation__interpolation__cubic__derivative_aec58f843befdd05ee5e003884eb17cba}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!main@{main}}
+\index{main@{main}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+M\+A\+IN \#\#\#. 
+
+
+
+Definition at line 692 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{692 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a17184534fa48653e3e1957dd8fe17257}{main}}():}
+\DoxyCodeLine{693     rospy.init\_node(\textcolor{stringliteral}{'pedal\_simulation'}, anonymous=\textcolor{keyword}{True})}
+\DoxyCodeLine{694     rospy.Subscriber(\textcolor{stringliteral}{"joint\_state"}, JointState, jointStateCallback)}
+\DoxyCodeLine{695     time.sleep(3)}
+\DoxyCodeLine{696 }
+\DoxyCodeLine{697     \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a14a03067c9be857e5286ea14d3ea5e95}{setJointControllerParameters}}(1, 0)}
+\DoxyCodeLine{698     \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a27598c0b1a95f3043035dc3740c4a421}{FSM}}()}
+\DoxyCodeLine{699 }
+\DoxyCodeLine{700     \textcolor{keywordflow}{return} 1}
+\DoxyCodeLine{701 }
+\DoxyCodeLine{702 }
+
+\end{DoxyCode}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacepedal__simulation__interpolation__cubic__derivative_aec58f843befdd05ee5e003884eb17cba_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a8a5d48b5475d75a026db3db0f5fe8d9e}\label{namespacepedal__simulation__interpolation__cubic__derivative_a8a5d48b5475d75a026db3db0f5fe8d9e}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!printInterpolatedFunctions@{printInterpolatedFunctions}}
+\index{printInterpolatedFunctions@{printInterpolatedFunctions}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{printInterpolatedFunctions()}{printInterpolatedFunctions()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+print\+Interpolated\+Functions (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 429 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{429 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a8a5d48b5475d75a026db3db0f5fe8d9e}{printInterpolatedFunctions}}():}
+\DoxyCodeLine{430     \textcolor{keyword}{global} \_pedalAngleTrajectoryRight}
+\DoxyCodeLine{431     \textcolor{keyword}{global} \_hipTrajectoryRight}
+\DoxyCodeLine{432     \textcolor{keyword}{global} \_kneeTrajectoryRight}
+\DoxyCodeLine{433     \textcolor{keyword}{global} \_ankleTrajectoryRight}
+\DoxyCodeLine{434 }
+\DoxyCodeLine{435     \textcolor{keyword}{global} \_pedalAngleTrajectoryLeft}
+\DoxyCodeLine{436     \textcolor{keyword}{global} \_hipTrajectoryLeft}
+\DoxyCodeLine{437     \textcolor{keyword}{global} \_kneeTrajectoryLeft}
+\DoxyCodeLine{438     \textcolor{keyword}{global} \_ankleTrajectoryLeft}
+\DoxyCodeLine{439 }
+\DoxyCodeLine{440     \textcolor{keyword}{global} \_jointsControlData}
+\DoxyCodeLine{441     \textcolor{keyword}{global} RIGHT\_HIP\_JOINT}
+\DoxyCodeLine{442     \textcolor{keyword}{global} RIGHT\_KNEE\_JOINT}
+\DoxyCodeLine{443     \textcolor{keyword}{global} RIGHT\_ANKLE\_JOINT}
+\DoxyCodeLine{444     \textcolor{keyword}{global} LEFT\_HIP\_JOINT}
+\DoxyCodeLine{445     \textcolor{keyword}{global} LEFT\_KNEE\_JOINT}
+\DoxyCodeLine{446     \textcolor{keyword}{global} LEFT\_ANKLE\_JOINT}
+\DoxyCodeLine{447 }
+\DoxyCodeLine{448     highDefPlotRange = np.linspace(0, 6, 500)}
+\DoxyCodeLine{449 }
+\DoxyCodeLine{450     plt.figure(1)}
+\DoxyCodeLine{451     plt.plot(\_pedalAngleTrajectoryRight, \_hipTrajectoryRight, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{452     plt.plot(highDefPlotRange, \_jointsControlData[RIGHT\_HIP\_JOINT][\textcolor{stringliteral}{"pos\_function"}](highDefPlotRange), \textcolor{stringliteral}{'-'})}
+\DoxyCodeLine{453 }
+\DoxyCodeLine{454     plt.figure(2)}
+\DoxyCodeLine{455     plt.plot(\_pedalAngleTrajectoryRight, \_kneeTrajectoryRight, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{456     plt.plot(highDefPlotRange, \_jointsControlData[RIGHT\_KNEE\_JOINT][\textcolor{stringliteral}{"pos\_function"}](highDefPlotRange), \textcolor{stringliteral}{'-'})}
+\DoxyCodeLine{457 }
+\DoxyCodeLine{458     plt.figure(3)}
+\DoxyCodeLine{459     plt.plot(\_pedalAngleTrajectoryRight, \_ankleTrajectoryRight, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{460     plt.plot(highDefPlotRange, \_jointsControlData[RIGHT\_ANKLE\_JOINT][\textcolor{stringliteral}{"pos\_function"}](highDefPlotRange), \textcolor{stringliteral}{'-'})}
+\DoxyCodeLine{461 }
+\DoxyCodeLine{462     plt.show()}
+\DoxyCodeLine{463 }
+\DoxyCodeLine{464 }
+
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a14a03067c9be857e5286ea14d3ea5e95}\label{namespacepedal__simulation__interpolation__cubic__derivative_a14a03067c9be857e5286ea14d3ea5e95}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!setJointControllerParameters@{setJointControllerParameters}}
+\index{setJointControllerParameters@{setJointControllerParameters}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{setJointControllerParameters()}{setJointControllerParameters()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+set\+Joint\+Controller\+Parameters (\begin{DoxyParamCaption}\item[{}]{proportional\+Val,  }\item[{}]{derivative\+Val }\end{DoxyParamCaption})}
+
+
+
+Definition at line 217 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{217 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a14a03067c9be857e5286ea14d3ea5e95}{setJointControllerParameters}}(proportionalVal, derivativeVal):}
+\DoxyCodeLine{218     \textcolor{keywordflow}{for} thisJointName \textcolor{keywordflow}{in} \_jointsListROS:}
+\DoxyCodeLine{219         rospy.wait\_for\_service(thisJointName + \textcolor{stringliteral}{'/'} + thisJointName + \textcolor{stringliteral}{'/params'})}
+\DoxyCodeLine{220         \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{221             param\_srv = rospy.ServiceProxy(thisJointName + \textcolor{stringliteral}{'/'} + thisJointName + \textcolor{stringliteral}{'/params'}, SetControllerParameters)}
+\DoxyCodeLine{222             param\_srv(proportionalVal, derivativeVal)}
+\DoxyCodeLine{223         \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
+\DoxyCodeLine{224             print(\textcolor{stringliteral}{"Service call for "} + thisJointName + \textcolor{stringliteral}{"failed:"} + e)}
+\DoxyCodeLine{225 }
+\DoxyCodeLine{226     print(\textcolor{stringliteral}{"Controller paramters updated"})}
+\DoxyCodeLine{227 }
+\DoxyCodeLine{228 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacepedal__simulation__interpolation__cubic__derivative_a14a03067c9be857e5286ea14d3ea5e95_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a528056c565ba9114579b889deb90665e}\label{namespacepedal__simulation__interpolation__cubic__derivative_a528056c565ba9114579b889deb90665e}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!setPedalAngularVelocity@{setPedalAngularVelocity}}
+\index{setPedalAngularVelocity@{setPedalAngularVelocity}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{setPedalAngularVelocity()}{setPedalAngularVelocity()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+set\+Pedal\+Angular\+Velocity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 359 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{359 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a528056c565ba9114579b889deb90665e}{setPedalAngularVelocity}}():}
+\DoxyCodeLine{360     \textcolor{keyword}{global} \_pedalAngularVelocity}
+\DoxyCodeLine{361     \textcolor{keyword}{global} PEDAL\_SINGLE\_ROTATION\_DURATION}
+\DoxyCodeLine{362     \textcolor{keywordflow}{if} PEDAL\_SINGLE\_ROTATION\_DURATION > 0:}
+\DoxyCodeLine{363         \_pedalAngularVelocity = float(PEDAL\_SINGLE\_ROTATION\_DURATION) / (2 * math.pi)}
+\DoxyCodeLine{364         print(\textcolor{stringliteral}{"Pedal angular velocity: "}, \_pedalAngularVelocity)}
+\DoxyCodeLine{365     \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{366         print(\textcolor{stringliteral}{"ERROR: trajectory point duration can not be calculated without number of points count"})}
+\DoxyCodeLine{367         \textcolor{keywordflow}{return} 0}
+\DoxyCodeLine{368     \textcolor{keywordflow}{return} 1}
+\DoxyCodeLine{369 }
+\DoxyCodeLine{370 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacepedal__simulation__interpolation__cubic__derivative_a528056c565ba9114579b889deb90665e_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a4f6620c14991a28592c3f3dbed06d47d}\label{namespacepedal__simulation__interpolation__cubic__derivative_a4f6620c14991a28592c3f3dbed06d47d}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!setPedalSingleRotationDuration@{setPedalSingleRotationDuration}}
+\index{setPedalSingleRotationDuration@{setPedalSingleRotationDuration}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{setPedalSingleRotationDuration()}{setPedalSingleRotationDuration()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+set\+Pedal\+Single\+Rotation\+Duration (\begin{DoxyParamCaption}\item[{}]{new\+\_\+duration\+\_\+seconds }\end{DoxyParamCaption})}
+
+
+
+Definition at line 339 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{339 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a4f6620c14991a28592c3f3dbed06d47d}{setPedalSingleRotationDuration}}(new\_duration\_seconds):}
+\DoxyCodeLine{340     \textcolor{keyword}{global} PEDAL\_SINGLE\_ROTATION\_DURATION}
+\DoxyCodeLine{341     PEDAL\_SINGLE\_ROTATION\_DURATION = new\_duration\_seconds}
+\DoxyCodeLine{342     \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ac9f7dfe56632b8e7d44453f45ce5ed12}{setTrajectoryPointDuration}}()}
+\DoxyCodeLine{343     \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_a528056c565ba9114579b889deb90665e}{setPedalAngularVelocity}}()}
+\DoxyCodeLine{344     \textcolor{keywordflow}{return} 1}
+\DoxyCodeLine{345 }
+\DoxyCodeLine{346 }
+
+\end{DoxyCode}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacepedal__simulation__interpolation__cubic__derivative_a4f6620c14991a28592c3f3dbed06d47d_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacepedal__simulation__interpolation__cubic__derivative_a4f6620c14991a28592c3f3dbed06d47d_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_ac9f7dfe56632b8e7d44453f45ce5ed12}\label{namespacepedal__simulation__interpolation__cubic__derivative_ac9f7dfe56632b8e7d44453f45ce5ed12}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!setTrajectoryPointDuration@{setTrajectoryPointDuration}}
+\index{setTrajectoryPointDuration@{setTrajectoryPointDuration}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{setTrajectoryPointDuration()}{setTrajectoryPointDuration()}}
+{\footnotesize\ttfamily def pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+set\+Trajectory\+Point\+Duration (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 347 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{347 \textcolor{keyword}{def }\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ac9f7dfe56632b8e7d44453f45ce5ed12}{setTrajectoryPointDuration}}():}
+\DoxyCodeLine{348     \textcolor{keyword}{global} \_trajectoryPointDuration}
+\DoxyCodeLine{349     \textcolor{keyword}{global} PEDAL\_SINGLE\_ROTATION\_DURATION}
+\DoxyCodeLine{350     \textcolor{keyword}{global} \_numTrajectoryPoints}
+\DoxyCodeLine{351     \textcolor{keywordflow}{if} \_numTrajectoryPoints > 0:}
+\DoxyCodeLine{352         \_trajectoryPointDuration = float(PEDAL\_SINGLE\_ROTATION\_DURATION) / \_numTrajectoryPoints}
+\DoxyCodeLine{353     \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{354         print(\textcolor{stringliteral}{"ERROR: trajectory point duration can not be calculated without number of points count"})}
+\DoxyCodeLine{355         \textcolor{keywordflow}{return} 0}
+\DoxyCodeLine{356     \textcolor{keywordflow}{return} 1}
+\DoxyCodeLine{357 }
+\DoxyCodeLine{358 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacepedal__simulation__interpolation__cubic__derivative_ac9f7dfe56632b8e7d44453f45ce5ed12_icgraph}
+\end{center}
+\end{figure}
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_aa24a6508fd81e17faaf36ef2f5f28ffb}\label{namespacepedal__simulation__interpolation__cubic__derivative_aa24a6508fd81e17faaf36ef2f5f28ffb}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_ankleTrajectoryLeft@{\_ankleTrajectoryLeft}}
+\index{\_ankleTrajectoryLeft@{\_ankleTrajectoryLeft}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_ankleTrajectoryLeft}{\_ankleTrajectoryLeft}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+ankle\+Trajectory\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 185 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a13a4270ffe37d5e466022d50c1719475}\label{namespacepedal__simulation__interpolation__cubic__derivative_a13a4270ffe37d5e466022d50c1719475}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_ankleTrajectoryRight@{\_ankleTrajectoryRight}}
+\index{\_ankleTrajectoryRight@{\_ankleTrajectoryRight}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_ankleTrajectoryRight}{\_ankleTrajectoryRight}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+ankle\+Trajectory\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 180 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a65edc5212dc70634c0cf8a16fbe1ba9a}\label{namespacepedal__simulation__interpolation__cubic__derivative_a65edc5212dc70634c0cf8a16fbe1ba9a}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_hipTrajectoryLeft@{\_hipTrajectoryLeft}}
+\index{\_hipTrajectoryLeft@{\_hipTrajectoryLeft}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_hipTrajectoryLeft}{\_hipTrajectoryLeft}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+hip\+Trajectory\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 183 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_adf4d214e4436371c65ac2fbb88bcd8fe}\label{namespacepedal__simulation__interpolation__cubic__derivative_adf4d214e4436371c65ac2fbb88bcd8fe}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_hipTrajectoryRight@{\_hipTrajectoryRight}}
+\index{\_hipTrajectoryRight@{\_hipTrajectoryRight}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_hipTrajectoryRight}{\_hipTrajectoryRight}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+hip\+Trajectory\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 178 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_afe341eacadbca8ed8ec34c084404d076}\label{namespacepedal__simulation__interpolation__cubic__derivative_afe341eacadbca8ed8ec34c084404d076}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_jointsControlData@{\_jointsControlData}}
+\index{\_jointsControlData@{\_jointsControlData}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_jointsControlData}{\_jointsControlData}}
+{\footnotesize\ttfamily dictionary pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+joints\+Control\+Data\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     RIGHT\_HIP\_JOINT: \_parametersRightHip,}
+\DoxyCodeLine{3     RIGHT\_KNEE\_JOINT: \_parametersRightKnee,}
+\DoxyCodeLine{4     RIGHT\_ANKLE\_JOINT: \_parametersRightAnkle,}
+\DoxyCodeLine{5     LEFT\_HIP\_JOINT: \_parametersLeftHip,}
+\DoxyCodeLine{6     LEFT\_KNEE\_JOINT: \_parametersLeftKnee,}
+\DoxyCodeLine{7     LEFT\_ANKLE\_JOINT: \_parametersLeftAnkle}
+\DoxyCodeLine{8 \}}
+
+\end{DoxyCode}
+
+
+Definition at line 135 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a46585eccb2f61bf4492924b1491a63c3}\label{namespacepedal__simulation__interpolation__cubic__derivative_a46585eccb2f61bf4492924b1491a63c3}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_jointsList@{\_jointsList}}
+\index{\_jointsList@{\_jointsList}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_jointsList}{\_jointsList}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+joints\+List = \mbox{[}\mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ab7526d770fd7644fb4ae9877e2e5a0a4}{R\+I\+G\+H\+T\+\_\+\+H\+I\+P\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_aa114b9878d6a2c2217f63815a71b8947}{R\+I\+G\+H\+T\+\_\+\+K\+N\+E\+E\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_aa168535cfe5c5c0f1d238d2558fa1431}{R\+I\+G\+H\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ab0985b6c554bba4c51460ccc2e72409a}{L\+E\+F\+T\+\_\+\+H\+I\+P\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_ab75a384144342f49e9b0a6607162902f}{L\+E\+F\+T\+\_\+\+K\+N\+E\+E\+\_\+\+J\+O\+I\+NT}}, \mbox{\hyperlink{namespacepedal__simulation__interpolation__cubic__derivative_afb5c7e31d8be3b45d589b829782a7aa1}{L\+E\+F\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+J\+O\+I\+NT}}\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 62 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a8ca3a1d78a7f1dff1d8a0b63c510463e}\label{namespacepedal__simulation__interpolation__cubic__derivative_a8ca3a1d78a7f1dff1d8a0b63c510463e}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_jointsListROS@{\_jointsListROS}}
+\index{\_jointsListROS@{\_jointsListROS}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_jointsListROS}{\_jointsListROS}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+joints\+List\+R\+OS\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  [ROS\_JOINT\_HIP\_RIGHT, ROS\_JOINT\_KNEE\_RIGHT, ROS\_JOINT\_ANKLE\_RIGHT, ROS\_JOINT\_HIP\_LEFT,}
+\DoxyCodeLine{2                   ROS\_JOINT\_KNEE\_LEFT, ROS\_JOINT\_ANKLE\_LEFT]}
+
+\end{DoxyCode}
+
+
+Definition at line 64 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a0d3d97a903596a53147e1f823df15873}\label{namespacepedal__simulation__interpolation__cubic__derivative_a0d3d97a903596a53147e1f823df15873}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_jointsStatusData@{\_jointsStatusData}}
+\index{\_jointsStatusData@{\_jointsStatusData}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_jointsStatusData}{\_jointsStatusData}}
+{\footnotesize\ttfamily dictionary pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+joints\+Status\+Data\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     RIGHT\_HIP\_JOINT: \{}
+\DoxyCodeLine{3         \textcolor{stringliteral}{"Pos"}: 0.0,}
+\DoxyCodeLine{4         \textcolor{stringliteral}{"Vel"}: 0.0}
+\DoxyCodeLine{5     \},}
+\DoxyCodeLine{6     LEFT\_HIP\_JOINT: \{}
+\DoxyCodeLine{7         \textcolor{stringliteral}{"Pos"}: 0.0,}
+\DoxyCodeLine{8         \textcolor{stringliteral}{"Vel"}: 0.0}
+\DoxyCodeLine{9     \},}
+\DoxyCodeLine{10     RIGHT\_KNEE\_JOINT: \{}
+\DoxyCodeLine{11         \textcolor{stringliteral}{"Pos"}: 0.0,}
+\DoxyCodeLine{12         \textcolor{stringliteral}{"Vel"}: 0.0}
+\DoxyCodeLine{13     \},}
+\DoxyCodeLine{14     LEFT\_KNEE\_JOINT: \{}
+\DoxyCodeLine{15         \textcolor{stringliteral}{"Pos"}: 0.0,}
+\DoxyCodeLine{16         \textcolor{stringliteral}{"Vel"}: 0.0}
+\DoxyCodeLine{17     \},}
+\DoxyCodeLine{18     RIGHT\_ANKLE\_JOINT: \{}
+\DoxyCodeLine{19         \textcolor{stringliteral}{"Pos"}: 0.0,}
+\DoxyCodeLine{20         \textcolor{stringliteral}{"Vel"}: 0.0}
+\DoxyCodeLine{21     \},}
+\DoxyCodeLine{22     LEFT\_ANKLE\_JOINT: \{}
+\DoxyCodeLine{23         \textcolor{stringliteral}{"Pos"}: 0.0,}
+\DoxyCodeLine{24         \textcolor{stringliteral}{"Vel"}: 0.0}
+\DoxyCodeLine{25     \}}
+\DoxyCodeLine{26 \}}
+
+\end{DoxyCode}
+
+
+Definition at line 144 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a6524f7e52a09b325a00e98b860666f7b}\label{namespacepedal__simulation__interpolation__cubic__derivative_a6524f7e52a09b325a00e98b860666f7b}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_kneeTrajectoryLeft@{\_kneeTrajectoryLeft}}
+\index{\_kneeTrajectoryLeft@{\_kneeTrajectoryLeft}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_kneeTrajectoryLeft}{\_kneeTrajectoryLeft}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+knee\+Trajectory\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 184 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a65c12062058d7f61d97409ce66bd8f04}\label{namespacepedal__simulation__interpolation__cubic__derivative_a65c12062058d7f61d97409ce66bd8f04}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_kneeTrajectoryRight@{\_kneeTrajectoryRight}}
+\index{\_kneeTrajectoryRight@{\_kneeTrajectoryRight}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_kneeTrajectoryRight}{\_kneeTrajectoryRight}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+knee\+Trajectory\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 179 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_ab1ef4a3ec1402d9bff71b6c5a75379e2}\label{namespacepedal__simulation__interpolation__cubic__derivative_ab1ef4a3ec1402d9bff71b6c5a75379e2}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_numTrajectoryPoints@{\_numTrajectoryPoints}}
+\index{\_numTrajectoryPoints@{\_numTrajectoryPoints}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_numTrajectoryPoints}{\_numTrajectoryPoints}}
+{\footnotesize\ttfamily int pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+num\+Trajectory\+Points = -\/1\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 171 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a1f065e4e4892997d87b96f78a988e28c}\label{namespacepedal__simulation__interpolation__cubic__derivative_a1f065e4e4892997d87b96f78a988e28c}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_parametersLeftAnkle@{\_parametersLeftAnkle}}
+\index{\_parametersLeftAnkle@{\_parametersLeftAnkle}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_parametersLeftAnkle}{\_parametersLeftAnkle}}
+{\footnotesize\ttfamily dictionary pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+parameters\+Left\+Ankle\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     \textcolor{stringliteral}{"param\_p"}: 100.0,}
+\DoxyCodeLine{3     \textcolor{stringliteral}{"param\_i"}: 0.0,}
+\DoxyCodeLine{4     \textcolor{stringliteral}{"param\_d"}: 0.0,}
+\DoxyCodeLine{5     \textcolor{stringliteral}{"prev\_pos"}: 0.0,}
+\DoxyCodeLine{6     \textcolor{stringliteral}{"prev\_vel"}: 0.0,}
+\DoxyCodeLine{7     \textcolor{stringliteral}{"prev\_error"}: 0.0,}
+\DoxyCodeLine{8     \textcolor{stringliteral}{"pos\_error\_integral"}: 0.0,}
+\DoxyCodeLine{9     \textcolor{stringliteral}{"pos\_function"}: \textcolor{keywordtype}{None}  \textcolor{comment}{\# interpolate.interp1d(\_interpolate\_x\_dummy, \_interpolate\_z\_dummy, kind = "cubic")}}
+\DoxyCodeLine{10 \}}
+
+\end{DoxyCode}
+
+
+Definition at line 124 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_ad516fcf5abb6ce486ab5c433b2c16ade}\label{namespacepedal__simulation__interpolation__cubic__derivative_ad516fcf5abb6ce486ab5c433b2c16ade}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_parametersLeftHip@{\_parametersLeftHip}}
+\index{\_parametersLeftHip@{\_parametersLeftHip}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_parametersLeftHip}{\_parametersLeftHip}}
+{\footnotesize\ttfamily dictionary pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+parameters\+Left\+Hip\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     \textcolor{stringliteral}{"param\_p"}: 150.0,}
+\DoxyCodeLine{3     \textcolor{stringliteral}{"param\_i"}: 0.05,}
+\DoxyCodeLine{4     \textcolor{stringliteral}{"param\_d"}: 0.0,}
+\DoxyCodeLine{5     \textcolor{stringliteral}{"prev\_pos"}: 0.0,}
+\DoxyCodeLine{6     \textcolor{stringliteral}{"prev\_vel"}: 0.0,}
+\DoxyCodeLine{7     \textcolor{stringliteral}{"prev\_error"}: 0.0,}
+\DoxyCodeLine{8     \textcolor{stringliteral}{"pos\_error\_integral"}: 0.0,}
+\DoxyCodeLine{9     \textcolor{stringliteral}{"pos\_function"}: \textcolor{keywordtype}{None}  \textcolor{comment}{\# interpolate.interp1d(\_interpolate\_x\_dummy, \_interpolate\_z\_dummy, kind = "cubic")}}
+\DoxyCodeLine{10 \}}
+
+\end{DoxyCode}
+
+
+Definition at line 102 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a56278512442581d350526ec9e3d614e2}\label{namespacepedal__simulation__interpolation__cubic__derivative_a56278512442581d350526ec9e3d614e2}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_parametersLeftKnee@{\_parametersLeftKnee}}
+\index{\_parametersLeftKnee@{\_parametersLeftKnee}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_parametersLeftKnee}{\_parametersLeftKnee}}
+{\footnotesize\ttfamily dictionary pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+parameters\+Left\+Knee\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     \textcolor{stringliteral}{"param\_p"}: 200.0,}
+\DoxyCodeLine{3     \textcolor{stringliteral}{"param\_i"}: 0.05,}
+\DoxyCodeLine{4     \textcolor{stringliteral}{"param\_d"}: 0.0,}
+\DoxyCodeLine{5     \textcolor{stringliteral}{"prev\_pos"}: 0.0,}
+\DoxyCodeLine{6     \textcolor{stringliteral}{"prev\_vel"}: 0.0,}
+\DoxyCodeLine{7     \textcolor{stringliteral}{"prev\_error"}: 0.0,}
+\DoxyCodeLine{8     \textcolor{stringliteral}{"pos\_error\_integral"}: 0.0,}
+\DoxyCodeLine{9     \textcolor{stringliteral}{"pos\_function"}: \textcolor{keywordtype}{None}  \textcolor{comment}{\# interpolate.interp1d(\_interpolate\_x\_dummy, \_interpolate\_z\_dummy, kind = "cubic")}}
+\DoxyCodeLine{10 \}}
+
+\end{DoxyCode}
+
+
+Definition at line 113 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_aa0679a4877ce46951c4c8653d79678bd}\label{namespacepedal__simulation__interpolation__cubic__derivative_aa0679a4877ce46951c4c8653d79678bd}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_parametersRightAnkle@{\_parametersRightAnkle}}
+\index{\_parametersRightAnkle@{\_parametersRightAnkle}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_parametersRightAnkle}{\_parametersRightAnkle}}
+{\footnotesize\ttfamily dictionary pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+parameters\+Right\+Ankle\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     \textcolor{stringliteral}{"param\_p"}: 100.0,}
+\DoxyCodeLine{3     \textcolor{stringliteral}{"param\_i"}: 0.0,}
+\DoxyCodeLine{4     \textcolor{stringliteral}{"param\_d"}: 0.0,}
+\DoxyCodeLine{5     \textcolor{stringliteral}{"prev\_pos"}: 0.0,}
+\DoxyCodeLine{6     \textcolor{stringliteral}{"prev\_vel"}: 0.0,}
+\DoxyCodeLine{7     \textcolor{stringliteral}{"prev\_error"}: 0.0,}
+\DoxyCodeLine{8     \textcolor{stringliteral}{"pos\_error\_integral"}: 0.0,}
+\DoxyCodeLine{9     \textcolor{stringliteral}{"pos\_function"}: \textcolor{keywordtype}{None}  \textcolor{comment}{\# interpolate.interp1d(\_interpolate\_x\_dummy, \_interpolate\_z\_dummy, kind = "cubic")}}
+\DoxyCodeLine{10 \}}
+
+\end{DoxyCode}
+
+
+Definition at line 91 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_acf30248ba78ced8eef7a7c47610d08f1}\label{namespacepedal__simulation__interpolation__cubic__derivative_acf30248ba78ced8eef7a7c47610d08f1}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_parametersRightHip@{\_parametersRightHip}}
+\index{\_parametersRightHip@{\_parametersRightHip}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_parametersRightHip}{\_parametersRightHip}}
+{\footnotesize\ttfamily dictionary pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+parameters\+Right\+Hip\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     \textcolor{stringliteral}{"param\_p"}: 150.0,}
+\DoxyCodeLine{3     \textcolor{stringliteral}{"param\_i"}: 0.05,}
+\DoxyCodeLine{4     \textcolor{stringliteral}{"param\_d"}: 0.0,}
+\DoxyCodeLine{5     \textcolor{stringliteral}{"prev\_pos"}: 0.0,}
+\DoxyCodeLine{6     \textcolor{stringliteral}{"prev\_vel"}: 0.0,}
+\DoxyCodeLine{7     \textcolor{stringliteral}{"prev\_error"}: 0.0,}
+\DoxyCodeLine{8     \textcolor{stringliteral}{"pos\_error\_integral"}: 0.0,}
+\DoxyCodeLine{9     \textcolor{stringliteral}{"pos\_function"}: \textcolor{keywordtype}{None}  \textcolor{comment}{\# interpolate.interp1d(\_interpolate\_x\_dummy, \_interpolate\_z\_dummy, kind = "cubic")}}
+\DoxyCodeLine{10 \}}
+
+\end{DoxyCode}
+
+
+Definition at line 70 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a639f362959fe622515eb7683d1b5aeb6}\label{namespacepedal__simulation__interpolation__cubic__derivative_a639f362959fe622515eb7683d1b5aeb6}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_parametersRightKnee@{\_parametersRightKnee}}
+\index{\_parametersRightKnee@{\_parametersRightKnee}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_parametersRightKnee}{\_parametersRightKnee}}
+{\footnotesize\ttfamily dictionary pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+parameters\+Right\+Knee\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     \textcolor{stringliteral}{"param\_p"}: 200.0,}
+\DoxyCodeLine{3     \textcolor{stringliteral}{"param\_i"}: 0.05,}
+\DoxyCodeLine{4     \textcolor{stringliteral}{"param\_d"}: 0.0,}
+\DoxyCodeLine{5     \textcolor{stringliteral}{"prev\_vel"}: 0.0,}
+\DoxyCodeLine{6     \textcolor{stringliteral}{"prev\_error"}: 0.0,}
+\DoxyCodeLine{7     \textcolor{stringliteral}{"pos\_error\_integral"}: 0.0,}
+\DoxyCodeLine{8     \textcolor{stringliteral}{"pos\_function"}: \textcolor{keywordtype}{None}  \textcolor{comment}{\# interpolate.interp1d(\_interpolate\_x\_dummy, \_interpolate\_z\_dummy, kind = "cubic")}}
+\DoxyCodeLine{9 \}}
+
+\end{DoxyCode}
+
+
+Definition at line 81 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a3035d159a582fb3b717d1992efb069d5}\label{namespacepedal__simulation__interpolation__cubic__derivative_a3035d159a582fb3b717d1992efb069d5}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_pedalAngleTrajectoryLeft@{\_pedalAngleTrajectoryLeft}}
+\index{\_pedalAngleTrajectoryLeft@{\_pedalAngleTrajectoryLeft}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_pedalAngleTrajectoryLeft}{\_pedalAngleTrajectoryLeft}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+pedal\+Angle\+Trajectory\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 182 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a5f925ce028f87694d403712a55ef3b2a}\label{namespacepedal__simulation__interpolation__cubic__derivative_a5f925ce028f87694d403712a55ef3b2a}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_pedalAngleTrajectoryRight@{\_pedalAngleTrajectoryRight}}
+\index{\_pedalAngleTrajectoryRight@{\_pedalAngleTrajectoryRight}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_pedalAngleTrajectoryRight}{\_pedalAngleTrajectoryRight}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+pedal\+Angle\+Trajectory\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 177 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a7b9a111c5470b09869921f18055cedb3}\label{namespacepedal__simulation__interpolation__cubic__derivative_a7b9a111c5470b09869921f18055cedb3}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_pedalAngularVelocity@{\_pedalAngularVelocity}}
+\index{\_pedalAngularVelocity@{\_pedalAngularVelocity}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_pedalAngularVelocity}{\_pedalAngularVelocity}}
+{\footnotesize\ttfamily float pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+pedal\+Angular\+Velocity = 0.\+1\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 174 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_ab9d3e6181986dcc0819fc283eca0ebdc}\label{namespacepedal__simulation__interpolation__cubic__derivative_ab9d3e6181986dcc0819fc283eca0ebdc}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_pedalTrajectoryLeft@{\_pedalTrajectoryLeft}}
+\index{\_pedalTrajectoryLeft@{\_pedalTrajectoryLeft}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_pedalTrajectoryLeft}{\_pedalTrajectoryLeft}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+pedal\+Trajectory\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 181 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a7c5c3aac0cf25f452f6f8fd01efd2c51}\label{namespacepedal__simulation__interpolation__cubic__derivative_a7c5c3aac0cf25f452f6f8fd01efd2c51}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_pedalTrajectoryRight@{\_pedalTrajectoryRight}}
+\index{\_pedalTrajectoryRight@{\_pedalTrajectoryRight}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_pedalTrajectoryRight}{\_pedalTrajectoryRight}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+pedal\+Trajectory\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 176 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a56a959649f16afc93fb4433e0f5a93eb}\label{namespacepedal__simulation__interpolation__cubic__derivative_a56a959649f16afc93fb4433e0f5a93eb}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_trajectoryPointDuration@{\_trajectoryPointDuration}}
+\index{\_trajectoryPointDuration@{\_trajectoryPointDuration}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_trajectoryPointDuration}{\_trajectoryPointDuration}}
+{\footnotesize\ttfamily float pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+trajectory\+Point\+Duration = 1.\+0\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 173 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_ad905ea34d738ed17f547cfa2bd9b557d}\label{namespacepedal__simulation__interpolation__cubic__derivative_ad905ea34d738ed17f547cfa2bd9b557d}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!\_trajectoryStartingPoint@{\_trajectoryStartingPoint}}
+\index{\_trajectoryStartingPoint@{\_trajectoryStartingPoint}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{\_trajectoryStartingPoint}{\_trajectoryStartingPoint}}
+{\footnotesize\ttfamily int pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+\_\+trajectory\+Starting\+Point = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 172 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_af77cf3846b9b03940b42346d5e5d33a1}\label{namespacepedal__simulation__interpolation__cubic__derivative_af77cf3846b9b03940b42346d5e5d33a1}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!CONTROLLER\_FREQUENCY@{CONTROLLER\_FREQUENCY}}
+\index{CONTROLLER\_FREQUENCY@{CONTROLLER\_FREQUENCY}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{CONTROLLER\_FREQUENCY}{CONTROLLER\_FREQUENCY}}
+{\footnotesize\ttfamily int pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+C\+O\+N\+T\+R\+O\+L\+L\+E\+R\+\_\+\+F\+R\+E\+Q\+U\+E\+N\+CY = 100}
+
+
+
+Definition at line 32 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_acbd3977fd006563df4cc4215a26f093b}\label{namespacepedal__simulation__interpolation__cubic__derivative_acbd3977fd006563df4cc4215a26f093b}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!JOINT\_TRAJECTORY\_ERROR\_TOLERANCE@{JOINT\_TRAJECTORY\_ERROR\_TOLERANCE}}
+\index{JOINT\_TRAJECTORY\_ERROR\_TOLERANCE@{JOINT\_TRAJECTORY\_ERROR\_TOLERANCE}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{JOINT\_TRAJECTORY\_ERROR\_TOLERANCE}{JOINT\_TRAJECTORY\_ERROR\_TOLERANCE}}
+{\footnotesize\ttfamily float pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+J\+O\+I\+N\+T\+\_\+\+T\+R\+A\+J\+E\+C\+T\+O\+R\+Y\+\_\+\+E\+R\+R\+O\+R\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE = 0.\+02}
+
+
+
+Definition at line 30 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_aacc5dbcfea4d8101bbb33668b9557625}\label{namespacepedal__simulation__interpolation__cubic__derivative_aacc5dbcfea4d8101bbb33668b9557625}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!JOINT\_VELOCITY\_FACTOR@{JOINT\_VELOCITY\_FACTOR}}
+\index{JOINT\_VELOCITY\_FACTOR@{JOINT\_VELOCITY\_FACTOR}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{JOINT\_VELOCITY\_FACTOR}{JOINT\_VELOCITY\_FACTOR}}
+{\footnotesize\ttfamily int pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+J\+O\+I\+N\+T\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y\+\_\+\+F\+A\+C\+T\+OR = 1}
+
+
+
+Definition at line 35 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_afb5c7e31d8be3b45d589b829782a7aa1}\label{namespacepedal__simulation__interpolation__cubic__derivative_afb5c7e31d8be3b45d589b829782a7aa1}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!LEFT\_ANKLE\_JOINT@{LEFT\_ANKLE\_JOINT}}
+\index{LEFT\_ANKLE\_JOINT@{LEFT\_ANKLE\_JOINT}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{LEFT\_ANKLE\_JOINT}{LEFT\_ANKLE\_JOINT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+L\+E\+F\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+J\+O\+I\+NT = \char`\"{}left\+\_\+ankle\char`\"{}}
+
+
+
+Definition at line 60 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_ab0985b6c554bba4c51460ccc2e72409a}\label{namespacepedal__simulation__interpolation__cubic__derivative_ab0985b6c554bba4c51460ccc2e72409a}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!LEFT\_HIP\_JOINT@{LEFT\_HIP\_JOINT}}
+\index{LEFT\_HIP\_JOINT@{LEFT\_HIP\_JOINT}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{LEFT\_HIP\_JOINT}{LEFT\_HIP\_JOINT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+L\+E\+F\+T\+\_\+\+H\+I\+P\+\_\+\+J\+O\+I\+NT = \char`\"{}left\+\_\+hip\char`\"{}}
+
+
+
+Definition at line 58 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_ab75a384144342f49e9b0a6607162902f}\label{namespacepedal__simulation__interpolation__cubic__derivative_ab75a384144342f49e9b0a6607162902f}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!LEFT\_KNEE\_JOINT@{LEFT\_KNEE\_JOINT}}
+\index{LEFT\_KNEE\_JOINT@{LEFT\_KNEE\_JOINT}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{LEFT\_KNEE\_JOINT}{LEFT\_KNEE\_JOINT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+L\+E\+F\+T\+\_\+\+K\+N\+E\+E\+\_\+\+J\+O\+I\+NT = \char`\"{}left\+\_\+knee\char`\"{}}
+
+
+
+Definition at line 59 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a79dd90d8e01df7b26eb98b2af65f2dee}\label{namespacepedal__simulation__interpolation__cubic__derivative_a79dd90d8e01df7b26eb98b2af65f2dee}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!MAX\_JOINT\_VEL@{MAX\_JOINT\_VEL}}
+\index{MAX\_JOINT\_VEL@{MAX\_JOINT\_VEL}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{MAX\_JOINT\_VEL}{MAX\_JOINT\_VEL}}
+{\footnotesize\ttfamily int pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+M\+A\+X\+\_\+\+J\+O\+I\+N\+T\+\_\+\+V\+EL = 50}
+
+
+
+Definition at line 34 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_aafe823b244143b02fb3e39fa531eca6a}\label{namespacepedal__simulation__interpolation__cubic__derivative_aafe823b244143b02fb3e39fa531eca6a}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!MIN\_JOINT\_VEL@{MIN\_JOINT\_VEL}}
+\index{MIN\_JOINT\_VEL@{MIN\_JOINT\_VEL}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{MIN\_JOINT\_VEL}{MIN\_JOINT\_VEL}}
+{\footnotesize\ttfamily int pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+M\+I\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+V\+EL = -\/50}
+
+
+
+Definition at line 33 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a44e03116b859bfe3a98ec6b62cde504d}\label{namespacepedal__simulation__interpolation__cubic__derivative_a44e03116b859bfe3a98ec6b62cde504d}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!PEDAL\_ANGLE\_ERROR\_TOLERANCE@{PEDAL\_ANGLE\_ERROR\_TOLERANCE}}
+\index{PEDAL\_ANGLE\_ERROR\_TOLERANCE@{PEDAL\_ANGLE\_ERROR\_TOLERANCE}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{PEDAL\_ANGLE\_ERROR\_TOLERANCE}{PEDAL\_ANGLE\_ERROR\_TOLERANCE}}
+{\footnotesize\ttfamily float pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+P\+E\+D\+A\+L\+\_\+\+A\+N\+G\+L\+E\+\_\+\+E\+R\+R\+O\+R\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE = 0.\+02}
+
+
+
+Definition at line 29 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a2b3980e4612b64ca1859deec1eea428a}\label{namespacepedal__simulation__interpolation__cubic__derivative_a2b3980e4612b64ca1859deec1eea428a}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!PEDAL\_CENTER\_OFFSET\_X@{PEDAL\_CENTER\_OFFSET\_X}}
+\index{PEDAL\_CENTER\_OFFSET\_X@{PEDAL\_CENTER\_OFFSET\_X}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{PEDAL\_CENTER\_OFFSET\_X}{PEDAL\_CENTER\_OFFSET\_X}}
+{\footnotesize\ttfamily float pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+P\+E\+D\+A\+L\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+X = 0.\+20421}
+
+
+
+Definition at line 37 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a2bfa0ad4dbbe7114dca00aeea126663f}\label{namespacepedal__simulation__interpolation__cubic__derivative_a2bfa0ad4dbbe7114dca00aeea126663f}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!PEDAL\_CENTER\_OFFSET\_Y@{PEDAL\_CENTER\_OFFSET\_Y}}
+\index{PEDAL\_CENTER\_OFFSET\_Y@{PEDAL\_CENTER\_OFFSET\_Y}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{PEDAL\_CENTER\_OFFSET\_Y}{PEDAL\_CENTER\_OFFSET\_Y}}
+{\footnotesize\ttfamily float pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+P\+E\+D\+A\+L\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Y = -\/0.\+00062}
+
+
+
+Definition at line 38 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_afeff8e75c707e34c08ef81847545421e}\label{namespacepedal__simulation__interpolation__cubic__derivative_afeff8e75c707e34c08ef81847545421e}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!PEDAL\_CENTER\_OFFSET\_Z@{PEDAL\_CENTER\_OFFSET\_Z}}
+\index{PEDAL\_CENTER\_OFFSET\_Z@{PEDAL\_CENTER\_OFFSET\_Z}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{PEDAL\_CENTER\_OFFSET\_Z}{PEDAL\_CENTER\_OFFSET\_Z}}
+{\footnotesize\ttfamily float pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+P\+E\+D\+A\+L\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Z = 0.\+2101}
+
+
+
+Definition at line 39 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_ab063ba2202081ff4fa968e4912f31659}\label{namespacepedal__simulation__interpolation__cubic__derivative_ab063ba2202081ff4fa968e4912f31659}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!PEDAL\_POSITION\_ERROR\_TOLERANCE@{PEDAL\_POSITION\_ERROR\_TOLERANCE}}
+\index{PEDAL\_POSITION\_ERROR\_TOLERANCE@{PEDAL\_POSITION\_ERROR\_TOLERANCE}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{PEDAL\_POSITION\_ERROR\_TOLERANCE}{PEDAL\_POSITION\_ERROR\_TOLERANCE}}
+{\footnotesize\ttfamily float pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+P\+E\+D\+A\+L\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+\_\+\+E\+R\+R\+O\+R\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE = 0.\+02}
+
+
+
+Definition at line 28 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a7577c34d4e434144075b99b4a6a28a23}\label{namespacepedal__simulation__interpolation__cubic__derivative_a7577c34d4e434144075b99b4a6a28a23}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!PEDAL\_SINGLE\_ROTATION\_DURATION@{PEDAL\_SINGLE\_ROTATION\_DURATION}}
+\index{PEDAL\_SINGLE\_ROTATION\_DURATION@{PEDAL\_SINGLE\_ROTATION\_DURATION}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{PEDAL\_SINGLE\_ROTATION\_DURATION}{PEDAL\_SINGLE\_ROTATION\_DURATION}}
+{\footnotesize\ttfamily int pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+P\+E\+D\+A\+L\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+R\+O\+T\+A\+T\+I\+O\+N\+\_\+\+D\+U\+R\+A\+T\+I\+ON = 40}
+
+
+
+Definition at line 31 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a3733bb593f2459fbde63dd7d7b41c527}\label{namespacepedal__simulation__interpolation__cubic__derivative_a3733bb593f2459fbde63dd7d7b41c527}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!PRINT\_DEBUG@{PRINT\_DEBUG}}
+\index{PRINT\_DEBUG@{PRINT\_DEBUG}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{PRINT\_DEBUG}{PRINT\_DEBUG}}
+{\footnotesize\ttfamily bool pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+P\+R\+I\+N\+T\+\_\+\+D\+E\+B\+UG = True}
+
+
+
+M\+O\+D\+U\+LE P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#. 
+
+
+
+Definition at line 24 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_ab65f0e2364123ac236825cbeb227e37d}\label{namespacepedal__simulation__interpolation__cubic__derivative_ab65f0e2364123ac236825cbeb227e37d}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!RECORDED\_TRAJECTORY\_FILENAME@{RECORDED\_TRAJECTORY\_FILENAME}}
+\index{RECORDED\_TRAJECTORY\_FILENAME@{RECORDED\_TRAJECTORY\_FILENAME}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{RECORDED\_TRAJECTORY\_FILENAME}{RECORDED\_TRAJECTORY\_FILENAME}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+R\+E\+C\+O\+R\+D\+E\+D\+\_\+\+T\+R\+A\+J\+E\+C\+T\+O\+R\+Y\+\_\+\+F\+I\+L\+E\+N\+A\+ME = \char`\"{}capture\+\_\+trajectory/desember\+\_\+pedal\+\_\+trajectory.\+json\char`\"{}}
+
+
+
+Definition at line 26 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_aa168535cfe5c5c0f1d238d2558fa1431}\label{namespacepedal__simulation__interpolation__cubic__derivative_aa168535cfe5c5c0f1d238d2558fa1431}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!RIGHT\_ANKLE\_JOINT@{RIGHT\_ANKLE\_JOINT}}
+\index{RIGHT\_ANKLE\_JOINT@{RIGHT\_ANKLE\_JOINT}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{RIGHT\_ANKLE\_JOINT}{RIGHT\_ANKLE\_JOINT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+R\+I\+G\+H\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+J\+O\+I\+NT = \char`\"{}right\+\_\+ankle\char`\"{}}
+
+
+
+Definition at line 57 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_ab7526d770fd7644fb4ae9877e2e5a0a4}\label{namespacepedal__simulation__interpolation__cubic__derivative_ab7526d770fd7644fb4ae9877e2e5a0a4}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!RIGHT\_HIP\_JOINT@{RIGHT\_HIP\_JOINT}}
+\index{RIGHT\_HIP\_JOINT@{RIGHT\_HIP\_JOINT}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{RIGHT\_HIP\_JOINT}{RIGHT\_HIP\_JOINT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+R\+I\+G\+H\+T\+\_\+\+H\+I\+P\+\_\+\+J\+O\+I\+NT = \char`\"{}right\+\_\+hip\char`\"{}}
+
+
+
+Definition at line 55 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_aa114b9878d6a2c2217f63815a71b8947}\label{namespacepedal__simulation__interpolation__cubic__derivative_aa114b9878d6a2c2217f63815a71b8947}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!RIGHT\_KNEE\_JOINT@{RIGHT\_KNEE\_JOINT}}
+\index{RIGHT\_KNEE\_JOINT@{RIGHT\_KNEE\_JOINT}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{RIGHT\_KNEE\_JOINT}{RIGHT\_KNEE\_JOINT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+R\+I\+G\+H\+T\+\_\+\+K\+N\+E\+E\+\_\+\+J\+O\+I\+NT = \char`\"{}right\+\_\+knee\char`\"{}}
+
+
+
+Definition at line 56 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_abc7f6cec05b87f791fee83eb74980f62}\label{namespacepedal__simulation__interpolation__cubic__derivative_abc7f6cec05b87f791fee83eb74980f62}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!ROS\_JOINT\_ANKLE\_LEFT@{ROS\_JOINT\_ANKLE\_LEFT}}
+\index{ROS\_JOINT\_ANKLE\_LEFT@{ROS\_JOINT\_ANKLE\_LEFT}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{ROS\_JOINT\_ANKLE\_LEFT}{ROS\_JOINT\_ANKLE\_LEFT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+L\+E\+FT = \char`\"{}joint\+\_\+foot\+\_\+left\char`\"{}}
+
+
+
+Definition at line 53 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a6f9c7c09e4cedc7a787240de28dcc011}\label{namespacepedal__simulation__interpolation__cubic__derivative_a6f9c7c09e4cedc7a787240de28dcc011}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!ROS\_JOINT\_ANKLE\_RIGHT@{ROS\_JOINT\_ANKLE\_RIGHT}}
+\index{ROS\_JOINT\_ANKLE\_RIGHT@{ROS\_JOINT\_ANKLE\_RIGHT}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{ROS\_JOINT\_ANKLE\_RIGHT}{ROS\_JOINT\_ANKLE\_RIGHT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+A\+N\+K\+L\+E\+\_\+\+R\+I\+G\+HT = \char`\"{}joint\+\_\+foot\+\_\+right\char`\"{}}
+
+
+
+Definition at line 50 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a6f9e3fd503a3e458136397662c906500}\label{namespacepedal__simulation__interpolation__cubic__derivative_a6f9e3fd503a3e458136397662c906500}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!ROS\_JOINT\_HIP\_LEFT@{ROS\_JOINT\_HIP\_LEFT}}
+\index{ROS\_JOINT\_HIP\_LEFT@{ROS\_JOINT\_HIP\_LEFT}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{ROS\_JOINT\_HIP\_LEFT}{ROS\_JOINT\_HIP\_LEFT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+H\+I\+P\+\_\+\+L\+E\+FT = \char`\"{}joint\+\_\+hip\+\_\+left\char`\"{}}
+
+
+
+Definition at line 51 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_aa6d7a9892d82d31f98321841f5682f02}\label{namespacepedal__simulation__interpolation__cubic__derivative_aa6d7a9892d82d31f98321841f5682f02}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!ROS\_JOINT\_HIP\_RIGHT@{ROS\_JOINT\_HIP\_RIGHT}}
+\index{ROS\_JOINT\_HIP\_RIGHT@{ROS\_JOINT\_HIP\_RIGHT}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{ROS\_JOINT\_HIP\_RIGHT}{ROS\_JOINT\_HIP\_RIGHT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+H\+I\+P\+\_\+\+R\+I\+G\+HT = \char`\"{}joint\+\_\+hip\+\_\+right\char`\"{}}
+
+
+
+Definition at line 48 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a5c57e261203d61b137f8c0f63dd70358}\label{namespacepedal__simulation__interpolation__cubic__derivative_a5c57e261203d61b137f8c0f63dd70358}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!ROS\_JOINT\_KNEE\_LEFT@{ROS\_JOINT\_KNEE\_LEFT}}
+\index{ROS\_JOINT\_KNEE\_LEFT@{ROS\_JOINT\_KNEE\_LEFT}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{ROS\_JOINT\_KNEE\_LEFT}{ROS\_JOINT\_KNEE\_LEFT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+K\+N\+E\+E\+\_\+\+L\+E\+FT = \char`\"{}joint\+\_\+knee\+\_\+left\char`\"{}}
+
+
+
+Definition at line 52 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a2cf09e42ef98b38f9f321007cc4d1040}\label{namespacepedal__simulation__interpolation__cubic__derivative_a2cf09e42ef98b38f9f321007cc4d1040}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!ROS\_JOINT\_KNEE\_RIGHT@{ROS\_JOINT\_KNEE\_RIGHT}}
+\index{ROS\_JOINT\_KNEE\_RIGHT@{ROS\_JOINT\_KNEE\_RIGHT}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{ROS\_JOINT\_KNEE\_RIGHT}{ROS\_JOINT\_KNEE\_RIGHT}}
+{\footnotesize\ttfamily string pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+R\+O\+S\+\_\+\+J\+O\+I\+N\+T\+\_\+\+K\+N\+E\+E\+\_\+\+R\+I\+G\+HT = \char`\"{}joint\+\_\+knee\+\_\+right\char`\"{}}
+
+
+
+Definition at line 49 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a15cdfa21f373ce0948d66b64f98eae22}\label{namespacepedal__simulation__interpolation__cubic__derivative_a15cdfa21f373ce0948d66b64f98eae22}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!x\_pedal\_record@{x\_pedal\_record}}
+\index{x\_pedal\_record@{x\_pedal\_record}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{x\_pedal\_record}{x\_pedal\_record}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+x\+\_\+pedal\+\_\+record = \mbox{[}$\,$\mbox{]}}
+
+
+
+G\+L\+O\+B\+AL V\+A\+R\+I\+A\+B\+L\+ES \#\#\#. 
+
+
+
+Definition at line 45 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+
+\mbox{\Hypertarget{namespacepedal__simulation__interpolation__cubic__derivative_a237b936a014f1444eea759e6081f5d4f}\label{namespacepedal__simulation__interpolation__cubic__derivative_a237b936a014f1444eea759e6081f5d4f}} 
+\index{pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}!y\_pedal\_record@{y\_pedal\_record}}
+\index{y\_pedal\_record@{y\_pedal\_record}!pedal\_simulation\_interpolation\_cubic\_derivative@{pedal\_simulation\_interpolation\_cubic\_derivative}}
+\subsubsection{\texorpdfstring{y\_pedal\_record}{y\_pedal\_record}}
+{\footnotesize\ttfamily list pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+y\+\_\+pedal\+\_\+record = \mbox{[}$\,$\mbox{]}}
+
+
+
+Definition at line 46 of file pedal\+\_\+simulation\+\_\+interpolation\+\_\+cubic\+\_\+derivative.\+py.
+

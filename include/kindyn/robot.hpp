@@ -58,6 +58,7 @@
 #include <roboy_simulation_msgs/JointState.h>
 #include <roboy_middleware_msgs/ForwardKinematics.h>
 #include <roboy_middleware_msgs/InverseKinematics.h>
+#include <roboy_middleware_msgs/InverseKinematicsMultipleFrames.h>
 #include <roboy_middleware_msgs/MotorCommand.h>
 #include <roboy_middleware_msgs/MotorStatus.h>
 #include <roboy_control_msgs/MoveEndEffectorAction.h>
@@ -157,6 +158,9 @@ namespace cardsflow {
              */
             bool InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::Request &req,
                                           roboy_middleware_msgs::InverseKinematics::Response &res);
+
+            bool InverseKinematicsMultipleFramesService(roboy_middleware_msgs::InverseKinematicsMultipleFrames::Request &req,
+                                          roboy_middleware_msgs::InverseKinematicsMultipleFrames::Response &res);
             /**
              * Callback for Interactive Marker Feedback of endeffectors. When the Interactive Marker is released in rviz,
              * the IK routine is called and the solution directly applied to the robot q_target angles
@@ -207,7 +211,7 @@ namespace cardsflow {
             ros::Publisher robot_state_pub, tendon_state_pub, joint_state_pub; /// ROS robot pose and tendon publisher
             ros::Publisher robot_state_target_pub, tendon_state_target_pub, joint_state_target_pub; /// target publisher
             ros::Subscriber controller_type_sub, joint_state_sub, floating_base_sub, interactive_marker_sub; /// ROS subscribers
-            ros::ServiceServer ik_srv, fk_srv;
+            ros::ServiceServer ik_srv, ik_two_frames_srv, fk_srv;
             map<string,boost::shared_ptr<actionlib::SimpleActionServer<roboy_control_msgs::MoveEndEffectorAction>>> moveEndEffector_as;
 
 
@@ -249,6 +253,7 @@ namespace cardsflow {
             MatrixXd M; /// The Mass matrix of the robot
             VectorXd CG; /// The Coriolis+Gravity term of the robot
             VectorXd q, qd, qdd; /// joint positon, velocity, acceleration
+            VectorXd q_min, q_max; /// joint limits
             VectorXd q_target, qd_target, qdd_target; /// joint positon, velocity, acceleration targets
             VectorXd q_target_prev, qd_target_prev, qdd_target_prev; /// joint positon, velocity, acceleration targets
             VectorXd l_int, l, l_target; /// tendon length and length change
@@ -288,6 +293,7 @@ namespace cardsflow {
             hardware_interface::EffortJointInterface joint_command_interface; /// ros control joint command interface
             hardware_interface::CardsflowStateInterface cardsflow_state_interface; /// cardsflow state interface
             hardware_interface::CardsflowCommandInterface cardsflow_command_interface; /// cardsflow command interface
+            bool first_update = true;
         };
     }
 }

@@ -1,0 +1,1788 @@
+\hypertarget{namespacesteering__simulation}{}\section{steering\+\_\+simulation Namespace Reference}
+\label{namespacesteering__simulation}\index{steering\_simulation@{steering\_simulation}}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacesteering__simulation_a04ebcaad2fa2cbdb0fd13fdb179d0f50}{joint\+\_\+state\+\_\+callback}} (joint\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Documentation for a function. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacesteering__simulation_af5611a9446037e0aee0542ebe1c111fc}{get\+\_\+joint\+\_\+position}} (joint\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Documentation for a function. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacesteering__simulation_af85ca971fcf35d30c3647fb0c3732195}{regress\+\_\+joint\+\_\+positions\+\_\+from\+\_\+file}} (filename)
+\begin{DoxyCompactList}\small\item\em Documentation for a function. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacesteering__simulation_a628f6027d970db8d4071e5846de522fc}{import\+\_\+joint\+\_\+trajectory\+\_\+record}} ()
+\begin{DoxyCompactList}\small\item\em Documentation for a function. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacesteering__simulation_a6e3b1fe25edfbec1713a6bd3ef2a445e}{interpolate\+\_\+joint\+\_\+angles}} ()
+\begin{DoxyCompactList}\small\item\em Documentation for a function. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacesteering__simulation_a920f69692c79162b2296b1a220bba527}{get\+\_\+angle\+\_\+difference}} (angle\+\_\+1, angle\+\_\+2)
+\begin{DoxyCompactList}\small\item\em Documentation for a function. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacesteering__simulation_a787fcfa65451a11a9f94afaea6a6e809}{set\+\_\+joint\+\_\+controller\+\_\+parameters}} (proportional\+\_\+value, derivative\+\_\+value)
+\begin{DoxyCompactList}\small\item\em Documentation for a function. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacesteering__simulation_ade71f08294031e29a94a9be5cc1f0961}{update\+\_\+steering\+\_\+angle}} (steering\+\_\+angle\+\_\+\+F32)
+\begin{DoxyCompactList}\small\item\em Documentation for a function. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacesteering__simulation_abe8ecf85be641d2a56c547e4e27946ba}{check\+\_\+steering\+\_\+angle\+\_\+range}} (steering\+\_\+angle)
+\begin{DoxyCompactList}\small\item\em Documentation for a function. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacesteering__simulation_aa303bfd6d5e874d19fda9e678aa4c3d9}{publish\+\_\+joint\+\_\+angle}} (joint\+\_\+name, steering\+\_\+angle)
+\begin{DoxyCompactList}\small\item\em Documentation for a function. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacesteering__simulation_a7e6cf517d5eedfae29bc0b05bada6a3e}{steering\+\_\+control}} ()
+\begin{DoxyCompactList}\small\item\em Documentation for a function. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacesteering__simulation_af3dec39cd8650ad512084dfda32c577a}{main}} ()
+\begin{DoxyCompactList}\small\item\em Documentation for a function. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{namespacesteering__simulation_a13db823567e2a46183a6887d72165d65}{P\+R\+I\+N\+T\+\_\+\+D\+E\+B\+UG}} = True
+\item 
+string \mbox{\hyperlink{namespacesteering__simulation_ab4de54bdf1b917546004a6eb92a8cd27}{R\+E\+C\+O\+R\+D\+E\+D\+\_\+\+T\+R\+A\+J\+E\+C\+T\+O\+R\+Y\+\_\+\+F\+I\+L\+E\+N\+A\+ME}} = \char`\"{}trajectory\+\_\+steering/steering\+\_\+trajectory.\+json\char`\"{}
+\item 
+float \mbox{\hyperlink{namespacesteering__simulation_a9d7ce571547e355ac4b1794548af1682}{J\+O\+I\+N\+T\+\_\+\+T\+A\+R\+G\+E\+T\+\_\+\+E\+R\+R\+O\+R\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE}} = 0.\+01
+\item 
+float \mbox{\hyperlink{namespacesteering__simulation_aa98f000080f13c942c2287914f8ef406}{U\+P\+D\+A\+T\+E\+\_\+\+F\+R\+E\+Q\+U\+E\+N\+CY}} = 0.\+001
+\item 
+int \mbox{\hyperlink{namespacesteering__simulation_af6a6a70049e66b65e195d32a0e566f39}{M\+A\+X\+\_\+\+A\+N\+G\+L\+E\+\_\+\+C\+H\+A\+N\+GE}} = np.\+pi / 72
+\item 
+float \mbox{\hyperlink{namespacesteering__simulation_a4f4712994f92a7c212a9fc29f90efafd}{S\+T\+E\+P\+\_\+\+T\+R\+A\+N\+S\+I\+T\+I\+O\+N\+\_\+\+T\+I\+ME}} = 2.\+5
+\item 
+string \mbox{\hyperlink{namespacesteering__simulation_aa17ebfc23242a5eb70e77d1c7b838b41}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+shoulder\+\_\+axis0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__simulation_a30fbab19241dfbe329ee608a9c47a31b}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+shoulder\+\_\+axis1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__simulation_a11b82fa8fdda843272cc39e43abc48e5}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+shoulder\+\_\+axis2\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__simulation_a349c0f63ddcdf619cf509dceff5f53a6}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+shoulder\+\_\+axis0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__simulation_a613bf71b0e0c3452f92b4853e2e62220}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+shoulder\+\_\+axis1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__simulation_ad9da62cd2eb0c4000d1fc4eda6017364}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+shoulder\+\_\+axis2\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__simulation_a87ec11ba1fc1588a0cd2cc310e9dd12d}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+R\+I\+G\+HT}} = \char`\"{}elbow\+\_\+right\+\_\+rot0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__simulation_a1a8aae1f17bde6bb8d80c73e7f546434}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+R\+I\+G\+HT}} = \char`\"{}elbow\+\_\+right\+\_\+rot1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__simulation_a6bc051ea14ae98684ec54faf12a80d18}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+L\+E\+FT}} = \char`\"{}elbow\+\_\+left\+\_\+rot0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__simulation_a95ae3d26f956b491229c78d10dee1aba}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+L\+E\+FT}} = \char`\"{}elbow\+\_\+left\+\_\+rot1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__simulation_a97c26a57b04116975fbd66982ffe0477}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+wrist\+\_\+0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__simulation_a1ff71de09a5b70901b4321e8cf68d061}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+wrist\+\_\+1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__simulation_a1292b9f1429c017d07ec3de6b2f0a7bf}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+wrist\+\_\+0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__simulation_a0032de0d6332a1ae30dee3b30019d5f8}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+wrist\+\_\+1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__simulation_a745b702c18a3c9c7ec661d2255a662c6}{J\+O\+I\+N\+T\+\_\+\+B\+I\+K\+E\+\_\+\+F\+R\+O\+NT}} = \char`\"{}joint\+\_\+front\char`\"{}
+\item 
+list \mbox{\hyperlink{namespacesteering__simulation_a76a7d611ad7418a972e460503b3f6ad5}{\+\_\+joints\+\_\+list}}
+\item 
+int \mbox{\hyperlink{namespacesteering__simulation_ab2b60690901db0cb00dcb7a84a575208}{\+\_\+num\+Trajectory\+Points}} = 0
+\item 
+list \mbox{\hyperlink{namespacesteering__simulation_ad897df89602b12dca6cf1d693cd90948}{\+\_\+trajectory\+Steering}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__simulation_a8d39f809cc1766c3ac57a804f35d15fb}{\+\_\+trajectory\+Shoulder0\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__simulation_a15d8c8b72dff883083c7e5993efd61b3}{\+\_\+trajectory\+Shoulder1\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__simulation_a287bcf5cdb0db4a5423e7a275a85d2bb}{\+\_\+trajectory\+Shoulder2\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__simulation_a679488f2cc2cdc4fd40d69ef424875a4}{\+\_\+trajectory\+Shoulder0\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__simulation_a30de866115acae4df94758efa870918e}{\+\_\+trajectory\+Shoulder1\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__simulation_a6e022b068f1ffb14c82a9a6433914fc3}{\+\_\+trajectory\+Shoulder2\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__simulation_a34fabb2baf450d02baa482645b1900a9}{\+\_\+trajectory\+Elbow0\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__simulation_aa3297ef058f1ff384a123c5fbcc47b9e}{\+\_\+trajectory\+Elbow1\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__simulation_a7ac46e89903b8b00bfcea25d5a0a8514}{\+\_\+trajectory\+Elbow0\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__simulation_adb1fd212106914e45e4864d5a3950884}{\+\_\+trajectory\+Elbow1\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__simulation_afe9e1def4f12d1f011a8e0e6c2051f48}{\+\_\+trajectory\+Wrist0\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__simulation_a48daa3f5dc8c583ae35007d94df2303e}{\+\_\+trajectory\+Wrist1\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__simulation_a65b6250dbe1a9a65e76a41c62da9ea7e}{\+\_\+trajectory\+Wrist0\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__simulation_a4f098ae88427b37c42fde098a61fb399}{\+\_\+trajectory\+Wrist1\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_ab34c683386394a4c7bb2641db1866aef}{\+\_\+interpolated\+Shoulder0\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a0e35e7ece667da88fa757991130d307d}{\+\_\+interpolated\+Shoulder1\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a756387ef588b4049bba42da3f65fef74}{\+\_\+interpolated\+Shoulder2\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a02b9a3d44de85acf12552bea98742482}{\+\_\+interpolated\+Shoulder0\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a3d00a16f91310a8d1e087d1ae152ac7e}{\+\_\+interpolated\+Shoulder1\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_ac4a5b7a74bda32146e2330b740a782e5}{\+\_\+interpolated\+Shoulder2\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_ae6eeda8709f7c3112029ba2123f2a0cd}{\+\_\+interpolated\+Elbow0\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_ac91c7d1fa823783ae6d5e03fd9ebdddb}{\+\_\+interpolated\+Elbow1\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_ab4a2cd7647ac12ccda18d55806c1c968}{\+\_\+interpolated\+Elbow0\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_ab9d03f365a99bbc5047aa6f1693bb650}{\+\_\+interpolated\+Elbow1\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_aaec0a977fbc1c9147a917be325f3a411}{\+\_\+interpolated\+Wrist0\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a348d2aedeba474cdc52c04f6920c8d2b}{\+\_\+interpolated\+Wrist1\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a89100082be780423ef8cb32970fb1719}{\+\_\+interpolated\+Wrist0\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a044a88f1d8e7442e56c31647186fd626}{\+\_\+interpolated\+Wrist1\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a9c00f2252bbdc56a767e0dd14244a172}{\+\_\+regressed\+Shoulder0\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a31e0576d19447bee4b24729459ff4b94}{\+\_\+regressed\+Shoulder1\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_aeec070bce57c67b666f5ebdbae1e27de}{\+\_\+regressed\+Shoulder2\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a4203655e78045f63c997316cc5c351e4}{\+\_\+regressed\+Shoulder0\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a7c1b938e9f72b1f50694edd164cb8419}{\+\_\+regressed\+Shoulder1\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a421efc578e81ec549903721c34847cd8}{\+\_\+regressed\+Shoulder2\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a9051de1d3ca856247286471428f4904a}{\+\_\+regressed\+Elbow0\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a8a1973e968c7a7cd522fa01b6bdcc708}{\+\_\+regressed\+Elbow1\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a6578ba913df0e70ad8bac370b2487690}{\+\_\+regressed\+Elbow0\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a9abb832a963446f645e9e2ef1c27c7bd}{\+\_\+regressed\+Elbow1\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a1c654b15f1b8ea91b2997bd5de4f8b9d}{\+\_\+regressed\+Wrist0\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a39e4eb08bba548e27a24df3b40a96c48}{\+\_\+regressed\+Wrist1\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a99abea20d1f4b510dd4dfb589201b963}{\+\_\+regressed\+Wrist0\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_aa295ffef98b1c03490f0cac204d3d7f1}{\+\_\+regressed\+Wrist1\+Left}} = None
+\item 
+dictionary \mbox{\hyperlink{namespacesteering__simulation_a151daa71bd805d2dd04fe522c1ddac4f}{\+\_\+joints\+Status\+Data}}
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a7824803c03df4637e22449c926522d6d}{ros\+\_\+right\+\_\+shoulder\+\_\+axis0\+\_\+pub}}
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a5da8818119a4289e3ed21573706ee4ad}{ros\+\_\+right\+\_\+shoulder\+\_\+axis1\+\_\+pub}}
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a70a5d7e7cbdd1a4af5ac27b114633b9d}{ros\+\_\+right\+\_\+shoulder\+\_\+axis2\+\_\+pub}}
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a0f7519e7fbc7a8cabdcdde1482ccacde}{ros\+\_\+left\+\_\+shoulder\+\_\+axis0\+\_\+pub}} = rospy.\+Publisher(\textquotesingle{}/left\+\_\+shoulder\+\_\+axis0/left\+\_\+shoulder\+\_\+axis0/target\textquotesingle{}, Float32, queue\+\_\+size=2)
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a75aaf98b6863a0aee4b61ee17b0133ba}{ros\+\_\+left\+\_\+shoulder\+\_\+axis1\+\_\+pub}} = rospy.\+Publisher(\textquotesingle{}/left\+\_\+shoulder\+\_\+axis1/left\+\_\+shoulder\+\_\+axis1/target\textquotesingle{}, Float32, queue\+\_\+size=2)
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_af594d9d0bfdf575e6e26e0b6a3a53c8b}{ros\+\_\+left\+\_\+shoulder\+\_\+axis2\+\_\+pub}} = rospy.\+Publisher(\textquotesingle{}/left\+\_\+shoulder\+\_\+axis2/left\+\_\+shoulder\+\_\+axis2/target\textquotesingle{}, Float32, queue\+\_\+size=2)
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a3d22b5897eee35c841b1df82b5d02111}{ros\+\_\+elbow\+\_\+right\+\_\+rot0\+\_\+pub}} = rospy.\+Publisher(\textquotesingle{}/elbow\+\_\+right\+\_\+rot0/elbow\+\_\+right\+\_\+rot0/target\textquotesingle{}, Float32, queue\+\_\+size=2)
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a1280b460562790964403c7752bbc056d}{ros\+\_\+elbow\+\_\+right\+\_\+rot1\+\_\+pub}} = rospy.\+Publisher(\textquotesingle{}/elbow\+\_\+right\+\_\+rot1/elbow\+\_\+right\+\_\+rot1/target\textquotesingle{}, Float32, queue\+\_\+size=2)
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a3e18ade3c9e741db3cd48035d7d11b43}{ros\+\_\+elbow\+\_\+left\+\_\+rot0\+\_\+pub}} = rospy.\+Publisher(\textquotesingle{}/elbow\+\_\+left\+\_\+rot0/elbow\+\_\+left\+\_\+rot0/target\textquotesingle{}, Float32, queue\+\_\+size=2)
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a7cf7d50a6b2f01251abedd8a59233be3}{ros\+\_\+elbow\+\_\+left\+\_\+rot1\+\_\+pub}} = rospy.\+Publisher(\textquotesingle{}/elbow\+\_\+left\+\_\+rot1/elbow\+\_\+left\+\_\+rot1/target\textquotesingle{}, Float32, queue\+\_\+size=2)
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a8e0b19adafe885231a487bf8378b0fa3}{ros\+\_\+right\+\_\+wrist\+\_\+0\+\_\+pub}} = rospy.\+Publisher(\textquotesingle{}/right\+\_\+wrist\+\_\+0/right\+\_\+wrist\+\_\+0/target\textquotesingle{}, Float32, queue\+\_\+size=2)
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a7650fabdc834af9527c1add7de4e3c7e}{ros\+\_\+right\+\_\+wrist\+\_\+1\+\_\+pub}} = rospy.\+Publisher(\textquotesingle{}/right\+\_\+wrist\+\_\+1/right\+\_\+wrist\+\_\+1/target\textquotesingle{}, Float32, queue\+\_\+size=2)
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_aae568c25dad5bee09d010a369a03d5c4}{ros\+\_\+left\+\_\+wrist\+\_\+0\+\_\+pub}} = rospy.\+Publisher(\textquotesingle{}/left\+\_\+wrist\+\_\+0/left\+\_\+wrist\+\_\+0/target\textquotesingle{}, Float32, queue\+\_\+size=2)
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_ab5f317214f6776ddc111dee9afe1f0c3}{ros\+\_\+left\+\_\+wrist\+\_\+1\+\_\+pub}} = rospy.\+Publisher(\textquotesingle{}/left\+\_\+wrist\+\_\+1/left\+\_\+wrist\+\_\+1/target\textquotesingle{}, Float32, queue\+\_\+size=2)
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_a2f98d3e960637df34f895f4ccee97bbe}{ros\+\_\+bike\+\_\+front\+\_\+pub}} = rospy.\+Publisher(\textquotesingle{}/joint\+\_\+front/joint\+\_\+front/target\textquotesingle{}, Float32, queue\+\_\+size=2)
+\item 
+\mbox{\hyperlink{namespacesteering__simulation_af24aa0340a9184e1a00a96bc8d68aef8}{ros\+\_\+log\+\_\+error\+\_\+pub}} = rospy.\+Publisher(\textquotesingle{}chatter\textquotesingle{}, String, queue\+\_\+size=10)
+\item 
+int \mbox{\hyperlink{namespacesteering__simulation_a1906425964226a8e34fc3f159b4d54fb}{requested\+\_\+steering\+\_\+angle}} = 0
+\item 
+bool \mbox{\hyperlink{namespacesteering__simulation_aa5275dfb8d3750aaec001938cd02a97d}{angle\+\_\+change\+\_\+successful}} = True
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacesteering__simulation_abe8ecf85be641d2a56c547e4e27946ba}\label{namespacesteering__simulation_abe8ecf85be641d2a56c547e4e27946ba}} 
+\index{steering\_simulation@{steering\_simulation}!check\_steering\_angle\_range@{check\_steering\_angle\_range}}
+\index{check\_steering\_angle\_range@{check\_steering\_angle\_range}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{check\_steering\_angle\_range()}{check\_steering\_angle\_range()}}
+{\footnotesize\ttfamily def steering\+\_\+simulation.\+check\+\_\+steering\+\_\+angle\+\_\+range (\begin{DoxyParamCaption}\item[{}]{steering\+\_\+angle }\end{DoxyParamCaption})}
+
+
+
+Documentation for a function. 
+
+Checks if the parameter @steering\+\_\+angle is within the range of reachable steering-\/angles of Roboy. 
+
+Definition at line 428 of file steering\+\_\+simulation.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{428 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__simulation_abe8ecf85be641d2a56c547e4e27946ba}{check\_steering\_angle\_range}}(steering\_angle):}
+\DoxyCodeLine{429     min\_angle = min(\_trajectorySteering)}
+\DoxyCodeLine{430     max\_angle = max(\_trajectorySteering)}
+\DoxyCodeLine{431     \textcolor{keywordflow}{if} min\_angle <= steering\_angle <= max\_angle:}
+\DoxyCodeLine{432         \textcolor{keywordflow}{return} \textcolor{keyword}{True}}
+\DoxyCodeLine{433     \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{434         log\_msg = \textcolor{stringliteral}{"requested steering\_angle ("} + str(steering\_angle) + \textcolor{stringliteral}{") out of range ["} \(\backslash\)}
+\DoxyCodeLine{435                   + str(min\_angle) + \textcolor{stringliteral}{";"} + str(max\_angle) + \textcolor{stringliteral}{"]"}}
+\DoxyCodeLine{436         ros\_log\_error\_pub.publish(log\_msg)}
+\DoxyCodeLine{437         \textcolor{keywordflow}{return} \textcolor{keyword}{False}}
+\DoxyCodeLine{438 }
+\DoxyCodeLine{439 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__simulation_abe8ecf85be641d2a56c547e4e27946ba_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__simulation_a920f69692c79162b2296b1a220bba527}\label{namespacesteering__simulation_a920f69692c79162b2296b1a220bba527}} 
+\index{steering\_simulation@{steering\_simulation}!get\_angle\_difference@{get\_angle\_difference}}
+\index{get\_angle\_difference@{get\_angle\_difference}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{get\_angle\_difference()}{get\_angle\_difference()}}
+{\footnotesize\ttfamily def steering\+\_\+simulation.\+get\+\_\+angle\+\_\+difference (\begin{DoxyParamCaption}\item[{}]{angle\+\_\+1,  }\item[{}]{angle\+\_\+2 }\end{DoxyParamCaption})}
+
+
+
+Documentation for a function. 
+
+Returns the absolute difference of two angles within the interval \mbox{[}0;2pi\mbox{]} 
+
+Definition at line 393 of file steering\+\_\+simulation.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{393 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__simulation_a920f69692c79162b2296b1a220bba527}{get\_angle\_difference}}(angle\_1, angle\_2):}
+\DoxyCodeLine{394     \textcolor{keywordflow}{return} np.pi - np.abs(np.abs(angle\_1 - angle\_2) - np.pi)}
+\DoxyCodeLine{395 }
+\DoxyCodeLine{396 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__simulation_a920f69692c79162b2296b1a220bba527_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__simulation_af5611a9446037e0aee0542ebe1c111fc}\label{namespacesteering__simulation_af5611a9446037e0aee0542ebe1c111fc}} 
+\index{steering\_simulation@{steering\_simulation}!get\_joint\_position@{get\_joint\_position}}
+\index{get\_joint\_position@{get\_joint\_position}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{get\_joint\_position()}{get\_joint\_position()}}
+{\footnotesize\ttfamily def steering\+\_\+simulation.\+get\+\_\+joint\+\_\+position (\begin{DoxyParamCaption}\item[{}]{joint\+\_\+name }\end{DoxyParamCaption})}
+
+
+
+Documentation for a function. 
+
+Returns current position of joint-\/angle @joint\+Name. . 
+
+Definition at line 206 of file steering\+\_\+simulation.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{206 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__simulation_af5611a9446037e0aee0542ebe1c111fc}{get\_joint\_position}}(joint\_name):}
+\DoxyCodeLine{207     \textcolor{keyword}{global} \_jointsStatusData}
+\DoxyCodeLine{208     \textcolor{keywordflow}{return} \_jointsStatusData[joint\_name ][ \textcolor{stringliteral}{"Pos"} ]}
+\DoxyCodeLine{209 }
+\DoxyCodeLine{210 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__simulation_af5611a9446037e0aee0542ebe1c111fc_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__simulation_a628f6027d970db8d4071e5846de522fc}\label{namespacesteering__simulation_a628f6027d970db8d4071e5846de522fc}} 
+\index{steering\_simulation@{steering\_simulation}!import\_joint\_trajectory\_record@{import\_joint\_trajectory\_record}}
+\index{import\_joint\_trajectory\_record@{import\_joint\_trajectory\_record}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{import\_joint\_trajectory\_record()}{import\_joint\_trajectory\_record()}}
+{\footnotesize\ttfamily def steering\+\_\+simulation.\+import\+\_\+joint\+\_\+trajectory\+\_\+record (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Documentation for a function. 
+
+Collects and saves all joint-\/ and steering-\/angles from the pre-\/captured trajectory from the @read\+\_\+file (global variable). 
+
+Definition at line 278 of file steering\+\_\+simulation.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{278 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__simulation_a628f6027d970db8d4071e5846de522fc}{import\_joint\_trajectory\_record}}():}
+\DoxyCodeLine{279     \textcolor{keyword}{global} \_trajectorySteering}
+\DoxyCodeLine{280     \textcolor{keyword}{global} \_trajectoryShoulder0Right}
+\DoxyCodeLine{281     \textcolor{keyword}{global} \_trajectoryShoulder1Right}
+\DoxyCodeLine{282     \textcolor{keyword}{global} \_trajectoryShoulder2Right}
+\DoxyCodeLine{283     \textcolor{keyword}{global} \_trajectoryShoulder0Left}
+\DoxyCodeLine{284     \textcolor{keyword}{global} \_trajectoryShoulder1Left}
+\DoxyCodeLine{285     \textcolor{keyword}{global} \_trajectoryShoulder2Left}
+\DoxyCodeLine{286     \textcolor{keyword}{global} \_trajectoryElbow0Right}
+\DoxyCodeLine{287     \textcolor{keyword}{global} \_trajectoryElbow1Right}
+\DoxyCodeLine{288     \textcolor{keyword}{global} \_trajectoryElbow0Left}
+\DoxyCodeLine{289     \textcolor{keyword}{global} \_trajectoryElbow1Left}
+\DoxyCodeLine{290     \textcolor{keyword}{global} \_trajectoryWrist0Right}
+\DoxyCodeLine{291     \textcolor{keyword}{global} \_trajectoryWrist1Right}
+\DoxyCodeLine{292     \textcolor{keyword}{global} \_trajectoryWrist0Left}
+\DoxyCodeLine{293     \textcolor{keyword}{global} \_trajectoryWrist1Left}
+\DoxyCodeLine{294 }
+\DoxyCodeLine{295     \textcolor{keyword}{global} PRINT\_DEBUG}
+\DoxyCodeLine{296 }
+\DoxyCodeLine{297     \textcolor{keyword}{with} open(RECORDED\_TRAJECTORY\_FILENAME, \textcolor{stringliteral}{"r"}) \textcolor{keyword}{as} read\_file:}
+\DoxyCodeLine{298         loaded\_data = json.load(read\_file)}
+\DoxyCodeLine{299 }
+\DoxyCodeLine{300     \textcolor{keywordflow}{if} loaded\_data[\textcolor{stringliteral}{"num\_points"}] \textcolor{keywordflow}{is} \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{301         \textcolor{keywordflow}{return} 0}
+\DoxyCodeLine{302     \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{303         \_numTrajectoryPoints = loaded\_data[\textcolor{stringliteral}{"num\_points"}]}
+\DoxyCodeLine{304 }
+\DoxyCodeLine{305     \textcolor{keywordflow}{for} pointIterator \textcolor{keywordflow}{in} range(\_numTrajectoryPoints):}
+\DoxyCodeLine{306         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"} + str(pointIterator) \textcolor{keywordflow}{in} loaded\_data:}
+\DoxyCodeLine{307             \_trajectorySteering.append(loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Right"}][\textcolor{stringliteral}{"Steering\_angle"}])}
+\DoxyCodeLine{308 }
+\DoxyCodeLine{309             \_trajectoryShoulder0Right.append(}
+\DoxyCodeLine{310                 loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Right"}][JOINT\_SHOULDER\_AXIS0\_RIGHT])}
+\DoxyCodeLine{311             \_trajectoryShoulder1Right.append(}
+\DoxyCodeLine{312                 loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Right"}][JOINT\_SHOULDER\_AXIS1\_RIGHT])}
+\DoxyCodeLine{313             \_trajectoryShoulder2Right.append(}
+\DoxyCodeLine{314                 loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Right"}][JOINT\_SHOULDER\_AXIS2\_RIGHT])}
+\DoxyCodeLine{315             \_trajectoryElbow0Right.append(}
+\DoxyCodeLine{316                 loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Right"}][JOINT\_ELBOW\_ROT0\_RIGHT])}
+\DoxyCodeLine{317             \_trajectoryElbow1Right.append(}
+\DoxyCodeLine{318                 loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Right"}][JOINT\_ELBOW\_ROT1\_RIGHT])}
+\DoxyCodeLine{319             \_trajectoryWrist0Right.append(}
+\DoxyCodeLine{320                 loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Right"}][JOINT\_WRIST\_0\_RIGHT])}
+\DoxyCodeLine{321             \_trajectoryWrist1Right.append(}
+\DoxyCodeLine{322                 loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Right"}][JOINT\_WRIST\_1\_RIGHT])}
+\DoxyCodeLine{323 }
+\DoxyCodeLine{324             \_trajectoryShoulder0Left.append(}
+\DoxyCodeLine{325                 loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Left"}][JOINT\_SHOULDER\_AXIS0\_LEFT])}
+\DoxyCodeLine{326             \_trajectoryShoulder1Left.append(}
+\DoxyCodeLine{327                 loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Left"}][JOINT\_SHOULDER\_AXIS1\_LEFT])}
+\DoxyCodeLine{328             \_trajectoryShoulder2Left.append(}
+\DoxyCodeLine{329                 loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Left"}][JOINT\_SHOULDER\_AXIS2\_LEFT])}
+\DoxyCodeLine{330             \_trajectoryElbow0Left.append(}
+\DoxyCodeLine{331                 loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Left"}][JOINT\_ELBOW\_ROT0\_LEFT])}
+\DoxyCodeLine{332             \_trajectoryElbow1Left.append(}
+\DoxyCodeLine{333                 loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Left"}][JOINT\_ELBOW\_ROT1\_LEFT])}
+\DoxyCodeLine{334             \_trajectoryWrist0Left.append(loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Left"}][JOINT\_WRIST\_0\_LEFT])}
+\DoxyCodeLine{335             \_trajectoryWrist1Left.append(loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Left"}][JOINT\_WRIST\_1\_LEFT])}
+\DoxyCodeLine{336 }
+\DoxyCodeLine{337         \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{338             print(\textcolor{stringliteral}{"WARNING: No point\_\%s in trajectory"} \% pointIterator)}
+\DoxyCodeLine{339             \_numTrajectoryPoints -= 1}
+\DoxyCodeLine{340 }
+\DoxyCodeLine{341     \textcolor{keywordflow}{if} PRINT\_DEBUG:}
+\DoxyCodeLine{342         print(\textcolor{stringliteral}{"--------- Num trajectory points:"})}
+\DoxyCodeLine{343         print(\_numTrajectoryPoints)}
+\DoxyCodeLine{344         print(\textcolor{stringliteral}{"max\_angle = "}, max(\_trajectorySteering))}
+\DoxyCodeLine{345         print(\textcolor{stringliteral}{"min\_angle = "}, min(\_trajectorySteering))}
+\DoxyCodeLine{346 }
+\DoxyCodeLine{347 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__simulation_a628f6027d970db8d4071e5846de522fc_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__simulation_a6e3b1fe25edfbec1713a6bd3ef2a445e}\label{namespacesteering__simulation_a6e3b1fe25edfbec1713a6bd3ef2a445e}} 
+\index{steering\_simulation@{steering\_simulation}!interpolate\_joint\_angles@{interpolate\_joint\_angles}}
+\index{interpolate\_joint\_angles@{interpolate\_joint\_angles}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{interpolate\_joint\_angles()}{interpolate\_joint\_angles()}}
+{\footnotesize\ttfamily def steering\+\_\+simulation.\+interpolate\+\_\+joint\+\_\+angles (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Documentation for a function. 
+
+Initializes the interpolation-\/functions for every joint-\/angle using cubic spline interpolation. The input value of the function is a steering angle and the output value of the function the correspondent joint angle.
+
+The functions can be used by calling \char`\"{}$<$function\+\_\+name$>$($<$steering\+\_\+angle$>$)\char`\"{} ==$>$ returns $<$joint\+\_\+angle$>$ 
+
+Definition at line 357 of file steering\+\_\+simulation.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{357 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__simulation_a6e3b1fe25edfbec1713a6bd3ef2a445e}{interpolate\_joint\_angles}}():}
+\DoxyCodeLine{358     \textcolor{keyword}{global} \_interpolatedShoulder0Right}
+\DoxyCodeLine{359     \textcolor{keyword}{global} \_interpolatedShoulder1Right}
+\DoxyCodeLine{360     \textcolor{keyword}{global} \_interpolatedShoulder2Right}
+\DoxyCodeLine{361     \textcolor{keyword}{global} \_interpolatedShoulder0Left}
+\DoxyCodeLine{362     \textcolor{keyword}{global} \_interpolatedShoulder1Left}
+\DoxyCodeLine{363     \textcolor{keyword}{global} \_interpolatedShoulder2Left}
+\DoxyCodeLine{364     \textcolor{keyword}{global} \_interpolatedElbow0Right}
+\DoxyCodeLine{365     \textcolor{keyword}{global} \_interpolatedElbow1Right}
+\DoxyCodeLine{366     \textcolor{keyword}{global} \_interpolatedElbow0Left}
+\DoxyCodeLine{367     \textcolor{keyword}{global} \_interpolatedElbow1Left}
+\DoxyCodeLine{368     \textcolor{keyword}{global} \_interpolatedWrist0Right}
+\DoxyCodeLine{369     \textcolor{keyword}{global} \_interpolatedWrist1Right}
+\DoxyCodeLine{370     \textcolor{keyword}{global} \_interpolatedWrist0Left}
+\DoxyCodeLine{371     \textcolor{keyword}{global} \_interpolatedWrist1Left}
+\DoxyCodeLine{372 }
+\DoxyCodeLine{373     \_interpolatedShoulder0Right = interpolate.interp1d(\_trajectorySteering, \_trajectoryShoulder0Right, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{374     \_interpolatedShoulder1Right = interpolate.interp1d(\_trajectorySteering, \_trajectoryShoulder1Right, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{375     \_interpolatedShoulder2Right = interpolate.interp1d(\_trajectorySteering, \_trajectoryShoulder2Right, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{376     \_interpolatedElbow0Right = interpolate.interp1d(\_trajectorySteering, \_trajectoryElbow0Right, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{377     \_interpolatedElbow1Right = interpolate.interp1d(\_trajectorySteering, \_trajectoryElbow1Right, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{378     \_interpolatedWrist0Right = interpolate.interp1d(\_trajectorySteering, \_trajectoryWrist0Right, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{379     \_interpolatedWrist1Right = interpolate.interp1d(\_trajectorySteering, \_trajectoryWrist1Right, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{380 }
+\DoxyCodeLine{381     \_interpolatedShoulder0Left = interpolate.interp1d(\_trajectorySteering, \_trajectoryShoulder0Left, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{382     \_interpolatedShoulder1Left = interpolate.interp1d(\_trajectorySteering, \_trajectoryShoulder1Left, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{383     \_interpolatedShoulder2Left = interpolate.interp1d(\_trajectorySteering, \_trajectoryShoulder2Left, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{384     \_interpolatedElbow0Left = interpolate.interp1d(\_trajectorySteering, \_trajectoryElbow0Left, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{385     \_interpolatedElbow1Left = interpolate.interp1d(\_trajectorySteering, \_trajectoryElbow1Left, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{386     \_interpolatedWrist0Left = interpolate.interp1d(\_trajectorySteering, \_trajectoryWrist0Left, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{387     \_interpolatedWrist1Left = interpolate.interp1d(\_trajectorySteering, \_trajectoryWrist1Left, kind=\textcolor{stringliteral}{"cubic"})}
+\DoxyCodeLine{388 }
+\DoxyCodeLine{389 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__simulation_a6e3b1fe25edfbec1713a6bd3ef2a445e_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__simulation_a04ebcaad2fa2cbdb0fd13fdb179d0f50}\label{namespacesteering__simulation_a04ebcaad2fa2cbdb0fd13fdb179d0f50}} 
+\index{steering\_simulation@{steering\_simulation}!joint\_state\_callback@{joint\_state\_callback}}
+\index{joint\_state\_callback@{joint\_state\_callback}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{joint\_state\_callback()}{joint\_state\_callback()}}
+{\footnotesize\ttfamily def steering\+\_\+simulation.\+joint\+\_\+state\+\_\+callback (\begin{DoxyParamCaption}\item[{}]{joint\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Documentation for a function. 
+
+This function collects the current status of the joint-\/angles and saves them in the global dictionary \char`\"{}\+\_\+joint\+Status\+Data\char`\"{}. 
+
+Definition at line 194 of file steering\+\_\+simulation.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{194 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__simulation_a04ebcaad2fa2cbdb0fd13fdb179d0f50}{joint\_state\_callback}}(joint\_data):}
+\DoxyCodeLine{195     \textcolor{keyword}{global} \_jointsStatusData}
+\DoxyCodeLine{196     \textcolor{comment}{\# Assert order of joints}}
+\DoxyCodeLine{197     \textcolor{keywordflow}{for} stringIter \textcolor{keywordflow}{in} range(len(joint\_data.names)):}
+\DoxyCodeLine{198         \textcolor{keywordflow}{if} joint\_data.names[stringIter] \textcolor{keywordflow}{in} \_jointsStatusData:}
+\DoxyCodeLine{199             \_jointsStatusData[joint\_data.names[stringIter]][\textcolor{stringliteral}{"Pos"}] = joint\_data.q[stringIter]}
+\DoxyCodeLine{200             \_jointsStatusData[joint\_data.names[stringIter]][\textcolor{stringliteral}{"Vel"}] = joint\_data.qd[stringIter]}
+\DoxyCodeLine{201 }
+\DoxyCodeLine{202 }
+
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacesteering__simulation_af3dec39cd8650ad512084dfda32c577a}\label{namespacesteering__simulation_af3dec39cd8650ad512084dfda32c577a}} 
+\index{steering\_simulation@{steering\_simulation}!main@{main}}
+\index{main@{main}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily def steering\+\_\+simulation.\+main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Documentation for a function. 
+
+Initializes the Control-\/\+Node for Steering and starts Steering-\/\+Algorithm. 
+
+Definition at line 646 of file steering\+\_\+simulation.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{646 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a17184534fa48653e3e1957dd8fe17257}{main}}():}
+\DoxyCodeLine{647     rospy.init\_node(\textcolor{stringliteral}{'steering\_simulation'}, anonymous=\textcolor{keyword}{True})}
+\DoxyCodeLine{648     rospy.Subscriber(\textcolor{stringliteral}{"joint\_state"}, JointState, joint\_state\_callback)}
+\DoxyCodeLine{649     \mbox{\hyperlink{namespacesteering__simulation_a628f6027d970db8d4071e5846de522fc}{import\_joint\_trajectory\_record}}()}
+\DoxyCodeLine{650     \mbox{\hyperlink{namespacesteering__simulation_a6e3b1fe25edfbec1713a6bd3ef2a445e}{interpolate\_joint\_angles}}()}
+\DoxyCodeLine{651     \mbox{\hyperlink{namespacesteering__simulation_af85ca971fcf35d30c3647fb0c3732195}{regress\_joint\_positions\_from\_file}}(\textcolor{stringliteral}{"trajectory\_steering/saved\_coefficients.json"})}
+\DoxyCodeLine{652     \mbox{\hyperlink{namespacesteering__simulation_a787fcfa65451a11a9f94afaea6a6e809}{set\_joint\_controller\_parameters}}(1000, 0)}
+\DoxyCodeLine{653     \mbox{\hyperlink{namespacesteering__simulation_a7e6cf517d5eedfae29bc0b05bada6a3e}{steering\_control}}()}
+\DoxyCodeLine{654 }
+\DoxyCodeLine{655 }
+
+\end{DoxyCode}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__simulation_af3dec39cd8650ad512084dfda32c577a_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__simulation_aa303bfd6d5e874d19fda9e678aa4c3d9}\label{namespacesteering__simulation_aa303bfd6d5e874d19fda9e678aa4c3d9}} 
+\index{steering\_simulation@{steering\_simulation}!publish\_joint\_angle@{publish\_joint\_angle}}
+\index{publish\_joint\_angle@{publish\_joint\_angle}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{publish\_joint\_angle()}{publish\_joint\_angle()}}
+{\footnotesize\ttfamily def steering\+\_\+simulation.\+publish\+\_\+joint\+\_\+angle (\begin{DoxyParamCaption}\item[{}]{joint\+\_\+name,  }\item[{}]{steering\+\_\+angle }\end{DoxyParamCaption})}
+
+
+
+Documentation for a function. 
+
+Evaluates the correspondent joint-\/angle of @joint\+\_\+name to given @steering\+\_\+angle using the interpolation-\/function of @joint\+\_\+name
+
+Publishes the computed value to the correspondent ros-\/topic of @joint\+\_\+name to apply position control.
+
+Waits until the joint\+\_\+angle has reached requested joint\+\_\+angle within error tolerance. 
+
+Definition at line 450 of file steering\+\_\+simulation.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{450 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__simulation_aa303bfd6d5e874d19fda9e678aa4c3d9}{publish\_joint\_angle}}(joint\_name, steering\_angle):}
+\DoxyCodeLine{451     \textcolor{keywordflow}{if} \mbox{\hyperlink{namespacesteering__simulation_abe8ecf85be641d2a56c547e4e27946ba}{check\_steering\_angle\_range}}(steering\_angle):}
+\DoxyCodeLine{452 }
+\DoxyCodeLine{453         pub = \textcolor{keywordtype}{None}}
+\DoxyCodeLine{454         f\_interpolated = \textcolor{keywordtype}{None}}
+\DoxyCodeLine{455         f\_regressed = \textcolor{keywordtype}{None}}
+\DoxyCodeLine{456 }
+\DoxyCodeLine{457         \textcolor{keywordflow}{if} joint\_name == JOINT\_SHOULDER\_AXIS0\_LEFT:}
+\DoxyCodeLine{458             pub = ros\_left\_shoulder\_axis0\_pub}
+\DoxyCodeLine{459             f\_interpolated = \_interpolatedShoulder0Left}
+\DoxyCodeLine{460             f\_regressed = \_regressedShoulder0Left}
+\DoxyCodeLine{461         \textcolor{keywordflow}{elif} joint\_name == JOINT\_SHOULDER\_AXIS1\_LEFT:}
+\DoxyCodeLine{462             pub = ros\_left\_shoulder\_axis1\_pub}
+\DoxyCodeLine{463             f\_interpolated = \_interpolatedShoulder1Left}
+\DoxyCodeLine{464             f\_regressed = \_regressedShoulder1Left}
+\DoxyCodeLine{465         \textcolor{keywordflow}{elif} joint\_name == JOINT\_SHOULDER\_AXIS2\_LEFT:}
+\DoxyCodeLine{466             pub = ros\_left\_shoulder\_axis2\_pub}
+\DoxyCodeLine{467             f\_interpolated = \_interpolatedShoulder2Left}
+\DoxyCodeLine{468             f\_regressed = \_regressedShoulder2Left}
+\DoxyCodeLine{469         \textcolor{keywordflow}{elif} joint\_name == JOINT\_SHOULDER\_AXIS0\_RIGHT:}
+\DoxyCodeLine{470             pub = ros\_right\_shoulder\_axis0\_pub}
+\DoxyCodeLine{471             f\_interpolated = \_interpolatedShoulder0Right}
+\DoxyCodeLine{472             f\_regressed = \_regressedShoulder0Right}
+\DoxyCodeLine{473         \textcolor{keywordflow}{elif} joint\_name == JOINT\_SHOULDER\_AXIS1\_RIGHT:}
+\DoxyCodeLine{474             pub = ros\_right\_shoulder\_axis1\_pub}
+\DoxyCodeLine{475             f\_interpolated = \_interpolatedShoulder1Right}
+\DoxyCodeLine{476             f\_regressed = \_regressedShoulder1Right}
+\DoxyCodeLine{477         \textcolor{keywordflow}{elif} joint\_name == JOINT\_SHOULDER\_AXIS2\_RIGHT:}
+\DoxyCodeLine{478             pub = ros\_right\_shoulder\_axis2\_pub}
+\DoxyCodeLine{479             f\_interpolated = \_interpolatedShoulder2Right}
+\DoxyCodeLine{480             f\_regressed = \_regressedShoulder2Right}
+\DoxyCodeLine{481         \textcolor{keywordflow}{elif} joint\_name == JOINT\_ELBOW\_ROT0\_LEFT:}
+\DoxyCodeLine{482             pub = ros\_elbow\_left\_rot0\_pub}
+\DoxyCodeLine{483             f\_interpolated = \_interpolatedElbow0Left}
+\DoxyCodeLine{484             f\_regressed = \_regressedElbow0Left}
+\DoxyCodeLine{485         \textcolor{keywordflow}{elif} joint\_name == JOINT\_ELBOW\_ROT1\_LEFT:}
+\DoxyCodeLine{486             pub = ros\_elbow\_left\_rot1\_pub}
+\DoxyCodeLine{487             f\_interpolated = \_interpolatedElbow1Left}
+\DoxyCodeLine{488             f\_regressed = \_regressedElbow1Left}
+\DoxyCodeLine{489         \textcolor{keywordflow}{elif} joint\_name == JOINT\_ELBOW\_ROT0\_RIGHT:}
+\DoxyCodeLine{490             pub = ros\_elbow\_right\_rot0\_pub}
+\DoxyCodeLine{491             f\_interpolated = \_interpolatedElbow0Right}
+\DoxyCodeLine{492             f\_regressed = \_regressedElbow0Right}
+\DoxyCodeLine{493         \textcolor{keywordflow}{elif} joint\_name == JOINT\_ELBOW\_ROT1\_RIGHT:}
+\DoxyCodeLine{494             pub = ros\_elbow\_right\_rot1\_pub}
+\DoxyCodeLine{495             f\_interpolated = \_interpolatedElbow1Right}
+\DoxyCodeLine{496             f\_regressed = \_regressedElbow1Right}
+\DoxyCodeLine{497         \textcolor{keywordflow}{elif} joint\_name == JOINT\_WRIST\_0\_LEFT:}
+\DoxyCodeLine{498             pub = ros\_left\_wrist\_0\_pub}
+\DoxyCodeLine{499             f\_interpolated = \_interpolatedWrist0Left}
+\DoxyCodeLine{500             f\_regressed = \_regressedWrist0Left}
+\DoxyCodeLine{501         \textcolor{keywordflow}{elif} joint\_name == JOINT\_WRIST\_1\_LEFT:}
+\DoxyCodeLine{502             pub = ros\_left\_wrist\_1\_pub}
+\DoxyCodeLine{503             f\_interpolated = \_interpolatedWrist1Left}
+\DoxyCodeLine{504             f\_regressed = \_regressedWrist1Left}
+\DoxyCodeLine{505         \textcolor{keywordflow}{elif} joint\_name == JOINT\_WRIST\_0\_RIGHT:}
+\DoxyCodeLine{506             pub = ros\_right\_wrist\_0\_pub}
+\DoxyCodeLine{507             f\_interpolated = \_interpolatedWrist0Right}
+\DoxyCodeLine{508             f\_regressed = \_regressedWrist0Right}
+\DoxyCodeLine{509         \textcolor{keywordflow}{elif} joint\_name == JOINT\_WRIST\_1\_RIGHT:}
+\DoxyCodeLine{510             pub = ros\_right\_wrist\_1\_pub}
+\DoxyCodeLine{511             f\_interpolated = \_interpolatedWrist1Right}
+\DoxyCodeLine{512             f\_regressed = \_regressedWrist1Right}
+\DoxyCodeLine{513         \textcolor{keywordflow}{elif} joint\_name == JOINT\_BIKE\_FRONT:}
+\DoxyCodeLine{514             pub = ros\_bike\_front\_pub}
+\DoxyCodeLine{515         \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{516             ros\_log\_error\_pub.publish(\textcolor{stringliteral}{"Didn't catch joint\_name in publish\_joint\_angle()"})}
+\DoxyCodeLine{517 }
+\DoxyCodeLine{518         target\_joint\_angle = \textcolor{keywordtype}{None}}
+\DoxyCodeLine{519         \textcolor{keywordflow}{if} joint\_name == JOINT\_BIKE\_FRONT:}
+\DoxyCodeLine{520             target\_joint\_angle = steering\_angle}
+\DoxyCodeLine{521         \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{522             \textcolor{comment}{\# target\_joint\_angle = f\_interpolated(steering\_angle)}}
+\DoxyCodeLine{523             target\_joint\_angle = f\_regressed(steering\_angle)}
+\DoxyCodeLine{524         pub.publish(target\_joint\_angle)}
+\DoxyCodeLine{525 }
+\DoxyCodeLine{526         \textcolor{keywordflow}{if} PRINT\_DEBUG:}
+\DoxyCodeLine{527             log\_msg = \textcolor{stringliteral}{"publishing "} + str(target\_joint\_angle) + \textcolor{stringliteral}{" to joint: "} + joint\_name}
+\DoxyCodeLine{528             print(log\_msg)}
+\DoxyCodeLine{529 }
+\DoxyCodeLine{530         \textcolor{comment}{\# ADDED THIS FOR FEEDBACK CONTROL}}
+\DoxyCodeLine{531         transition\_end\_time = time.time() + STEP\_TRANSITION\_TIME}
+\DoxyCodeLine{532         \textcolor{keywordflow}{while} (time.time() < transition\_end\_time) \textcolor{keywordflow}{and} abs(}
+\DoxyCodeLine{533                 \mbox{\hyperlink{namespacesteering__simulation_af5611a9446037e0aee0542ebe1c111fc}{get\_joint\_position}}(joint\_name) - target\_joint\_angle) > JOINT\_TARGET\_ERROR\_TOLERANCE:}
+\DoxyCodeLine{534             time.sleep(0.001)  \textcolor{comment}{\# Wait}}
+\DoxyCodeLine{535 }
+\DoxyCodeLine{536         \textcolor{comment}{\# time.sleep(STEP\_TRANSITION\_TIME)}}
+\DoxyCodeLine{537 }
+\DoxyCodeLine{538     \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{539         \textcolor{keyword}{global} angle\_change\_successful}
+\DoxyCodeLine{540         angle\_change\_successful = \textcolor{keyword}{False}}
+\DoxyCodeLine{541         \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{542 }
+\DoxyCodeLine{543 }
+
+\end{DoxyCode}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__simulation_aa303bfd6d5e874d19fda9e678aa4c3d9_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__simulation_af85ca971fcf35d30c3647fb0c3732195}\label{namespacesteering__simulation_af85ca971fcf35d30c3647fb0c3732195}} 
+\index{steering\_simulation@{steering\_simulation}!regress\_joint\_positions\_from\_file@{regress\_joint\_positions\_from\_file}}
+\index{regress\_joint\_positions\_from\_file@{regress\_joint\_positions\_from\_file}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{regress\_joint\_positions\_from\_file()}{regress\_joint\_positions\_from\_file()}}
+{\footnotesize\ttfamily def steering\+\_\+simulation.\+regress\+\_\+joint\+\_\+positions\+\_\+from\+\_\+file (\begin{DoxyParamCaption}\item[{}]{filename }\end{DoxyParamCaption})}
+
+
+
+Documentation for a function. 
+
+Initializes the interpolation-\/functions for every joint-\/angle using regression. The input value of the function is a steering angle and the output value of the function is the correspondent joint angle.
+
+The functions can be used by calling \char`\"{}$<$function\+\_\+name$>$($<$steering\+\_\+angle$>$)\char`\"{} ==$>$ returns $<$joint\+\_\+angle$>$ 
+
+Definition at line 219 of file steering\+\_\+simulation.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{219 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__simulation_af85ca971fcf35d30c3647fb0c3732195}{regress\_joint\_positions\_from\_file}}(filename):}
+\DoxyCodeLine{220     \textcolor{keyword}{global} \_trajectorySteering}
+\DoxyCodeLine{221     \textcolor{keyword}{global} \_trajectoryShoulder0Right}
+\DoxyCodeLine{222     \textcolor{keyword}{global} \_trajectoryShoulder1Right}
+\DoxyCodeLine{223     \textcolor{keyword}{global} \_trajectoryShoulder2Right}
+\DoxyCodeLine{224     \textcolor{keyword}{global} \_trajectoryShoulder0Left}
+\DoxyCodeLine{225     \textcolor{keyword}{global} \_trajectoryShoulder1Left}
+\DoxyCodeLine{226     \textcolor{keyword}{global} \_trajectoryShoulder2Left}
+\DoxyCodeLine{227     \textcolor{keyword}{global} \_trajectoryElbow0Right}
+\DoxyCodeLine{228     \textcolor{keyword}{global} \_trajectoryElbow1Right}
+\DoxyCodeLine{229     \textcolor{keyword}{global} \_trajectoryElbow0Left}
+\DoxyCodeLine{230     \textcolor{keyword}{global} \_trajectoryElbow1Left}
+\DoxyCodeLine{231     \textcolor{keyword}{global} \_trajectoryWrist0Right}
+\DoxyCodeLine{232     \textcolor{keyword}{global} \_trajectoryWrist1Right}
+\DoxyCodeLine{233     \textcolor{keyword}{global} \_trajectoryWrist0Left}
+\DoxyCodeLine{234     \textcolor{keyword}{global} \_trajectoryWrist1Left}
+\DoxyCodeLine{235 }
+\DoxyCodeLine{236     \textcolor{keyword}{global} \_regressedShoulder0Right}
+\DoxyCodeLine{237     \textcolor{keyword}{global} \_regressedShoulder1Right}
+\DoxyCodeLine{238     \textcolor{keyword}{global} \_regressedShoulder2Right}
+\DoxyCodeLine{239     \textcolor{keyword}{global} \_regressedShoulder0Left}
+\DoxyCodeLine{240     \textcolor{keyword}{global} \_regressedShoulder1Left}
+\DoxyCodeLine{241     \textcolor{keyword}{global} \_regressedShoulder2Left}
+\DoxyCodeLine{242     \textcolor{keyword}{global} \_regressedElbow0Right}
+\DoxyCodeLine{243     \textcolor{keyword}{global} \_regressedElbow1Right}
+\DoxyCodeLine{244     \textcolor{keyword}{global} \_regressedElbow0Left}
+\DoxyCodeLine{245     \textcolor{keyword}{global} \_regressedElbow1Left}
+\DoxyCodeLine{246     \textcolor{keyword}{global} \_regressedWrist0Right}
+\DoxyCodeLine{247     \textcolor{keyword}{global} \_regressedWrist1Right}
+\DoxyCodeLine{248     \textcolor{keyword}{global} \_regressedWrist0Left}
+\DoxyCodeLine{249     \textcolor{keyword}{global} \_regressedWrist1Left}
+\DoxyCodeLine{250 }
+\DoxyCodeLine{251     loaded\_data = \textcolor{keywordtype}{None}}
+\DoxyCodeLine{252     \textcolor{keyword}{with} open(filename, \textcolor{stringliteral}{"r"}) \textcolor{keyword}{as} read\_file:}
+\DoxyCodeLine{253         loaded\_data = json.load(read\_file)}
+\DoxyCodeLine{254 }
+\DoxyCodeLine{255     \_regressedShoulder0Right = poly.Polynomial(loaded\_data[JOINT\_SHOULDER\_AXIS0\_RIGHT])}
+\DoxyCodeLine{256     \_regressedShoulder1Right = poly.Polynomial(loaded\_data[JOINT\_SHOULDER\_AXIS1\_RIGHT])}
+\DoxyCodeLine{257     \_regressedShoulder2Right = poly.Polynomial(loaded\_data[JOINT\_SHOULDER\_AXIS2\_RIGHT])}
+\DoxyCodeLine{258     \_regressedElbow0Right = poly.Polynomial(loaded\_data[JOINT\_ELBOW\_ROT0\_RIGHT])}
+\DoxyCodeLine{259     \_regressedElbow1Right = poly.Polynomial(loaded\_data[JOINT\_ELBOW\_ROT1\_RIGHT])}
+\DoxyCodeLine{260     \_regressedWrist0Right = poly.Polynomial(loaded\_data[JOINT\_WRIST\_0\_RIGHT])}
+\DoxyCodeLine{261     \_regressedWrist1Right = poly.Polynomial(loaded\_data[JOINT\_WRIST\_1\_RIGHT])}
+\DoxyCodeLine{262 }
+\DoxyCodeLine{263     \_regressedShoulder0Left = poly.Polynomial(loaded\_data[JOINT\_SHOULDER\_AXIS0\_LEFT])}
+\DoxyCodeLine{264     \_regressedShoulder1Left = poly.Polynomial(loaded\_data[JOINT\_SHOULDER\_AXIS1\_LEFT])}
+\DoxyCodeLine{265     \_regressedShoulder2Left = poly.Polynomial(loaded\_data[JOINT\_SHOULDER\_AXIS2\_LEFT])}
+\DoxyCodeLine{266     \_regressedElbow0Left = poly.Polynomial(loaded\_data[JOINT\_ELBOW\_ROT0\_LEFT])}
+\DoxyCodeLine{267     \_regressedElbow1Left = poly.Polynomial(loaded\_data[JOINT\_ELBOW\_ROT1\_LEFT])}
+\DoxyCodeLine{268     \_regressedWrist0Left = poly.Polynomial(loaded\_data[JOINT\_WRIST\_0\_LEFT])}
+\DoxyCodeLine{269     \_regressedWrist1Left = poly.Polynomial(loaded\_data[JOINT\_WRIST\_1\_LEFT])}
+\DoxyCodeLine{270 }
+\DoxyCodeLine{271     \textcolor{keywordflow}{return} 1}
+\DoxyCodeLine{272 }
+\DoxyCodeLine{273 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__simulation_af85ca971fcf35d30c3647fb0c3732195_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__simulation_a787fcfa65451a11a9f94afaea6a6e809}\label{namespacesteering__simulation_a787fcfa65451a11a9f94afaea6a6e809}} 
+\index{steering\_simulation@{steering\_simulation}!set\_joint\_controller\_parameters@{set\_joint\_controller\_parameters}}
+\index{set\_joint\_controller\_parameters@{set\_joint\_controller\_parameters}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{set\_joint\_controller\_parameters()}{set\_joint\_controller\_parameters()}}
+{\footnotesize\ttfamily def steering\+\_\+simulation.\+set\+\_\+joint\+\_\+controller\+\_\+parameters (\begin{DoxyParamCaption}\item[{}]{proportional\+\_\+value,  }\item[{}]{derivative\+\_\+value }\end{DoxyParamCaption})}
+
+
+
+Documentation for a function. 
+
+Sets Kp of joint-\/controller to @proportional\+\_\+value Sets Kd of joint-\/controller to @derivative\+\_\+value 
+
+Definition at line 401 of file steering\+\_\+simulation.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{401 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__simulation_a787fcfa65451a11a9f94afaea6a6e809}{set\_joint\_controller\_parameters}}(proportional\_value, derivative\_value):}
+\DoxyCodeLine{402     \textcolor{keywordflow}{for} thisJointName \textcolor{keywordflow}{in} \_joints\_list:}
+\DoxyCodeLine{403         rospy.wait\_for\_service(thisJointName + \textcolor{stringliteral}{'/'} + thisJointName + \textcolor{stringliteral}{'/params'})}
+\DoxyCodeLine{404         \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{405             joint\_srv = rospy.ServiceProxy(thisJointName + \textcolor{stringliteral}{'/'} + thisJointName + \textcolor{stringliteral}{'/params'}, SetControllerParameters)}
+\DoxyCodeLine{406             joint\_srv(proportional\_value, derivative\_value)}
+\DoxyCodeLine{407         \textcolor{keywordflow}{except} rospy.ServiceException \textcolor{keyword}{as} e:}
+\DoxyCodeLine{408             print(\textcolor{stringliteral}{"Service call joint\_foot\_left failed:"}, e)}
+\DoxyCodeLine{409 }
+\DoxyCodeLine{410 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__simulation_a787fcfa65451a11a9f94afaea6a6e809_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__simulation_a7e6cf517d5eedfae29bc0b05bada6a3e}\label{namespacesteering__simulation_a7e6cf517d5eedfae29bc0b05bada6a3e}} 
+\index{steering\_simulation@{steering\_simulation}!steering\_control@{steering\_control}}
+\index{steering\_control@{steering\_control}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{steering\_control()}{steering\_control()}}
+{\footnotesize\ttfamily def steering\+\_\+simulation.\+steering\+\_\+control (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Documentation for a function. 
+
+Controls the whole steering-\/process. Evaluates the target\+\_\+steering\+\_\+angles between requested\+\_\+steering\+\_\+angle and current\+\_\+steering\+\_\+angle and creates a Thread for every joint-\/angle with which is responsible to apply correspondent joint-\/angle given current target\+\_\+steering\+\_\+angle.
+
+Simplified Pseudo-\/code\+:
+
+while requested\+\_\+steering\+\_\+angle = current\+\_\+steering\+\_\+angle\+: \begin{DoxyVerb}sleep()
+\end{DoxyVerb}
+
+
+if angle\+\_\+difference(requested\+\_\+steering\+\_\+angle, current\+\_\+steering\+\_\+angle) $>$ max\+\_\+angle\+\_\+change \begin{DoxyVerb}target_steering_angle = current_steering_angle + max_angle_change
+\end{DoxyVerb}
+
+
+else\+: \begin{DoxyVerb}target_steering_angle = requested_steering_angle
+\end{DoxyVerb}
+
+
+for joint in joint\+\_\+list\+: \begin{DoxyVerb}Thread.publish_joint_angle(joint_name, target_joint_angle)
+\end{DoxyVerb}
+
+
+for Thread in created\+\_\+threads\+: \begin{DoxyVerb}    Thread.join
+\end{DoxyVerb}
+
+
+current\+\_\+steering\+\_\+angle = target\+\_\+steering\+\_\+angle 
+
+Definition at line 575 of file steering\+\_\+simulation.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{575 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__simulation_a7e6cf517d5eedfae29bc0b05bada6a3e}{steering\_control}}():}
+\DoxyCodeLine{576     rospy.Subscriber(\textcolor{stringliteral}{"/cmd\_steering\_angle\_rickshaw"}, Float32, update\_steering\_angle)}
+\DoxyCodeLine{577 }
+\DoxyCodeLine{578     current\_steering\_angle = 0}
+\DoxyCodeLine{579 }
+\DoxyCodeLine{580     \textcolor{keyword}{global} angle\_change\_successful}
+\DoxyCodeLine{581 }
+\DoxyCodeLine{582     \textcolor{keywordflow}{while} \textcolor{keywordflow}{not} rospy.is\_shutdown():}
+\DoxyCodeLine{583 }
+\DoxyCodeLine{584         \textcolor{keywordflow}{if} requested\_steering\_angle == current\_steering\_angle:}
+\DoxyCodeLine{585             \textcolor{keywordflow}{if} PRINT\_DEBUG:}
+\DoxyCodeLine{586                 log\_msg = \textcolor{stringliteral}{"\(\backslash\)nrequested\_steering\_angle = current\_steering\_angle = "} + str(requested\_steering\_angle)}
+\DoxyCodeLine{587                 print(log\_msg)}
+\DoxyCodeLine{588                 \textcolor{keywordflow}{while} requested\_steering\_angle == current\_steering\_angle:}
+\DoxyCodeLine{589                     time.sleep(UPDATE\_FREQUENCY)}
+\DoxyCodeLine{590 }
+\DoxyCodeLine{591         \textcolor{keywordflow}{if} PRINT\_DEBUG:}
+\DoxyCodeLine{592             log\_msg = \textcolor{stringliteral}{"\(\backslash\)nrequested\_steering\_angle = "} + str(requested\_steering\_angle)}
+\DoxyCodeLine{593             log\_msg += \textcolor{stringliteral}{"\(\backslash\)ncurrent\_steering\_angle = "} + str(current\_steering\_angle)}
+\DoxyCodeLine{594             print(log\_msg)}
+\DoxyCodeLine{595 }
+\DoxyCodeLine{596         \textcolor{keywordflow}{if} \mbox{\hyperlink{namespacesteering__simulation_a920f69692c79162b2296b1a220bba527}{get\_angle\_difference}}(current\_steering\_angle, requested\_steering\_angle) > MAX\_ANGLE\_CHANGE:}
+\DoxyCodeLine{597 }
+\DoxyCodeLine{598             target\_steering\_angle = 0}
+\DoxyCodeLine{599 }
+\DoxyCodeLine{600             \textcolor{keywordflow}{if} current\_steering\_angle < requested\_steering\_angle:}
+\DoxyCodeLine{601                 target\_steering\_angle = current\_steering\_angle + MAX\_ANGLE\_CHANGE}
+\DoxyCodeLine{602             \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{603                 target\_steering\_angle = current\_steering\_angle - MAX\_ANGLE\_CHANGE}
+\DoxyCodeLine{604 }
+\DoxyCodeLine{605             \textcolor{keywordflow}{if} PRINT\_DEBUG:}
+\DoxyCodeLine{606                 log\_msg = \textcolor{stringliteral}{"target\_steering\_angle = "} + str(target\_steering\_angle)}
+\DoxyCodeLine{607                 print(log\_msg)}
+\DoxyCodeLine{608 }
+\DoxyCodeLine{609             publisher\_threads = []}
+\DoxyCodeLine{610             i = 0}
+\DoxyCodeLine{611             \textcolor{keywordflow}{for} joint \textcolor{keywordflow}{in} \_joints\_list:}
+\DoxyCodeLine{612                 publisher\_threads.append(Thread(target=publish\_joint\_angle, args=(joint, target\_steering\_angle)))}
+\DoxyCodeLine{613                 publisher\_threads[i].start()}
+\DoxyCodeLine{614                 i += 1}
+\DoxyCodeLine{615 }
+\DoxyCodeLine{616             \textcolor{keywordflow}{for} thread \textcolor{keywordflow}{in} publisher\_threads:}
+\DoxyCodeLine{617                 thread.join()}
+\DoxyCodeLine{618 }
+\DoxyCodeLine{619             \textcolor{keywordflow}{if} angle\_change\_successful:}
+\DoxyCodeLine{620                 current\_steering\_angle = target\_steering\_angle}
+\DoxyCodeLine{621             \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{622                 print(\textcolor{stringliteral}{"Steering angle out of range: "}, target\_steering\_angle)}
+\DoxyCodeLine{623                 angle\_change\_successful = \textcolor{keyword}{True}}
+\DoxyCodeLine{624 }
+\DoxyCodeLine{625         \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{626             publisher\_threads = []}
+\DoxyCodeLine{627             i = 0}
+\DoxyCodeLine{628             \textcolor{keywordflow}{for} joint \textcolor{keywordflow}{in} \_joints\_list:}
+\DoxyCodeLine{629                 publisher\_threads.append(Thread(target=publish\_joint\_angle, args=(joint, requested\_steering\_angle)))}
+\DoxyCodeLine{630                 publisher\_threads[i].start()}
+\DoxyCodeLine{631                 i += 1}
+\DoxyCodeLine{632 }
+\DoxyCodeLine{633             \textcolor{keywordflow}{for} thread \textcolor{keywordflow}{in} publisher\_threads:}
+\DoxyCodeLine{634                 thread.join()}
+\DoxyCodeLine{635 }
+\DoxyCodeLine{636             \textcolor{keywordflow}{if} angle\_change\_successful:}
+\DoxyCodeLine{637                 current\_steering\_angle = requested\_steering\_angle}
+\DoxyCodeLine{638             \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{639                 print(\textcolor{stringliteral}{"Steering angle out of range: "}, requested\_steering\_angle)}
+\DoxyCodeLine{640                 angle\_change\_successful = \textcolor{keyword}{True}}
+\DoxyCodeLine{641 }
+\DoxyCodeLine{642 }
+
+\end{DoxyCode}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__simulation_a7e6cf517d5eedfae29bc0b05bada6a3e_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__simulation_a7e6cf517d5eedfae29bc0b05bada6a3e_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__simulation_ade71f08294031e29a94a9be5cc1f0961}\label{namespacesteering__simulation_ade71f08294031e29a94a9be5cc1f0961}} 
+\index{steering\_simulation@{steering\_simulation}!update\_steering\_angle@{update\_steering\_angle}}
+\index{update\_steering\_angle@{update\_steering\_angle}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{update\_steering\_angle()}{update\_steering\_angle()}}
+{\footnotesize\ttfamily def steering\+\_\+simulation.\+update\+\_\+steering\+\_\+angle (\begin{DoxyParamCaption}\item[{}]{steering\+\_\+angle\+\_\+\+F32 }\end{DoxyParamCaption})}
+
+
+
+Documentation for a function. 
+
+Updates the global variable @requested\+\_\+steering\+\_\+angle when another node publishes a new requested steering\+\_\+angle to the topic \char`\"{}cmd\+\_\+steering\+\_\+angle\+\_\+rickshaw\char`\"{}. 
+
+Definition at line 415 of file steering\+\_\+simulation.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{415 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__simulation_ade71f08294031e29a94a9be5cc1f0961}{update\_steering\_angle}}(steering\_angle\_F32):}
+\DoxyCodeLine{416     \textcolor{keyword}{global} requested\_steering\_angle}
+\DoxyCodeLine{417     requested\_steering\_angle = steering\_angle\_F32.data}
+\DoxyCodeLine{418 }
+\DoxyCodeLine{419     \textcolor{keywordflow}{if} PRINT\_DEBUG:}
+\DoxyCodeLine{420         log\_msg = \textcolor{stringliteral}{"updating requested\_steering\_angle: "} + str(requested\_steering\_angle)}
+\DoxyCodeLine{421         print(log\_msg)}
+\DoxyCodeLine{422 }
+\DoxyCodeLine{423 }
+
+\end{DoxyCode}
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{namespacesteering__simulation_ab4a2cd7647ac12ccda18d55806c1c968}\label{namespacesteering__simulation_ab4a2cd7647ac12ccda18d55806c1c968}} 
+\index{steering\_simulation@{steering\_simulation}!\_interpolatedElbow0Left@{\_interpolatedElbow0Left}}
+\index{\_interpolatedElbow0Left@{\_interpolatedElbow0Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_interpolatedElbow0Left}{\_interpolatedElbow0Left}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+interpolated\+Elbow0\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 83 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_ae6eeda8709f7c3112029ba2123f2a0cd}\label{namespacesteering__simulation_ae6eeda8709f7c3112029ba2123f2a0cd}} 
+\index{steering\_simulation@{steering\_simulation}!\_interpolatedElbow0Right@{\_interpolatedElbow0Right}}
+\index{\_interpolatedElbow0Right@{\_interpolatedElbow0Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_interpolatedElbow0Right}{\_interpolatedElbow0Right}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+interpolated\+Elbow0\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 81 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_ab9d03f365a99bbc5047aa6f1693bb650}\label{namespacesteering__simulation_ab9d03f365a99bbc5047aa6f1693bb650}} 
+\index{steering\_simulation@{steering\_simulation}!\_interpolatedElbow1Left@{\_interpolatedElbow1Left}}
+\index{\_interpolatedElbow1Left@{\_interpolatedElbow1Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_interpolatedElbow1Left}{\_interpolatedElbow1Left}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+interpolated\+Elbow1\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 84 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_ac91c7d1fa823783ae6d5e03fd9ebdddb}\label{namespacesteering__simulation_ac91c7d1fa823783ae6d5e03fd9ebdddb}} 
+\index{steering\_simulation@{steering\_simulation}!\_interpolatedElbow1Right@{\_interpolatedElbow1Right}}
+\index{\_interpolatedElbow1Right@{\_interpolatedElbow1Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_interpolatedElbow1Right}{\_interpolatedElbow1Right}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+interpolated\+Elbow1\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 82 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a02b9a3d44de85acf12552bea98742482}\label{namespacesteering__simulation_a02b9a3d44de85acf12552bea98742482}} 
+\index{steering\_simulation@{steering\_simulation}!\_interpolatedShoulder0Left@{\_interpolatedShoulder0Left}}
+\index{\_interpolatedShoulder0Left@{\_interpolatedShoulder0Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_interpolatedShoulder0Left}{\_interpolatedShoulder0Left}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+interpolated\+Shoulder0\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 78 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_ab34c683386394a4c7bb2641db1866aef}\label{namespacesteering__simulation_ab34c683386394a4c7bb2641db1866aef}} 
+\index{steering\_simulation@{steering\_simulation}!\_interpolatedShoulder0Right@{\_interpolatedShoulder0Right}}
+\index{\_interpolatedShoulder0Right@{\_interpolatedShoulder0Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_interpolatedShoulder0Right}{\_interpolatedShoulder0Right}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+interpolated\+Shoulder0\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 75 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a3d00a16f91310a8d1e087d1ae152ac7e}\label{namespacesteering__simulation_a3d00a16f91310a8d1e087d1ae152ac7e}} 
+\index{steering\_simulation@{steering\_simulation}!\_interpolatedShoulder1Left@{\_interpolatedShoulder1Left}}
+\index{\_interpolatedShoulder1Left@{\_interpolatedShoulder1Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_interpolatedShoulder1Left}{\_interpolatedShoulder1Left}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+interpolated\+Shoulder1\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 79 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a0e35e7ece667da88fa757991130d307d}\label{namespacesteering__simulation_a0e35e7ece667da88fa757991130d307d}} 
+\index{steering\_simulation@{steering\_simulation}!\_interpolatedShoulder1Right@{\_interpolatedShoulder1Right}}
+\index{\_interpolatedShoulder1Right@{\_interpolatedShoulder1Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_interpolatedShoulder1Right}{\_interpolatedShoulder1Right}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+interpolated\+Shoulder1\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 76 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_ac4a5b7a74bda32146e2330b740a782e5}\label{namespacesteering__simulation_ac4a5b7a74bda32146e2330b740a782e5}} 
+\index{steering\_simulation@{steering\_simulation}!\_interpolatedShoulder2Left@{\_interpolatedShoulder2Left}}
+\index{\_interpolatedShoulder2Left@{\_interpolatedShoulder2Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_interpolatedShoulder2Left}{\_interpolatedShoulder2Left}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+interpolated\+Shoulder2\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 80 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a756387ef588b4049bba42da3f65fef74}\label{namespacesteering__simulation_a756387ef588b4049bba42da3f65fef74}} 
+\index{steering\_simulation@{steering\_simulation}!\_interpolatedShoulder2Right@{\_interpolatedShoulder2Right}}
+\index{\_interpolatedShoulder2Right@{\_interpolatedShoulder2Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_interpolatedShoulder2Right}{\_interpolatedShoulder2Right}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+interpolated\+Shoulder2\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 77 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a89100082be780423ef8cb32970fb1719}\label{namespacesteering__simulation_a89100082be780423ef8cb32970fb1719}} 
+\index{steering\_simulation@{steering\_simulation}!\_interpolatedWrist0Left@{\_interpolatedWrist0Left}}
+\index{\_interpolatedWrist0Left@{\_interpolatedWrist0Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_interpolatedWrist0Left}{\_interpolatedWrist0Left}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+interpolated\+Wrist0\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 87 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_aaec0a977fbc1c9147a917be325f3a411}\label{namespacesteering__simulation_aaec0a977fbc1c9147a917be325f3a411}} 
+\index{steering\_simulation@{steering\_simulation}!\_interpolatedWrist0Right@{\_interpolatedWrist0Right}}
+\index{\_interpolatedWrist0Right@{\_interpolatedWrist0Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_interpolatedWrist0Right}{\_interpolatedWrist0Right}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+interpolated\+Wrist0\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 85 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a044a88f1d8e7442e56c31647186fd626}\label{namespacesteering__simulation_a044a88f1d8e7442e56c31647186fd626}} 
+\index{steering\_simulation@{steering\_simulation}!\_interpolatedWrist1Left@{\_interpolatedWrist1Left}}
+\index{\_interpolatedWrist1Left@{\_interpolatedWrist1Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_interpolatedWrist1Left}{\_interpolatedWrist1Left}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+interpolated\+Wrist1\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 88 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a348d2aedeba474cdc52c04f6920c8d2b}\label{namespacesteering__simulation_a348d2aedeba474cdc52c04f6920c8d2b}} 
+\index{steering\_simulation@{steering\_simulation}!\_interpolatedWrist1Right@{\_interpolatedWrist1Right}}
+\index{\_interpolatedWrist1Right@{\_interpolatedWrist1Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_interpolatedWrist1Right}{\_interpolatedWrist1Right}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+interpolated\+Wrist1\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 86 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a76a7d611ad7418a972e460503b3f6ad5}\label{namespacesteering__simulation_a76a7d611ad7418a972e460503b3f6ad5}} 
+\index{steering\_simulation@{steering\_simulation}!\_joints\_list@{\_joints\_list}}
+\index{\_joints\_list@{\_joints\_list}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_joints\_list}{\_joints\_list}}
+{\footnotesize\ttfamily list steering\+\_\+simulation.\+\_\+joints\+\_\+list\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  [JOINT\_SHOULDER\_AXIS0\_RIGHT, JOINT\_SHOULDER\_AXIS1\_RIGHT, JOINT\_SHOULDER\_AXIS2\_RIGHT,}
+\DoxyCodeLine{2                 JOINT\_SHOULDER\_AXIS0\_LEFT, JOINT\_SHOULDER\_AXIS1\_LEFT, JOINT\_SHOULDER\_AXIS2\_LEFT,}
+\DoxyCodeLine{3                 JOINT\_ELBOW\_ROT0\_RIGHT, JOINT\_ELBOW\_ROT1\_RIGHT, JOINT\_ELBOW\_ROT0\_LEFT, JOINT\_ELBOW\_ROT1\_LEFT,}
+\DoxyCodeLine{4                 JOINT\_WRIST\_0\_RIGHT, JOINT\_WRIST\_1\_RIGHT, JOINT\_WRIST\_0\_LEFT, JOINT\_WRIST\_1\_LEFT, JOINT\_BIKE\_FRONT]}
+
+\end{DoxyCode}
+
+
+Definition at line 52 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a151daa71bd805d2dd04fe522c1ddac4f}\label{namespacesteering__simulation_a151daa71bd805d2dd04fe522c1ddac4f}} 
+\index{steering\_simulation@{steering\_simulation}!\_jointsStatusData@{\_jointsStatusData}}
+\index{\_jointsStatusData@{\_jointsStatusData}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_jointsStatusData}{\_jointsStatusData}}
+{\footnotesize\ttfamily dictionary steering\+\_\+simulation.\+\_\+joints\+Status\+Data\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 105 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_ab2b60690901db0cb00dcb7a84a575208}\label{namespacesteering__simulation_ab2b60690901db0cb00dcb7a84a575208}} 
+\index{steering\_simulation@{steering\_simulation}!\_numTrajectoryPoints@{\_numTrajectoryPoints}}
+\index{\_numTrajectoryPoints@{\_numTrajectoryPoints}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_numTrajectoryPoints}{\_numTrajectoryPoints}}
+{\footnotesize\ttfamily int steering\+\_\+simulation.\+\_\+num\+Trajectory\+Points = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 57 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a6578ba913df0e70ad8bac370b2487690}\label{namespacesteering__simulation_a6578ba913df0e70ad8bac370b2487690}} 
+\index{steering\_simulation@{steering\_simulation}!\_regressedElbow0Left@{\_regressedElbow0Left}}
+\index{\_regressedElbow0Left@{\_regressedElbow0Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_regressedElbow0Left}{\_regressedElbow0Left}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+regressed\+Elbow0\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 98 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a9051de1d3ca856247286471428f4904a}\label{namespacesteering__simulation_a9051de1d3ca856247286471428f4904a}} 
+\index{steering\_simulation@{steering\_simulation}!\_regressedElbow0Right@{\_regressedElbow0Right}}
+\index{\_regressedElbow0Right@{\_regressedElbow0Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_regressedElbow0Right}{\_regressedElbow0Right}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+regressed\+Elbow0\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 96 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a9abb832a963446f645e9e2ef1c27c7bd}\label{namespacesteering__simulation_a9abb832a963446f645e9e2ef1c27c7bd}} 
+\index{steering\_simulation@{steering\_simulation}!\_regressedElbow1Left@{\_regressedElbow1Left}}
+\index{\_regressedElbow1Left@{\_regressedElbow1Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_regressedElbow1Left}{\_regressedElbow1Left}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+regressed\+Elbow1\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 99 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a8a1973e968c7a7cd522fa01b6bdcc708}\label{namespacesteering__simulation_a8a1973e968c7a7cd522fa01b6bdcc708}} 
+\index{steering\_simulation@{steering\_simulation}!\_regressedElbow1Right@{\_regressedElbow1Right}}
+\index{\_regressedElbow1Right@{\_regressedElbow1Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_regressedElbow1Right}{\_regressedElbow1Right}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+regressed\+Elbow1\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 97 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a4203655e78045f63c997316cc5c351e4}\label{namespacesteering__simulation_a4203655e78045f63c997316cc5c351e4}} 
+\index{steering\_simulation@{steering\_simulation}!\_regressedShoulder0Left@{\_regressedShoulder0Left}}
+\index{\_regressedShoulder0Left@{\_regressedShoulder0Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_regressedShoulder0Left}{\_regressedShoulder0Left}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+regressed\+Shoulder0\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 93 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a9c00f2252bbdc56a767e0dd14244a172}\label{namespacesteering__simulation_a9c00f2252bbdc56a767e0dd14244a172}} 
+\index{steering\_simulation@{steering\_simulation}!\_regressedShoulder0Right@{\_regressedShoulder0Right}}
+\index{\_regressedShoulder0Right@{\_regressedShoulder0Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_regressedShoulder0Right}{\_regressedShoulder0Right}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+regressed\+Shoulder0\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 90 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a7c1b938e9f72b1f50694edd164cb8419}\label{namespacesteering__simulation_a7c1b938e9f72b1f50694edd164cb8419}} 
+\index{steering\_simulation@{steering\_simulation}!\_regressedShoulder1Left@{\_regressedShoulder1Left}}
+\index{\_regressedShoulder1Left@{\_regressedShoulder1Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_regressedShoulder1Left}{\_regressedShoulder1Left}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+regressed\+Shoulder1\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 94 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a31e0576d19447bee4b24729459ff4b94}\label{namespacesteering__simulation_a31e0576d19447bee4b24729459ff4b94}} 
+\index{steering\_simulation@{steering\_simulation}!\_regressedShoulder1Right@{\_regressedShoulder1Right}}
+\index{\_regressedShoulder1Right@{\_regressedShoulder1Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_regressedShoulder1Right}{\_regressedShoulder1Right}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+regressed\+Shoulder1\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 91 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a421efc578e81ec549903721c34847cd8}\label{namespacesteering__simulation_a421efc578e81ec549903721c34847cd8}} 
+\index{steering\_simulation@{steering\_simulation}!\_regressedShoulder2Left@{\_regressedShoulder2Left}}
+\index{\_regressedShoulder2Left@{\_regressedShoulder2Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_regressedShoulder2Left}{\_regressedShoulder2Left}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+regressed\+Shoulder2\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 95 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_aeec070bce57c67b666f5ebdbae1e27de}\label{namespacesteering__simulation_aeec070bce57c67b666f5ebdbae1e27de}} 
+\index{steering\_simulation@{steering\_simulation}!\_regressedShoulder2Right@{\_regressedShoulder2Right}}
+\index{\_regressedShoulder2Right@{\_regressedShoulder2Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_regressedShoulder2Right}{\_regressedShoulder2Right}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+regressed\+Shoulder2\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 92 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a99abea20d1f4b510dd4dfb589201b963}\label{namespacesteering__simulation_a99abea20d1f4b510dd4dfb589201b963}} 
+\index{steering\_simulation@{steering\_simulation}!\_regressedWrist0Left@{\_regressedWrist0Left}}
+\index{\_regressedWrist0Left@{\_regressedWrist0Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_regressedWrist0Left}{\_regressedWrist0Left}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+regressed\+Wrist0\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 102 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a1c654b15f1b8ea91b2997bd5de4f8b9d}\label{namespacesteering__simulation_a1c654b15f1b8ea91b2997bd5de4f8b9d}} 
+\index{steering\_simulation@{steering\_simulation}!\_regressedWrist0Right@{\_regressedWrist0Right}}
+\index{\_regressedWrist0Right@{\_regressedWrist0Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_regressedWrist0Right}{\_regressedWrist0Right}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+regressed\+Wrist0\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 100 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_aa295ffef98b1c03490f0cac204d3d7f1}\label{namespacesteering__simulation_aa295ffef98b1c03490f0cac204d3d7f1}} 
+\index{steering\_simulation@{steering\_simulation}!\_regressedWrist1Left@{\_regressedWrist1Left}}
+\index{\_regressedWrist1Left@{\_regressedWrist1Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_regressedWrist1Left}{\_regressedWrist1Left}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+regressed\+Wrist1\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 103 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a39e4eb08bba548e27a24df3b40a96c48}\label{namespacesteering__simulation_a39e4eb08bba548e27a24df3b40a96c48}} 
+\index{steering\_simulation@{steering\_simulation}!\_regressedWrist1Right@{\_regressedWrist1Right}}
+\index{\_regressedWrist1Right@{\_regressedWrist1Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_regressedWrist1Right}{\_regressedWrist1Right}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+\_\+regressed\+Wrist1\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 101 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a7ac46e89903b8b00bfcea25d5a0a8514}\label{namespacesteering__simulation_a7ac46e89903b8b00bfcea25d5a0a8514}} 
+\index{steering\_simulation@{steering\_simulation}!\_trajectoryElbow0Left@{\_trajectoryElbow0Left}}
+\index{\_trajectoryElbow0Left@{\_trajectoryElbow0Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_trajectoryElbow0Left}{\_trajectoryElbow0Left}}
+{\footnotesize\ttfamily list steering\+\_\+simulation.\+\_\+trajectory\+Elbow0\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 68 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a34fabb2baf450d02baa482645b1900a9}\label{namespacesteering__simulation_a34fabb2baf450d02baa482645b1900a9}} 
+\index{steering\_simulation@{steering\_simulation}!\_trajectoryElbow0Right@{\_trajectoryElbow0Right}}
+\index{\_trajectoryElbow0Right@{\_trajectoryElbow0Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_trajectoryElbow0Right}{\_trajectoryElbow0Right}}
+{\footnotesize\ttfamily list steering\+\_\+simulation.\+\_\+trajectory\+Elbow0\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 66 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_adb1fd212106914e45e4864d5a3950884}\label{namespacesteering__simulation_adb1fd212106914e45e4864d5a3950884}} 
+\index{steering\_simulation@{steering\_simulation}!\_trajectoryElbow1Left@{\_trajectoryElbow1Left}}
+\index{\_trajectoryElbow1Left@{\_trajectoryElbow1Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_trajectoryElbow1Left}{\_trajectoryElbow1Left}}
+{\footnotesize\ttfamily list steering\+\_\+simulation.\+\_\+trajectory\+Elbow1\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 69 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_aa3297ef058f1ff384a123c5fbcc47b9e}\label{namespacesteering__simulation_aa3297ef058f1ff384a123c5fbcc47b9e}} 
+\index{steering\_simulation@{steering\_simulation}!\_trajectoryElbow1Right@{\_trajectoryElbow1Right}}
+\index{\_trajectoryElbow1Right@{\_trajectoryElbow1Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_trajectoryElbow1Right}{\_trajectoryElbow1Right}}
+{\footnotesize\ttfamily list steering\+\_\+simulation.\+\_\+trajectory\+Elbow1\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 67 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a679488f2cc2cdc4fd40d69ef424875a4}\label{namespacesteering__simulation_a679488f2cc2cdc4fd40d69ef424875a4}} 
+\index{steering\_simulation@{steering\_simulation}!\_trajectoryShoulder0Left@{\_trajectoryShoulder0Left}}
+\index{\_trajectoryShoulder0Left@{\_trajectoryShoulder0Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_trajectoryShoulder0Left}{\_trajectoryShoulder0Left}}
+{\footnotesize\ttfamily list steering\+\_\+simulation.\+\_\+trajectory\+Shoulder0\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 63 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a8d39f809cc1766c3ac57a804f35d15fb}\label{namespacesteering__simulation_a8d39f809cc1766c3ac57a804f35d15fb}} 
+\index{steering\_simulation@{steering\_simulation}!\_trajectoryShoulder0Right@{\_trajectoryShoulder0Right}}
+\index{\_trajectoryShoulder0Right@{\_trajectoryShoulder0Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_trajectoryShoulder0Right}{\_trajectoryShoulder0Right}}
+{\footnotesize\ttfamily list steering\+\_\+simulation.\+\_\+trajectory\+Shoulder0\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 60 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a30de866115acae4df94758efa870918e}\label{namespacesteering__simulation_a30de866115acae4df94758efa870918e}} 
+\index{steering\_simulation@{steering\_simulation}!\_trajectoryShoulder1Left@{\_trajectoryShoulder1Left}}
+\index{\_trajectoryShoulder1Left@{\_trajectoryShoulder1Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_trajectoryShoulder1Left}{\_trajectoryShoulder1Left}}
+{\footnotesize\ttfamily list steering\+\_\+simulation.\+\_\+trajectory\+Shoulder1\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 64 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a15d8c8b72dff883083c7e5993efd61b3}\label{namespacesteering__simulation_a15d8c8b72dff883083c7e5993efd61b3}} 
+\index{steering\_simulation@{steering\_simulation}!\_trajectoryShoulder1Right@{\_trajectoryShoulder1Right}}
+\index{\_trajectoryShoulder1Right@{\_trajectoryShoulder1Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_trajectoryShoulder1Right}{\_trajectoryShoulder1Right}}
+{\footnotesize\ttfamily list steering\+\_\+simulation.\+\_\+trajectory\+Shoulder1\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 61 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a6e022b068f1ffb14c82a9a6433914fc3}\label{namespacesteering__simulation_a6e022b068f1ffb14c82a9a6433914fc3}} 
+\index{steering\_simulation@{steering\_simulation}!\_trajectoryShoulder2Left@{\_trajectoryShoulder2Left}}
+\index{\_trajectoryShoulder2Left@{\_trajectoryShoulder2Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_trajectoryShoulder2Left}{\_trajectoryShoulder2Left}}
+{\footnotesize\ttfamily list steering\+\_\+simulation.\+\_\+trajectory\+Shoulder2\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 65 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a287bcf5cdb0db4a5423e7a275a85d2bb}\label{namespacesteering__simulation_a287bcf5cdb0db4a5423e7a275a85d2bb}} 
+\index{steering\_simulation@{steering\_simulation}!\_trajectoryShoulder2Right@{\_trajectoryShoulder2Right}}
+\index{\_trajectoryShoulder2Right@{\_trajectoryShoulder2Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_trajectoryShoulder2Right}{\_trajectoryShoulder2Right}}
+{\footnotesize\ttfamily list steering\+\_\+simulation.\+\_\+trajectory\+Shoulder2\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 62 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_ad897df89602b12dca6cf1d693cd90948}\label{namespacesteering__simulation_ad897df89602b12dca6cf1d693cd90948}} 
+\index{steering\_simulation@{steering\_simulation}!\_trajectorySteering@{\_trajectorySteering}}
+\index{\_trajectorySteering@{\_trajectorySteering}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_trajectorySteering}{\_trajectorySteering}}
+{\footnotesize\ttfamily list steering\+\_\+simulation.\+\_\+trajectory\+Steering = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 59 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a65b6250dbe1a9a65e76a41c62da9ea7e}\label{namespacesteering__simulation_a65b6250dbe1a9a65e76a41c62da9ea7e}} 
+\index{steering\_simulation@{steering\_simulation}!\_trajectoryWrist0Left@{\_trajectoryWrist0Left}}
+\index{\_trajectoryWrist0Left@{\_trajectoryWrist0Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_trajectoryWrist0Left}{\_trajectoryWrist0Left}}
+{\footnotesize\ttfamily list steering\+\_\+simulation.\+\_\+trajectory\+Wrist0\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 72 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_afe9e1def4f12d1f011a8e0e6c2051f48}\label{namespacesteering__simulation_afe9e1def4f12d1f011a8e0e6c2051f48}} 
+\index{steering\_simulation@{steering\_simulation}!\_trajectoryWrist0Right@{\_trajectoryWrist0Right}}
+\index{\_trajectoryWrist0Right@{\_trajectoryWrist0Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_trajectoryWrist0Right}{\_trajectoryWrist0Right}}
+{\footnotesize\ttfamily list steering\+\_\+simulation.\+\_\+trajectory\+Wrist0\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 70 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a4f098ae88427b37c42fde098a61fb399}\label{namespacesteering__simulation_a4f098ae88427b37c42fde098a61fb399}} 
+\index{steering\_simulation@{steering\_simulation}!\_trajectoryWrist1Left@{\_trajectoryWrist1Left}}
+\index{\_trajectoryWrist1Left@{\_trajectoryWrist1Left}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_trajectoryWrist1Left}{\_trajectoryWrist1Left}}
+{\footnotesize\ttfamily list steering\+\_\+simulation.\+\_\+trajectory\+Wrist1\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 73 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a48daa3f5dc8c583ae35007d94df2303e}\label{namespacesteering__simulation_a48daa3f5dc8c583ae35007d94df2303e}} 
+\index{steering\_simulation@{steering\_simulation}!\_trajectoryWrist1Right@{\_trajectoryWrist1Right}}
+\index{\_trajectoryWrist1Right@{\_trajectoryWrist1Right}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{\_trajectoryWrist1Right}{\_trajectoryWrist1Right}}
+{\footnotesize\ttfamily list steering\+\_\+simulation.\+\_\+trajectory\+Wrist1\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 71 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_aa5275dfb8d3750aaec001938cd02a97d}\label{namespacesteering__simulation_aa5275dfb8d3750aaec001938cd02a97d}} 
+\index{steering\_simulation@{steering\_simulation}!angle\_change\_successful@{angle\_change\_successful}}
+\index{angle\_change\_successful@{angle\_change\_successful}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{angle\_change\_successful}{angle\_change\_successful}}
+{\footnotesize\ttfamily bool steering\+\_\+simulation.\+angle\+\_\+change\+\_\+successful = True}
+
+
+
+Definition at line 187 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a745b702c18a3c9c7ec661d2255a662c6}\label{namespacesteering__simulation_a745b702c18a3c9c7ec661d2255a662c6}} 
+\index{steering\_simulation@{steering\_simulation}!JOINT\_BIKE\_FRONT@{JOINT\_BIKE\_FRONT}}
+\index{JOINT\_BIKE\_FRONT@{JOINT\_BIKE\_FRONT}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{JOINT\_BIKE\_FRONT}{JOINT\_BIKE\_FRONT}}
+{\footnotesize\ttfamily string steering\+\_\+simulation.\+J\+O\+I\+N\+T\+\_\+\+B\+I\+K\+E\+\_\+\+F\+R\+O\+NT = \char`\"{}joint\+\_\+front\char`\"{}}
+
+
+
+Definition at line 50 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a6bc051ea14ae98684ec54faf12a80d18}\label{namespacesteering__simulation_a6bc051ea14ae98684ec54faf12a80d18}} 
+\index{steering\_simulation@{steering\_simulation}!JOINT\_ELBOW\_ROT0\_LEFT@{JOINT\_ELBOW\_ROT0\_LEFT}}
+\index{JOINT\_ELBOW\_ROT0\_LEFT@{JOINT\_ELBOW\_ROT0\_LEFT}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{JOINT\_ELBOW\_ROT0\_LEFT}{JOINT\_ELBOW\_ROT0\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+simulation.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+L\+E\+FT = \char`\"{}elbow\+\_\+left\+\_\+rot0\char`\"{}}
+
+
+
+Definition at line 44 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a87ec11ba1fc1588a0cd2cc310e9dd12d}\label{namespacesteering__simulation_a87ec11ba1fc1588a0cd2cc310e9dd12d}} 
+\index{steering\_simulation@{steering\_simulation}!JOINT\_ELBOW\_ROT0\_RIGHT@{JOINT\_ELBOW\_ROT0\_RIGHT}}
+\index{JOINT\_ELBOW\_ROT0\_RIGHT@{JOINT\_ELBOW\_ROT0\_RIGHT}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{JOINT\_ELBOW\_ROT0\_RIGHT}{JOINT\_ELBOW\_ROT0\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+simulation.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+R\+I\+G\+HT = \char`\"{}elbow\+\_\+right\+\_\+rot0\char`\"{}}
+
+
+
+Definition at line 42 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a95ae3d26f956b491229c78d10dee1aba}\label{namespacesteering__simulation_a95ae3d26f956b491229c78d10dee1aba}} 
+\index{steering\_simulation@{steering\_simulation}!JOINT\_ELBOW\_ROT1\_LEFT@{JOINT\_ELBOW\_ROT1\_LEFT}}
+\index{JOINT\_ELBOW\_ROT1\_LEFT@{JOINT\_ELBOW\_ROT1\_LEFT}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{JOINT\_ELBOW\_ROT1\_LEFT}{JOINT\_ELBOW\_ROT1\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+simulation.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+L\+E\+FT = \char`\"{}elbow\+\_\+left\+\_\+rot1\char`\"{}}
+
+
+
+Definition at line 45 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a1a8aae1f17bde6bb8d80c73e7f546434}\label{namespacesteering__simulation_a1a8aae1f17bde6bb8d80c73e7f546434}} 
+\index{steering\_simulation@{steering\_simulation}!JOINT\_ELBOW\_ROT1\_RIGHT@{JOINT\_ELBOW\_ROT1\_RIGHT}}
+\index{JOINT\_ELBOW\_ROT1\_RIGHT@{JOINT\_ELBOW\_ROT1\_RIGHT}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{JOINT\_ELBOW\_ROT1\_RIGHT}{JOINT\_ELBOW\_ROT1\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+simulation.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+R\+I\+G\+HT = \char`\"{}elbow\+\_\+right\+\_\+rot1\char`\"{}}
+
+
+
+Definition at line 43 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a349c0f63ddcdf619cf509dceff5f53a6}\label{namespacesteering__simulation_a349c0f63ddcdf619cf509dceff5f53a6}} 
+\index{steering\_simulation@{steering\_simulation}!JOINT\_SHOULDER\_AXIS0\_LEFT@{JOINT\_SHOULDER\_AXIS0\_LEFT}}
+\index{JOINT\_SHOULDER\_AXIS0\_LEFT@{JOINT\_SHOULDER\_AXIS0\_LEFT}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS0\_LEFT}{JOINT\_SHOULDER\_AXIS0\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+simulation.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+shoulder\+\_\+axis0\char`\"{}}
+
+
+
+Definition at line 39 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_aa17ebfc23242a5eb70e77d1c7b838b41}\label{namespacesteering__simulation_aa17ebfc23242a5eb70e77d1c7b838b41}} 
+\index{steering\_simulation@{steering\_simulation}!JOINT\_SHOULDER\_AXIS0\_RIGHT@{JOINT\_SHOULDER\_AXIS0\_RIGHT}}
+\index{JOINT\_SHOULDER\_AXIS0\_RIGHT@{JOINT\_SHOULDER\_AXIS0\_RIGHT}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS0\_RIGHT}{JOINT\_SHOULDER\_AXIS0\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+simulation.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+shoulder\+\_\+axis0\char`\"{}}
+
+
+
+Definition at line 36 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a613bf71b0e0c3452f92b4853e2e62220}\label{namespacesteering__simulation_a613bf71b0e0c3452f92b4853e2e62220}} 
+\index{steering\_simulation@{steering\_simulation}!JOINT\_SHOULDER\_AXIS1\_LEFT@{JOINT\_SHOULDER\_AXIS1\_LEFT}}
+\index{JOINT\_SHOULDER\_AXIS1\_LEFT@{JOINT\_SHOULDER\_AXIS1\_LEFT}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS1\_LEFT}{JOINT\_SHOULDER\_AXIS1\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+simulation.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+shoulder\+\_\+axis1\char`\"{}}
+
+
+
+Definition at line 40 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a30fbab19241dfbe329ee608a9c47a31b}\label{namespacesteering__simulation_a30fbab19241dfbe329ee608a9c47a31b}} 
+\index{steering\_simulation@{steering\_simulation}!JOINT\_SHOULDER\_AXIS1\_RIGHT@{JOINT\_SHOULDER\_AXIS1\_RIGHT}}
+\index{JOINT\_SHOULDER\_AXIS1\_RIGHT@{JOINT\_SHOULDER\_AXIS1\_RIGHT}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS1\_RIGHT}{JOINT\_SHOULDER\_AXIS1\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+simulation.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+shoulder\+\_\+axis1\char`\"{}}
+
+
+
+Definition at line 37 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_ad9da62cd2eb0c4000d1fc4eda6017364}\label{namespacesteering__simulation_ad9da62cd2eb0c4000d1fc4eda6017364}} 
+\index{steering\_simulation@{steering\_simulation}!JOINT\_SHOULDER\_AXIS2\_LEFT@{JOINT\_SHOULDER\_AXIS2\_LEFT}}
+\index{JOINT\_SHOULDER\_AXIS2\_LEFT@{JOINT\_SHOULDER\_AXIS2\_LEFT}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS2\_LEFT}{JOINT\_SHOULDER\_AXIS2\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+simulation.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+shoulder\+\_\+axis2\char`\"{}}
+
+
+
+Definition at line 41 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a11b82fa8fdda843272cc39e43abc48e5}\label{namespacesteering__simulation_a11b82fa8fdda843272cc39e43abc48e5}} 
+\index{steering\_simulation@{steering\_simulation}!JOINT\_SHOULDER\_AXIS2\_RIGHT@{JOINT\_SHOULDER\_AXIS2\_RIGHT}}
+\index{JOINT\_SHOULDER\_AXIS2\_RIGHT@{JOINT\_SHOULDER\_AXIS2\_RIGHT}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS2\_RIGHT}{JOINT\_SHOULDER\_AXIS2\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+simulation.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+shoulder\+\_\+axis2\char`\"{}}
+
+
+
+Definition at line 38 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a9d7ce571547e355ac4b1794548af1682}\label{namespacesteering__simulation_a9d7ce571547e355ac4b1794548af1682}} 
+\index{steering\_simulation@{steering\_simulation}!JOINT\_TARGET\_ERROR\_TOLERANCE@{JOINT\_TARGET\_ERROR\_TOLERANCE}}
+\index{JOINT\_TARGET\_ERROR\_TOLERANCE@{JOINT\_TARGET\_ERROR\_TOLERANCE}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{JOINT\_TARGET\_ERROR\_TOLERANCE}{JOINT\_TARGET\_ERROR\_TOLERANCE}}
+{\footnotesize\ttfamily float steering\+\_\+simulation.\+J\+O\+I\+N\+T\+\_\+\+T\+A\+R\+G\+E\+T\+\_\+\+E\+R\+R\+O\+R\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE = 0.\+01}
+
+
+
+Definition at line 30 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a1292b9f1429c017d07ec3de6b2f0a7bf}\label{namespacesteering__simulation_a1292b9f1429c017d07ec3de6b2f0a7bf}} 
+\index{steering\_simulation@{steering\_simulation}!JOINT\_WRIST\_0\_LEFT@{JOINT\_WRIST\_0\_LEFT}}
+\index{JOINT\_WRIST\_0\_LEFT@{JOINT\_WRIST\_0\_LEFT}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{JOINT\_WRIST\_0\_LEFT}{JOINT\_WRIST\_0\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+simulation.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+wrist\+\_\+0\char`\"{}}
+
+
+
+Definition at line 48 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a97c26a57b04116975fbd66982ffe0477}\label{namespacesteering__simulation_a97c26a57b04116975fbd66982ffe0477}} 
+\index{steering\_simulation@{steering\_simulation}!JOINT\_WRIST\_0\_RIGHT@{JOINT\_WRIST\_0\_RIGHT}}
+\index{JOINT\_WRIST\_0\_RIGHT@{JOINT\_WRIST\_0\_RIGHT}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{JOINT\_WRIST\_0\_RIGHT}{JOINT\_WRIST\_0\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+simulation.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+wrist\+\_\+0\char`\"{}}
+
+
+
+Definition at line 46 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a0032de0d6332a1ae30dee3b30019d5f8}\label{namespacesteering__simulation_a0032de0d6332a1ae30dee3b30019d5f8}} 
+\index{steering\_simulation@{steering\_simulation}!JOINT\_WRIST\_1\_LEFT@{JOINT\_WRIST\_1\_LEFT}}
+\index{JOINT\_WRIST\_1\_LEFT@{JOINT\_WRIST\_1\_LEFT}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{JOINT\_WRIST\_1\_LEFT}{JOINT\_WRIST\_1\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+simulation.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+wrist\+\_\+1\char`\"{}}
+
+
+
+Definition at line 49 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a1ff71de09a5b70901b4321e8cf68d061}\label{namespacesteering__simulation_a1ff71de09a5b70901b4321e8cf68d061}} 
+\index{steering\_simulation@{steering\_simulation}!JOINT\_WRIST\_1\_RIGHT@{JOINT\_WRIST\_1\_RIGHT}}
+\index{JOINT\_WRIST\_1\_RIGHT@{JOINT\_WRIST\_1\_RIGHT}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{JOINT\_WRIST\_1\_RIGHT}{JOINT\_WRIST\_1\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+simulation.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+wrist\+\_\+1\char`\"{}}
+
+
+
+Definition at line 47 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_af6a6a70049e66b65e195d32a0e566f39}\label{namespacesteering__simulation_af6a6a70049e66b65e195d32a0e566f39}} 
+\index{steering\_simulation@{steering\_simulation}!MAX\_ANGLE\_CHANGE@{MAX\_ANGLE\_CHANGE}}
+\index{MAX\_ANGLE\_CHANGE@{MAX\_ANGLE\_CHANGE}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{MAX\_ANGLE\_CHANGE}{MAX\_ANGLE\_CHANGE}}
+{\footnotesize\ttfamily int steering\+\_\+simulation.\+M\+A\+X\+\_\+\+A\+N\+G\+L\+E\+\_\+\+C\+H\+A\+N\+GE = np.\+pi / 72}
+
+
+
+Definition at line 32 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a13db823567e2a46183a6887d72165d65}\label{namespacesteering__simulation_a13db823567e2a46183a6887d72165d65}} 
+\index{steering\_simulation@{steering\_simulation}!PRINT\_DEBUG@{PRINT\_DEBUG}}
+\index{PRINT\_DEBUG@{PRINT\_DEBUG}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{PRINT\_DEBUG}{PRINT\_DEBUG}}
+{\footnotesize\ttfamily bool steering\+\_\+simulation.\+P\+R\+I\+N\+T\+\_\+\+D\+E\+B\+UG = True}
+
+
+
+Definition at line 28 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_ab4de54bdf1b917546004a6eb92a8cd27}\label{namespacesteering__simulation_ab4de54bdf1b917546004a6eb92a8cd27}} 
+\index{steering\_simulation@{steering\_simulation}!RECORDED\_TRAJECTORY\_FILENAME@{RECORDED\_TRAJECTORY\_FILENAME}}
+\index{RECORDED\_TRAJECTORY\_FILENAME@{RECORDED\_TRAJECTORY\_FILENAME}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{RECORDED\_TRAJECTORY\_FILENAME}{RECORDED\_TRAJECTORY\_FILENAME}}
+{\footnotesize\ttfamily string steering\+\_\+simulation.\+R\+E\+C\+O\+R\+D\+E\+D\+\_\+\+T\+R\+A\+J\+E\+C\+T\+O\+R\+Y\+\_\+\+F\+I\+L\+E\+N\+A\+ME = \char`\"{}trajectory\+\_\+steering/steering\+\_\+trajectory.\+json\char`\"{}}
+
+
+
+Definition at line 29 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a1906425964226a8e34fc3f159b4d54fb}\label{namespacesteering__simulation_a1906425964226a8e34fc3f159b4d54fb}} 
+\index{steering\_simulation@{steering\_simulation}!requested\_steering\_angle@{requested\_steering\_angle}}
+\index{requested\_steering\_angle@{requested\_steering\_angle}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{requested\_steering\_angle}{requested\_steering\_angle}}
+{\footnotesize\ttfamily int steering\+\_\+simulation.\+requested\+\_\+steering\+\_\+angle = 0}
+
+
+
+Definition at line 186 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a2f98d3e960637df34f895f4ccee97bbe}\label{namespacesteering__simulation_a2f98d3e960637df34f895f4ccee97bbe}} 
+\index{steering\_simulation@{steering\_simulation}!ros\_bike\_front\_pub@{ros\_bike\_front\_pub}}
+\index{ros\_bike\_front\_pub@{ros\_bike\_front\_pub}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{ros\_bike\_front\_pub}{ros\_bike\_front\_pub}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+ros\+\_\+bike\+\_\+front\+\_\+pub = rospy.\+Publisher(\textquotesingle{}/joint\+\_\+front/joint\+\_\+front/target\textquotesingle{}, Float32, queue\+\_\+size=2)}
+
+
+
+Definition at line 182 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a3e18ade3c9e741db3cd48035d7d11b43}\label{namespacesteering__simulation_a3e18ade3c9e741db3cd48035d7d11b43}} 
+\index{steering\_simulation@{steering\_simulation}!ros\_elbow\_left\_rot0\_pub@{ros\_elbow\_left\_rot0\_pub}}
+\index{ros\_elbow\_left\_rot0\_pub@{ros\_elbow\_left\_rot0\_pub}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{ros\_elbow\_left\_rot0\_pub}{ros\_elbow\_left\_rot0\_pub}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+ros\+\_\+elbow\+\_\+left\+\_\+rot0\+\_\+pub = rospy.\+Publisher(\textquotesingle{}/elbow\+\_\+left\+\_\+rot0/elbow\+\_\+left\+\_\+rot0/target\textquotesingle{}, Float32, queue\+\_\+size=2)}
+
+
+
+Definition at line 175 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a7cf7d50a6b2f01251abedd8a59233be3}\label{namespacesteering__simulation_a7cf7d50a6b2f01251abedd8a59233be3}} 
+\index{steering\_simulation@{steering\_simulation}!ros\_elbow\_left\_rot1\_pub@{ros\_elbow\_left\_rot1\_pub}}
+\index{ros\_elbow\_left\_rot1\_pub@{ros\_elbow\_left\_rot1\_pub}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{ros\_elbow\_left\_rot1\_pub}{ros\_elbow\_left\_rot1\_pub}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+ros\+\_\+elbow\+\_\+left\+\_\+rot1\+\_\+pub = rospy.\+Publisher(\textquotesingle{}/elbow\+\_\+left\+\_\+rot1/elbow\+\_\+left\+\_\+rot1/target\textquotesingle{}, Float32, queue\+\_\+size=2)}
+
+
+
+Definition at line 176 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a3d22b5897eee35c841b1df82b5d02111}\label{namespacesteering__simulation_a3d22b5897eee35c841b1df82b5d02111}} 
+\index{steering\_simulation@{steering\_simulation}!ros\_elbow\_right\_rot0\_pub@{ros\_elbow\_right\_rot0\_pub}}
+\index{ros\_elbow\_right\_rot0\_pub@{ros\_elbow\_right\_rot0\_pub}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{ros\_elbow\_right\_rot0\_pub}{ros\_elbow\_right\_rot0\_pub}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+ros\+\_\+elbow\+\_\+right\+\_\+rot0\+\_\+pub = rospy.\+Publisher(\textquotesingle{}/elbow\+\_\+right\+\_\+rot0/elbow\+\_\+right\+\_\+rot0/target\textquotesingle{}, Float32, queue\+\_\+size=2)}
+
+
+
+Definition at line 173 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a1280b460562790964403c7752bbc056d}\label{namespacesteering__simulation_a1280b460562790964403c7752bbc056d}} 
+\index{steering\_simulation@{steering\_simulation}!ros\_elbow\_right\_rot1\_pub@{ros\_elbow\_right\_rot1\_pub}}
+\index{ros\_elbow\_right\_rot1\_pub@{ros\_elbow\_right\_rot1\_pub}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{ros\_elbow\_right\_rot1\_pub}{ros\_elbow\_right\_rot1\_pub}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+ros\+\_\+elbow\+\_\+right\+\_\+rot1\+\_\+pub = rospy.\+Publisher(\textquotesingle{}/elbow\+\_\+right\+\_\+rot1/elbow\+\_\+right\+\_\+rot1/target\textquotesingle{}, Float32, queue\+\_\+size=2)}
+
+
+
+Definition at line 174 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a0f7519e7fbc7a8cabdcdde1482ccacde}\label{namespacesteering__simulation_a0f7519e7fbc7a8cabdcdde1482ccacde}} 
+\index{steering\_simulation@{steering\_simulation}!ros\_left\_shoulder\_axis0\_pub@{ros\_left\_shoulder\_axis0\_pub}}
+\index{ros\_left\_shoulder\_axis0\_pub@{ros\_left\_shoulder\_axis0\_pub}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{ros\_left\_shoulder\_axis0\_pub}{ros\_left\_shoulder\_axis0\_pub}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+ros\+\_\+left\+\_\+shoulder\+\_\+axis0\+\_\+pub = rospy.\+Publisher(\textquotesingle{}/left\+\_\+shoulder\+\_\+axis0/left\+\_\+shoulder\+\_\+axis0/target\textquotesingle{}, Float32, queue\+\_\+size=2)}
+
+
+
+Definition at line 170 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a75aaf98b6863a0aee4b61ee17b0133ba}\label{namespacesteering__simulation_a75aaf98b6863a0aee4b61ee17b0133ba}} 
+\index{steering\_simulation@{steering\_simulation}!ros\_left\_shoulder\_axis1\_pub@{ros\_left\_shoulder\_axis1\_pub}}
+\index{ros\_left\_shoulder\_axis1\_pub@{ros\_left\_shoulder\_axis1\_pub}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{ros\_left\_shoulder\_axis1\_pub}{ros\_left\_shoulder\_axis1\_pub}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+ros\+\_\+left\+\_\+shoulder\+\_\+axis1\+\_\+pub = rospy.\+Publisher(\textquotesingle{}/left\+\_\+shoulder\+\_\+axis1/left\+\_\+shoulder\+\_\+axis1/target\textquotesingle{}, Float32, queue\+\_\+size=2)}
+
+
+
+Definition at line 171 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_af594d9d0bfdf575e6e26e0b6a3a53c8b}\label{namespacesteering__simulation_af594d9d0bfdf575e6e26e0b6a3a53c8b}} 
+\index{steering\_simulation@{steering\_simulation}!ros\_left\_shoulder\_axis2\_pub@{ros\_left\_shoulder\_axis2\_pub}}
+\index{ros\_left\_shoulder\_axis2\_pub@{ros\_left\_shoulder\_axis2\_pub}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{ros\_left\_shoulder\_axis2\_pub}{ros\_left\_shoulder\_axis2\_pub}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+ros\+\_\+left\+\_\+shoulder\+\_\+axis2\+\_\+pub = rospy.\+Publisher(\textquotesingle{}/left\+\_\+shoulder\+\_\+axis2/left\+\_\+shoulder\+\_\+axis2/target\textquotesingle{}, Float32, queue\+\_\+size=2)}
+
+
+
+Definition at line 172 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_aae568c25dad5bee09d010a369a03d5c4}\label{namespacesteering__simulation_aae568c25dad5bee09d010a369a03d5c4}} 
+\index{steering\_simulation@{steering\_simulation}!ros\_left\_wrist\_0\_pub@{ros\_left\_wrist\_0\_pub}}
+\index{ros\_left\_wrist\_0\_pub@{ros\_left\_wrist\_0\_pub}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{ros\_left\_wrist\_0\_pub}{ros\_left\_wrist\_0\_pub}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+ros\+\_\+left\+\_\+wrist\+\_\+0\+\_\+pub = rospy.\+Publisher(\textquotesingle{}/left\+\_\+wrist\+\_\+0/left\+\_\+wrist\+\_\+0/target\textquotesingle{}, Float32, queue\+\_\+size=2)}
+
+
+
+Definition at line 179 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_ab5f317214f6776ddc111dee9afe1f0c3}\label{namespacesteering__simulation_ab5f317214f6776ddc111dee9afe1f0c3}} 
+\index{steering\_simulation@{steering\_simulation}!ros\_left\_wrist\_1\_pub@{ros\_left\_wrist\_1\_pub}}
+\index{ros\_left\_wrist\_1\_pub@{ros\_left\_wrist\_1\_pub}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{ros\_left\_wrist\_1\_pub}{ros\_left\_wrist\_1\_pub}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+ros\+\_\+left\+\_\+wrist\+\_\+1\+\_\+pub = rospy.\+Publisher(\textquotesingle{}/left\+\_\+wrist\+\_\+1/left\+\_\+wrist\+\_\+1/target\textquotesingle{}, Float32, queue\+\_\+size=2)}
+
+
+
+Definition at line 180 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_af24aa0340a9184e1a00a96bc8d68aef8}\label{namespacesteering__simulation_af24aa0340a9184e1a00a96bc8d68aef8}} 
+\index{steering\_simulation@{steering\_simulation}!ros\_log\_error\_pub@{ros\_log\_error\_pub}}
+\index{ros\_log\_error\_pub@{ros\_log\_error\_pub}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{ros\_log\_error\_pub}{ros\_log\_error\_pub}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+ros\+\_\+log\+\_\+error\+\_\+pub = rospy.\+Publisher(\textquotesingle{}chatter\textquotesingle{}, String, queue\+\_\+size=10)}
+
+
+
+Definition at line 184 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a7824803c03df4637e22449c926522d6d}\label{namespacesteering__simulation_a7824803c03df4637e22449c926522d6d}} 
+\index{steering\_simulation@{steering\_simulation}!ros\_right\_shoulder\_axis0\_pub@{ros\_right\_shoulder\_axis0\_pub}}
+\index{ros\_right\_shoulder\_axis0\_pub@{ros\_right\_shoulder\_axis0\_pub}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{ros\_right\_shoulder\_axis0\_pub}{ros\_right\_shoulder\_axis0\_pub}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+ros\+\_\+right\+\_\+shoulder\+\_\+axis0\+\_\+pub}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  rospy.Publisher(\textcolor{stringliteral}{'/right\_shoulder\_axis0/right\_shoulder\_axis0/target'}, Float32,}
+\DoxyCodeLine{2                                                queue\_size=2)}
+
+\end{DoxyCode}
+
+
+Definition at line 164 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a5da8818119a4289e3ed21573706ee4ad}\label{namespacesteering__simulation_a5da8818119a4289e3ed21573706ee4ad}} 
+\index{steering\_simulation@{steering\_simulation}!ros\_right\_shoulder\_axis1\_pub@{ros\_right\_shoulder\_axis1\_pub}}
+\index{ros\_right\_shoulder\_axis1\_pub@{ros\_right\_shoulder\_axis1\_pub}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{ros\_right\_shoulder\_axis1\_pub}{ros\_right\_shoulder\_axis1\_pub}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+ros\+\_\+right\+\_\+shoulder\+\_\+axis1\+\_\+pub}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  rospy.Publisher(\textcolor{stringliteral}{'/right\_shoulder\_axis1/right\_shoulder\_axis1/target'}, Float32,}
+\DoxyCodeLine{2                                                queue\_size=2)}
+
+\end{DoxyCode}
+
+
+Definition at line 166 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a70a5d7e7cbdd1a4af5ac27b114633b9d}\label{namespacesteering__simulation_a70a5d7e7cbdd1a4af5ac27b114633b9d}} 
+\index{steering\_simulation@{steering\_simulation}!ros\_right\_shoulder\_axis2\_pub@{ros\_right\_shoulder\_axis2\_pub}}
+\index{ros\_right\_shoulder\_axis2\_pub@{ros\_right\_shoulder\_axis2\_pub}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{ros\_right\_shoulder\_axis2\_pub}{ros\_right\_shoulder\_axis2\_pub}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+ros\+\_\+right\+\_\+shoulder\+\_\+axis2\+\_\+pub}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  rospy.Publisher(\textcolor{stringliteral}{'/right\_shoulder\_axis2/right\_shoulder\_axis2/target'}, Float32,}
+\DoxyCodeLine{2                                                queue\_size=2)}
+
+\end{DoxyCode}
+
+
+Definition at line 168 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a8e0b19adafe885231a487bf8378b0fa3}\label{namespacesteering__simulation_a8e0b19adafe885231a487bf8378b0fa3}} 
+\index{steering\_simulation@{steering\_simulation}!ros\_right\_wrist\_0\_pub@{ros\_right\_wrist\_0\_pub}}
+\index{ros\_right\_wrist\_0\_pub@{ros\_right\_wrist\_0\_pub}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{ros\_right\_wrist\_0\_pub}{ros\_right\_wrist\_0\_pub}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+ros\+\_\+right\+\_\+wrist\+\_\+0\+\_\+pub = rospy.\+Publisher(\textquotesingle{}/right\+\_\+wrist\+\_\+0/right\+\_\+wrist\+\_\+0/target\textquotesingle{}, Float32, queue\+\_\+size=2)}
+
+
+
+Definition at line 177 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a7650fabdc834af9527c1add7de4e3c7e}\label{namespacesteering__simulation_a7650fabdc834af9527c1add7de4e3c7e}} 
+\index{steering\_simulation@{steering\_simulation}!ros\_right\_wrist\_1\_pub@{ros\_right\_wrist\_1\_pub}}
+\index{ros\_right\_wrist\_1\_pub@{ros\_right\_wrist\_1\_pub}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{ros\_right\_wrist\_1\_pub}{ros\_right\_wrist\_1\_pub}}
+{\footnotesize\ttfamily steering\+\_\+simulation.\+ros\+\_\+right\+\_\+wrist\+\_\+1\+\_\+pub = rospy.\+Publisher(\textquotesingle{}/right\+\_\+wrist\+\_\+1/right\+\_\+wrist\+\_\+1/target\textquotesingle{}, Float32, queue\+\_\+size=2)}
+
+
+
+Definition at line 178 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_a4f4712994f92a7c212a9fc29f90efafd}\label{namespacesteering__simulation_a4f4712994f92a7c212a9fc29f90efafd}} 
+\index{steering\_simulation@{steering\_simulation}!STEP\_TRANSITION\_TIME@{STEP\_TRANSITION\_TIME}}
+\index{STEP\_TRANSITION\_TIME@{STEP\_TRANSITION\_TIME}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{STEP\_TRANSITION\_TIME}{STEP\_TRANSITION\_TIME}}
+{\footnotesize\ttfamily float steering\+\_\+simulation.\+S\+T\+E\+P\+\_\+\+T\+R\+A\+N\+S\+I\+T\+I\+O\+N\+\_\+\+T\+I\+ME = 2.\+5}
+
+
+
+Definition at line 33 of file steering\+\_\+simulation.\+py.
+
+\mbox{\Hypertarget{namespacesteering__simulation_aa98f000080f13c942c2287914f8ef406}\label{namespacesteering__simulation_aa98f000080f13c942c2287914f8ef406}} 
+\index{steering\_simulation@{steering\_simulation}!UPDATE\_FREQUENCY@{UPDATE\_FREQUENCY}}
+\index{UPDATE\_FREQUENCY@{UPDATE\_FREQUENCY}!steering\_simulation@{steering\_simulation}}
+\subsubsection{\texorpdfstring{UPDATE\_FREQUENCY}{UPDATE\_FREQUENCY}}
+{\footnotesize\ttfamily float steering\+\_\+simulation.\+U\+P\+D\+A\+T\+E\+\_\+\+F\+R\+E\+Q\+U\+E\+N\+CY = 0.\+001}
+
+
+
+Definition at line 31 of file steering\+\_\+simulation.\+py.
+

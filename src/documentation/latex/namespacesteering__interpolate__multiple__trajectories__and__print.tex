@@ -1,0 +1,1070 @@
+\hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print}{}\section{steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print Namespace Reference}
+\label{namespacesteering__interpolate__multiple__trajectories__and__print}\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a5ecaa1f0c7b7379d5d217b69ecbcfafc}{import\+Joint\+Trajectory\+Record}} ()
+\begin{DoxyCompactList}\small\item\em U\+T\+I\+L\+I\+TY F\+U\+N\+C\+T\+I\+O\+NS \#\#\#. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a455bf7b19b802ee191ffab2ea68b89ff}{regress\+All\+Joint\+Positions}} (order)
+\item 
+def \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_ac37d0b266a32494874d9f5bb5572cded}{print\+Regressed\+Functions}} ()
+\item 
+def \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a77eaba3dfeff8bad51d43bd0d6304fbc}{print\+All\+Trajectories}} ()
+\item 
+def \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_abd864bec2616f889e72f950898521b8b}{save\+Regression\+To\+File}} (filename, order)
+\item 
+def \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a17184534fa48653e3e1957dd8fe17257}{main}} ()
+\begin{DoxyCompactList}\small\item\em M\+A\+IN \#\#\#. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_abff55433943d763524cabcc9e147f79d}{R\+E\+C\+O\+R\+D\+E\+D\+\_\+\+T\+R\+A\+J\+E\+C\+T\+O\+R\+Y\+\_\+\+F\+I\+L\+E\+N\+A\+ME}} = \char`\"{}multiple\+\_\+steering\+\_\+trajectory\+\_\+temp.\+json\char`\"{}
+\begin{DoxyCompactList}\small\item\em M\+O\+D\+U\+LE P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a4fdac325563923bb16fc60ef13e23985}{P\+R\+I\+N\+T\+\_\+\+D\+E\+B\+UG}} = True
+\item 
+int \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_abe63139c1d174a200b75814ba1148bb5}{M\+A\+X\+\_\+\+T\+U\+R\+N\+I\+N\+G\+\_\+\+A\+N\+G\+LE}} = math.\+pi / 15
+\item 
+string \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a02195a7a42f67f4af354227794662503}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+shoulder\+\_\+axis0\char`\"{}
+\begin{DoxyCompactList}\small\item\em G\+L\+O\+B\+AL V\+A\+R\+I\+A\+B\+L\+ES \#\#\#. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_ad1bcac7071ff58234b4c80fe6e57a571}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+shoulder\+\_\+axis1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_aee43a630684af60ac0f5c7e7cb4f876a}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+shoulder\+\_\+axis2\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_ae49742ad3775a10bb2afe9a269b33f00}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+shoulder\+\_\+axis0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_ab3e915fd6122465d226f5ecadd814f91}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+shoulder\+\_\+axis1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a83d9e70cc313685bb0e6b79d66eacb57}{J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+shoulder\+\_\+axis2\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a7fa5b44ce171eca46a5c45bff7cce5f7}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+R\+I\+G\+HT}} = \char`\"{}elbow\+\_\+right\+\_\+rot0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a7a6951aef50eb31b3e4828fe299a03c9}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+R\+I\+G\+HT}} = \char`\"{}elbow\+\_\+right\+\_\+rot1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_adf7e0a2bbd844abd38f7fa934fc896a9}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+L\+E\+FT}} = \char`\"{}elbow\+\_\+left\+\_\+rot0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_abc5dcb691e08ce96af03984136710a82}{J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+L\+E\+FT}} = \char`\"{}elbow\+\_\+left\+\_\+rot1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a42212be0fc9fb97df3c4661d0a883f98}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+wrist\+\_\+0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a690533b6db2d3471024f26a0c2dc6ad1}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+wrist\+\_\+1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a687dc01ea8021308e9bd2217164f82cf}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+wrist\+\_\+0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a1fc7f18e44f7d2f5a138c789e088b83e}{J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+wrist\+\_\+1\char`\"{}
+\item 
+int \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a0d4474b80213f5089c46423325c57c95}{\+\_\+num\+Trajectory\+Points}} = 0
+\item 
+list \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a565b90d2f2f24c7253af614061ddad9f}{\+\_\+trajectory\+Steering}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a31525c6644b6269f06f9f4cb7e0241ac}{\+\_\+trajectory\+Shoulder0\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a2b64212444f183bef95e9157f5f52551}{\+\_\+trajectory\+Shoulder1\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a678f18ab4a5bcd5580c74e488e71bdd7}{\+\_\+trajectory\+Shoulder2\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a17e01d8adf47863249743b5dace1ab01}{\+\_\+trajectory\+Shoulder0\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_ae109fefba54da7423593442208221922}{\+\_\+trajectory\+Shoulder1\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a95e62574a291f93c55538e58bdb0cb8e}{\+\_\+trajectory\+Shoulder2\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a8086f3a259b143ff4b82a67d6274e6e6}{\+\_\+trajectory\+Elbow0\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a65af93e83047d9dd4e777ad5e5fe0af3}{\+\_\+trajectory\+Elbow1\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_aa1676f36e115868ba031616743bd8c83}{\+\_\+trajectory\+Elbow0\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a2745b076c14b317645f393ba65f6177d}{\+\_\+trajectory\+Elbow1\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_ac2edefa235a22d2a20d44d9d8dd7581c}{\+\_\+trajectory\+Wrist0\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a48bffb5e0397b6a741289d62ea42fcf3}{\+\_\+trajectory\+Wrist1\+Right}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_acdc59004c346730537fd36fc02252562}{\+\_\+trajectory\+Wrist0\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a95c6d44cfd5cce308bfde2c84bfdfa9a}{\+\_\+trajectory\+Wrist1\+Left}} = \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a4d0dda5857a965afe9648203cd90d3b4}{\+\_\+regressed\+Shoulder0\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a8a6efa4759cc921d52020b30a479558e}{\+\_\+regressed\+Shoulder1\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a2327a305b2c2dfa305b15b1e5c4c8848}{\+\_\+regressed\+Shoulder2\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a30e469e5d45f2f158ed8d8ed8d0fcf81}{\+\_\+regressed\+Shoulder0\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_ab5f93208fa781b69a97c427125c5a4b6}{\+\_\+regressed\+Shoulder1\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_aee5f5a2e7c771b98b58ffc98822bf51e}{\+\_\+regressed\+Shoulder2\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_aa77f4a41c3c298cda99da57dd249a3e4}{\+\_\+regressed\+Elbow0\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a3689faeaf99e3d97698c6b22b73c4c12}{\+\_\+regressed\+Elbow1\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_ae7ab4469cf5dc2b368e5d8d6b9f79ab0}{\+\_\+regressed\+Elbow0\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a9d4d2667d21c5a16b876d86a0d62c1a7}{\+\_\+regressed\+Elbow1\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_aaacdc9fde66962dbad14df4e0d2dce34}{\+\_\+regressed\+Wrist0\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_aa0ecde8ae6f1f4da8ee021071dcd8638}{\+\_\+regressed\+Wrist1\+Right}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a691d8994f1fb578840efff722cc3d59b}{\+\_\+regressed\+Wrist0\+Left}} = None
+\item 
+\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a6a68a5282fa90f67cc060bb873ed68a7}{\+\_\+regressed\+Wrist1\+Left}} = None
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a5ecaa1f0c7b7379d5d217b69ecbcfafc}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a5ecaa1f0c7b7379d5d217b69ecbcfafc}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!importJointTrajectoryRecord@{importJointTrajectoryRecord}}
+\index{importJointTrajectoryRecord@{importJointTrajectoryRecord}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{importJointTrajectoryRecord()}{importJointTrajectoryRecord()}}
+{\footnotesize\ttfamily def steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+import\+Joint\+Trajectory\+Record (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+U\+T\+I\+L\+I\+TY F\+U\+N\+C\+T\+I\+O\+NS \#\#\#. 
+
+
+
+Definition at line 79 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{79 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a5ecaa1f0c7b7379d5d217b69ecbcfafc}{importJointTrajectoryRecord}}():}
+\DoxyCodeLine{80     \textcolor{keyword}{global} \_trajectorySteering}
+\DoxyCodeLine{81     \textcolor{keyword}{global} \_trajectoryShoulder0Right}
+\DoxyCodeLine{82     \textcolor{keyword}{global} \_trajectoryShoulder1Right}
+\DoxyCodeLine{83     \textcolor{keyword}{global} \_trajectoryShoulder2Right}
+\DoxyCodeLine{84     \textcolor{keyword}{global} \_trajectoryShoulder0Left}
+\DoxyCodeLine{85     \textcolor{keyword}{global} \_trajectoryShoulder1Left}
+\DoxyCodeLine{86     \textcolor{keyword}{global} \_trajectoryShoulder2Left}
+\DoxyCodeLine{87     \textcolor{keyword}{global} \_trajectoryElbow0Right}
+\DoxyCodeLine{88     \textcolor{keyword}{global} \_trajectoryElbow1Right}
+\DoxyCodeLine{89     \textcolor{keyword}{global} \_trajectoryElbow0Left}
+\DoxyCodeLine{90     \textcolor{keyword}{global} \_trajectoryElbow1Left}
+\DoxyCodeLine{91     \textcolor{keyword}{global} \_trajectoryWrist0Right}
+\DoxyCodeLine{92     \textcolor{keyword}{global} \_trajectoryWrist1Right}
+\DoxyCodeLine{93     \textcolor{keyword}{global} \_trajectoryWrist0Left}
+\DoxyCodeLine{94     \textcolor{keyword}{global} \_trajectoryWrist1Left}
+\DoxyCodeLine{95 }
+\DoxyCodeLine{96     \textcolor{keyword}{global} PRINT\_DEBUG}
+\DoxyCodeLine{97 }
+\DoxyCodeLine{98     \textcolor{keyword}{with} open(RECORDED\_TRAJECTORY\_FILENAME, \textcolor{stringliteral}{"r"}) \textcolor{keyword}{as} read\_file:}
+\DoxyCodeLine{99         loaded\_data = json.load(read\_file)}
+\DoxyCodeLine{100 }
+\DoxyCodeLine{101     \textcolor{keywordflow}{if} (loaded\_data[\textcolor{stringliteral}{"num\_points"}] \textcolor{keywordflow}{is} \textcolor{keywordtype}{None}) \textcolor{keywordflow}{or} (loaded\_data[\textcolor{stringliteral}{"num\_steering\_angles"}] \textcolor{keywordflow}{is} \textcolor{keywordtype}{None}):}
+\DoxyCodeLine{102         \textcolor{keywordflow}{return} 0}
+\DoxyCodeLine{103     \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{104         \_numTrajectoryPoints = loaded\_data[\textcolor{stringliteral}{"num\_points"}]}
+\DoxyCodeLine{105         \_numSteeringAngles = loaded\_data[\textcolor{stringliteral}{"num\_steering\_angles"}]}
+\DoxyCodeLine{106 }
+\DoxyCodeLine{107     \textcolor{comment}{\#    for steeringAngleIterator in range(\_numSteeringAngles):}}
+\DoxyCodeLine{108     \textcolor{comment}{\#        \_trajectorySteering.append([])}}
+\DoxyCodeLine{109     \textcolor{comment}{\#        \_trajectoryShoulder0Right.append([])}}
+\DoxyCodeLine{110     \textcolor{comment}{\#        \_trajectoryShoulder1Right.append([])}}
+\DoxyCodeLine{111     \textcolor{comment}{\#        \_trajectoryShoulder2Right.append([])}}
+\DoxyCodeLine{112     \textcolor{comment}{\#        \_trajectoryShoulder0Left.append([])}}
+\DoxyCodeLine{113     \textcolor{comment}{\#        \_trajectoryShoulder1Left.append([])}}
+\DoxyCodeLine{114     \textcolor{comment}{\#        \_trajectoryShoulder2Left.append([])}}
+\DoxyCodeLine{115     \textcolor{comment}{\#        \_trajectoryElbow0Right.append([])}}
+\DoxyCodeLine{116     \textcolor{comment}{\#        \_trajectoryElbow1Right.append([])}}
+\DoxyCodeLine{117     \textcolor{comment}{\#        \_trajectoryElbow0Left.append([])}}
+\DoxyCodeLine{118     \textcolor{comment}{\#        \_trajectoryElbow1Left.append([])}}
+\DoxyCodeLine{119     \textcolor{comment}{\#        \_trajectoryWrist0Right.append([])}}
+\DoxyCodeLine{120     \textcolor{comment}{\#        \_trajectoryWrist1Right.append([])}}
+\DoxyCodeLine{121     \textcolor{comment}{\#        \_trajectoryWrist0Left.append([])}}
+\DoxyCodeLine{122     \textcolor{comment}{\#        \_trajectoryWrist1Left.append([])}}
+\DoxyCodeLine{123 }
+\DoxyCodeLine{124     \textcolor{keywordflow}{for} pointIterator \textcolor{keywordflow}{in} range(1, \_numTrajectoryPoints + 1):}
+\DoxyCodeLine{125         \textcolor{keywordflow}{if} \textcolor{stringliteral}{"point\_"} + str(pointIterator) \textcolor{keywordflow}{in} loaded\_data:}
+\DoxyCodeLine{126             \_trajectorySteering.append(loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Steering\_angle"}])}
+\DoxyCodeLine{127             \_trajectoryShoulder0Right.append(}
+\DoxyCodeLine{128                 loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Right"}][JOINT\_SHOULDER\_AXIS0\_RIGHT])}
+\DoxyCodeLine{129             \_trajectoryShoulder1Right.append(}
+\DoxyCodeLine{130                 loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Right"}][JOINT\_SHOULDER\_AXIS1\_RIGHT])}
+\DoxyCodeLine{131             \_trajectoryShoulder2Right.append(}
+\DoxyCodeLine{132                 loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Right"}][JOINT\_SHOULDER\_AXIS2\_RIGHT])}
+\DoxyCodeLine{133             \_trajectoryElbow0Right.append(loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Right"}][JOINT\_ELBOW\_ROT0\_RIGHT])}
+\DoxyCodeLine{134             \_trajectoryElbow1Right.append(loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Right"}][JOINT\_ELBOW\_ROT1\_RIGHT])}
+\DoxyCodeLine{135             \_trajectoryWrist0Right.append(loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Right"}][JOINT\_WRIST\_0\_RIGHT])}
+\DoxyCodeLine{136             \_trajectoryWrist1Right.append(loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Right"}][JOINT\_WRIST\_1\_RIGHT])}
+\DoxyCodeLine{137 }
+\DoxyCodeLine{138             \_trajectoryShoulder0Left.append(}
+\DoxyCodeLine{139                 loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Left"}][JOINT\_SHOULDER\_AXIS0\_LEFT])}
+\DoxyCodeLine{140             \_trajectoryShoulder1Left.append(}
+\DoxyCodeLine{141                 loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Left"}][JOINT\_SHOULDER\_AXIS1\_LEFT])}
+\DoxyCodeLine{142             \_trajectoryShoulder2Left.append(}
+\DoxyCodeLine{143                 loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Left"}][JOINT\_SHOULDER\_AXIS2\_LEFT])}
+\DoxyCodeLine{144             \_trajectoryElbow0Left.append(loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Left"}][JOINT\_ELBOW\_ROT0\_LEFT])}
+\DoxyCodeLine{145             \_trajectoryElbow1Left.append(loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Left"}][JOINT\_ELBOW\_ROT1\_LEFT])}
+\DoxyCodeLine{146             \_trajectoryWrist0Left.append(loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Left"}][JOINT\_WRIST\_0\_LEFT])}
+\DoxyCodeLine{147             \_trajectoryWrist1Left.append(loaded\_data[\textcolor{stringliteral}{"point\_"} + str(pointIterator)][\textcolor{stringliteral}{"Left"}][JOINT\_WRIST\_1\_LEFT])}
+\DoxyCodeLine{148 }
+\DoxyCodeLine{149         \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{150             print(\textcolor{stringliteral}{"WARNING: No point\_\%s in trajectory"} \% pointIterator)}
+\DoxyCodeLine{151             \_numTrajectoryPoints -= 1}
+\DoxyCodeLine{152 }
+\DoxyCodeLine{153     \textcolor{keywordflow}{if} PRINT\_DEBUG:}
+\DoxyCodeLine{154         print(\textcolor{stringliteral}{"--------- Num trajectory points:"})}
+\DoxyCodeLine{155         print(\_numTrajectoryPoints)}
+\DoxyCodeLine{156 }
+\DoxyCodeLine{157 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__interpolate__multiple__trajectories__and__print_a5ecaa1f0c7b7379d5d217b69ecbcfafc_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a17184534fa48653e3e1957dd8fe17257}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a17184534fa48653e3e1957dd8fe17257}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!main@{main}}
+\index{main@{main}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily def steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+M\+A\+IN \#\#\#. 
+
+
+
+Definition at line 421 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{421 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a17184534fa48653e3e1957dd8fe17257}{main}}():}
+\DoxyCodeLine{422     order = 4}
+\DoxyCodeLine{423     filename\_coefficients = \textcolor{stringliteral}{"saved\_coefficients.json"}}
+\DoxyCodeLine{424 }
+\DoxyCodeLine{425     \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a5ecaa1f0c7b7379d5d217b69ecbcfafc}{importJointTrajectoryRecord}}()}
+\DoxyCodeLine{426     \textcolor{comment}{\#    printAllTrajectories()}}
+\DoxyCodeLine{427     \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a455bf7b19b802ee191ffab2ea68b89ff}{regressAllJointPositions}}(order)}
+\DoxyCodeLine{428     \textcolor{comment}{\#    saveRegressionToFile(filename\_coefficients, order)}}
+\DoxyCodeLine{429     \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_ac37d0b266a32494874d9f5bb5572cded}{printRegressedFunctions}}()}
+\DoxyCodeLine{430     \textcolor{comment}{\#    print("Len \_trajectoryWrist1Left: ", len(\_trajectoryWrist1Left))}}
+\DoxyCodeLine{431     \textcolor{comment}{\#    print(\_trajectoryWrist1Left)}}
+\DoxyCodeLine{432 }
+\DoxyCodeLine{433     \textcolor{keywordflow}{return} 1}
+\DoxyCodeLine{434 }
+\DoxyCodeLine{435 }
+
+\end{DoxyCode}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__interpolate__multiple__trajectories__and__print_a17184534fa48653e3e1957dd8fe17257_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a77eaba3dfeff8bad51d43bd0d6304fbc}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a77eaba3dfeff8bad51d43bd0d6304fbc}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!printAllTrajectories@{printAllTrajectories}}
+\index{printAllTrajectories@{printAllTrajectories}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{printAllTrajectories()}{printAllTrajectories()}}
+{\footnotesize\ttfamily def steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+print\+All\+Trajectories (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 316 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{316 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a77eaba3dfeff8bad51d43bd0d6304fbc}{printAllTrajectories}}():}
+\DoxyCodeLine{317     \textcolor{keyword}{global} \_trajectorySteering}
+\DoxyCodeLine{318     \textcolor{keyword}{global} \_trajectoryShoulder0Right}
+\DoxyCodeLine{319     \textcolor{keyword}{global} \_trajectoryShoulder1Right}
+\DoxyCodeLine{320     \textcolor{keyword}{global} \_trajectoryShoulder2Right}
+\DoxyCodeLine{321     \textcolor{keyword}{global} \_trajectoryShoulder0Left}
+\DoxyCodeLine{322     \textcolor{keyword}{global} \_trajectoryShoulder1Left}
+\DoxyCodeLine{323     \textcolor{keyword}{global} \_trajectoryShoulder2Left}
+\DoxyCodeLine{324     \textcolor{keyword}{global} \_trajectoryElbow0Right}
+\DoxyCodeLine{325     \textcolor{keyword}{global} \_trajectoryElbow1Right}
+\DoxyCodeLine{326     \textcolor{keyword}{global} \_trajectoryElbow0Left}
+\DoxyCodeLine{327     \textcolor{keyword}{global} \_trajectoryElbow1Left}
+\DoxyCodeLine{328     \textcolor{keyword}{global} \_trajectoryWrist0Right}
+\DoxyCodeLine{329     \textcolor{keyword}{global} \_trajectoryWrist1Right}
+\DoxyCodeLine{330     \textcolor{keyword}{global} \_trajectoryWrist0Left}
+\DoxyCodeLine{331     \textcolor{keyword}{global} \_trajectoryWrist1Left}
+\DoxyCodeLine{332 }
+\DoxyCodeLine{333     plt.figure(1)}
+\DoxyCodeLine{334     plt.plot(\_trajectorySteering, \_trajectoryShoulder0Right, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{335     plt.title(\textcolor{stringliteral}{"Shoulder0Right"})}
+\DoxyCodeLine{336 }
+\DoxyCodeLine{337     plt.figure(2)}
+\DoxyCodeLine{338     plt.plot(\_trajectorySteering, \_trajectoryShoulder1Right, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{339     plt.title(\textcolor{stringliteral}{"Shoulder1Right"})}
+\DoxyCodeLine{340 }
+\DoxyCodeLine{341     plt.figure(3)}
+\DoxyCodeLine{342     plt.plot(\_trajectorySteering, \_trajectoryShoulder2Right, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{343     plt.title(\textcolor{stringliteral}{"Shoulder2Right"})}
+\DoxyCodeLine{344 }
+\DoxyCodeLine{345     plt.figure(4)}
+\DoxyCodeLine{346     plt.plot(\_trajectorySteering, \_trajectoryShoulder0Left, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{347     plt.title(\textcolor{stringliteral}{"Shoulder0Left"})}
+\DoxyCodeLine{348 }
+\DoxyCodeLine{349     plt.figure(5)}
+\DoxyCodeLine{350     plt.plot(\_trajectorySteering, \_trajectoryShoulder1Left, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{351     plt.title(\textcolor{stringliteral}{"Shoulder1Left"})}
+\DoxyCodeLine{352 }
+\DoxyCodeLine{353     plt.figure(6)}
+\DoxyCodeLine{354     plt.plot(\_trajectorySteering, \_trajectoryShoulder2Left, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{355     plt.title(\textcolor{stringliteral}{"Shoulder2Left"})}
+\DoxyCodeLine{356 }
+\DoxyCodeLine{357     plt.figure(7)}
+\DoxyCodeLine{358     plt.plot(\_trajectorySteering, \_trajectoryElbow0Right, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{359     plt.title(\textcolor{stringliteral}{"Elbow0Right"})}
+\DoxyCodeLine{360 }
+\DoxyCodeLine{361     plt.figure(8)}
+\DoxyCodeLine{362     plt.plot(\_trajectorySteering, \_trajectoryElbow1Right, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{363     plt.title(\textcolor{stringliteral}{"Elbow1Right"})}
+\DoxyCodeLine{364 }
+\DoxyCodeLine{365     plt.figure(9)}
+\DoxyCodeLine{366     plt.plot(\_trajectorySteering, \_trajectoryWrist0Right, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{367     plt.title(\textcolor{stringliteral}{"Wrist0Right"})}
+\DoxyCodeLine{368 }
+\DoxyCodeLine{369     plt.figure(10)}
+\DoxyCodeLine{370     plt.plot(\_trajectorySteering, \_trajectoryWrist1Right, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{371     plt.title(\textcolor{stringliteral}{"Wrist1Right"})}
+\DoxyCodeLine{372 }
+\DoxyCodeLine{373     plt.figure(11)}
+\DoxyCodeLine{374     plt.plot(\_trajectorySteering, \_trajectoryElbow0Left, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{375     plt.title(\textcolor{stringliteral}{"Elbow0Left"})}
+\DoxyCodeLine{376 }
+\DoxyCodeLine{377     plt.figure(12)}
+\DoxyCodeLine{378     plt.plot(\_trajectorySteering, \_trajectoryElbow1Left, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{379     plt.title(\textcolor{stringliteral}{"Elbow1Left"})}
+\DoxyCodeLine{380 }
+\DoxyCodeLine{381     plt.figure(13)}
+\DoxyCodeLine{382     plt.plot(\_trajectorySteering, \_trajectoryWrist0Left, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{383     plt.title(\textcolor{stringliteral}{"Wrist0Left"})}
+\DoxyCodeLine{384 }
+\DoxyCodeLine{385     plt.figure(14)}
+\DoxyCodeLine{386     plt.plot(\_trajectorySteering, \_trajectoryWrist1Left, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{387     plt.title(\textcolor{stringliteral}{"Wrist1Left"})}
+\DoxyCodeLine{388 }
+\DoxyCodeLine{389     plt.show()}
+\DoxyCodeLine{390 }
+\DoxyCodeLine{391 }
+
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_ac37d0b266a32494874d9f5bb5572cded}\label{namespacesteering__interpolate__multiple__trajectories__and__print_ac37d0b266a32494874d9f5bb5572cded}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!printRegressedFunctions@{printRegressedFunctions}}
+\index{printRegressedFunctions@{printRegressedFunctions}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{printRegressedFunctions()}{printRegressedFunctions()}}
+{\footnotesize\ttfamily def steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+print\+Regressed\+Functions (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 209 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{209 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_ac37d0b266a32494874d9f5bb5572cded}{printRegressedFunctions}}():}
+\DoxyCodeLine{210     \textcolor{keyword}{global} \_trajectorySteering}
+\DoxyCodeLine{211     \textcolor{keyword}{global} \_trajectoryShoulder0Right}
+\DoxyCodeLine{212     \textcolor{keyword}{global} \_trajectoryShoulder1Right}
+\DoxyCodeLine{213     \textcolor{keyword}{global} \_trajectoryShoulder2Right}
+\DoxyCodeLine{214     \textcolor{keyword}{global} \_trajectoryShoulder0Left}
+\DoxyCodeLine{215     \textcolor{keyword}{global} \_trajectoryShoulder1Left}
+\DoxyCodeLine{216     \textcolor{keyword}{global} \_trajectoryShoulder2Left}
+\DoxyCodeLine{217     \textcolor{keyword}{global} \_trajectoryElbow0Right}
+\DoxyCodeLine{218     \textcolor{keyword}{global} \_trajectoryElbow1Right}
+\DoxyCodeLine{219     \textcolor{keyword}{global} \_trajectoryElbow0Left}
+\DoxyCodeLine{220     \textcolor{keyword}{global} \_trajectoryElbow1Left}
+\DoxyCodeLine{221     \textcolor{keyword}{global} \_trajectoryWrist0Right}
+\DoxyCodeLine{222     \textcolor{keyword}{global} \_trajectoryWrist1Right}
+\DoxyCodeLine{223     \textcolor{keyword}{global} \_trajectoryWrist0Left}
+\DoxyCodeLine{224     \textcolor{keyword}{global} \_trajectoryWrist1Left}
+\DoxyCodeLine{225 }
+\DoxyCodeLine{226     \textcolor{keyword}{global} \_regressedShoulder0Right}
+\DoxyCodeLine{227     \textcolor{keyword}{global} \_regressedShoulder1Right}
+\DoxyCodeLine{228     \textcolor{keyword}{global} \_regressedShoulder2Right}
+\DoxyCodeLine{229     \textcolor{keyword}{global} \_regressedShoulder0Left}
+\DoxyCodeLine{230     \textcolor{keyword}{global} \_regressedShoulder1Left}
+\DoxyCodeLine{231     \textcolor{keyword}{global} \_regressedShoulder2Left}
+\DoxyCodeLine{232     \textcolor{keyword}{global} \_regressedElbow0Right}
+\DoxyCodeLine{233     \textcolor{keyword}{global} \_regressedElbow1Right}
+\DoxyCodeLine{234     \textcolor{keyword}{global} \_regressedElbow0Left}
+\DoxyCodeLine{235     \textcolor{keyword}{global} \_regressedElbow1Left}
+\DoxyCodeLine{236     \textcolor{keyword}{global} \_regressedWrist0Right}
+\DoxyCodeLine{237     \textcolor{keyword}{global} \_regressedWrist1Right}
+\DoxyCodeLine{238     \textcolor{keyword}{global} \_regressedWrist0Left}
+\DoxyCodeLine{239     \textcolor{keyword}{global} \_regressedWrist1Left}
+\DoxyCodeLine{240 }
+\DoxyCodeLine{241     highDefPlotRange = np.linspace(-1 * MAX\_TURNING\_ANGLE, MAX\_TURNING\_ANGLE, 100)}
+\DoxyCodeLine{242 }
+\DoxyCodeLine{243     plt.figure(1)}
+\DoxyCodeLine{244     plt.plot(\_trajectorySteering, \_trajectoryShoulder0Right, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{245     plt.plot(highDefPlotRange, \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a4d0dda5857a965afe9648203cd90d3b4}{\_regressedShoulder0Right}}(highDefPlotRange), \textcolor{stringliteral}{'-'})}
+\DoxyCodeLine{246     plt.title(\textcolor{stringliteral}{"Shoulder0Right"})}
+\DoxyCodeLine{247 }
+\DoxyCodeLine{248     plt.figure(2)}
+\DoxyCodeLine{249     plt.plot(\_trajectorySteering, \_trajectoryShoulder1Right, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{250     plt.plot(highDefPlotRange, \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a8a6efa4759cc921d52020b30a479558e}{\_regressedShoulder1Right}}(highDefPlotRange), \textcolor{stringliteral}{'-'})}
+\DoxyCodeLine{251     plt.title(\textcolor{stringliteral}{"Shoulder1Right"})}
+\DoxyCodeLine{252 }
+\DoxyCodeLine{253     plt.figure(3)}
+\DoxyCodeLine{254     plt.plot(\_trajectorySteering, \_trajectoryShoulder2Right, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{255     plt.plot(highDefPlotRange, \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a2327a305b2c2dfa305b15b1e5c4c8848}{\_regressedShoulder2Right}}(highDefPlotRange), \textcolor{stringliteral}{'-'})}
+\DoxyCodeLine{256     plt.title(\textcolor{stringliteral}{"Shoulder2Right"})}
+\DoxyCodeLine{257 }
+\DoxyCodeLine{258     plt.figure(4)}
+\DoxyCodeLine{259     plt.plot(\_trajectorySteering, \_trajectoryShoulder0Left, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{260     plt.plot(highDefPlotRange, \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a30e469e5d45f2f158ed8d8ed8d0fcf81}{\_regressedShoulder0Left}}(highDefPlotRange), \textcolor{stringliteral}{'-'})}
+\DoxyCodeLine{261     plt.title(\textcolor{stringliteral}{"Shoulder0Left"})}
+\DoxyCodeLine{262 }
+\DoxyCodeLine{263     plt.figure(5)}
+\DoxyCodeLine{264     plt.plot(\_trajectorySteering, \_trajectoryShoulder1Left, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{265     plt.plot(highDefPlotRange, \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_ab5f93208fa781b69a97c427125c5a4b6}{\_regressedShoulder1Left}}(highDefPlotRange), \textcolor{stringliteral}{'-'})}
+\DoxyCodeLine{266     plt.title(\textcolor{stringliteral}{"Shoulder1Left"})}
+\DoxyCodeLine{267 }
+\DoxyCodeLine{268     plt.figure(6)}
+\DoxyCodeLine{269     plt.plot(\_trajectorySteering, \_trajectoryShoulder2Left, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{270     plt.plot(highDefPlotRange, \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_aee5f5a2e7c771b98b58ffc98822bf51e}{\_regressedShoulder2Left}}(highDefPlotRange), \textcolor{stringliteral}{'-'})}
+\DoxyCodeLine{271     plt.title(\textcolor{stringliteral}{"Shoulder2Left"})}
+\DoxyCodeLine{272 }
+\DoxyCodeLine{273     plt.figure(7)}
+\DoxyCodeLine{274     plt.plot(\_trajectorySteering, \_trajectoryElbow0Right, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{275     plt.plot(highDefPlotRange, \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_aa77f4a41c3c298cda99da57dd249a3e4}{\_regressedElbow0Right}}(highDefPlotRange), \textcolor{stringliteral}{'-'})}
+\DoxyCodeLine{276     plt.title(\textcolor{stringliteral}{"Elbow0Right"})}
+\DoxyCodeLine{277 }
+\DoxyCodeLine{278     plt.figure(8)}
+\DoxyCodeLine{279     plt.plot(\_trajectorySteering, \_trajectoryElbow1Right, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{280     plt.plot(highDefPlotRange, \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a3689faeaf99e3d97698c6b22b73c4c12}{\_regressedElbow1Right}}(highDefPlotRange), \textcolor{stringliteral}{'-'})}
+\DoxyCodeLine{281     plt.title(\textcolor{stringliteral}{"Elbow1Right"})}
+\DoxyCodeLine{282 }
+\DoxyCodeLine{283     plt.figure(9)}
+\DoxyCodeLine{284     plt.plot(\_trajectorySteering, \_trajectoryWrist0Right, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{285     plt.plot(highDefPlotRange, \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_aaacdc9fde66962dbad14df4e0d2dce34}{\_regressedWrist0Right}}(highDefPlotRange), \textcolor{stringliteral}{'-'})}
+\DoxyCodeLine{286     plt.title(\textcolor{stringliteral}{"Wrist0Right"})}
+\DoxyCodeLine{287 }
+\DoxyCodeLine{288     plt.figure(10)}
+\DoxyCodeLine{289     plt.plot(\_trajectorySteering, \_trajectoryWrist1Right, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{290     plt.plot(highDefPlotRange, \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_aa0ecde8ae6f1f4da8ee021071dcd8638}{\_regressedWrist1Right}}(highDefPlotRange), \textcolor{stringliteral}{'-'})}
+\DoxyCodeLine{291     plt.title(\textcolor{stringliteral}{"Wrist1Right"})}
+\DoxyCodeLine{292 }
+\DoxyCodeLine{293     plt.figure(11)}
+\DoxyCodeLine{294     plt.plot(\_trajectorySteering, \_trajectoryElbow0Left, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{295     plt.plot(highDefPlotRange, \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_ae7ab4469cf5dc2b368e5d8d6b9f79ab0}{\_regressedElbow0Left}}(highDefPlotRange), \textcolor{stringliteral}{'-'})}
+\DoxyCodeLine{296     plt.title(\textcolor{stringliteral}{"Elbow0Left"})}
+\DoxyCodeLine{297 }
+\DoxyCodeLine{298     plt.figure(12)}
+\DoxyCodeLine{299     plt.plot(\_trajectorySteering, \_trajectoryElbow1Left, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{300     plt.plot(highDefPlotRange, \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a9d4d2667d21c5a16b876d86a0d62c1a7}{\_regressedElbow1Left}}(highDefPlotRange), \textcolor{stringliteral}{'-'})}
+\DoxyCodeLine{301     plt.title(\textcolor{stringliteral}{"Elbow1Left"})}
+\DoxyCodeLine{302 }
+\DoxyCodeLine{303     plt.figure(13)}
+\DoxyCodeLine{304     plt.plot(\_trajectorySteering, \_trajectoryWrist0Left, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{305     plt.plot(highDefPlotRange, \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a691d8994f1fb578840efff722cc3d59b}{\_regressedWrist0Left}}(highDefPlotRange), \textcolor{stringliteral}{'-'})}
+\DoxyCodeLine{306     plt.title(\textcolor{stringliteral}{"Wrist0Left"})}
+\DoxyCodeLine{307 }
+\DoxyCodeLine{308     plt.figure(14)}
+\DoxyCodeLine{309     plt.plot(\_trajectorySteering, \_trajectoryWrist1Left, \textcolor{stringliteral}{'*'})}
+\DoxyCodeLine{310     plt.plot(highDefPlotRange, \mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a6a68a5282fa90f67cc060bb873ed68a7}{\_regressedWrist1Left}}(highDefPlotRange), \textcolor{stringliteral}{'-'})}
+\DoxyCodeLine{311     plt.title(\textcolor{stringliteral}{"Wrist1Left"})}
+\DoxyCodeLine{312 }
+\DoxyCodeLine{313     plt.show()}
+\DoxyCodeLine{314 }
+\DoxyCodeLine{315 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__interpolate__multiple__trajectories__and__print_ac37d0b266a32494874d9f5bb5572cded_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a455bf7b19b802ee191ffab2ea68b89ff}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a455bf7b19b802ee191ffab2ea68b89ff}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!regressAllJointPositions@{regressAllJointPositions}}
+\index{regressAllJointPositions@{regressAllJointPositions}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{regressAllJointPositions()}{regressAllJointPositions()}}
+{\footnotesize\ttfamily def steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+regress\+All\+Joint\+Positions (\begin{DoxyParamCaption}\item[{}]{order }\end{DoxyParamCaption})}
+
+
+
+Definition at line 158 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{158 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_a455bf7b19b802ee191ffab2ea68b89ff}{regressAllJointPositions}}(order):}
+\DoxyCodeLine{159     \textcolor{keyword}{global} \_trajectorySteering}
+\DoxyCodeLine{160     \textcolor{keyword}{global} \_trajectoryShoulder0Right}
+\DoxyCodeLine{161     \textcolor{keyword}{global} \_trajectoryShoulder1Right}
+\DoxyCodeLine{162     \textcolor{keyword}{global} \_trajectoryShoulder2Right}
+\DoxyCodeLine{163     \textcolor{keyword}{global} \_trajectoryShoulder0Left}
+\DoxyCodeLine{164     \textcolor{keyword}{global} \_trajectoryShoulder1Left}
+\DoxyCodeLine{165     \textcolor{keyword}{global} \_trajectoryShoulder2Left}
+\DoxyCodeLine{166     \textcolor{keyword}{global} \_trajectoryElbow0Right}
+\DoxyCodeLine{167     \textcolor{keyword}{global} \_trajectoryElbow1Right}
+\DoxyCodeLine{168     \textcolor{keyword}{global} \_trajectoryElbow0Left}
+\DoxyCodeLine{169     \textcolor{keyword}{global} \_trajectoryElbow1Left}
+\DoxyCodeLine{170     \textcolor{keyword}{global} \_trajectoryWrist0Right}
+\DoxyCodeLine{171     \textcolor{keyword}{global} \_trajectoryWrist1Right}
+\DoxyCodeLine{172     \textcolor{keyword}{global} \_trajectoryWrist0Left}
+\DoxyCodeLine{173     \textcolor{keyword}{global} \_trajectoryWrist1Left}
+\DoxyCodeLine{174 }
+\DoxyCodeLine{175     \textcolor{keyword}{global} \_regressedShoulder0Right}
+\DoxyCodeLine{176     \textcolor{keyword}{global} \_regressedShoulder1Right}
+\DoxyCodeLine{177     \textcolor{keyword}{global} \_regressedShoulder2Right}
+\DoxyCodeLine{178     \textcolor{keyword}{global} \_regressedShoulder0Left}
+\DoxyCodeLine{179     \textcolor{keyword}{global} \_regressedShoulder1Left}
+\DoxyCodeLine{180     \textcolor{keyword}{global} \_regressedShoulder2Left}
+\DoxyCodeLine{181     \textcolor{keyword}{global} \_regressedElbow0Right}
+\DoxyCodeLine{182     \textcolor{keyword}{global} \_regressedElbow1Right}
+\DoxyCodeLine{183     \textcolor{keyword}{global} \_regressedElbow0Left}
+\DoxyCodeLine{184     \textcolor{keyword}{global} \_regressedElbow1Left}
+\DoxyCodeLine{185     \textcolor{keyword}{global} \_regressedWrist0Right}
+\DoxyCodeLine{186     \textcolor{keyword}{global} \_regressedWrist1Right}
+\DoxyCodeLine{187     \textcolor{keyword}{global} \_regressedWrist0Left}
+\DoxyCodeLine{188     \textcolor{keyword}{global} \_regressedWrist1Left}
+\DoxyCodeLine{189 }
+\DoxyCodeLine{190     \_regressedShoulder0Right = poly.Polynomial(poly.polyfit(\_trajectorySteering, \_trajectoryShoulder0Right, order))}
+\DoxyCodeLine{191     \_regressedShoulder1Right = poly.Polynomial(poly.polyfit(\_trajectorySteering, \_trajectoryShoulder1Right, order))}
+\DoxyCodeLine{192     \_regressedShoulder2Right = poly.Polynomial(poly.polyfit(\_trajectorySteering, \_trajectoryShoulder2Right, order))}
+\DoxyCodeLine{193     \_regressedElbow0Right = poly.Polynomial(poly.polyfit(\_trajectorySteering, \_trajectoryElbow0Right, order))}
+\DoxyCodeLine{194     \_regressedElbow1Right = poly.Polynomial(poly.polyfit(\_trajectorySteering, \_trajectoryElbow1Right, order))}
+\DoxyCodeLine{195     \_regressedWrist0Right = poly.Polynomial(poly.polyfit(\_trajectorySteering, \_trajectoryWrist0Right, order))}
+\DoxyCodeLine{196     \_regressedWrist1Right = poly.Polynomial(poly.polyfit(\_trajectorySteering, \_trajectoryWrist1Right, order))}
+\DoxyCodeLine{197 }
+\DoxyCodeLine{198     \_regressedShoulder0Left = poly.Polynomial(poly.polyfit(\_trajectorySteering, \_trajectoryShoulder0Left, order))}
+\DoxyCodeLine{199     \_regressedShoulder1Left = poly.Polynomial(poly.polyfit(\_trajectorySteering, \_trajectoryShoulder1Left, order))}
+\DoxyCodeLine{200     \_regressedShoulder2Left = poly.Polynomial(poly.polyfit(\_trajectorySteering, \_trajectoryShoulder2Left, order))}
+\DoxyCodeLine{201     \_regressedElbow0Left = poly.Polynomial(poly.polyfit(\_trajectorySteering, \_trajectoryElbow0Left, order))}
+\DoxyCodeLine{202     \_regressedElbow1Left = poly.Polynomial(poly.polyfit(\_trajectorySteering, \_trajectoryElbow1Left, order))}
+\DoxyCodeLine{203     \_regressedWrist0Left = poly.Polynomial(poly.polyfit(\_trajectorySteering, \_trajectoryWrist0Left, order))}
+\DoxyCodeLine{204     \_regressedWrist1Left = poly.Polynomial(poly.polyfit(\_trajectorySteering, \_trajectoryWrist1Left, order))}
+\DoxyCodeLine{205 }
+\DoxyCodeLine{206     \textcolor{keywordflow}{return} 1}
+\DoxyCodeLine{207 }
+\DoxyCodeLine{208 }
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacesteering__interpolate__multiple__trajectories__and__print_a455bf7b19b802ee191ffab2ea68b89ff_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_abd864bec2616f889e72f950898521b8b}\label{namespacesteering__interpolate__multiple__trajectories__and__print_abd864bec2616f889e72f950898521b8b}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!saveRegressionToFile@{saveRegressionToFile}}
+\index{saveRegressionToFile@{saveRegressionToFile}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{saveRegressionToFile()}{saveRegressionToFile()}}
+{\footnotesize\ttfamily def steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+save\+Regression\+To\+File (\begin{DoxyParamCaption}\item[{}]{filename,  }\item[{}]{order }\end{DoxyParamCaption})}
+
+
+
+Definition at line 392 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{392 \textcolor{keyword}{def }\mbox{\hyperlink{namespacesteering__interpolate__multiple__trajectories__and__print_abd864bec2616f889e72f950898521b8b}{saveRegressionToFile}}(filename, order):}
+\DoxyCodeLine{393     regressionCoefficientsDict = \{}
+\DoxyCodeLine{394         JOINT\_SHOULDER\_AXIS0\_RIGHT: poly.polyfit(\_trajectorySteering, \_trajectoryShoulder0Right, order).tolist(),}
+\DoxyCodeLine{395         JOINT\_SHOULDER\_AXIS1\_RIGHT: poly.polyfit(\_trajectorySteering, \_trajectoryShoulder1Right, order).tolist(),}
+\DoxyCodeLine{396         JOINT\_SHOULDER\_AXIS2\_RIGHT: poly.polyfit(\_trajectorySteering, \_trajectoryShoulder2Right, order).tolist(),}
+\DoxyCodeLine{397         JOINT\_ELBOW\_ROT0\_RIGHT: poly.polyfit(\_trajectorySteering, \_trajectoryElbow0Right, order).tolist(),}
+\DoxyCodeLine{398         JOINT\_ELBOW\_ROT1\_RIGHT: poly.polyfit(\_trajectorySteering, \_trajectoryElbow1Right, order).tolist(),}
+\DoxyCodeLine{399         JOINT\_WRIST\_0\_RIGHT: poly.polyfit(\_trajectorySteering, \_trajectoryWrist0Right, order).tolist(),}
+\DoxyCodeLine{400         JOINT\_WRIST\_1\_RIGHT: poly.polyfit(\_trajectorySteering, \_trajectoryWrist1Right, order).tolist(),}
+\DoxyCodeLine{401 }
+\DoxyCodeLine{402         JOINT\_SHOULDER\_AXIS0\_LEFT: poly.polyfit(\_trajectorySteering, \_trajectoryShoulder0Left, order).tolist(),}
+\DoxyCodeLine{403         JOINT\_SHOULDER\_AXIS1\_LEFT: poly.polyfit(\_trajectorySteering, \_trajectoryShoulder1Left, order).tolist(),}
+\DoxyCodeLine{404         JOINT\_SHOULDER\_AXIS2\_LEFT: poly.polyfit(\_trajectorySteering, \_trajectoryShoulder2Left, order).tolist(),}
+\DoxyCodeLine{405         JOINT\_ELBOW\_ROT0\_LEFT: poly.polyfit(\_trajectorySteering, \_trajectoryElbow0Left, order).tolist(),}
+\DoxyCodeLine{406         JOINT\_ELBOW\_ROT1\_LEFT: poly.polyfit(\_trajectorySteering, \_trajectoryElbow1Left, order).tolist(),}
+\DoxyCodeLine{407         JOINT\_WRIST\_0\_LEFT: poly.polyfit(\_trajectorySteering, \_trajectoryWrist0Left, order).tolist(),}
+\DoxyCodeLine{408         JOINT\_WRIST\_1\_LEFT: poly.polyfit(\_trajectorySteering, \_trajectoryWrist1Left, order).tolist()}
+\DoxyCodeLine{409     \}}
+\DoxyCodeLine{410 }
+\DoxyCodeLine{411     \textcolor{keyword}{with} open(filename, \textcolor{stringliteral}{"w"}) \textcolor{keyword}{as} write\_file:}
+\DoxyCodeLine{412         json.dump(regressionCoefficientsDict, write\_file, indent=4, sort\_keys=\textcolor{keyword}{True})}
+\DoxyCodeLine{413         print(\textcolor{stringliteral}{"Saved regression coefficients in file "}, filename)}
+\DoxyCodeLine{414 }
+\DoxyCodeLine{415 }
+
+\end{DoxyCode}
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a0d4474b80213f5089c46423325c57c95}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a0d4474b80213f5089c46423325c57c95}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_numTrajectoryPoints@{\_numTrajectoryPoints}}
+\index{\_numTrajectoryPoints@{\_numTrajectoryPoints}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_numTrajectoryPoints}{\_numTrajectoryPoints}}
+{\footnotesize\ttfamily int steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+num\+Trajectory\+Points = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 40 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_ae7ab4469cf5dc2b368e5d8d6b9f79ab0}\label{namespacesteering__interpolate__multiple__trajectories__and__print_ae7ab4469cf5dc2b368e5d8d6b9f79ab0}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_regressedElbow0Left@{\_regressedElbow0Left}}
+\index{\_regressedElbow0Left@{\_regressedElbow0Left}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_regressedElbow0Left}{\_regressedElbow0Left}}
+{\footnotesize\ttfamily steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+regressed\+Elbow0\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 66 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_aa77f4a41c3c298cda99da57dd249a3e4}\label{namespacesteering__interpolate__multiple__trajectories__and__print_aa77f4a41c3c298cda99da57dd249a3e4}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_regressedElbow0Right@{\_regressedElbow0Right}}
+\index{\_regressedElbow0Right@{\_regressedElbow0Right}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_regressedElbow0Right}{\_regressedElbow0Right}}
+{\footnotesize\ttfamily steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+regressed\+Elbow0\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 64 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a9d4d2667d21c5a16b876d86a0d62c1a7}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a9d4d2667d21c5a16b876d86a0d62c1a7}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_regressedElbow1Left@{\_regressedElbow1Left}}
+\index{\_regressedElbow1Left@{\_regressedElbow1Left}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_regressedElbow1Left}{\_regressedElbow1Left}}
+{\footnotesize\ttfamily steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+regressed\+Elbow1\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 67 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a3689faeaf99e3d97698c6b22b73c4c12}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a3689faeaf99e3d97698c6b22b73c4c12}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_regressedElbow1Right@{\_regressedElbow1Right}}
+\index{\_regressedElbow1Right@{\_regressedElbow1Right}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_regressedElbow1Right}{\_regressedElbow1Right}}
+{\footnotesize\ttfamily steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+regressed\+Elbow1\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 65 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a30e469e5d45f2f158ed8d8ed8d0fcf81}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a30e469e5d45f2f158ed8d8ed8d0fcf81}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_regressedShoulder0Left@{\_regressedShoulder0Left}}
+\index{\_regressedShoulder0Left@{\_regressedShoulder0Left}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_regressedShoulder0Left}{\_regressedShoulder0Left}}
+{\footnotesize\ttfamily steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+regressed\+Shoulder0\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 61 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a4d0dda5857a965afe9648203cd90d3b4}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a4d0dda5857a965afe9648203cd90d3b4}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_regressedShoulder0Right@{\_regressedShoulder0Right}}
+\index{\_regressedShoulder0Right@{\_regressedShoulder0Right}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_regressedShoulder0Right}{\_regressedShoulder0Right}}
+{\footnotesize\ttfamily steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+regressed\+Shoulder0\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 58 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_ab5f93208fa781b69a97c427125c5a4b6}\label{namespacesteering__interpolate__multiple__trajectories__and__print_ab5f93208fa781b69a97c427125c5a4b6}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_regressedShoulder1Left@{\_regressedShoulder1Left}}
+\index{\_regressedShoulder1Left@{\_regressedShoulder1Left}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_regressedShoulder1Left}{\_regressedShoulder1Left}}
+{\footnotesize\ttfamily steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+regressed\+Shoulder1\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 62 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a8a6efa4759cc921d52020b30a479558e}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a8a6efa4759cc921d52020b30a479558e}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_regressedShoulder1Right@{\_regressedShoulder1Right}}
+\index{\_regressedShoulder1Right@{\_regressedShoulder1Right}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_regressedShoulder1Right}{\_regressedShoulder1Right}}
+{\footnotesize\ttfamily steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+regressed\+Shoulder1\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 59 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_aee5f5a2e7c771b98b58ffc98822bf51e}\label{namespacesteering__interpolate__multiple__trajectories__and__print_aee5f5a2e7c771b98b58ffc98822bf51e}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_regressedShoulder2Left@{\_regressedShoulder2Left}}
+\index{\_regressedShoulder2Left@{\_regressedShoulder2Left}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_regressedShoulder2Left}{\_regressedShoulder2Left}}
+{\footnotesize\ttfamily steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+regressed\+Shoulder2\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 63 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a2327a305b2c2dfa305b15b1e5c4c8848}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a2327a305b2c2dfa305b15b1e5c4c8848}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_regressedShoulder2Right@{\_regressedShoulder2Right}}
+\index{\_regressedShoulder2Right@{\_regressedShoulder2Right}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_regressedShoulder2Right}{\_regressedShoulder2Right}}
+{\footnotesize\ttfamily steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+regressed\+Shoulder2\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 60 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a691d8994f1fb578840efff722cc3d59b}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a691d8994f1fb578840efff722cc3d59b}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_regressedWrist0Left@{\_regressedWrist0Left}}
+\index{\_regressedWrist0Left@{\_regressedWrist0Left}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_regressedWrist0Left}{\_regressedWrist0Left}}
+{\footnotesize\ttfamily steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+regressed\+Wrist0\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 70 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_aaacdc9fde66962dbad14df4e0d2dce34}\label{namespacesteering__interpolate__multiple__trajectories__and__print_aaacdc9fde66962dbad14df4e0d2dce34}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_regressedWrist0Right@{\_regressedWrist0Right}}
+\index{\_regressedWrist0Right@{\_regressedWrist0Right}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_regressedWrist0Right}{\_regressedWrist0Right}}
+{\footnotesize\ttfamily steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+regressed\+Wrist0\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 68 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a6a68a5282fa90f67cc060bb873ed68a7}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a6a68a5282fa90f67cc060bb873ed68a7}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_regressedWrist1Left@{\_regressedWrist1Left}}
+\index{\_regressedWrist1Left@{\_regressedWrist1Left}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_regressedWrist1Left}{\_regressedWrist1Left}}
+{\footnotesize\ttfamily steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+regressed\+Wrist1\+Left = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 71 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_aa0ecde8ae6f1f4da8ee021071dcd8638}\label{namespacesteering__interpolate__multiple__trajectories__and__print_aa0ecde8ae6f1f4da8ee021071dcd8638}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_regressedWrist1Right@{\_regressedWrist1Right}}
+\index{\_regressedWrist1Right@{\_regressedWrist1Right}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_regressedWrist1Right}{\_regressedWrist1Right}}
+{\footnotesize\ttfamily steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+regressed\+Wrist1\+Right = None\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 69 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_aa1676f36e115868ba031616743bd8c83}\label{namespacesteering__interpolate__multiple__trajectories__and__print_aa1676f36e115868ba031616743bd8c83}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_trajectoryElbow0Left@{\_trajectoryElbow0Left}}
+\index{\_trajectoryElbow0Left@{\_trajectoryElbow0Left}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_trajectoryElbow0Left}{\_trajectoryElbow0Left}}
+{\footnotesize\ttfamily list steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+trajectory\+Elbow0\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 51 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a8086f3a259b143ff4b82a67d6274e6e6}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a8086f3a259b143ff4b82a67d6274e6e6}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_trajectoryElbow0Right@{\_trajectoryElbow0Right}}
+\index{\_trajectoryElbow0Right@{\_trajectoryElbow0Right}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_trajectoryElbow0Right}{\_trajectoryElbow0Right}}
+{\footnotesize\ttfamily list steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+trajectory\+Elbow0\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 49 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a2745b076c14b317645f393ba65f6177d}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a2745b076c14b317645f393ba65f6177d}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_trajectoryElbow1Left@{\_trajectoryElbow1Left}}
+\index{\_trajectoryElbow1Left@{\_trajectoryElbow1Left}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_trajectoryElbow1Left}{\_trajectoryElbow1Left}}
+{\footnotesize\ttfamily list steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+trajectory\+Elbow1\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 52 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a65af93e83047d9dd4e777ad5e5fe0af3}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a65af93e83047d9dd4e777ad5e5fe0af3}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_trajectoryElbow1Right@{\_trajectoryElbow1Right}}
+\index{\_trajectoryElbow1Right@{\_trajectoryElbow1Right}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_trajectoryElbow1Right}{\_trajectoryElbow1Right}}
+{\footnotesize\ttfamily list steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+trajectory\+Elbow1\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 50 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a17e01d8adf47863249743b5dace1ab01}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a17e01d8adf47863249743b5dace1ab01}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_trajectoryShoulder0Left@{\_trajectoryShoulder0Left}}
+\index{\_trajectoryShoulder0Left@{\_trajectoryShoulder0Left}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_trajectoryShoulder0Left}{\_trajectoryShoulder0Left}}
+{\footnotesize\ttfamily list steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+trajectory\+Shoulder0\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 46 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a31525c6644b6269f06f9f4cb7e0241ac}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a31525c6644b6269f06f9f4cb7e0241ac}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_trajectoryShoulder0Right@{\_trajectoryShoulder0Right}}
+\index{\_trajectoryShoulder0Right@{\_trajectoryShoulder0Right}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_trajectoryShoulder0Right}{\_trajectoryShoulder0Right}}
+{\footnotesize\ttfamily list steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+trajectory\+Shoulder0\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 43 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_ae109fefba54da7423593442208221922}\label{namespacesteering__interpolate__multiple__trajectories__and__print_ae109fefba54da7423593442208221922}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_trajectoryShoulder1Left@{\_trajectoryShoulder1Left}}
+\index{\_trajectoryShoulder1Left@{\_trajectoryShoulder1Left}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_trajectoryShoulder1Left}{\_trajectoryShoulder1Left}}
+{\footnotesize\ttfamily list steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+trajectory\+Shoulder1\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 47 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a2b64212444f183bef95e9157f5f52551}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a2b64212444f183bef95e9157f5f52551}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_trajectoryShoulder1Right@{\_trajectoryShoulder1Right}}
+\index{\_trajectoryShoulder1Right@{\_trajectoryShoulder1Right}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_trajectoryShoulder1Right}{\_trajectoryShoulder1Right}}
+{\footnotesize\ttfamily list steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+trajectory\+Shoulder1\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 44 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a95e62574a291f93c55538e58bdb0cb8e}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a95e62574a291f93c55538e58bdb0cb8e}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_trajectoryShoulder2Left@{\_trajectoryShoulder2Left}}
+\index{\_trajectoryShoulder2Left@{\_trajectoryShoulder2Left}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_trajectoryShoulder2Left}{\_trajectoryShoulder2Left}}
+{\footnotesize\ttfamily list steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+trajectory\+Shoulder2\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 48 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a678f18ab4a5bcd5580c74e488e71bdd7}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a678f18ab4a5bcd5580c74e488e71bdd7}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_trajectoryShoulder2Right@{\_trajectoryShoulder2Right}}
+\index{\_trajectoryShoulder2Right@{\_trajectoryShoulder2Right}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_trajectoryShoulder2Right}{\_trajectoryShoulder2Right}}
+{\footnotesize\ttfamily list steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+trajectory\+Shoulder2\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 45 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a565b90d2f2f24c7253af614061ddad9f}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a565b90d2f2f24c7253af614061ddad9f}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_trajectorySteering@{\_trajectorySteering}}
+\index{\_trajectorySteering@{\_trajectorySteering}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_trajectorySteering}{\_trajectorySteering}}
+{\footnotesize\ttfamily list steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+trajectory\+Steering = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 42 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_acdc59004c346730537fd36fc02252562}\label{namespacesteering__interpolate__multiple__trajectories__and__print_acdc59004c346730537fd36fc02252562}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_trajectoryWrist0Left@{\_trajectoryWrist0Left}}
+\index{\_trajectoryWrist0Left@{\_trajectoryWrist0Left}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_trajectoryWrist0Left}{\_trajectoryWrist0Left}}
+{\footnotesize\ttfamily list steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+trajectory\+Wrist0\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 55 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_ac2edefa235a22d2a20d44d9d8dd7581c}\label{namespacesteering__interpolate__multiple__trajectories__and__print_ac2edefa235a22d2a20d44d9d8dd7581c}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_trajectoryWrist0Right@{\_trajectoryWrist0Right}}
+\index{\_trajectoryWrist0Right@{\_trajectoryWrist0Right}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_trajectoryWrist0Right}{\_trajectoryWrist0Right}}
+{\footnotesize\ttfamily list steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+trajectory\+Wrist0\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 53 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a95c6d44cfd5cce308bfde2c84bfdfa9a}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a95c6d44cfd5cce308bfde2c84bfdfa9a}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_trajectoryWrist1Left@{\_trajectoryWrist1Left}}
+\index{\_trajectoryWrist1Left@{\_trajectoryWrist1Left}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_trajectoryWrist1Left}{\_trajectoryWrist1Left}}
+{\footnotesize\ttfamily list steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+trajectory\+Wrist1\+Left = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 56 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a48bffb5e0397b6a741289d62ea42fcf3}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a48bffb5e0397b6a741289d62ea42fcf3}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!\_trajectoryWrist1Right@{\_trajectoryWrist1Right}}
+\index{\_trajectoryWrist1Right@{\_trajectoryWrist1Right}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{\_trajectoryWrist1Right}{\_trajectoryWrist1Right}}
+{\footnotesize\ttfamily list steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+\_\+trajectory\+Wrist1\+Right = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 54 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_adf7e0a2bbd844abd38f7fa934fc896a9}\label{namespacesteering__interpolate__multiple__trajectories__and__print_adf7e0a2bbd844abd38f7fa934fc896a9}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!JOINT\_ELBOW\_ROT0\_LEFT@{JOINT\_ELBOW\_ROT0\_LEFT}}
+\index{JOINT\_ELBOW\_ROT0\_LEFT@{JOINT\_ELBOW\_ROT0\_LEFT}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{JOINT\_ELBOW\_ROT0\_LEFT}{JOINT\_ELBOW\_ROT0\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+L\+E\+FT = \char`\"{}elbow\+\_\+left\+\_\+rot0\char`\"{}}
+
+
+
+Definition at line 33 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a7fa5b44ce171eca46a5c45bff7cce5f7}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a7fa5b44ce171eca46a5c45bff7cce5f7}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!JOINT\_ELBOW\_ROT0\_RIGHT@{JOINT\_ELBOW\_ROT0\_RIGHT}}
+\index{JOINT\_ELBOW\_ROT0\_RIGHT@{JOINT\_ELBOW\_ROT0\_RIGHT}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{JOINT\_ELBOW\_ROT0\_RIGHT}{JOINT\_ELBOW\_ROT0\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+R\+I\+G\+HT = \char`\"{}elbow\+\_\+right\+\_\+rot0\char`\"{}}
+
+
+
+Definition at line 31 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_abc5dcb691e08ce96af03984136710a82}\label{namespacesteering__interpolate__multiple__trajectories__and__print_abc5dcb691e08ce96af03984136710a82}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!JOINT\_ELBOW\_ROT1\_LEFT@{JOINT\_ELBOW\_ROT1\_LEFT}}
+\index{JOINT\_ELBOW\_ROT1\_LEFT@{JOINT\_ELBOW\_ROT1\_LEFT}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{JOINT\_ELBOW\_ROT1\_LEFT}{JOINT\_ELBOW\_ROT1\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+L\+E\+FT = \char`\"{}elbow\+\_\+left\+\_\+rot1\char`\"{}}
+
+
+
+Definition at line 34 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a7a6951aef50eb31b3e4828fe299a03c9}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a7a6951aef50eb31b3e4828fe299a03c9}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!JOINT\_ELBOW\_ROT1\_RIGHT@{JOINT\_ELBOW\_ROT1\_RIGHT}}
+\index{JOINT\_ELBOW\_ROT1\_RIGHT@{JOINT\_ELBOW\_ROT1\_RIGHT}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{JOINT\_ELBOW\_ROT1\_RIGHT}{JOINT\_ELBOW\_ROT1\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+R\+I\+G\+HT = \char`\"{}elbow\+\_\+right\+\_\+rot1\char`\"{}}
+
+
+
+Definition at line 32 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_ae49742ad3775a10bb2afe9a269b33f00}\label{namespacesteering__interpolate__multiple__trajectories__and__print_ae49742ad3775a10bb2afe9a269b33f00}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!JOINT\_SHOULDER\_AXIS0\_LEFT@{JOINT\_SHOULDER\_AXIS0\_LEFT}}
+\index{JOINT\_SHOULDER\_AXIS0\_LEFT@{JOINT\_SHOULDER\_AXIS0\_LEFT}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS0\_LEFT}{JOINT\_SHOULDER\_AXIS0\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+shoulder\+\_\+axis0\char`\"{}}
+
+
+
+Definition at line 28 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a02195a7a42f67f4af354227794662503}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a02195a7a42f67f4af354227794662503}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!JOINT\_SHOULDER\_AXIS0\_RIGHT@{JOINT\_SHOULDER\_AXIS0\_RIGHT}}
+\index{JOINT\_SHOULDER\_AXIS0\_RIGHT@{JOINT\_SHOULDER\_AXIS0\_RIGHT}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS0\_RIGHT}{JOINT\_SHOULDER\_AXIS0\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+shoulder\+\_\+axis0\char`\"{}}
+
+
+
+G\+L\+O\+B\+AL V\+A\+R\+I\+A\+B\+L\+ES \#\#\#. 
+
+
+
+Definition at line 25 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_ab3e915fd6122465d226f5ecadd814f91}\label{namespacesteering__interpolate__multiple__trajectories__and__print_ab3e915fd6122465d226f5ecadd814f91}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!JOINT\_SHOULDER\_AXIS1\_LEFT@{JOINT\_SHOULDER\_AXIS1\_LEFT}}
+\index{JOINT\_SHOULDER\_AXIS1\_LEFT@{JOINT\_SHOULDER\_AXIS1\_LEFT}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS1\_LEFT}{JOINT\_SHOULDER\_AXIS1\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+shoulder\+\_\+axis1\char`\"{}}
+
+
+
+Definition at line 29 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_ad1bcac7071ff58234b4c80fe6e57a571}\label{namespacesteering__interpolate__multiple__trajectories__and__print_ad1bcac7071ff58234b4c80fe6e57a571}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!JOINT\_SHOULDER\_AXIS1\_RIGHT@{JOINT\_SHOULDER\_AXIS1\_RIGHT}}
+\index{JOINT\_SHOULDER\_AXIS1\_RIGHT@{JOINT\_SHOULDER\_AXIS1\_RIGHT}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS1\_RIGHT}{JOINT\_SHOULDER\_AXIS1\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+shoulder\+\_\+axis1\char`\"{}}
+
+
+
+Definition at line 26 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a83d9e70cc313685bb0e6b79d66eacb57}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a83d9e70cc313685bb0e6b79d66eacb57}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!JOINT\_SHOULDER\_AXIS2\_LEFT@{JOINT\_SHOULDER\_AXIS2\_LEFT}}
+\index{JOINT\_SHOULDER\_AXIS2\_LEFT@{JOINT\_SHOULDER\_AXIS2\_LEFT}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS2\_LEFT}{JOINT\_SHOULDER\_AXIS2\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+shoulder\+\_\+axis2\char`\"{}}
+
+
+
+Definition at line 30 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_aee43a630684af60ac0f5c7e7cb4f876a}\label{namespacesteering__interpolate__multiple__trajectories__and__print_aee43a630684af60ac0f5c7e7cb4f876a}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!JOINT\_SHOULDER\_AXIS2\_RIGHT@{JOINT\_SHOULDER\_AXIS2\_RIGHT}}
+\index{JOINT\_SHOULDER\_AXIS2\_RIGHT@{JOINT\_SHOULDER\_AXIS2\_RIGHT}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{JOINT\_SHOULDER\_AXIS2\_RIGHT}{JOINT\_SHOULDER\_AXIS2\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+shoulder\+\_\+axis2\char`\"{}}
+
+
+
+Definition at line 27 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a687dc01ea8021308e9bd2217164f82cf}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a687dc01ea8021308e9bd2217164f82cf}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!JOINT\_WRIST\_0\_LEFT@{JOINT\_WRIST\_0\_LEFT}}
+\index{JOINT\_WRIST\_0\_LEFT@{JOINT\_WRIST\_0\_LEFT}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{JOINT\_WRIST\_0\_LEFT}{JOINT\_WRIST\_0\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+wrist\+\_\+0\char`\"{}}
+
+
+
+Definition at line 37 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a42212be0fc9fb97df3c4661d0a883f98}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a42212be0fc9fb97df3c4661d0a883f98}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!JOINT\_WRIST\_0\_RIGHT@{JOINT\_WRIST\_0\_RIGHT}}
+\index{JOINT\_WRIST\_0\_RIGHT@{JOINT\_WRIST\_0\_RIGHT}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{JOINT\_WRIST\_0\_RIGHT}{JOINT\_WRIST\_0\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+wrist\+\_\+0\char`\"{}}
+
+
+
+Definition at line 35 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a1fc7f18e44f7d2f5a138c789e088b83e}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a1fc7f18e44f7d2f5a138c789e088b83e}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!JOINT\_WRIST\_1\_LEFT@{JOINT\_WRIST\_1\_LEFT}}
+\index{JOINT\_WRIST\_1\_LEFT@{JOINT\_WRIST\_1\_LEFT}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{JOINT\_WRIST\_1\_LEFT}{JOINT\_WRIST\_1\_LEFT}}
+{\footnotesize\ttfamily string steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+L\+E\+FT = \char`\"{}left\+\_\+wrist\+\_\+1\char`\"{}}
+
+
+
+Definition at line 38 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a690533b6db2d3471024f26a0c2dc6ad1}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a690533b6db2d3471024f26a0c2dc6ad1}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!JOINT\_WRIST\_1\_RIGHT@{JOINT\_WRIST\_1\_RIGHT}}
+\index{JOINT\_WRIST\_1\_RIGHT@{JOINT\_WRIST\_1\_RIGHT}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{JOINT\_WRIST\_1\_RIGHT}{JOINT\_WRIST\_1\_RIGHT}}
+{\footnotesize\ttfamily string steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+R\+I\+G\+HT = \char`\"{}right\+\_\+wrist\+\_\+1\char`\"{}}
+
+
+
+Definition at line 36 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_abe63139c1d174a200b75814ba1148bb5}\label{namespacesteering__interpolate__multiple__trajectories__and__print_abe63139c1d174a200b75814ba1148bb5}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!MAX\_TURNING\_ANGLE@{MAX\_TURNING\_ANGLE}}
+\index{MAX\_TURNING\_ANGLE@{MAX\_TURNING\_ANGLE}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{MAX\_TURNING\_ANGLE}{MAX\_TURNING\_ANGLE}}
+{\footnotesize\ttfamily int steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+M\+A\+X\+\_\+\+T\+U\+R\+N\+I\+N\+G\+\_\+\+A\+N\+G\+LE = math.\+pi / 15}
+
+
+
+Definition at line 19 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_a4fdac325563923bb16fc60ef13e23985}\label{namespacesteering__interpolate__multiple__trajectories__and__print_a4fdac325563923bb16fc60ef13e23985}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!PRINT\_DEBUG@{PRINT\_DEBUG}}
+\index{PRINT\_DEBUG@{PRINT\_DEBUG}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{PRINT\_DEBUG}{PRINT\_DEBUG}}
+{\footnotesize\ttfamily bool steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+P\+R\+I\+N\+T\+\_\+\+D\+E\+B\+UG = True}
+
+
+
+Definition at line 17 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+
+\mbox{\Hypertarget{namespacesteering__interpolate__multiple__trajectories__and__print_abff55433943d763524cabcc9e147f79d}\label{namespacesteering__interpolate__multiple__trajectories__and__print_abff55433943d763524cabcc9e147f79d}} 
+\index{steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}!RECORDED\_TRAJECTORY\_FILENAME@{RECORDED\_TRAJECTORY\_FILENAME}}
+\index{RECORDED\_TRAJECTORY\_FILENAME@{RECORDED\_TRAJECTORY\_FILENAME}!steering\_interpolate\_multiple\_trajectories\_and\_print@{steering\_interpolate\_multiple\_trajectories\_and\_print}}
+\subsubsection{\texorpdfstring{RECORDED\_TRAJECTORY\_FILENAME}{RECORDED\_TRAJECTORY\_FILENAME}}
+{\footnotesize\ttfamily string steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+R\+E\+C\+O\+R\+D\+E\+D\+\_\+\+T\+R\+A\+J\+E\+C\+T\+O\+R\+Y\+\_\+\+F\+I\+L\+E\+N\+A\+ME = \char`\"{}multiple\+\_\+steering\+\_\+trajectory\+\_\+temp.\+json\char`\"{}}
+
+
+
+M\+O\+D\+U\+LE P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#. 
+
+
+
+Definition at line 16 of file steering\+\_\+interpolate\+\_\+multiple\+\_\+trajectories\+\_\+and\+\_\+print.\+py.
+

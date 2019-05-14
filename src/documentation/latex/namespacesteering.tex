@@ -1,0 +1,19 @@
+\hypertarget{namespacesteering}{}\section{steering Namespace Reference}
+\label{namespacesteering}\index{steering@{steering}}
+
+
+Documentation for this module.  
+
+
+
+
+\subsection{Detailed Description}
+Documentation for this module. 
+
+Control of Roboys\textquotesingle{} shoulders, elbows and wrists for steering. In order to reach the requested steering-\/angle we target intermediate points between the current and the requested steering-\/angle to ensure Roboys\textquotesingle{} hands are following the captured steering-\/trajectory.
+
+In order to target a point on the steering-\/trajectory for the hands, we use an interpolation-\/function for the joint angles with steering-\/angle as input that uses precomputed set-\/points of all joint-\/angles according to a certain steering-\/angle.
+
+Test-\/script for testing the transition-\/time between two different-\/steering-\/angles. Accuracy-\/measurement is not important as we are using position-\/control for the joint-\/angles and assume they are working.
+
+@\+S\+T\+E\+P\+S\+\_\+\+D\+I\+S\+T\+R\+I\+B\+U\+T\+I\+O\+N\+\_\+\+T\+E\+ST determines the amount of steps for measurement between min and max angle. The program saves all transition-\/times between two angles going from min to max and from max to min anngle and saves them in two separate lists. 

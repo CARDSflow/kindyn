@@ -151,6 +151,8 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     cable_forces.setZero();
     torques.resize(number_of_dofs);
     torques.setZero();
+    q_min.resize(number_of_dofs);
+    q_max.resize(number_of_dofs);
 
     controller_type.resize(number_of_cables, CARDSflow::ControllerType::cable_length_controller);
     joint_state.resize(number_of_dofs);
@@ -179,8 +181,8 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         joint_command_interface.registerHandle(torque_handle);
         joint_state[joint][0] = 0;
         joint_state[joint][1] = 0;
-
-        joint_command_pub.push_back(nh->advertise<std_msgs::Float32>((joint_names[joint]+"/"+joint_names[joint].c_str()+"/target").c_str(),1));
+        q_min[joint] = model.getJoint(joint)->getMinPosLimit(0);
+        q_max[joint] = model.getJoint(joint)->getMaxPosLimit(0);
     }
     registerInterface(&cardsflow_command_interface);
     registerInterface(&joint_command_interface);
@@ -307,7 +309,15 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         }
         ik[ef].setModel(ik_models[ef].getRobotModel());
         ik[ef].setVerbosity(0);
+
+        auto it = find(link_names.begin(),link_names.end(),ef);
+        int link_index = distance(link_names.begin(),it);
         tf::Vector3 pos(0,0.3*k,0);
+        if(link_index<link_names.size()) {
+            iDynTree::Matrix4x4 pose = kinDynComp.getWorldTransform(link_index).asHomogeneousTransform();
+            pos = tf::Vector3(pose.getVal(0,3),pose.getVal(1,3),pose.getVal(2,3));
+        }
+
         make6DofMarker(false,visualization_msgs::InteractiveMarkerControl::MOVE_3D,pos,false,0.15,"world",ef.c_str());
 
         moveEndEffector_as[ef].reset(
@@ -325,6 +335,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     joint_state_sub = nh->subscribe("/joint_states", 100, &Robot::JointState, this);
     floating_base_sub = nh->subscribe("/floating_base", 100, &Robot::FloatingBase, this);
     ik_srv = nh->advertiseService("/ik", &Robot::InverseKinematicsService, this);
+    ik_two_frames_srv = nh->advertiseService("/ik_multiple_frames", &Robot::InverseKinematicsMultipleFramesService, this);
     fk_srv = nh->advertiseService("/fk", &Robot::ForwardKinematicsService, this);
     interactive_marker_sub = nh->subscribe("/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
 }
@@ -533,7 +544,9 @@ void Robot::update() {
             }
         }
         { // robot target publisher
-            if((q_target-q_target_prev).norm()>0.001 || (qd_target-qd_target_prev).norm()>0.001 ) { // only if target changed
+            if((q_target-q_target_prev).norm()>0.001 || (qd_target-qd_target_prev).norm()>0.001 || first_update) { // only if target changed
+                if(first_update)
+                    first_update = false;
                 q_target_prev = q_target;
                 qd_target_prev = qd_target;
                 iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
@@ -547,17 +560,37 @@ void Robot::update() {
                                                robotstate.gravity);
 
                 static int seq = 0;
+                vector<Matrix4d> target_poses;
                 for (int i = 0; i < number_of_links; i++) {
-                    Matrix4d pose = iDynTree::toEigen(kinDynCompTarget.getWorldTransform(i).asHomogeneousTransform());
+                    target_poses.push_back(iDynTree::toEigen(kinDynCompTarget.getWorldTransform(i).asHomogeneousTransform()));
                     Vector3d com = iDynTree::toEigen(model.getLink(i)->getInertia().getCenterOfMass());
-                    pose.block(0, 3, 3, 1) += pose.block(0, 0, 3, 3) * com;
+                    target_poses[i].block(0, 3, 3, 1) += target_poses[i].block(0, 0, 3, 3) * com;
                     geometry_msgs::PoseStamped msg;
                     msg.header.seq = seq++;
                     msg.header.stamp = ros::Time::now();
                     msg.header.frame_id = link_names[i];
-                    Isometry3d iso(pose);
+                    Isometry3d iso(target_poses[i]);
                     tf::poseEigenToMsg(iso, msg.pose);
                     robot_state_target_pub.publish(msg);
+                }
+
+                int i=0;
+                for (auto muscle:cables) {
+                    l_target[i] = 0;
+                    int j=0;
+                    vector<Vector3d> target_viapoints;
+                    for (auto vp:muscle.viaPoints) {
+                        if (!vp->fixed_to_world) { // move viapoint with link
+                            target_viapoints.push_back(target_poses[vp->link_index].block(0, 3, 3, 1) +
+                                                               target_poses[vp->link_index].block(0, 0, 3, 3) *
+                                                     vp->local_coordinates);
+                        }
+                        if(j>0){
+                            l_target[i] += (target_viapoints[j]-target_viapoints[j-1]).norm();
+                        }
+                        j++;
+                    }
+                    i++;
                 }
             }
         }
@@ -597,6 +630,7 @@ void Robot::forwardKinematics(double dt) {
     if(force_position_controller_active) // we do the calculations only if there is a controller active
         qdd_force_control = M.block(6, 6, number_of_dofs, number_of_dofs).inverse() * (L_t * cable_forces - CG);
 
+    #pragma omp parallel for
     for(int i = 0; i<endeffectors.size();i++) {
         int dof_offset = endeffector_dof_offset[i];
         MatrixXd L_endeffector = L.block(0,dof_offset,number_of_cables,endeffector_number_of_dofs[i]);
@@ -644,6 +678,17 @@ void Robot::forwardKinematics(double dt) {
             l_int[l] = motor_state[l][0];
         }
     }
+    // respect joint limits
+    for(int i=0;i<number_of_joints;i++){
+        if(q[i]<q_min[i]){
+            q[i] = q_min[i];
+            qd[i] = 0;
+        }
+        if(q[i]>q_max[i]){
+            q[i] = q_max[i];
+            qd[i] = 0;
+        }
+    }
 
     integration_time += dt;
     ROS_INFO_THROTTLE(5, "forward kinematics calculated for %lf s", integration_time);
@@ -652,6 +697,7 @@ void Robot::forwardKinematics(double dt) {
 void Robot::update_V() {
     static int counter = 0;
     V.setZero(number_of_cables, 6 * number_of_links);
+    #pragma omp parallel for
     for (int muscle_index = 0; muscle_index < cables.size(); muscle_index++) {
         for (auto &segment:segments[muscle_index]) {
             if (segment.first->link_name != segment.second->link_name) { // ignore redundant cables
@@ -712,10 +758,10 @@ void Robot::update_P() {
     const iDynTree::Model &model = kinDynComp.model();
 
     static int counter = 0;
+    #pragma omp parallel for
     for (int k = 1; k < number_of_links; k++) {
         Matrix4d transformMatrix_k = world_to_link_transform[k];
         Matrix3d R_k0 = transformMatrix_k.block(0, 0, 3, 3);
-
         for (int a = 1; a <= k; a++) {
             Matrix4d transformMatrix_a = world_to_link_transform[a];
             Matrix3d R_0a = transformMatrix_a.block(0, 0, 3, 3).transpose();
@@ -830,9 +876,12 @@ bool Robot::InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::R
     ik_models[req.endeffector].setRobotState(robotstate.world_H_base, jointPos, robotstate.baseVel,
                                              jointVel, robotstate.gravity);
     ik[req.endeffector].clearProblem();
+//    ik[req.endeffector].setMaxCPUTime(60);
+    ik[req.endeffector].setCostTolerance(0.001);
     // we constrain the base link to stay where it is
     ik[req.endeffector].addTarget(ik_base_link[req.endeffector], ik_models[req.endeffector].model().getFrameTransform(
             ik_models[req.endeffector].getFrameIndex(ik_base_link[req.endeffector])));
+
     switch (req.type) {
         case 0: {
             Eigen::Isometry3d iso;
@@ -857,6 +906,18 @@ bool Robot::InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::R
             break;
         }
     }
+
+    static int counter = 6969;
+    counter++;
+    COLOR color(1,1,1,1);
+    color.randColor();
+    if(counter-(rand()/(float)RAND_MAX)*10==0){
+        publishMesh("robots", "common/meshes/visuals","target.stl", req.pose, 0.005,
+                    "world", "ik_target", counter, 10, color);
+    }else{
+        publishCube(req.pose, "world", "ik_target", counter, color, 0.05, 15);
+    }
+
     if (ik[req.endeffector].solve()) {
         iDynTree::Transform base_solution;
         iDynTree::VectorDynSize q_star;
@@ -896,6 +957,71 @@ bool Robot::InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::R
     }
 }
 
+bool Robot::InverseKinematicsMultipleFramesService(roboy_middleware_msgs::InverseKinematicsMultipleFrames::Request &req,
+                                     roboy_middleware_msgs::InverseKinematicsMultipleFrames::Response &res) {
+    if (ik_models.find(req.endeffector) == ik_models.end()) {
+        ROS_ERROR_STREAM("endeffector " << req.endeffector << " not initialized");
+        return false;
+    }
+    int index = endeffector_index[req.endeffector];
+    iDynTree::VectorDynSize jointPos, jointVel;
+    jointPos.resize(endeffector_number_of_dofs[index]);
+    jointVel.resize(endeffector_number_of_dofs[index]);
+    iDynTree::toEigen(jointPos) = q.segment(endeffector_dof_offset[index], endeffector_number_of_dofs[index]);
+    iDynTree::toEigen(jointVel) = qd.segment(endeffector_dof_offset[index], endeffector_number_of_dofs[index]);
+
+    ik_models[req.endeffector].setRobotState(robotstate.world_H_base, jointPos, robotstate.baseVel,
+                                             jointVel, robotstate.gravity);
+    ik[req.endeffector].clearProblem();
+//    ik[req.endeffector].setMaxCPUTime(60);
+    ik[req.endeffector].setCostTolerance(0.001);
+    // we constrain the base link to stay where it is
+    ik[req.endeffector].addTarget(ik_base_link[req.endeffector], ik_models[req.endeffector].model().getFrameTransform(
+            ik_models[req.endeffector].getFrameIndex(ik_base_link[req.endeffector])),1,1);
+
+    switch (req.type) {
+        case 0: {
+            break;
+        }
+        case 1: {
+            for (int reqIterator = 0; reqIterator < req.poses.size(); reqIterator++) {
+              iDynTree::Position pos(req.poses[reqIterator].position.x, req.poses[reqIterator].position.y, req.poses[reqIterator].position.z);
+              ik[req.endeffector].addPositionTarget(req.target_frames[reqIterator], pos, req.weights[reqIterator]);
+            }
+            break;
+        }
+        case 2: {
+            break;
+        }
+    }
+
+    if (ik[req.endeffector].solve()) {
+        iDynTree::Transform base_solution;
+        iDynTree::VectorDynSize q_star;
+        ik[req.endeffector].getFullJointsSolution(base_solution, q_star);
+        ROS_INFO_STREAM("ik solution:\n" << "base solution:" << base_solution.toString() << "\njoint solution: "
+                                         << q_star.toString());
+        for (int i = 0; i < q_star.size(); i++) {
+            res.joint_names.push_back(ik[req.endeffector].reducedModel().getJointName(i));
+            res.angles.push_back(q_star(i));
+        }
+        return true;
+    } else {
+        switch (req.type) {
+            case 0:
+                break;
+            case 1:
+                ROS_ERROR("unable to solve position ik");
+                break;
+
+            case 2:
+                break;
+        }
+
+        return false;
+    }
+}
+
 void Robot::InteractiveMarkerFeedback( const visualization_msgs::InteractiveMarkerFeedbackConstPtr &msg){
     if(msg->event_type!=visualization_msgs::InteractiveMarkerFeedback::MOUSE_UP)
         return;
@@ -909,7 +1035,7 @@ void Robot::InteractiveMarkerFeedback( const visualization_msgs::InteractiveMark
         if(InverseKinematicsService(msg2.request,msg2.response)){
             int index = endeffector_index[msg->marker_name];
             for(int i=0;i<msg2.response.joint_names.size();i++){
-                q_target[endeffector_dof_offset[index]+i] = msg2.response.angles[i];
+                q_target[joint_index[msg2.response.joint_names[i]]] = msg2.response.angles[i];
             }
 
         }

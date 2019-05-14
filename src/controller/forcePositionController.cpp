@@ -107,7 +107,7 @@ public:
      * Called by controller manager when the controller is about to be stopped
      * @param time current time
      */
-    void stopping(const ros::Time& time) { ROS_WARN("cable length controller stopped for %s", joint_name.c_str());}
+    void stopping(const ros::Time& time) { ROS_WARN("force length controller stopped for %s", joint_name.c_str());}
 
     /**
      * Joint position command callback for this joint

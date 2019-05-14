@@ -1,0 +1,111 @@
+\hypertarget{steering__capture__multiple__trajectories_8py}{}\section{steering/trajectory\+\_\+steering/steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.py File Reference}
+\label{steering__capture__multiple__trajectories_8py}\index{steering/trajectory\_steering/steering\_capture\_multiple\_trajectories.py@{steering/trajectory\_steering/steering\_capture\_multiple\_trajectories.py}}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories}}
+\item 
+ \mbox{\hyperlink{namespacesteering}{steering}}
+\begin{DoxyCompactList}\small\item\em Documentation for this module. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_ac83f5e5e6b91803312d66604bbf97255}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+set\+Joint\+Controller\+Parameters}} (proportional\+Val, derivative\+Val)
+\begin{DoxyCompactList}\small\item\em U\+T\+I\+L\+I\+TY F\+U\+N\+C\+T\+I\+O\+NS \#\#\#. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a3927995509cbd9f0c078e0360b4d3fa7}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+compute\+Steering\+Angles}} ()
+\item 
+def \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_abf792e04838c070143a839f0ed9519af}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+compute\+Hand\+Trajectories}} ()
+\item 
+def \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a95175c2c569ebc87d8635cd5ac111f9d}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+get\+Position\+Left\+Hand}} ()
+\item 
+def \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_aabe5dd4b4636c49de9d19bc3e3af0fc0}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+get\+Position\+Right\+Hand}} ()
+\item 
+def \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a86550764a3c3c45dc79a64da0925fbb2}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+joint\+State\+Callback}} (joint\+\_\+data)
+\item 
+def \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_ad8355642b878dbeb866d47d4a9f453f2}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+inverse\+\_\+kinematics\+\_\+client}} (endeffector, frame, x, y, z, roll, pitch, yaw)
+\item 
+def \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_ac91eab461598a6eefd844f7f57630083}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+main}} ()
+\begin{DoxyCompactList}\small\item\em M\+A\+IN \#\#\#. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a40863367d4da7da82fb534541b8a29ad}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+M\+A\+X\+\_\+\+T\+U\+R\+N\+I\+N\+G\+\_\+\+A\+N\+G\+LE}} = math.\+pi / 15
+\begin{DoxyCompactList}\small\item\em F\+U\+N\+C\+T\+I\+ON P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a2372127a1b9025d7a508ed838ada6fba}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+N\+U\+M\+\_\+\+S\+T\+E\+E\+R\+I\+N\+G\+\_\+\+A\+N\+G\+L\+ES}} = 61
+\item 
+int \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_aff39cf6ffe3629f0c7e774ed14bc94cf}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+P\+O\+I\+N\+T\+\_\+\+M\+U\+L\+T\+I\+P\+L\+I\+C\+I\+TY}} = 50
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a5b90d04415dda9cfbca0f7cbcc8e360e}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+J\+S\+O\+N\+\_\+\+F\+I\+L\+E\+N\+A\+ME}} = \char`\"{}multiple\+\_\+steering\+\_\+trajectory\+\_\+temp.\+json\char`\"{}
+\item 
+float \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a72cf7e53c4678321817b70570842582b}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+J\+O\+I\+N\+T\+\_\+\+A\+N\+G\+L\+E\+\_\+\+T\+O\+L\+E\+R\+A\+N\+C\+E\+\_\+\+FK}} = 0.\+01
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_ad2a5ba548c1d8b15b33e7c0c6f5f7774}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+E\+N\+D\+E\+F\+F\+E\+C\+T\+O\+R\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+hand\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a3bfc9a7fa847955d6d833a7745063fe5}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+F\+R\+A\+M\+E\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+hand\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_ac4f49abb136b76ccf6ae5ff9132c9307}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+E\+N\+D\+E\+F\+F\+E\+C\+T\+O\+R\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+hand\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a704345f9f3718283855612cc31adca4f}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+F\+R\+A\+M\+E\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+hand\char`\"{}
+\item 
+int \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a74b0a574d604840c326701f632ddcafb}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+B\+I\+K\+E\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+X}} = 0
+\begin{DoxyCompactList}\small\item\em M\+E\+A\+S\+U\+R\+ED P\+A\+R\+A\+M\+E\+T\+E\+RS \#\#\#. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_ab8a927ab0e1c7d56504573bc88898fb5}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+B\+I\+K\+E\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Y}} = 0
+\item 
+int \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_aca5080b6e47ef4c4f56bb2d951496be0}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+B\+I\+K\+E\+\_\+\+O\+F\+F\+S\+E\+T\+\_\+Z}} = 0
+\item 
+float \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a699bc2f7d1c69923d224da22a3544a53}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+R\+I\+K\+S\+H\+A\+W\+\_\+\+T\+U\+R\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+X\+\_\+\+O\+F\+F\+S\+ET}} = 0.\+7163902600571725 + 0.\+23003546879794612
+\item 
+float \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a254f6617251becee2e6a063f38870822}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+R\+I\+K\+S\+H\+A\+W\+\_\+\+T\+U\+R\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+Y\+\_\+\+O\+F\+F\+S\+ET}} = -\/0.\+010388552466272516 + 0.\+010388308199859624
+\item 
+float \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a6f42beb37c18fb8ed9e680fe6576575a}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+R\+I\+K\+S\+H\+A\+W\+\_\+\+T\+U\+R\+N\+\_\+\+J\+O\+I\+N\+T\+\_\+\+Z\+\_\+\+O\+F\+F\+S\+ET}} = 0.\+2164376942146126 -\/ 0.\+20527069599791542
+\item 
+int \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a627b43b7325318f8172d5080e19b9db5}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+Y\+A\+W\+\_\+\+R\+I\+G\+H\+T\+\_\+\+H\+A\+N\+D\+\_\+\+O\+F\+F\+S\+ET}} = math.\+pi / 2 + math.\+pi
+\item 
+int \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_afaa26504856c2662db5b0d5407560de5}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+Y\+A\+W\+\_\+\+L\+E\+F\+T\+\_\+\+H\+A\+N\+D\+\_\+\+O\+F\+F\+S\+ET}} = 3 $\ast$ math.\+pi / 2 + math.\+pi
+\item 
+float \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a04548f6a3365996390a4ec2f802e98f7}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+H\+A\+N\+D\+L\+E\+B\+A\+R\+\_\+\+X\+\_\+\+O\+F\+F\+S\+ET}} = 0.\+728713
+\item 
+float \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_aa9cec6d2bd874a7f40b30551e83537e9}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+H\+A\+N\+D\+L\+E\+B\+A\+R\+\_\+\+Z\+\_\+\+O\+F\+F\+S\+ET}} = 0.\+719269
+\item 
+float \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a3933eb9e16f7a32da3622a7bc4bac011}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+H\+A\+N\+D\+\_\+\+Y\+\_\+\+O\+F\+F\+S\+ET}} = 0.\+2
+\item 
+list \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a55f3e2d0281ef84f632bf30832d11fab}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+\_\+steering\+Angles}} = \mbox{[}$\,$\mbox{]}
+\begin{DoxyCompactList}\small\item\em G\+L\+O\+B\+AL V\+A\+R\+I\+A\+B\+L\+ES \#\#\#. \end{DoxyCompactList}\item 
+list \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a973fbdc2e2bfa222ac380573be72fa08}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+\_\+right\+Hand\+Trajectory}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_ac33475cba15ad6c9c554abaeaf8a5266}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+\_\+left\+Hand\+Trajectory}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a45e7234084b314319955e1cc12809cd8}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+\_\+center\+Handlebar\+Trajectory}} = \mbox{[}$\,$\mbox{]}
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a6f0b5571039be6646a4a656a54d8eb37}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+shoulder\+\_\+axis0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_afd78072ee43debf3797143a97d551acd}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+shoulder\+\_\+axis1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_ad9e8863759901d1239b94edad66900e6}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+shoulder\+\_\+axis2\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a536386527d4d7bd82b5525628600903e}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S0\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+shoulder\+\_\+axis0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_ad118834a76677368da4f3466dd5f04fb}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S1\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+shoulder\+\_\+axis1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a52b7ed9d7b0a88a43e563ea911e0cd86}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+J\+O\+I\+N\+T\+\_\+\+S\+H\+O\+U\+L\+D\+E\+R\+\_\+\+A\+X\+I\+S2\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+shoulder\+\_\+axis2\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a243b724dd40651ba69fa9e8fc0d5f85c}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+R\+I\+G\+HT}} = \char`\"{}elbow\+\_\+right\+\_\+rot0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a9eb5ffcde390c34770314e0aa9bf43f5}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+R\+I\+G\+HT}} = \char`\"{}elbow\+\_\+right\+\_\+rot1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a692bf60961a4f8d1fc164671f0824eeb}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T0\+\_\+\+L\+E\+FT}} = \char`\"{}elbow\+\_\+left\+\_\+rot0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_afb54881a722eca416af2d2c71c5fd116}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+J\+O\+I\+N\+T\+\_\+\+E\+L\+B\+O\+W\+\_\+\+R\+O\+T1\+\_\+\+L\+E\+FT}} = \char`\"{}elbow\+\_\+left\+\_\+rot1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_aaad0ed1220b3c6e8013d43d4ce0d95da}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+wrist\+\_\+0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a3fcdafb9f250aa577293dbba67316f7c}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+R\+I\+G\+HT}} = \char`\"{}right\+\_\+wrist\+\_\+1\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a8a7c69c5d7d4b536204b270ad9852c93}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+0\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+wrist\+\_\+0\char`\"{}
+\item 
+string \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a8538783d0544a956ef595b6ba0cd959f}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+J\+O\+I\+N\+T\+\_\+\+W\+R\+I\+S\+T\+\_\+1\+\_\+\+L\+E\+FT}} = \char`\"{}left\+\_\+wrist\+\_\+1\char`\"{}
+\item 
+list \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a13591e1f833cc2fae5dd12507dd649d7}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+J\+O\+I\+N\+T\+\_\+\+L\+I\+ST}}
+\item 
+dictionary \mbox{\hyperlink{namespacesteering__capture__multiple__trajectories_a864742365101fcf47fb999bbf9d6720c}{steering\+\_\+capture\+\_\+multiple\+\_\+trajectories.\+\_\+joints\+Status\+Data}}
+\end{DoxyCompactItemize}
