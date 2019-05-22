@@ -630,7 +630,7 @@ void Robot::forwardKinematics(double dt) {
     if(force_position_controller_active) // we do the calculations only if there is a controller active
         qdd_force_control = M.block(6, 6, number_of_dofs, number_of_dofs).inverse() * (L_t * cable_forces - CG);
 
-    #pragma omp parallel for
+//    #pragma omp parallel for
     for(int i = 0; i<endeffectors.size();i++) {
         int dof_offset = endeffector_dof_offset[i];
         MatrixXd L_endeffector = L.block(0,dof_offset,number_of_cables,endeffector_number_of_dofs[i]);
@@ -697,7 +697,7 @@ void Robot::forwardKinematics(double dt) {
 void Robot::update_V() {
     static int counter = 0;
     V.setZero(number_of_cables, 6 * number_of_links);
-    #pragma omp parallel for
+//    #pragma omp parallel for
     for (int muscle_index = 0; muscle_index < cables.size(); muscle_index++) {
         for (auto &segment:segments[muscle_index]) {
             if (segment.first->link_name != segment.second->link_name) { // ignore redundant cables
@@ -758,7 +758,7 @@ void Robot::update_P() {
     const iDynTree::Model &model = kinDynComp.model();
 
     static int counter = 0;
-    #pragma omp parallel for
+//    #pragma omp parallel for
     for (int k = 1; k < number_of_links; k++) {
         Matrix4d transformMatrix_k = world_to_link_transform[k];
         Matrix3d R_k0 = transformMatrix_k.block(0, 0, 3, 3);
