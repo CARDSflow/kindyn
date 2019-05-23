@@ -34,6 +34,7 @@ find_package(catkin REQUIRED COMPONENTS
 		controller_manager
 		eigen_conversions
 		effort_controllers
+		roboy_control_msgs
 )
 
 catkin_package( CATKIN_DEPENDS roboy_middleware_msgs common_utilities
