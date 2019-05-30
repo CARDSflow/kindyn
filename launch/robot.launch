@@ -12,6 +12,7 @@
     <arg name="x" default="0"/>
     <arg name="y" default="0"/>
     <arg name="z" default="0"/>
+    <arg name="physics" default="ode"/>
 
     <param name="robot_name" type="string" value="$(arg robot_name)"  />
     <param name="model_name" type="string" value="$(arg model_name)"  />
@@ -37,6 +38,7 @@
           type="$(arg robot_name)"
           respawn="false"
           output="screen"
+          launch-prefix="gdb -ex run"
     />
 
     <group if="$(arg gazebo)">
@@ -46,6 +48,7 @@
             <arg name="paused" value="$(arg paused)"/>
             <arg name="use_sim_time" value="$(arg use_sim_time)"/>
             <arg name="headless" value="$(arg headless)"/>
+            <arg name="physics" value="$(arg physics)"/>
         </include>
         <node name="robot_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
               args="-sdf -file $(find robots)/$(arg model_name)/model.sdf -model $(arg model_name)
