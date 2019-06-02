@@ -57,6 +57,12 @@ include_directories(${iDynTree_INCLUDE_DIRS})
 find_package(qpOASES REQUIRED)
 include_directories(${qpOASES_INCLUDE_DIRS})
 
+pkg_check_modules(ipopt REQUIRED ipopt)
+include_directories(${ipopt_INCLUDE_DIRS})
+
+find_package(Pagmo REQUIRED)
+include_directories(${Pagmo_INCLUDE_DIRS})
+
 # find openmp support
 find_package(OpenMP)
 if (OPENMP_FOUND)
@@ -108,7 +114,7 @@ add_library(kindyn SHARED
 		include/kindyn/cable.hpp)
 add_dependencies(kindyn roboy_simulation_msgs_generate_messages_cpp roboy_simulation_msgs_msgs_generate_messages_cpp)
 target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CardsflowHardwareInterface
-		CableLengthController TorquePositionController ForcePositionController ${OpenMP_CXX_libraries})
+		CableLengthController TorquePositionController ForcePositionController ${OpenMP_CXX_libraries} -lpagmo)
 
 # testing idyntree
 add_executable( test_idyntree src/utilities/test_idyntree.cpp)
@@ -157,6 +163,10 @@ target_link_libraries(VRpuppet ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 # roboy_icecream
 add_executable( roboy_icecream src/robots/roboy_icecream.cpp)
 target_link_libraries(roboy_icecream ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+
+## roboy_icecream
+#add_executable( test_ipopt src/test_ipopt.cpp src/CableForce_NLP.cpp)
+#target_link_libraries(test_ipopt ${ipopt_LIBRARIES})
 
 #==============================================================================
 # Installation

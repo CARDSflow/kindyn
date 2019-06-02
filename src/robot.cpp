@@ -2,6 +2,61 @@
 
 using namespace cardsflow::kindyn;
 
+typedef Eigen::Matrix< double, 8,1 > Vector8;
+
+class PAGMO_DLL_PUBLIC MyProblem{
+public:
+    MyProblem(int number_of_cables, MatrixXd L_t, VectorXd torques) :
+            number_of_cables(number_of_cables), L_t(L_t), torques(torques) {
+
+    };
+    MyProblem(){
+        L_t.resize(3,8);
+        torques.resize(3);
+    };
+    // Mandatory, computes ... well ... the fitness
+    vector_double fitness(const vector_double &x) const  {
+        Vector8 f;
+        Vector3d residual;
+        vector_double result(1);
+        for (int i = 0; i < x.size(); i++)
+            f[i] = x[i];
+        residual = (torques - L_t * f);
+        result[0] = residual.norm();
+        return result;
+    }
+
+    // Mandatory, returns the box-bounds
+    std::pair<vector_double, vector_double> get_bounds() const {
+        vector_double min_force(number_of_cables, 0);
+        vector_double max_force(number_of_cables, 500);
+        return {min_force, max_force};
+    }
+
+    // Optional, provides a name for the problem overrding the default name
+    std::string get_name() const {
+        return "My Problem";
+    }
+
+    // Optional, provides extra information that will be appended after
+    // the default stream operator
+    std::string get_extra_info() const {
+        return "This is a simple toy stochastic problem with one objective, no constraints and a fixed dimension of 4.";
+    }
+
+    // Optional methods-data can also be accessed later via
+    // the problem::extract() method
+    vector_double best_known() const {
+        vector_double best(number_of_cables, 0);
+        return best;
+    }
+
+    int number_of_cables = 8;
+    vector_double result;
+    VectorXd torques, f;
+    MatrixXd L_t;
+};
+
 Robot::Robot() {
     if (!ros::isInitialized()) {
         int argc = 0;
@@ -511,7 +566,45 @@ void Robot::update() {
 
     // for the cable force controller with do a centralized update
     if(force_position_controller_active){
-        cable_forces = resolve_function(L_t, torques, f_min, f_max);
+        problem p0{MyProblem{}};
+        p0.extract<MyProblem>()->number_of_cables = number_of_cables;
+        p0.extract<MyProblem>()->L_t = L_t;
+        p0.extract<MyProblem>()->torques = torques;
+
+        // 4 - Run the evolution in parallel on the 16 separate islands 10 times.
+        // 2 - Instantiate a pagmo algorithm
+        algorithm algo{cmaes(100)};
+
+        // 3 - Instantiate a population
+        population pop{p0, 24};
+
+        vector_double result = pop.champion_x();
+        vector_double fitness = pop.champion_f();
+        double fitness_result = 0;
+        for(int i=0;i<result.size();i++)
+            fitness_result += fitness[i]*fitness[i];
+        // 4 - Evolve the population
+        do{
+            pop = algo.evolve(pop);
+            result = pop.champion_x();
+            fitness = pop.champion_f();
+            fitness_result = 0;
+            for(int i=0;i<result.size();i++)
+                fitness_result += fitness[i]*fitness[i];
+            ROS_INFO_THROTTLE(1,"eval...");
+        }while(fitness_result>1);
+
+        for(int i=0;i<result.size();i++)
+            cable_forces[i] = result[i];
+        for(int i=0;i<result.size();i++)
+            fitness_result += fitness[i]*fitness[i];
+
+        ROS_INFO_STREAM_THROTTLE(5,"fitness " << fitness_result << " " << p0.get_bounds().first.size());
+//        // 6 - Print the fitness of the best solution in each island
+//        for (const auto &isl : p0) {
+//            std::cout << isl.get_population().champion_f()[0] << '\n';
+//        }
+//        cable_forces = resolve_function(L_t, torques, f_min, f_max);
     }
 
     if ((1.0 / (ros::Time::now() - last_visualization).toSec()) < 30) {

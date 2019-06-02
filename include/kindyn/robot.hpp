@@ -83,6 +83,13 @@
 #include <visualization_msgs/InteractiveMarkerFeedback.h>
 #include <thread>
 
+#include <pagmo/detail/visibility.hpp>
+#include <pagmo/population.hpp>
+#include <pagmo/problem.hpp>
+#include <pagmo/types.hpp>
+#include <pagmo/algorithms/cmaes.hpp>
+using namespace pagmo;
+
 using namespace qpOASES;
 using namespace std;
 using namespace Eigen;
@@ -91,6 +98,7 @@ using iDynTree::fromEigen;
 
 namespace cardsflow {
     namespace kindyn {
+
         class Robot:public hardware_interface::RobotHW, public rviz_visualization{
         public:
             /**
