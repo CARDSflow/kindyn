@@ -87,7 +87,8 @@
 #include <pagmo/population.hpp>
 #include <pagmo/problem.hpp>
 #include <pagmo/types.hpp>
-#include <pagmo/algorithms/cmaes.hpp>
+#include <pagmo/io.hpp>
+#include <pagmo/algorithms/pso.hpp>
 using namespace pagmo;
 
 using namespace qpOASES;
@@ -302,6 +303,10 @@ namespace cardsflow {
             hardware_interface::CardsflowStateInterface cardsflow_state_interface; /// cardsflow state interface
             hardware_interface::CardsflowCommandInterface cardsflow_command_interface; /// cardsflow command interface
             bool first_update = true;
+        private:
+            problem *p0;
+            algorithm *algo;
+            population pop;
         };
     }
 }

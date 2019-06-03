@@ -4,7 +4,7 @@ using namespace cardsflow::kindyn;
 
 typedef Eigen::Matrix< double, 8,1 > Vector8;
 
-class PAGMO_DLL_PUBLIC MyProblem{
+class MyProblem:public problem{
 public:
     MyProblem(int number_of_cables, MatrixXd L_t, VectorXd torques) :
             number_of_cables(number_of_cables), L_t(L_t), torques(torques) {
@@ -13,6 +13,7 @@ public:
     MyProblem(){
         L_t.resize(3,8);
         torques.resize(3);
+        best.resize(8,0);
     };
     // Mandatory, computes ... well ... the fitness
     vector_double fitness(const vector_double &x) const  {
@@ -21,16 +22,18 @@ public:
         vector_double result(1);
         for (int i = 0; i < x.size(); i++)
             f[i] = x[i];
-        residual = (torques - L_t * f);
+        residual = (torques+L_t * f);
+//        ROS_INFO_STREAM_THROTTLE(1,torques  << endl << L_t);
         result[0] = residual.norm();
         return result;
     }
 
     // Mandatory, returns the box-bounds
-    std::pair<vector_double, vector_double> get_bounds() const {
+    std::pair<pagmo::vector_double, pagmo::vector_double> get_bounds() const{
         vector_double min_force(number_of_cables, 0);
-        vector_double max_force(number_of_cables, 500);
-        return {min_force, max_force};
+        vector_double max_force(number_of_cables, 1000);
+        ROS_INFO("welvcome to my worl");
+        return std::make_pair(min_force, max_force);
     }
 
     // Optional, provides a name for the problem overrding the default name
@@ -47,14 +50,15 @@ public:
     // Optional methods-data can also be accessed later via
     // the problem::extract() method
     vector_double best_known() const {
-        vector_double best(number_of_cables, 0);
         return best;
     }
+    MyProblem &operator=(const problem &){return *this;};
 
     int number_of_cables = 8;
     vector_double result;
     VectorXd torques, f;
     MatrixXd L_t;
+    vector_double best;
 };
 
 Robot::Robot() {
@@ -84,6 +88,9 @@ Robot::~Robot() {
 //    delete[] ub;
 //    delete[] b;
 //    delete[] FOpt;
+delete p0;
+delete algo;
+//delete pop;
     delete[] link_to_link_transform;
 }
 
@@ -393,6 +400,40 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     ik_two_frames_srv = nh->advertiseService("/ik_multiple_frames", &Robot::InverseKinematicsMultipleFramesService, this);
     fk_srv = nh->advertiseService("/fk", &Robot::ForwardKinematicsService, this);
     interactive_marker_sub = nh->subscribe("/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
+
+
+    p0 = new problem (MyProblem());
+    p0->extract<MyProblem>()->number_of_cables = number_of_cables;
+    p0->extract<MyProblem>()->L_t = L_t;
+    p0->extract<MyProblem>()->torques = torques;
+
+    // 4 - Run the evolution in parallel on the 16 separate islands 10 times.
+    // 2 - Instantiate a pagmo algorithm
+    algo = new algorithm {pso(100)};
+    // 3 - Instantiate a population
+    pop = population{*p0, 24};
+
+    // Streaming to screen the problem
+    std::cout << *p0 << '\n';
+    // Getting its dimensions
+    std::cout << "Calling the dimension getter: " << p0->get_nx() << '\n';
+    std::cout << "Calling the fitness dimension getter: " << p0->get_nobj() << '\n';
+
+    // Getting the bounds via the pagmo::print eating also std containers
+    pagmo::print("Calling the bounds getter: ", p0->get_bounds(), "\n");
+
+    // As soon as a problem its created its function evaluation counter
+    // is set to zero. Checking its value is easy
+    pagmo::print("fevals: ", p0->get_fevals(), "\n");
+    // Computing one fitness
+    pagmo::print("calling fitness in x=[2,2,2,2]: ", p0->fitness({2, 2, 2, 2,2,2,2,2}), "\n");
+    // The evaluation counter is now ... well ... 1
+    pagmo::print("fevals: ", p0->get_fevals(), "\n");
+    // The evaluation counter is now ... well ... 1
+    pagmo::print("fevals: ", p0->get_fevals(), "\n");
+    // While our problem_basic struct is now hidden inside the pagmo::problem
+    // we can still access its methods / data via the extract interface
+    pagmo::print("Accessing best_known: ", p0->extract<MyProblem>()->best_known(), "\n");
 }
 
 VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max) {
@@ -566,40 +607,24 @@ void Robot::update() {
 
     // for the cable force controller with do a centralized update
     if(force_position_controller_active){
-        problem p0{MyProblem{}};
-        p0.extract<MyProblem>()->number_of_cables = number_of_cables;
-        p0.extract<MyProblem>()->L_t = L_t;
-        p0.extract<MyProblem>()->torques = torques;
-
-        // 4 - Run the evolution in parallel on the 16 separate islands 10 times.
-        // 2 - Instantiate a pagmo algorithm
-        algorithm algo{cmaes(100)};
-
-        // 3 - Instantiate a population
-        population pop{p0, 24};
-
+        p0->extract<MyProblem>()->number_of_cables = number_of_cables;
+        p0->extract<MyProblem>()->L_t = L_t;
+        p0->extract<MyProblem>()->torques = torques;
+        pop = population{*p0, 24};
+        pop = algo->evolve(pop);
+        p0->extract<MyProblem>()->best = pop.champion_x();
         vector_double result = pop.champion_x();
         vector_double fitness = pop.champion_f();
         double fitness_result = 0;
         for(int i=0;i<result.size();i++)
             fitness_result += fitness[i]*fitness[i];
-        // 4 - Evolve the population
-        do{
-            pop = algo.evolve(pop);
-            result = pop.champion_x();
-            fitness = pop.champion_f();
-            fitness_result = 0;
+        if(fitness_result <1)
             for(int i=0;i<result.size();i++)
-                fitness_result += fitness[i]*fitness[i];
-            ROS_INFO_THROTTLE(1,"eval...");
-        }while(fitness_result>1);
-
-        for(int i=0;i<result.size();i++)
-            cable_forces[i] = result[i];
+                cable_forces[i] = result[i];
         for(int i=0;i<result.size();i++)
             fitness_result += fitness[i]*fitness[i];
 
-        ROS_INFO_STREAM_THROTTLE(5,"fitness " << fitness_result << " " << p0.get_bounds().first.size());
+        ROS_INFO_STREAM_THROTTLE(5,"fitness " << fitness_result << " " << pop.get_problem().extract<MyProblem>()->get_bounds().first.size());
 //        // 6 - Print the fitness of the best solution in each island
 //        for (const auto &isl : p0) {
 //            std::cout << isl.get_population().champion_f()[0] << '\n';
