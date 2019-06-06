@@ -1,13 +1,13 @@
 <launch>
-    <arg name="robot_name" default="msj_platform"/>
+    <arg name="robot_name" default="msj_platform_head"/>
     <arg name="start_controllers" default="sphere_axis0 sphere_axis1 sphere_axis2"/>
-    <arg name="gazebo" default="false"/>
+    <arg name="gazebo" default="true"/>
     <arg name="paused" default="false"/>
     <arg name="use_sim_time" default="false"/>
     <arg name="gui" default="true"/>
     <arg name="headless" default="false"/>
     <arg name="debug" default="false"/>
-    <arg name="external_robot_state" default="false"/>
+    <arg name="external_robot_state" default="true"/>
 
     <param name="robot_name" type="string" value="$(arg robot_name)"  />
     <param name="robot_description" textfile="$(find robots)/$(arg robot_name)/model.urdf" />
@@ -35,7 +35,7 @@
 
     <node name="robot_controller"
           pkg="kindyn"
-          type="$(arg robot_name)"
+          type="msj_platform"
           respawn="false"
           output="screen"
     />

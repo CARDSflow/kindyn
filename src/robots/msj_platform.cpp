@@ -4,7 +4,7 @@
 #include <roboy_simulation_msgs/Tendon.h>
 #include <common_utilities/CommonDefinitions.h>
 #include "sensor_msgs/JointState.h"
-#include <roboy_simulation_msgs/CardsflowStatus.h>
+//#include <roboy_simulation_msgs/CardsflowStatus.h>
 
 #include <mutex>
 
@@ -52,7 +52,7 @@ public:
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
-        cardsflow_status_pub = nh->advertise<roboy_simulation_msgs::CardsflowStatus>("/cardsflow/status", 1);
+//        cardsflow_status_pub = nh->advertise<roboy_simulation_msgs::CardsflowStatus>("/cardsflow/status", 1);
         // first we retrieve the active joint names from the parameter server
         vector<string> joint_names;
         nh->getParam("joint_names", joint_names);
@@ -98,20 +98,24 @@ public:
      */
     void write(){
         roboy_middleware_msgs::MotorCommand msg;
-        roboy_simulation_msgs::CardsflowStatus cf_msg;
+//        roboy_simulation_msgs::CardsflowStatus cf_msg;
+        double coef = sqrt((q-q_target).norm());
         msg.id = 0;
         for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
             msg.motors.push_back(i);
-            msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(Ld[i]));
 
-            cf_msg.current.push_back(Ld_curr[i]);
-            cf_msg.target.push_back(Ld[i]);
+
+            msg.set_points.push_back(coef*myoMuscleEncoderTicksPerMeter(Ld[i]));
+//            msg.set_points.push_back(coef*myoMuscleEncoderTicksPerMeter(l_offset[i]-l[i]));
+
+//            cf_msg.current.push_back(Ld_curr[i]);
+//            cf_msg.target.push_back(Ld[i]);
 
         }
         ROS_INFO_STREAM_THROTTLE(1, "Ld_target " << Ld.transpose().format(fmt));
 //        ROS_INFO_STREAM_THROTTLE(1,str.str());
         motor_command.publish(msg);
-        cardsflow_status_pub.publish(cf_msg);
+//        cardsflow_status_pub.publish(cf_msg);
     };
     bool external_robot_state; /// indicates if we get the robot state externally
     ros::NodeHandlePtr nh; /// ROS nodehandle
