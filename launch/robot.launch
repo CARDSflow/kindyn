@@ -1,7 +1,7 @@
 <launch>
     <arg name="robot_name" default="msj_platform_head"/>
     <arg name="start_controllers" default="sphere_axis0 sphere_axis1 sphere_axis2"/>
-    <arg name="gazebo" default="true"/>
+    <arg name="gazebo" default="false"/>
     <arg name="paused" default="false"/>
     <arg name="use_sim_time" default="false"/>
     <arg name="gui" default="true"/>
@@ -10,6 +10,7 @@
     <arg name="external_robot_state" default="true"/>
 
     <param name="robot_name" type="string" value="$(arg robot_name)"  />
+    <param name="model_name" type="string" value="$(arg robot_name)"  />
     <param name="robot_description" textfile="$(find robots)/$(arg robot_name)/model.urdf" />
     <param name="urdf_file_path" type="string" value="$(find robots)/$(arg robot_name)/model.urdf" />
     <param name="cardsflow_xml" type="string" value="$(find robots)/$(arg robot_name)/cardsflow.xml" />
@@ -35,7 +36,7 @@
 
     <node name="robot_controller"
           pkg="kindyn"
-          type="msj_platform"
+          type="roboy_icecream"
           respawn="false"
           output="screen"
     />
@@ -49,9 +50,20 @@
             <arg name="use_sim_time" value="$(arg use_sim_time)"/>
             <arg name="headless" value="$(arg headless)"/>
         </include>
-        <node name="robot_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-              args="-sdf -file $(find robots)/$(arg robot_name)/model.sdf -model $(arg robot_name)"
-        />
+<!--        <node name="robot_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"-->
+<!--              args="-sdf -file $(find robots)/$(arg robot_name)/model.sdf -model $(arg robot_name)"-->
+<!--        />-->
+
+        <node name="sdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+              args="-sdf -file $(find robots)/roboy_icecream/model.sdf -model roboy_icecream
+               -z 0.3
+               -J shoulder_left_axis0 0.7
+               -J shoulder_left_axis1 -0.47
+               -J shoulder_left_axis2 0.3
+               -J shoulder_right_axis0 -0.66
+               -J shoulder_right_axis1 -0.47
+               -J shoulder_right_axis2 -0.3"
+                    />
     </group>
 
 </launch>

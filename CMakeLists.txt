@@ -104,6 +104,10 @@ target_link_libraries(test_idyntree ${iDynTree_LIBRARIES} ${catkin_LIBRARIES})
 add_executable( test_robot src/robots/test_robot.cpp)
 target_link_libraries(test_robot ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
+# roboy_icecream
+add_executable( roboy_icecream src/robots/roboy_icecream.cpp)
+target_link_libraries(roboy_icecream ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+
 # msj_platform
 add_executable( msj_platform src/robots/msj_platform.cpp)
 target_link_libraries(msj_platform ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)

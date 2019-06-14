@@ -64,6 +64,7 @@ public:
         ros::Rate r(10);
         while(controller_state.getNumSubscribers()==0) // we wait until the controller state is available
             r.sleep();
+        ROS_INFO_STREAM("cable length controller init");
         joint = hw->getHandle(joint_name); // throws on failure
         joint_index = joint.getJointIndex();
         last_update = ros::Time::now();
