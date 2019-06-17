@@ -52,47 +52,54 @@ public:
      */
     void read(){
         update();
-        if(!external_robot_state)
+        if(!external_robot_state) {
             forwardKinematics(0.0001);
+        }
+        else {
+            for(int i = 0; i<endeffectors.size();i++) {
+                int dof_offset = endeffector_dof_offset[i];
+                Ld[i].setZero();
+                for (int j = dof_offset; j < endeffector_number_of_dofs[i] + dof_offset; j++) {
+                    Ld[i] -= ld[j];
+                }
+            }
+        }
     };
     /**
      * Sends motor commands to the real robot
      */
     void write(){
-//        stringstream str;
-//        for(auto ef:endeffectors) {
-//            str << ef << ": ";
-//            roboy_middleware_msgs::MotorCommand msg;
-//            msg.id = bodyPartIDs[ef];
-//            msg.motors = motors[ef];
-//            for (int i = 0; i < sim_motors[ef].size(); i++) {
-//                double l_meter = -l[sim_motors[ef][i]];
-//                str  <<  l_meter << "\t";
-//                switch(motor_type[msg.id][i]){
-//                    case MYOBRICK100N:{
-//                        msg.set_points.push_back(myoBrick100NEncoderTicksPerMeter(l_meter));
-//                        break;
-//                    }
-//                    case MYOBRICK300N:{
-//                        msg.set_points.push_back(myoBrick300NEncoderTicksPerMeter(l_meter));
-//                        break;
-//                    }
-//                    case MYOMUSCLE500N:{
-//                        msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(l_meter));
-//                        break;
-//                    }
-//                }
+        stringstream str;
+        for(int e=0; e<endeffectors.size(); e++) {
+            auto _q = q.segment(endeffector_dof_offset[e], endeffector_number_of_dofs[e]);
+            auto _q_target = q_target.segment(endeffector_dof_offset[e], endeffector_number_of_dofs[e]);
+
+            double coef = sqrt((_q-_q_target).norm())/10.0;
+//            str << "coef: " << coef;
+
+            string ef = endeffectors[e];
+//            if (ef != "head") {
+//                continue;
 //            }
-//            str << endl;
-//            motor_command.publish(msg);
-//        }
+            str << ef << ": ";
+//            str << "ld: " << Ld[0].segment(sim_motors[ef][0], sim_motors[ef].size()).transpose().format(fmt) << endl;
+            roboy_middleware_msgs::MotorCommand msg;
+            msg.id = bodyPartIDs[ef];
+            for (int i = 0; i < sim_motors[ef].size(); i++) {
+                msg.motors.push_back(sim_motors[ef][i]);
+                msg.set_points.push_back(coef*myoMuscleEncoderTicksPerMeter(Ld[0][sim_motors[ef][i]]));
+//                str << Ld[e].transpose().format(fmt);
+            }
+            str << endl;
+            motor_command.publish(msg);
+        }
 //        ROS_INFO_STREAM_THROTTLE(1, str.str());
     };
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
     ros::ServiceClient motor_config, sphere_left_axis0_params, sphere_left_axis1_params, sphere_left_axis2_params;
     map<string,ros::ServiceClient> motor_control_mode;
-    vector<string> endeffectors = {"spine_right"}; //"head", "shoulder_left", "shoulder_right",
+    vector<string> endeffectors = {"head", "shoulder_left"};//, "shoulder_right", "shoulder_left"}; //"head", "shoulder_left", "shoulder_right",
     map<string, vector<string>> endeffector_jointnames;
     bool external_robot_state; /// indicates if we get the robot state externally
     map<string,vector<short unsigned int>> motors = {
@@ -102,9 +109,9 @@ public:
             {"spine_right",{9,10,11,12,13,14}}
     };
     map<string,vector<short unsigned int>> sim_motors = {
-            {"head",{36,37,35,34,32,33}},
-            {"shoulder_left",{0,1,2,3,4,5,6,7,8,9,10}},
-            {"shoulder_right",{0,1,2,3,4,5,6,7,8,9,11}},
+            {"head",{18,19,20,21,22,23}},
+            {"shoulder_left",{9,10,11,12,13,14,15,16,17,26,27}},
+            {"shoulder_right",{0,1,2,3,4,5,6,7,8,24,25}},
             {"spine_right",{11,10,13,14,12,9}}
     };
     map<string,vector<double>> l_offset = {

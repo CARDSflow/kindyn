@@ -6,7 +6,7 @@
 #include <common_utilities/CommonDefinitions.h>
 
 #define NUMBER_OF_MOTORS 8
-#define SPINDLERADIUS 0.00675
+#define SPINDLERADIUS 0.0045
 #define msjMeterPerEncoderTick(encoderTicks) (((encoderTicks)/(4096.0)*(2.0*M_PI*SPINDLERADIUS)))
 #define msjEncoderTicksPerMeter(meter) ((meter)*(4096.0)/(2.0*M_PI*SPINDLERADIUS))
 
@@ -48,8 +48,18 @@ public:
      */
     void read(){
         update();
-        if(!external_robot_state)
+        if(!external_robot_state) {
             forwardKinematics(0.0001);
+        }
+        else {
+            for(int i = 0; i<endeffectors.size();i++) {
+                int dof_offset = endeffector_dof_offset[i];
+                Ld[i].setZero();
+                for (int j = dof_offset; j < endeffector_number_of_dofs[i] + dof_offset; j++) {
+                    Ld[i] -= ld[j];
+                }
+            }
+        }
     };
 
     /**
@@ -68,10 +78,14 @@ public:
             }
         }else {
             static double l_change[NUMBER_OF_MOTORS] = {0};
+            double coef = sqrt((q-q_target).norm());
             for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
                 msg.motors.push_back(i);
-                l_change[i] += Kp*(l_target[i]-l[i]);
-                msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change[i])); //
+                msg.set_points.push_back(coef*myoMuscleEncoderTicksPerMeter(Ld[0][i]));
+                double l_change = l[i] - l_offset[i];
+//                msg.set_points.push_back(-myoMuscleEncoderTicksPerMeter(l_change)); //
+//                l_change[i] += Kp*(l_target[i]-l[i]);
+//                msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change[i])); //
         //            str << l_change << "\t";
             }
         }
