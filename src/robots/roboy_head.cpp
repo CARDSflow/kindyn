@@ -123,7 +123,7 @@ public:
             return;
         int j = 0;
         for(int i=9;i<15;i++){
-            encoder_offset["shoulder_right"][j]=((msg->position[i]));
+            encoder_offset["shoulder_right"][j]=((msg->position[i]+3000));
             j++;
         }
         motor_status.shutdown();
@@ -181,7 +181,6 @@ public:
                 msg.id = bodyPartIDs[ef];
                 msg.motors = motors[ef];
                 for (int i = 0; i < sim_motors[ef].size(); i++) {
-
                     switch (motor_type[msg.id][motors[ef][i]]) {
                         case MYOBRICK100N: {
                             l_change[ef][i] += Kp*(l_target[i]-l[i]);
@@ -226,7 +225,7 @@ public:
 //            {"shoulder_right",{0,1,2,3,4,5,6,7,8,9,11}},
 //            {"spine_right",{9,10,11,12,13,14}}
 //    };
-    map<string,vector<short unsigned int>> motors = {
+    map<string,vector<int>> motors = {
             {"shoulder_right",{9,10,11,12,13,14}}
     };
 //    map<string,vector<short unsigned int>> sim_motors = {
@@ -235,7 +234,7 @@ public:
 //            {"shoulder_right",{0,1,2,3,4,5,6,7,8,9,11}},
 //            {"spine_right",{11,10,13,14,12,9}}
 //    };
-    map<string,vector<short unsigned int>> sim_motors = {
+    map<string,vector<int>> sim_motors = {
             {"shoulder_right",{0,1,2,3,4,5}}
     };
 

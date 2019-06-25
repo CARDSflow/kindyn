@@ -94,13 +94,13 @@ public:
     vector<string> endeffectors = {"spine_right"}; //"head", "shoulder_left", "shoulder_right",
     map<string, vector<string>> endeffector_jointnames;
     bool external_robot_state; /// indicates if we get the robot state externally
-    map<string,vector<short unsigned int>> motors = {
+    map<string,vector<int>> motors = {
             {"head",{9,10,11,12,13,14}},
             {"shoulder_left",{0,1,2,3,4,5,6,7,8,9,10}},
             {"shoulder_right",{0,1,2,3,4,5,6,7,8,9,11}},
             {"spine_right",{9,10,11,12,13,14}}
     };
-    map<string,vector<short unsigned int>> sim_motors = {
+    map<string,vector<int>> sim_motors = {
             {"head",{36,37,35,34,32,33}},
             {"shoulder_left",{0,1,2,3,4,5,6,7,8,9,10}},
             {"shoulder_right",{0,1,2,3,4,5,6,7,8,9,11}},
