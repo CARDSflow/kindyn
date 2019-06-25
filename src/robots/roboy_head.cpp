@@ -220,22 +220,22 @@ public:
     bool status_received = false;
     std_msgs::Float32 roll, pitch, yaw;
     float err_x = 0, error_y = 0, pitch_max = 0.33, pitch_min = -0.50, yaw_min = -0.50, yaw_max = 0;
-//    map<string,vector<short unsigned int>> motors = {
+//    map<string,vector<int>> motors = {
 //            {"head",{9,10,11,12,13,14}},
 //            {"shoulder_left",{0,1,2,3,4,5,6,7,8,9,10}},
 //            {"shoulder_right",{0,1,2,3,4,5,6,7,8,9,11}},
 //            {"spine_right",{9,10,11,12,13,14}}
 //    };
-    map<string,vector<short unsigned int>> motors = {
+    map<string,vector<int>> motors = {
             {"shoulder_right",{9,10,11,12,13,14}}
     };
-//    map<string,vector<short unsigned int>> sim_motors = {
+//    map<string,vector<int>> sim_motors = {
 //            {"head",{36,37,35,34,32,33}},
 //            {"shoulder_left",{0,1,2,3,4,5,6,7,8,9,10}},
 //            {"shoulder_right",{0,1,2,3,4,5,6,7,8,9,11}},
 //            {"spine_right",{11,10,13,14,12,9}}
 //    };
-    map<string,vector<short unsigned int>> sim_motors = {
+    map<string,vector<int>> sim_motors = {
             {"shoulder_right",{0,1,2,3,4,5}}
     };
 
