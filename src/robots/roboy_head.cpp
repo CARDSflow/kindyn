@@ -29,7 +29,7 @@ public:
         sphere_head_axis0 = nh->advertise<std_msgs::Float32>("/sphere_head_axis0/sphere_head_axis0/target",1);
         sphere_head_axis1 = nh->advertise<std_msgs::Float32>("/sphere_head_axis1/sphere_head_axis1/target",1);
         sphere_head_axis2 = nh->advertise<std_msgs::Float32>("/sphere_head_axis2/sphere_head_axis2/target",1);
-        face_coordinates = nh->subscribe("/roboy/cognition/vision/face_coordinates",1, &RoboyHead::FaceCoordinates, this);
+        // face_coordinates = nh->subscribe("/roboy/cognition/vision/face_coordinates",1, &RoboyHead::FaceCoordinates, this);
         motor_status = nh->subscribe("/roboy/middleware/MotorStatus", 1, &RoboyHead::MotorStatus, this);
         for(auto ef:endeffectors) {
             motor_control_mode[ef] = nh->serviceClient<roboy_middleware_msgs::ControlMode>(

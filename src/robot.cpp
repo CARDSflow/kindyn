@@ -19,6 +19,7 @@ Robot::Robot() {
     tendon_state_target_pub = nh->advertise<roboy_simulation_msgs::Tendon>("/tendon_state_target", 1);
     joint_state_target_pub = nh->advertise<roboy_simulation_msgs::JointState>("/joint_state_target", 1);
     fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
+    nh->getParam("external_robot_target", external_robot_target);
 }
 
 Robot::~Robot() {

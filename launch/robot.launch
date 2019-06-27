@@ -9,6 +9,7 @@
     <arg name="headless" default="false"/>
     <arg name="debug" default="false"/>
     <arg name="external_robot_state" default="false"/>
+    <arg name="external_robot_target" default="false"/>
     <arg name="x" default="0"/>
     <arg name="y" default="0"/>
     <arg name="z" default="0"/>
