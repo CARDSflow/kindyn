@@ -41,10 +41,8 @@ public:
         }
         update();
 
-//        for(auto ef:endeffectors) {
-//            for(int i=0;i<sim_motors[ef].size();i++)
-//                l_offset[ef][i] = l[sim_motors[ef][i]];
-//        }
+        for(int i=0;i<6;i++)
+            l_offset[i] = l[i];
     };
     /**
      * Updates the robot model and integrates the robot model using the forwardKinematics function
@@ -59,34 +57,23 @@ public:
      * Sends motor commands to the real robot
      */
     void write(){
-//        stringstream str;
-//        for(auto ef:endeffectors) {
-//            str << ef << ": ";
-//            roboy_middleware_msgs::MotorCommand msg;
-//            msg.id = bodyPartIDs[ef];
-//            msg.motors = motors[ef];
-//            for (int i = 0; i < sim_motors[ef].size(); i++) {
-//                double l_meter = -l[sim_motors[ef][i]];
-//                str  <<  l_meter << "\t";
-//                switch(motor_type[msg.id][i]){
-//                    case MYOBRICK100N:{
-//                        msg.set_points.push_back(myoBrick100NEncoderTicksPerMeter(l_meter));
-//                        break;
-//                    }
-//                    case MYOBRICK300N:{
-//                        msg.set_points.push_back(myoBrick300NEncoderTicksPerMeter(l_meter));
-//                        break;
-//                    }
-//                    case MYOMUSCLE500N:{
-//                        msg.set_points.push_back(myoMuscleEncoderTicksPerMeter(l_meter));
-//                        break;
-//                    }
-//                }
-//            }
-//            str << endl;
-//            motor_command.publish(msg);
-//        }
-//        ROS_INFO_STREAM_THROTTLE(1, str.str());
+        roboy_middleware_msgs::MotorCommand msg;
+        msg.id = 69;
+        msg.motors = {0,1,2,3,4,5};
+        stringstream str;
+        float kp;
+        nh->getParam("kp",kp);
+        for(int i=0;i<6;i++){
+            float setpoint = ((l[i]-l_offset[i])-l_target[i])*kp;
+            str << setpoint << "\t";
+            if(setpoint>0){
+                msg.set_points.push_back(setpoint);
+            }else{
+                msg.set_points.push_back(100);
+            }
+        }
+        ROS_INFO_STREAM_THROTTLE(1,str.str());
+        motor_command.publish(msg);
     };
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
@@ -94,25 +81,8 @@ public:
     map<string,ros::ServiceClient> motor_control_mode;
     vector<string> endeffectors = {"spine_right"}; //"head", "shoulder_left", "shoulder_right",
     map<string, vector<string>> endeffector_jointnames;
+    vector<int> l_offset = {0,0,0,0,0,0};
     bool external_robot_state; /// indicates if we get the robot state externally
-    map<string,vector<short unsigned int>> motors = {
-            {"head",{9,10,11,12,13,14}},
-            {"shoulder_left",{0,1,2,3,4,5,6,7,8,9,10}},
-            {"shoulder_right",{0,1,2,3,4,5,6,7,8,9,11}},
-            {"spine_right",{9,10,11,12,13,14}}
-    };
-    map<string,vector<short unsigned int>> sim_motors = {
-            {"head",{36,37,35,34,32,33}},
-            {"shoulder_left",{0,1,2,3,4,5,6,7,8,9,10}},
-            {"shoulder_right",{0,1,2,3,4,5,6,7,8,9,11}},
-            {"spine_right",{11,10,13,14,12,9}}
-    };
-    map<string,vector<double>> l_offset = {
-            {"head",{0,0,0,0,0,0}},
-            {"shoulder_left",{0,0,0,0,0,0,0,0,0,0,0,0}},
-            {"shoulder_right",{0,0,0,0,0,0,0,0,0,0,0,0}},
-            {"spine_right",{0,0,0,0,0,0}}
-    };
 };
 
 /**
