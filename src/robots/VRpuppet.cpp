@@ -7,6 +7,10 @@
 
 using namespace std;
 
+#define SPINDLERADIUS 0.0085
+#define meterPerDegree(degree) (degreesToRadians(degree)*(2.0*M_PI*SPINDLERADIUS))
+#define degreePerMeter(meter) (radiansToDegrees(meter)/(2.0*M_PI*SPINDLERADIUS))
+
 class VRpuppet: public cardsflow::kindyn::Robot{
 public:
     /**
@@ -21,10 +25,12 @@ public:
             ros::init(argc, argv, "VRpuppet");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
+        spinner.reset(new ros::AsyncSpinner(0));
+        spinner->start();
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
         for(auto ef:endeffectors) {
             motor_control_mode[ef] = nh->serviceClient<roboy_middleware_msgs::ControlMode>(
-                    "/roboy/" + ef + "/middleware/ControlMode");
+                    "/"+ ef + "/ControlMode");
             nh->getParam((ef+"/joints").c_str(),endeffector_jointnames[ef]);
         }
         vector<string> joint_names;
@@ -32,17 +38,42 @@ public:
         init(urdf,cardsflow_xml,joint_names);
         // if we do not get the robot state externally, we use the forwardKinematics function to integrate the robot state
         nh->getParam("external_robot_state", external_robot_state);
-        roboy_middleware_msgs::ControlMode msg;
-        msg.request.control_mode = POSITION;
-        msg.request.set_point = 0;
-        for(auto control:motor_control_mode){
-            if(!control.second.call(msg))
-                ROS_WARN("failed to change control mode to position");
-        }
-        update();
+        {
+            roboy_middleware_msgs::ControlMode msg;
+            msg.request.control_mode = DISPLACEMENT;
+            msg.request.set_point = 200;
+            msg.request.motor_id = {0, 1, 2, 3, 4, 5};
+            ros::Duration d(5);
+            bool success = false;
+            while (!success && ros::ok()) {
+                for (auto control:motor_control_mode) {
+                    success = control.second.call(msg);
+                    if (!success) {
+                        ROS_WARN("failed to change control mode to DISPLACEMENT, trying again in 5 seconds");
+                        d.sleep();
+                    }
+                }
+            }
 
-        for(int i=0;i<6;i++)
-            l_offset[i] = l[i];
+            ROS_INFO("setting muscles to DISPLACEMENT and sleeping for 5 seconds");
+        }
+        {
+            while (!status_received && ros::ok()) {
+                ROS_INFO_THROTTLE(5, "waiting for motor status from cage, did you start the rqt plugin?!");
+            }
+            bool success = false;
+            roboy_middleware_msgs::ControlMode msg;
+            msg.request.control_mode = POSITION;
+            for (auto control:motor_control_mode) {
+                success = control.second.call(msg);
+                if (!success)
+                    ROS_WARN("failed to change control mode to position");
+            }
+            update();
+
+            for (int i = 0; i < 6; i++)
+                l_offset[i] = l[i];
+        }
     };
     /**
      * Updates the robot model and integrates the robot model using the forwardKinematics function
@@ -64,25 +95,34 @@ public:
         float kp;
         nh->getParam("kp",kp);
         for(int i=0;i<6;i++){
-            float setpoint = ((l[i]-l_offset[i])-l_target[i])*kp;
+            float setpoint = degreePerMeter((l[i]-l_offset[i])-l_target[i]);
             str << setpoint << "\t";
-            if(setpoint>0){
-                msg.set_points.push_back(setpoint);
-            }else{
-                msg.set_points.push_back(100);
-            }
+            msg.set_points.push_back(setpoint);
         }
         ROS_INFO_STREAM_THROTTLE(1,str.str());
         motor_command.publish(msg);
     };
+    void MotorStatus(const roboy_middleware_msgs::MotorStatus::ConstPtr &msg){
+        status_received = true;
+        for(int i=0;i<msg->position.size();i++){
+            pos[i] = meterPerDegree(msg->position[i]);
+            vel[i] = meterPerDegree(msg->velocity[i]);
+            dis[i] = msg->displacement[i];
+        }
+    }
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
     ros::ServiceClient motor_config, sphere_left_axis0_params, sphere_left_axis1_params, sphere_left_axis2_params;
+    boost::shared_ptr<ros::AsyncSpinner> spinner;
     map<string,ros::ServiceClient> motor_control_mode;
-    vector<string> endeffectors = {"spine_right"}; //"head", "shoulder_left", "shoulder_right",
+    vector<string> endeffectors = {"VRpuppet"};
     map<string, vector<string>> endeffector_jointnames;
-    vector<int> l_offset = {0,0,0,0,0,0};
+    vector<int> l_offset = {0,0,0,0,0,0,0,0,0,0,0},
+                pos = {0,0,0,0,0,0,0,0,0,0,0},
+                vel = {0,0,0,0,0,0,0,0,0,0,0},
+                dis = {0,0,0,0,0,0,0,0,0,0,0};
     bool external_robot_state; /// indicates if we get the robot state externally
+    bool status_received = false;
 };
 
 /**
