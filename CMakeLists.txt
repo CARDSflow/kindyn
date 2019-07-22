@@ -110,6 +110,17 @@ add_dependencies(kindyn roboy_simulation_msgs_generate_messages_cpp roboy_simula
 target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CardsflowHardwareInterface
 		CableLengthController TorquePositionController ForcePositionController ${OpenMP_CXX_libraries})
 
+# vrpuppet library
+add_library(vrpuppet SHARED
+		src/vrpuppet.cpp
+		src/EigenExtension.cpp
+		include/kindyn/EigenExtension.hpp
+		include/kindyn/vrpuppet.hpp
+		include/kindyn/cable.hpp)
+add_dependencies(vrpuppet roboy_simulation_msgs_generate_messages_cpp roboy_simulation_msgs_msgs_generate_messages_cpp)
+target_link_libraries(vrpuppet ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CardsflowHardwareInterface
+		CableLengthController TorquePositionController ForcePositionController ${OpenMP_CXX_libraries})
+
 # testing idyntree
 add_executable( test_idyntree src/utilities/test_idyntree.cpp)
 target_link_libraries(test_idyntree ${iDynTree_LIBRARIES} ${catkin_LIBRARIES})
@@ -156,7 +167,7 @@ target_link_libraries(VRpuppet ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
 # roboy_icecream
 add_executable( roboy_icecream src/robots/roboy_icecream.cpp)
-target_link_libraries(roboy_icecream ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
+target_link_libraries(roboy_icecream ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet)
 
 #==============================================================================
 # Installation
