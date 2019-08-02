@@ -34,10 +34,12 @@ public:
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         for(auto part:body_parts) {
+            std::string fpga_name;
+            nh->getParam(part + "/fpga_name", fpga_name);
             motor_control_mode[part] = nh->serviceClient<roboy_middleware_msgs::ControlMode>(
-                    "/roboy/" + part + "/middleware/ControlMode");
+                    "/roboy/" + fpga_name + "/middleware/ControlMode");
             motor_config[part] = nh->serviceClient<roboy_middleware_msgs::MotorConfigService>(
-                    "/roboy/" + part + "/middleware/MotorConfig");
+                    "/roboy/" + fpga_name + "/middleware/MotorConfig");
             nh->getParam((part+"/joints"),endeffector_jointnames[part]);
             string mode;
             nh->getParam((part+"/init_mode"),mode);
