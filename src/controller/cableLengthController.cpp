@@ -57,6 +57,8 @@ public:
         if (!n.getParam("joint", joint_name)) {
             ROS_ERROR("No joint given (namespace: %s)", n.getNamespace().c_str());
             return false;
+        } else {
+            ROS_INFO_STREAM("Created a CableLenghtController for " + joint_name + ".");
         }
         spinner.reset(new ros::AsyncSpinner(0));
         spinner->start();

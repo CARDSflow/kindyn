@@ -1,4 +1,4 @@
-#include "kindyn/vrpuppet.hpp"
+#include "kindyn/robot.hpp"
 #include <thread>
 #include <roboy_middleware_msgs/MotorCommand.h>
 #include <roboy_middleware_msgs/ControlMode.h>
@@ -19,7 +19,7 @@
 
 using namespace std;
 
-class RoboyIcecream: public cardsflow::vrpuppet::Robot{
+class RoboyIcecream: public cardsflow::kindyn::Robot{
 public:
     /**
      * Constructor
@@ -221,8 +221,13 @@ public:
                 msg.id = bodyPartIDs[part];
                 msg.motors = real_motor_ids[part];
                 for (int i = 0; i < sim_motor_ids[part].size(); i++) {
-                    double l_meter = (-l[sim_motor_ids[part][i]] + l_offset[part][i]);
+                    double l_meter = -l[sim_motor_ids[part][i]] + l_offset[part][i];
                     str << sim_motor_ids[part][i] << "\t" << l_meter << "\t";
+
+                    stringstream ss;
+                    ss << "Motortype: " << motor_type[part][i] << ". Known types are " << MYOBRICK100N << " " << MYOBRICK300N << " " << MYOMUSCLE500N << " l_meter: " << l_meter << endl;
+                    ss << "l: " << l[sim_motor_ids[part][i]] << " l_offset: " << l_offset[part][i];
+                    if (i == 0 && msg.id == 3) ROS_INFO_STREAM(ss.str());
                     switch (motor_type[part][i]) {
                         case MYOBRICK100N: {
                             msg.set_points.push_back(myoBrick100NEncoderTicksPerMeter(l_meter));
@@ -242,7 +247,7 @@ public:
                 str << endl;
                 motor_command.publish(msg);
             }
-            ROS_INFO_STREAM_THROTTLE(1, str.str());
+            //ROS_INFO_STREAM_THROTTLE(1, str.str());
         }else{
             ROS_INFO_THROTTLE(5,"waiting for initialisation, call /init_pose service!!!");
         }
@@ -263,6 +268,22 @@ public:
     map<string,int> bodyPartIDs;
 };
 
+/**
+ * controller manager update thread. Here you can define how fast your controllers should run
+ * @param cm pointer to the controller manager
+ */
+void update(controller_manager::ControllerManager *cm) {
+    ros::Time prev_time = ros::Time::now();
+    ros::Rate rate(300); // changing this value affects the control speed of your running controllers
+    while (ros::ok()) {
+        const ros::Time time = ros::Time::now();
+        const ros::Duration period = time - prev_time;
+        cm->update(time, period);
+        prev_time = time;
+        rate.sleep();
+    }
+}
+
 int main(int argc, char *argv[]) {
     if (!ros::isInitialized()) {
         int argc = 0;
@@ -281,6 +302,13 @@ int main(int argc, char *argv[]) {
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
     RoboyIcecream robot(urdf, cardsflow_xml);
+
+    controller_manager::ControllerManager cm(&robot);
+
+    // we need an additional update thread, otherwise the controllers won't switch
+    thread update_thread(update, &cm);
+    update_thread.detach();
+
 
     while(ros::ok()){
         robot.read();

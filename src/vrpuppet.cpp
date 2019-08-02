@@ -523,7 +523,7 @@ void Robot::update() {
                 msg.q.push_back(q[i-1]);
                 msg.qd.push_back(qd[i-1]);
             }
-            joint_state_pub.publish(msg);
+            joint_state_pub.publish(msg); // TODO
         }
         last_visualization = ros::Time::now();
     }
@@ -763,9 +763,9 @@ void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg) {
         int joint_index = model.getJointIndex(joint);
         if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
             q(joint_index) = msg->position[i];
-            qd(joint_index) = msg->velocity[i];
+            qd(joint_index) = msg->velocity[i]; // TODO
         } else {
-            ROS_ERROR("joint %s not found in model", joint.c_str());
+            //ROS_ERROR("joint %s not found in model", joint.c_str());
         }
         i++;
     }

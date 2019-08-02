@@ -46,8 +46,8 @@ pkg_check_modules(EIGEN3 REQUIRED eigen3)
 include_directories(${EIGEN3_INCLUDE_DIRS})
 
 # libxml++
-find_package(LibXML++ REQUIRED)
-include_directories(${LibXML++_INCLUDE_DIRS})
+#find_package(LibXML++ REQUIRED)
+#include_directories(${LibXML++_INCLUDE_DIRS})
 
 # idyntree
 find_package(iDynTree 0.11.1 REQUIRED)
@@ -167,7 +167,7 @@ target_link_libraries(VRpuppet ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
 # roboy_icecream
 add_executable( roboy_icecream src/robots/roboy_icecream.cpp)
-target_link_libraries(roboy_icecream ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet)
+target_link_libraries(roboy_icecream ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
 #==============================================================================
 # Installation
