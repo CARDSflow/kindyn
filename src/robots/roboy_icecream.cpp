@@ -208,6 +208,8 @@ public:
      */
     void read(){
         update();
+        if(!external_robot_state)
+            forwardKinematics(0.0001);
     };
     /**
      * Sends motor commands to the real robot
@@ -227,7 +229,7 @@ public:
                     stringstream ss;
                     ss << "Motortype: " << motor_type[part][i] << ". Known types are " << MYOBRICK100N << " " << MYOBRICK300N << " " << MYOMUSCLE500N << " l_meter: " << l_meter << endl;
                     ss << "l: " << l[sim_motor_ids[part][i]] << " l_offset: " << l_offset[part][i];
-                    if (i == 0 && msg.id == 3) ROS_INFO_STREAM(ss.str());
+                    //if (i == 0 && msg.id == 3) ROS_INFO_STREAM(ss.str());
                     switch (motor_type[part][i]) {
                         case MYOBRICK100N: {
                             msg.set_points.push_back(myoBrick100NEncoderTicksPerMeter(l_meter));
@@ -258,7 +260,7 @@ public:
     ros::ServiceServer init_pose;
     map<string,ros::ServiceClient> motor_control_mode, motor_config;
 //    vector<string> body_parts = {"head","shoulder_left", "shoulder_right", "arms"};
-    vector<string> body_parts = {"shoulder_right", "shoulder_left"};
+    vector<string> body_parts = {"shoulder_right", "shoulder_left", "arms"};
     map<string, vector<string>> endeffector_jointnames;
     bool external_robot_state; /// indicates if we get the robot state externally
     bool initialized = false, motor_status_received[2] = {false,false};

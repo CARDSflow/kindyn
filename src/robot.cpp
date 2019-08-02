@@ -333,7 +333,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     }
 
     controller_type_sub = nh->subscribe("/controller_type", 100, &Robot::controllerType, this);
-    joint_state_sub = nh->subscribe("/joint_states", 100, &Robot::JointState, this);
+    //joint_state_sub = nh->subscribe("/joint_states", 100, &Robot::JointState, this);
     floating_base_sub = nh->subscribe("/floating_base", 100, &Robot::FloatingBase, this);
     ik_srv = nh->advertiseService("/ik", &Robot::InverseKinematicsService, this);
     ik_two_frames_srv = nh->advertiseService("/ik_multiple_frames", &Robot::InverseKinematicsMultipleFramesService, this);
@@ -458,6 +458,7 @@ void Robot::update() {
             }
             j++;
         }
+
         i++;
     }
 //    ROS_INFO_THROTTLE(1,"model update takes %f seconds", (ros::Time::now()-t0).toSec());
@@ -504,11 +505,11 @@ void Robot::update() {
     ROS_INFO_STREAM_THROTTLE(5, "qdd " << qdd.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "qd " << qd.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "q " << q.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "l " << l.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "ld " << Ld[0].transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "torques " << torques.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "cable_forces " << cable_forces.transpose().format(fmt));
     */
+    ROS_WARN_STREAM_THROTTLE(1, "l " << l.transpose().format(fmt));
 
     // for the cable force controller with do a centralized update
     if(force_position_controller_active){
