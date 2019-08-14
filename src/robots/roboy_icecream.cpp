@@ -110,8 +110,22 @@ public:
         stringstream str;
         str << "saving position offsets:" << endl << "sim motor id   |  real motor id  |   position offset (ticks)  | length offset(m)" << endl;
         for(auto part:body_parts) {
+            str << "Positions for body part " << part;
+            for (int i=0;i<sim_motor_ids[part].size();i++) str << i << ": " << position[part][i] << ", ";
+            str << endl;
             for(int i=0;i<sim_motor_ids[part].size();i++) {
-                l_offset[part][i] = l[sim_motor_ids[part][i]] + myoMuscleMeterPerEncoderTick(position[part][i]);
+                double meters = 0.0;
+                switch (motor_type[part][i]) {
+                    case MYOMUSCLE500N:
+                        meters = myoMuscleMeterPerEncoderTick(position[part][i]);
+                        break;
+                    case MYOBRICK300N:
+                        meters = myoBrick300NMeterPerEncoderTick(position[part][i]);
+                        break;
+                    case MYOBRICK100N:
+                        meters = myoBrick100NMeterPerEncoderTick(position[part][i]);
+                }
+                l_offset[part][i] = l[sim_motor_ids[part][i]] + meters;
                 str << sim_motor_ids[part][i] << "\t|\t" << real_motor_ids[part][i] << "\t|\t" << position[part][i] << "\t|\t" << l_offset[part][i] << endl;
             }
         }
@@ -261,7 +275,6 @@ public:
     ros::Subscriber motor_status_sub;
     ros::ServiceServer init_pose;
     map<string,ros::ServiceClient> motor_control_mode, motor_config;
-//    vector<string> body_parts = {"head","shoulder_left", "shoulder_right", "arms"};
     vector<string> body_parts = {"shoulder_right", "shoulder_left", "arms"};
     map<string, vector<string>> endeffector_jointnames;
     bool external_robot_state; /// indicates if we get the robot state externally
