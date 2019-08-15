@@ -214,6 +214,8 @@ public:
      */
     void write(){
         if(initialized) {
+            double Kp_dl = 0;
+            nh->getParam("Kp_dl",Kp_dl);
             stringstream str;
             for (auto part:body_parts) {
                 str << part << ": ";
@@ -221,7 +223,7 @@ public:
                 msg.id = bodyPartIDs[part];
                 msg.motors = real_motor_ids[part];
                 for (int i = 0; i < sim_motor_ids[part].size(); i++) {
-                    double l_meter = (-l_target[sim_motor_ids[part][i]] + l_offset[part][i]);
+                    double l_meter = (-l_target[sim_motor_ids[part][i]] + l_offset[part][i]) - Kp_dl*(l_target[sim_motor_ids[part][i]]-l[sim_motor_ids[part][i]]);
                     str << sim_motor_ids[part][i] << "\t" << l_meter << "\t";
                     switch (motor_type[part][i]) {
                         case MYOBRICK100N: {
