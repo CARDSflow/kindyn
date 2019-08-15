@@ -240,7 +240,7 @@ public:
                     }
                 }
                 str << endl;
-                // motor_command.publish(msg);
+                motor_command.publish(msg);
             }
             ROS_INFO_STREAM_THROTTLE(1, str.str());
         }else{
