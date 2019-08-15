@@ -221,7 +221,7 @@ public:
                 msg.id = bodyPartIDs[part];
                 msg.motors = real_motor_ids[part];
                 for (int i = 0; i < sim_motor_ids[part].size(); i++) {
-                    double l_meter = (-l[sim_motor_ids[part][i]] + l_offset[part][i]);
+                    double l_meter = (-l_target[sim_motor_ids[part][i]] + l_offset[part][i]);
                     str << sim_motor_ids[part][i] << "\t" << l_meter << "\t";
                     switch (motor_type[part][i]) {
                         case MYOBRICK100N: {
