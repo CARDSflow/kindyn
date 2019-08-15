@@ -167,7 +167,7 @@ target_link_libraries(VRpuppet ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
 # roboy_icecream
 add_executable( roboy_icecream src/robots/roboy_icecream.cpp)
-target_link_libraries(roboy_icecream ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet)
+target_link_libraries(roboy_icecream ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
 
 #==============================================================================
 # Installation

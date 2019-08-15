@@ -240,7 +240,7 @@ public:
                     }
                 }
                 str << endl;
-                motor_command.publish(msg);
+                // motor_command.publish(msg);
             }
             ROS_INFO_STREAM_THROTTLE(1, str.str());
         }else{
@@ -255,7 +255,6 @@ public:
 //    vector<string> body_parts = {"head","shoulder_left", "shoulder_right", "arms"};
     vector<string> body_parts = {"shoulder_right", "shoulder_left"};
     map<string, vector<string>> endeffector_jointnames;
-    bool external_robot_state; /// indicates if we get the robot state externally
     bool initialized = false, motor_status_received[2] = {false,false};
     map<string, int> init_mode, init_setpoint;
     map<string,vector<int>> real_motor_ids, sim_motor_ids, motor_type;

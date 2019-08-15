@@ -22,6 +22,7 @@
     <param name="cardsflow_xml" type="string" value="$(find robots)/$(arg model_name)/cardsflow.xml" />
     <rosparam file="$(find robots)/$(arg model_name)/config/controller.yaml" command="load"/>
     <rosparam file="$(find robots)/$(arg model_name)/config/endeffectors.yaml" command="load"/>
+    <rosparam file="$(find robots)/$(arg model_name)/config/motor_config.yaml" command="load"/>
     <rosparam param="q_target">[0.0, 0.0, 0.0]</rosparam>
     <param name="min_force" type="double" value="0"  />
     <param name="max_force" type="double" value="100000"  />

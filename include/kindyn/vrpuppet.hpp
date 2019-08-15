@@ -244,6 +244,7 @@ namespace cardsflow {
 
             MatrixXd S, P, V, W; /// matrices of cable model
             vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments
+            bool external_robot_state; /// indicates if we get the robot state externally
         protected:
             iDynTree::FreeFloatingGeneralizedTorques bias; /// Coriolis+Gravity term
             iDynTree::MatrixDynSize Mass; /// Mass matrix
