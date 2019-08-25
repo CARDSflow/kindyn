@@ -282,16 +282,16 @@ int main(int argc, char *argv[]) {
     }
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
-    bool simulated = false;
-    if (nh.hasParam("simulated")) {
-      nh.getParam("simulated", simulated);
-    }
 
     RoboyIcecream robot(urdf, cardsflow_xml);
 
+    if (nh.hasParam("simulated")) {
+      nh.getParam("simulated", robot.simulated);
+    }
+
     while(ros::ok()){
         robot.read();
-        if (!simulated)
+        if (!robot.simulated)
           robot.write();
         ros::spinOnce();
     }
