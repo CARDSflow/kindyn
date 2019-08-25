@@ -379,7 +379,8 @@ VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min
 }
 
 void Robot::update() {
-    // q = q_target;
+    if(!external_robot_state)
+      q = q_target;
 
     ros::Time t0 = ros::Time::now();
     iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
