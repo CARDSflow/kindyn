@@ -766,7 +766,7 @@ void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg) {
             q(joint_index) = msg->position[i];
             qd(joint_index) = msg->velocity[i];
         } else {
-            ROS_ERROR("joint %s not found in model", joint.c_str());
+            ROS_WARN_THROTTLE(5.0, "joint %s not found in model", joint.c_str());
         }
         i++;
     }
@@ -781,7 +781,7 @@ void Robot::JointTarget(const sensor_msgs::JointStateConstPtr &msg){
             q_target(joint_index) = msg->position[i];
             qd_target(joint_index) = msg->velocity[i];
         } else {
-            ROS_ERROR("joint %s not found in model", joint.c_str());
+            ROS_WARN_THROTTLE(5.0, "joint %s not found in model", joint.c_str());
         }
         i++;
     }
