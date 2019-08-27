@@ -4,6 +4,9 @@
 #include <common_utilities/CommonDefinitions.h>
 
 #define NUMBER_OF_MOTORS 8
+// #define NemaMetersPerEncoderTick(t) t*3.14*winch_radius[i]*2/200;
+// #define NemaEncoderTicksPerMeter(m) m*200/(2*3.14*winch_radius[i]);
+
 
 using namespace std;
 
@@ -19,10 +22,11 @@ public:
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
-            ros::init(argc, argv, "msj_platform");
+            // ros::init(argc, argv, "msj_platform");
+            ros::init(argc, argv, "ShoulderTestbed");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
-        motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
+        motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/stepper_motor_shield/MotorCommand",1);
 
         // first we retrieve the active joint names from the parameter server
         vector<string> joint_names;
@@ -32,6 +36,7 @@ public:
         // if we do not get the robot state externally, we use the forwardKinematics function to integrate the robot state
         nh->getParam("external_robot_state", external_robot_state);
         update();
+        last_update = ros::Time::now();
         for(int i=0;i<NUMBER_OF_MOTORS;i++)
             l_offset[i] = l[i];
     };
@@ -41,6 +46,7 @@ public:
      * with a small step length
      */
     void read(){
+      update();
         if(!external_robot_state)
             forwardKinematics(0.0001);
     };
@@ -49,29 +55,36 @@ public:
      * Sends motor commands to the real robot
      */
     void write(){
-        roboy_middleware_msgs::MotorCommand msg;
-        msg.id = 5;
-//        stringstream str;
-        if(!external_robot_state) {
-            for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
-                msg.motors.push_back(i);
-                double l_change = l[i] - l_offset[i];
-                // msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
-        //            str << l_change << "\t";
-            }
-        }else {
-            static double l_change[NUMBER_OF_MOTORS] = {0};
-            for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
-                msg.motors.push_back(i);
-                l_change[i] += Kp*(l_target[i]-l[i]);
-                // msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change[i])); //
-        //            str << l_change << "\t";
-            }
-        }
+        if((ros::Time::now()-last_update).toSec()>0.1){
+          roboy_middleware_msgs::MotorCommand msg;
+          msg.id = 68;
 
-        motor_command.publish(msg);
+  //        stringstream str;
+          // if(!external_robot_state) {
+              for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
+                  msg.motors.push_back(i);
+                  double l_change = l[i] - l_offset[i];
+                  double ticks = -l_change*200/(2*3.14*winch_radius[i]);
+                  msg.set_points.push_back(ticks);
+
+                  // msg.set_points.push_back(-msjEncoderTicksPerMeter(l_change)); //
+          //            str << l_change << "\t";
+              // }
+          // }else {
+              // static double l_change[NUMBER_OF_MOTORS] = {0};
+              // for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
+                  // msg.motors.push_back(i);
+                  // l_change[i] += Kp*(l_target[i]-l[i]);
+                  // msg.set_points.push_back(-NemaEncoderTicksPerMeter(l_change[i])); //
+          //            str << l_change << "\t";
+              }
+          // }
+
+          motor_command.publish(msg);
+          last_update = ros::Time::now();
+      }
     };
-
+    ros::Time last_update;
     bool external_robot_state; /// indicates if we get the robot state externally
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
