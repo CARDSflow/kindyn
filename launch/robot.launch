@@ -1,7 +1,9 @@
 <launch>
     <arg name="robot_name" default="msj_platform"/>
     <arg name="model_name" default="$(arg robot_name)"/>
+    <arg name="urdf_file_name" default="model.urdf"/>
     <arg name="start_controllers" default="sphere_axis0 sphere_axis1 sphere_axis2"/>
+    <arg name="simulated" default="false"/>
     <arg name="gazebo" default="false"/>
     <arg name="paused" default="false"/>
     <arg name="use_sim_time" default="false"/>
@@ -18,8 +20,9 @@
     <param name="robot_name" type="string" value="$(arg robot_name)"  />
     <param name="model_name" type="string" value="$(arg model_name)"  />
     <param name="robot_description" textfile="$(find robots)/$(arg model_name)/model.urdf" />
-    <param name="urdf_file_path" type="string" value="$(find robots)/$(arg model_name)/model.urdf" />
+    <param name="urdf_file_path" type="string" value="$(find robots)/$(arg robot_name)/$(arg urdf_file_name)" />
     <param name="cardsflow_xml" type="string" value="$(find robots)/$(arg model_name)/cardsflow.xml" />
+    <param name="simulated" type="bool" value="$(arg simulated)"/>
     <rosparam file="$(find robots)/$(arg model_name)/config/controller.yaml" command="load"/>
     <rosparam file="$(find robots)/$(arg model_name)/config/endeffectors.yaml" command="load"/>
     <rosparam file="$(find robots)/$(arg model_name)/config/motor_config.yaml" command="load"/>

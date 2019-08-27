@@ -213,6 +213,7 @@ public:
      * Sends motor commands to the real robot
      */
     void write(){
+      // initialized = true;
         if(initialized) {
             double Kp_dl = 0;
             nh->getParam("Kp_dl",Kp_dl);
@@ -281,11 +282,17 @@ int main(int argc, char *argv[]) {
     }
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
+
     RoboyIcecream robot(urdf, cardsflow_xml);
+
+    if (nh.hasParam("simulated")) {
+      nh.getParam("simulated", robot.simulated);
+    }
 
     while(ros::ok()){
         robot.read();
-        robot.write();
+        if (!robot.simulated)
+          robot.write();
         ros::spinOnce();
     }
 
