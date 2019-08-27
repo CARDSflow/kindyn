@@ -568,7 +568,7 @@ bool Robot::ForwardKinematicsService(roboy_middleware_msgs::ForwardKinematics::R
         if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
             jointPos(joint_index) = req.angles[i];
         } else {
-            ROS_ERROR("joint %s not found in model", joint.c_str());
+            ROS_WARN_THROTTLE(5.0, "joint %s not found in model", joint.c_str());
         }
         i++;
     }

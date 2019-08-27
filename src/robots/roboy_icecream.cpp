@@ -109,15 +109,30 @@ public:
             ROS_INFO_THROTTLE(1,"waiting to receive motor status from both fpgas");
         stringstream str;
         str << "saving position offsets:" << endl << "sim motor id   |  real motor id  |   position offset (ticks)  | length offset(m)" << endl;
-        for(auto part:body_parts) {
+        for (const auto &part:body_parts) {
+            str << "Positions for body part " << part;
+            for (int i = 0; i<sim_motor_ids[part].size();i++) str << i << ": " << position[part][i] << ", ";
+            str << endl;
             for(int i=0;i<sim_motor_ids[part].size();i++) {
-                l_offset[part][i] = l[sim_motor_ids[part][i]] + myoMuscleMeterPerEncoderTick(position[part][i]);
+                double meters = 0.0;
+                switch (motor_type[part][i]) {
+                    case MYOMUSCLE500N:
+                        meters = myoMuscleMeterPerEncoderTick(position[part][i]);
+                        break;
+                    case MYOBRICK300N:
+                        meters = myoBrick300NMeterPerEncoderTick(position[part][i]);
+                        break;
+                    case MYOBRICK100N:
+                        meters = myoBrick100NMeterPerEncoderTick(position[part][i]);
+                        break;
+                }
+                l_offset[part][i] = l[sim_motor_ids[part][i]] + meters;
                 str << sim_motor_ids[part][i] << "\t|\t" << real_motor_ids[part][i] << "\t|\t" << position[part][i] << "\t|\t" << l_offset[part][i] << endl;
             }
         }
         ROS_INFO_STREAM(str.str());
         ROS_INFO("changing control mode to POSITION");
-        for(auto part:body_parts){
+        for (const auto &part:body_parts){
             roboy_middleware_msgs::MotorConfigService msg;
             for (int i = 0; i < sim_motor_ids[part].size(); i++) {
                 msg.request.config.motors.push_back(real_motor_ids[part][i]);
