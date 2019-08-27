@@ -14,7 +14,8 @@ Robot::Robot() {
     robot_state_pub = nh->advertise<geometry_msgs::PoseStamped>("/robot_state", 1);
     tendon_state_pub = nh->advertise<roboy_simulation_msgs::Tendon>("/tendon_state", 1);
 
-    joint_state_pub = nh->advertise<roboy_simulation_msgs::JointState>("/joint_state", 1);
+    joint_state_pub = nh->advertise<roboy_simulation_msgs::JointState>("/rviz_joint_states", 1);
+    cardsflow_joint_states_pub = nh->advertise<sensor_msgs::JointState>("/cardsflow_joint_states", 1);
     robot_state_target_pub = nh->advertise<geometry_msgs::PoseStamped>("/robot_state_target", 1);
     tendon_state_target_pub = nh->advertise<roboy_simulation_msgs::Tendon>("/tendon_state_target", 1);
     joint_state_target_pub = nh->advertise<roboy_simulation_msgs::JointState>("/joint_state_target", 1);
@@ -301,7 +302,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         k++;
     }
 
-    joint_state_sub = nh->subscribe("/joint_states", 100, &Robot::JointState, this);
+    joint_state_sub = nh->subscribe("/external_joint_states", 100, &Robot::JointState, this);
     joint_target_sub = nh->subscribe("/joint_targets", 100, &Robot::JointTarget, this);
     floating_base_sub = nh->subscribe("/floating_base", 100, &Robot::FloatingBase, this);
     ik_srv = nh->advertiseService("/ik", &Robot::InverseKinematicsService, this);
@@ -511,8 +512,10 @@ void Robot::update() {
             }
         }
         { // joint state publisher
+            sensor_msgs::JointState cf_msg;
             roboy_simulation_msgs::JointState msg;
             msg.names = joint_names;
+            cf_msg.name = joint_names;
             for (int i = 1; i < number_of_links; i++) {
                 Matrix4d pose = iDynTree::toEigen(kinDynComp.getWorldTransform(i).asHomogeneousTransform());
                 Vector3d axis;
@@ -523,8 +526,13 @@ void Robot::update() {
                 msg.torque.push_back(torques[i - 1]);
                 msg.q.push_back(q[i-1]);
                 msg.qd.push_back(qd[i-1]);
+
+                cf_msg.position.push_back(q[i-1]);
+                cf_msg.velocity.push_back(qd[i-1]);
+
             }
             joint_state_pub.publish(msg);
+            cardsflow_joint_states_pub.publish(cf_msg);
         }
         last_visualization = ros::Time::now();
     }
