@@ -108,7 +108,13 @@ public:
         ROS_INFO("sleeping for 5 seconds");
         d.sleep();
         while(std::any_of(motor_status_received.begin(), motor_status_received.end(), [](auto &e){return !e.second;}))
-            ROS_INFO_THROTTLE(1,"waiting to receive motor status from both fpgas");
+        {
+            stringstream ss; ss << "Waiting to receive motor status from these body parts: ";
+            for (const auto &part : body_parts) {
+                if (!motor_status_received[part]) ss << part << " ";
+            }
+            ROS_INFO_STREAM_THROTTLE(0.5, ss.str());
+        }
         stringstream str;
         str << "saving position offsets:" << endl << "sim motor id   |  real motor id  |   position offset (ticks)  | length offset(m)" << endl;
         for (const auto &part:body_parts) {
