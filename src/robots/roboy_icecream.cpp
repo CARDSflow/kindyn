@@ -66,6 +66,8 @@ public:
             velocity[part].resize(real_motor_ids[part].size(),0);
             displacement[part].resize(real_motor_ids[part].size(),0);
             nh->getParam((part+"/bodyPartID"),bodyPartIDs[part]);
+
+            motor_status_received[part] = false;
         }
         vector<string> joint_names;
         nh->getParam("joint_names", joint_names);
@@ -105,7 +107,7 @@ public:
         ros::Duration d(5);
         ROS_INFO("sleeping for 5 seconds");
         d.sleep();
-        while(!motor_status_received[0] || !motor_status_received[1])
+        while(std::any_of(motor_status_received.begin(), motor_status_received.end(), [](auto &e){return !e.second;}))
             ROS_INFO_THROTTLE(1,"waiting to receive motor status from both fpgas");
         stringstream str;
         str << "saving position offsets:" << endl << "sim motor id   |  real motor id  |   position offset (ticks)  | length offset(m)" << endl;
@@ -159,64 +161,17 @@ public:
     }
 
     void MotorStatus(const roboy_middleware_msgs::MotorStatus::ConstPtr &msg){
-        if(msg->id==3){
-            int j = 0;
-            if(std::find(body_parts.begin(), body_parts.end(), "shoulder_left") != body_parts.end()) {
-                for(int i=0;i<9;i++) {
-                    position["shoulder_left"][j] = msg->position[i];
-                    velocity["shoulder_left"][j] = msg->velocity[i];
-                    displacement["shoulder_left"][j] = msg->displacement[i];
+        for (const auto &part : body_parts) {
+            if (msg->id==bodyPartIDs[part]) {
+                int j = 0;
+                for (const int &real_motor_id : real_motor_ids[part]) {
+                    position[part][j] = msg->position[real_motor_id];
+                    velocity[part][j] = msg->velocity[real_motor_id];
+                    displacement[part][j] = msg->displacement[real_motor_id];
                     j++;
                 }
+                motor_status_received[part] = true;
             }
-            j = 0;
-            if(std::find(body_parts.begin(), body_parts.end(), "arms") != body_parts.end()) {
-                for (int i = 9; i < 15; i++) {
-                    position["arms"][j] = msg->position[i];
-                    velocity["arms"][j] = msg->velocity[i];
-                    displacement["arms"][j] = msg->displacement[i];
-                    j++;
-                }
-            }
-            j = 0;
-            if(std::find(body_parts.begin(), body_parts.end(), "leg_left") != body_parts.end()) {
-                for (int i = 15; i < 21; i++) {
-                    position["leg_left"][j] = msg->position[i];
-                    velocity["leg_left"][j] = msg->velocity[i];
-                    displacement["leg_left"][j] = msg->displacement[i];
-                    j++;
-                }
-            }
-            motor_status_received[0] = true;
-        }else if(msg->id == 4){
-            int j = 0;
-            if(std::find(body_parts.begin(), body_parts.end(), "shoulder_right") != body_parts.end()) {
-                for (int i = 0; i < 9; i++) {
-                    position["shoulder_right"][j] = msg->position[i];
-                    velocity["shoulder_right"][j] = msg->velocity[i];
-                    displacement["shoulder_right"][j] = msg->displacement[i];
-                    j++;
-                }
-            }
-            j = 0;
-            if(std::find(body_parts.begin(), body_parts.end(), "head") != body_parts.end()) {
-                for (int i = 9; i < 15; i++) {
-                    position["head"][j] = msg->position[i];
-                    velocity["head"][j] = msg->velocity[i];
-                    displacement["head"][j] = msg->displacement[i];
-                    j++;
-                }
-            }
-            j = 0;
-            if(std::find(body_parts.begin(), body_parts.end(), "leg_right") != body_parts.end()) {
-                for (int i = 15; i < 21; i++) {
-                    position["leg_right"][j] = msg->position[i];
-                    velocity["leg_right"][j] = msg->velocity[i];
-                    displacement["leg_right"][j] = msg->displacement[i];
-                    j++;
-                }
-            }
-            motor_status_received[1] = true;
         }
     }
 
@@ -273,9 +228,10 @@ public:
     ros::ServiceServer init_pose;
     map<string,ros::ServiceClient> motor_control_mode, motor_config;
 //    vector<string> body_parts = {"head","shoulder_left", "shoulder_right", "arms"};
-    vector<string> body_parts = {"shoulder_right", "shoulder_left"};
+    vector<string> body_parts = {"shoulder_right", "shoulder_left", "arm_left", "arm_right"};
     map<string, vector<string>> endeffector_jointnames;
-    bool initialized = false, motor_status_received[2] = {false,false};
+    bool initialized = false;
+    map<string, bool> motor_status_received;
     map<string, int> init_mode, init_setpoint;
     map<string,vector<int>> real_motor_ids, sim_motor_ids, motor_type;
     map<string,vector<double>> l_offset, position, velocity, displacement;
@@ -286,7 +242,7 @@ int main(int argc, char *argv[]) {
     if (!ros::isInitialized()) {
         int argc = 0;
         char **argv = NULL;
-        ros::init(argc, argv, "VRpuppet");
+        ros::init(argc, argv, "roboy_icecream");
     }
     ros::NodeHandle nh;
     string urdf, cardsflow_xml;
