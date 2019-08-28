@@ -61,6 +61,7 @@ public:
             nh->getParam((part+"/init_setpoint"),init_setpoint[part]);
             nh->getParam((part+"/init_mode"),init_mode[part]);
             nh->getParam((part+"/motor_type"),motor_type[part]);
+            nh->getParam((part+"/use_motor_config"),use_motor_config[part]);
             l_offset[part].resize(real_motor_ids[part].size(),0);
             position[part].resize(real_motor_ids[part].size(),0);
             velocity[part].resize(real_motor_ids[part].size(),0);
@@ -68,6 +69,7 @@ public:
             nh->getParam((part+"/bodyPartID"),bodyPartIDs[part]);
 
             motor_status_received[part] = false;
+            ROS_INFO_STREAM("Added body part: " << part);
         }
         vector<string> joint_names;
         nh->getParam("joint_names", joint_names);
@@ -77,6 +79,7 @@ public:
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
         motor_status_sub = nh->subscribe("roboy/middleware/MotorStatus",1,&RoboyIcecream::MotorStatus, this);
         init_pose = nh->advertiseService("init_pose",&RoboyIcecream::initPose,this);
+        ROS_INFO_STREAM("Finished setup");
     };
 
     bool initPose(std_srvs::Empty::Request &req,
@@ -84,6 +87,7 @@ public:
         initialized = false;
         ROS_INFO("changing control mode to init mode for each part");
         for(auto part:body_parts){
+          if (use_motor_config[part]) {
             roboy_middleware_msgs::MotorConfigService msg;
             for (int i = 0; i < sim_motor_ids[part].size(); i++) {
                 msg.request.config.motors.push_back(real_motor_ids[part][i]);
@@ -101,14 +105,22 @@ public:
                 msg.request.config.integral_neg_max.push_back(0);
                 msg.request.config.output_divider.push_back(0);
                 msg.request.config.setpoint.push_back(init_setpoint[part]);
-                motor_config[part].call(msg);
             }
+            motor_config[part].call(msg);
+          } else {
+            roboy_middleware_msgs::ControlMode msg;
+            for (int i = 0; i < sim_motor_ids[part].size(); i++) {
+              msg.request.motor_id.push_back(i);
+              msg.request.set_point = init_setpoint[part];
+              msg.request.control_mode = init_mode[part];
+            }
+            motor_control_mode[part].call(msg);
+          }
         }
         ros::Duration d(5);
         ROS_INFO("sleeping for 5 seconds");
         d.sleep();
-        while(std::any_of(motor_status_received.begin(), motor_status_received.end(), [](auto &e){return !e.second;}))
-        {
+        while(std::any_of(motor_status_received.begin(), motor_status_received.end(), [](auto &e){return !e.second;})) {
             stringstream ss; ss << "Waiting to receive motor status from these body parts: ";
             for (const auto &part : body_parts) {
                 if (!motor_status_received[part]) ss << part << " ";
@@ -141,6 +153,7 @@ public:
         ROS_INFO_STREAM(str.str());
         ROS_INFO("changing control mode to POSITION");
         for (const auto &part:body_parts){
+          if (use_motor_config[part]) {
             roboy_middleware_msgs::MotorConfigService msg;
             for (int i = 0; i < sim_motor_ids[part].size(); i++) {
                 msg.request.config.motors.push_back(real_motor_ids[part][i]);
@@ -160,6 +173,15 @@ public:
                 msg.request.config.setpoint.push_back(position[part][i]);
             }
             motor_config[part].call(msg);
+          } else {
+            roboy_middleware_msgs::ControlMode msg;
+            for (int i = 0; i < sim_motor_ids[part].size(); i++) {
+              msg.request.motor_id.push_back(i);
+              msg.request.set_point = position[part][i];
+              msg.request.control_mode = POSITION;
+            }
+          motor_control_mode[part].call(msg);
+          }
         }
         ROS_INFO("pose init done");
         initialized = true;
@@ -233,8 +255,7 @@ public:
     ros::Subscriber motor_status_sub;
     ros::ServiceServer init_pose;
     map<string,ros::ServiceClient> motor_control_mode, motor_config;
-//    vector<string> body_parts = {"head","shoulder_left", "shoulder_right", "arms"};
-    vector<string> body_parts = {"shoulder_right", "shoulder_left", "arm_left", "arm_right"};
+    vector<string> body_parts = { "arm_right", "shoulder_right"};
     map<string, vector<string>> endeffector_jointnames;
     bool initialized = false;
     map<string, bool> motor_status_received;
@@ -242,6 +263,7 @@ public:
     map<string,vector<int>> real_motor_ids, sim_motor_ids, motor_type;
     map<string,vector<double>> l_offset, position, velocity, displacement;
     map<string,int> bodyPartIDs;
+    map<string,bool> use_motor_config;
 };
 
 int main(int argc, char *argv[]) {
