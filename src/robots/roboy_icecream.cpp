@@ -282,13 +282,11 @@ int main(int argc, char *argv[]) {
       nh.getParam("simulated", robot.simulated);
     }
 
-    ros::Rate rate(5);
     while(ros::ok()){
         robot.read();
         if (!robot.simulated)
           robot.write();
         ros::spinOnce();
-        rate.sleep();
     }
 
     ROS_INFO("TERMINATING...");
