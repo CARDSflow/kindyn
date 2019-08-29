@@ -7,16 +7,6 @@
 #include <roboy_control_msgs/SetControllerParameters.h>
 #include <std_srvs/Empty.h>
 
-#define myoMuscleMeterPerEncoderTick(encoderTicks) ((encoderTicks)/(2096.0*53.0)*(2.0*M_PI*0.0045))
-#define myoMuscleEncoderTicksPerMeter(meter) ((meter)*(2096.0*53.0)/(2.0*M_PI*0.0045))
-#define myoBrick100NMeterPerEncoderTick(encoderTicks) ((encoderTicks)/(256.0*35.0)*(2.0*M_PI*0.003))
-#define myoBrick100NEncoderTicksPerMeter(meter) ((meter)*(256.0*35.0)/(2.0*M_PI*0.003))
-#define myoBrick300NMeterPerEncoderTick(encoderTicks) ((encoderTicks)/(1024.0*62.0)*(2.0*M_PI*0.003))
-#define myoBrick300NEncoderTicksPerMeter(meter) ((meter)*(1024.0*62.0)/(2.0*M_PI*0.003))
-
-#define springEncoderTicksPerMeter(meter) (10*1000*meter)
-#define springMeterPerEncoderTicks(encoderTicks) (encoderTicks/(10*1000))
-
 using namespace std;
 
 class RoboyIcecream: public cardsflow::vrpuppet::Robot{
@@ -228,10 +218,12 @@ public:
                     str << sim_motor_ids[part][i] << "\t" << l_meter << "\t";
                     switch (motor_type[part][i]) {
                         case MYOBRICK100N: {
+                            str << myoBrick100NEncoderTicksPerMeter(l_meter) << "\t";
                             msg.set_points.push_back(myoBrick100NEncoderTicksPerMeter(l_meter));
                             break;
                         }
                         case MYOBRICK300N: {
+                            str << myoBrick300NEncoderTicksPerMeter(l_meter) << "\t";
                             msg.set_points.push_back(myoBrick300NEncoderTicksPerMeter(l_meter));
                             break;
                         }
@@ -255,7 +247,7 @@ public:
     ros::Subscriber motor_status_sub;
     ros::ServiceServer init_pose;
     map<string,ros::ServiceClient> motor_control_mode, motor_config;
-    vector<string> body_parts = { "arm_right", "shoulder_right"};
+    vector<string> body_parts = {"arm_right", "shoulder_right", "arm_left", "shoulder_left"};
     map<string, vector<string>> endeffector_jointnames;
     bool initialized = false;
     map<string, bool> motor_status_received;
@@ -290,11 +282,13 @@ int main(int argc, char *argv[]) {
       nh.getParam("simulated", robot.simulated);
     }
 
+    ros::Rate rate(5);
     while(ros::ok()){
         robot.read();
         if (!robot.simulated)
           robot.write();
         ros::spinOnce();
+        rate.sleep();
     }
 
     ROS_INFO("TERMINATING...");

@@ -380,7 +380,7 @@ VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min
 }
 
 void Robot::update() {
-    if(this->simulated)
+    if(!this->external_robot_state)
       q = q_target;
 
     ros::Time t0 = ros::Time::now();
