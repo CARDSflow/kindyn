@@ -302,7 +302,9 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         k++;
     }
 
-    joint_state_sub = nh->subscribe("/external_joint_states", 100, &Robot::JointState, this);
+    if (this->external_robot_state) {
+        joint_state_sub = nh->subscribe("/external_joint_states", 100, &Robot::JointState, this);
+    }
     joint_target_sub = nh->subscribe("/joint_targets", 100, &Robot::JointTarget, this);
     floating_base_sub = nh->subscribe("/floating_base", 100, &Robot::FloatingBase, this);
     ik_srv = nh->advertiseService("/ik", &Robot::InverseKinematicsService, this);
