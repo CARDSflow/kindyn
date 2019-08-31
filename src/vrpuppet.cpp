@@ -303,6 +303,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     }
 
     if (this->external_robot_state) {
+        ROS_WARN("Subscribing to external joint state");
         joint_state_sub = nh->subscribe("/external_joint_states", 100, &Robot::JointState, this);
     }
     joint_target_sub = nh->subscribe("/joint_targets", 100, &Robot::JointTarget, this);
