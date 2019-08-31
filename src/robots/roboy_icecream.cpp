@@ -63,9 +63,9 @@ public:
         }
         vector<string> joint_names;
         nh->getParam("joint_names", joint_names);
-        init(urdf,cardsflow_xml,joint_names);
         nh->getParam("external_robot_state", external_robot_state);
         ROS_INFO_STREAM("External robot state: " << external_robot_state);
+        init(urdf,cardsflow_xml,joint_names);
         update();
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
         motor_status_sub = nh->subscribe("roboy/middleware/MotorStatus",1,&RoboyIcecream::MotorStatus, this);
