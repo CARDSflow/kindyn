@@ -768,10 +768,14 @@ void Robot::InteractiveMarkerFeedback( const visualization_msgs::InteractiveMark
 void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg) {
     const iDynTree::Model &model = kinDynComp.getRobotModel();
     int i = 0;
+
     for (string joint:msg->name) {
+        float offset = 0;
+        if(joint=="elbow_right")
+          nh->getParam("elbow_right_offset", offset);
         int joint_index = model.getJointIndex(joint);
         if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
-            q(joint_index) = msg->position[i];
+            q(joint_index) = msg->position[i]+offset;
             qd(joint_index) = msg->velocity[i];
         } else {
             ROS_WARN_THROTTLE(5.0, "joint %s not found in model", joint.c_str());

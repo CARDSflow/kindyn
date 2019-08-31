@@ -247,7 +247,7 @@ public:
     ros::Subscriber motor_status_sub;
     ros::ServiceServer init_pose;
     map<string,ros::ServiceClient> motor_control_mode, motor_config;
-    vector<string> body_parts = {"arm_right", "shoulder_right", "arm_left", "shoulder_left"};
+    vector<string> body_parts = {"arm_right", "shoulder_right"};
     map<string, vector<string>> endeffector_jointnames;
     bool initialized = false;
     map<string, bool> motor_status_received;
@@ -282,11 +282,13 @@ int main(int argc, char *argv[]) {
       nh.getParam("simulated", robot.simulated);
     }
 
+    ros::Rate rate(5.0);
     while(ros::ok()){
         robot.read();
         if (!robot.simulated)
           robot.write();
         ros::spinOnce();
+        rate.sleep();
     }
 
     ROS_INFO("TERMINATING...");
