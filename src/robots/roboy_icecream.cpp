@@ -17,12 +17,15 @@ public:
      * @param cardsflow_xml path to cardsflow xml
      */
     RoboyIcecream(string urdf, string cardsflow_xml){
+
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
             ros::init(argc, argv, "roboy_icecream");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
+        spinner = new ros::AsyncSpinner(0);
+        spinner->start();
         for(auto part:body_parts) {
             std::string board_name;
             nh->getParam(part + "/board_name", board_name);
@@ -247,6 +250,7 @@ public:
     ros::Publisher motor_command; /// motor command publisher
     ros::Subscriber motor_status_sub;
     ros::ServiceServer init_pose;
+    ros::AsyncSpinner *spinner;
     map<string,ros::ServiceClient> motor_control_mode, motor_config;
     vector<string> body_parts = {"arm_right", "shoulder_right"};
     map<string, vector<string>> endeffector_jointnames;
