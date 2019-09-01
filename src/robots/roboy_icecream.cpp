@@ -127,6 +127,7 @@ public:
             }
             ROS_INFO_STREAM_THROTTLE(0.5, ss.str());
         }
+
         stringstream str;
         str << "saving position offsets:" << endl << "sim motor id   |  real motor id  |   position offset (ticks)  | length offset(m)" << endl;
         for (const auto &part:body_parts) {
@@ -138,6 +139,7 @@ public:
                 switch (motor_type[part][i]) {
                     case MYOMUSCLE500N:
                         meters = myoMuscleMeterPerEncoderTick(position[part][i]);
+                        meters += 2*springMeterPerEncoderTicks(displacement[part][i]);
                         break;
                     case MYOBRICK300N:
                         meters = myoBrick300NMeterPerEncoderTick(position[part][i]);
@@ -217,6 +219,8 @@ public:
         if(initialized) {
             double Kp_dl = 0;
             nh->getParam("Kp_dl",Kp_dl);
+            double Kp_disp = 0;
+            nh->getParam("Kp_disp", Kp_disp);
             stringstream str;
             for (auto part:body_parts) {
                 str << part << ": ";
@@ -224,7 +228,7 @@ public:
                 msg.id = bodyPartIDs[part];
                 msg.motors = real_motor_ids[part];
                 for (int i = 0; i < sim_motor_ids[part].size(); i++) {
-                    double l_meter = (-l_target[sim_motor_ids[part][i]] + l_offset[part][i]) - Kp_dl*(l_target[sim_motor_ids[part][i]]-l[sim_motor_ids[part][i]]);
+                    double l_meter = (-l_target[sim_motor_ids[part][i]] + l_offset[part][i]) - Kp_dl*(l_target[sim_motor_ids[part][i]]-l[sim_motor_ids[part][i]]) - Kp_disp*(displacement[part][i]);
                     str << sim_motor_ids[part][i] << "\t" << l_meter << "\t";
                     switch (motor_type[part][i]) {
                         case MYOBRICK100N: {
