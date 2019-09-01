@@ -246,6 +246,7 @@ namespace cardsflow {
             vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments
             bool external_robot_state; /// indicates if we get the robot state externally
             bool simulated = false; /// indicates if the robots is simulated or hardware is used
+            bool initialized = false;
         protected:
             iDynTree::FreeFloatingGeneralizedTorques bias; /// Coriolis+Gravity term
             iDynTree::MatrixDynSize Mass; /// Mass matrix

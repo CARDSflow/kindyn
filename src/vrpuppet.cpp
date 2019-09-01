@@ -383,8 +383,13 @@ VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min
 }
 
 void Robot::update() {
-    if(!this->external_robot_state)
+    if(!this->external_robot_state) {
       q = q_target;
+    }
+    else {
+      ROS_WARN_STREAM_THROTTLE(1, "q " << q.transpose().format(fmt));
+      ROS_WARN_STREAM_THROTTLE(1, "q_target " << q_target.transpose().format(fmt));
+    }
 
     ros::Time t0 = ros::Time::now();
     iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
@@ -769,22 +774,26 @@ void Robot::InteractiveMarkerFeedback( const visualization_msgs::InteractiveMark
 }
 
 void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg) {
-    const iDynTree::Model &model = kinDynComp.getRobotModel();
-    int i = 0;
 
-    for (string joint:msg->name) {
-        float offset = 0;
-        if(joint=="elbow_right")
-          nh->getParam("elbow_right_offset", offset);
-        int joint_index = model.getJointIndex(joint);
-        if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
-            q(joint_index) = msg->position[i]+offset;
-            qd(joint_index) = msg->velocity[i];
-        } else {
-            ROS_WARN_THROTTLE(5.0, "joint %s not found in model", joint.c_str());
-        }
-        i++;
-    }
+    // if (initialized) {
+      const iDynTree::Model &model = kinDynComp.getRobotModel();
+      int i = 0;
+
+      for (string joint:msg->name) {
+          float offset = 0;
+          if(joint=="elbow_right")
+            nh->getParam("elbow_right_offset", offset);
+          int joint_index = model.getJointIndex(joint);
+          if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
+              q(joint_index) = msg->position[i]+offset;
+              qd(joint_index) = msg->velocity[i];
+          } else {
+              ROS_WARN_THROTTLE(5.0, "joint %s not found in model", joint.c_str());
+          }
+          i++;
+      }
+    // }
+
 }
 
 void Robot::JointTarget(const sensor_msgs::JointStateConstPtr &msg){

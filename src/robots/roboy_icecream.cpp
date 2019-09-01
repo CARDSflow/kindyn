@@ -111,9 +111,15 @@ public:
             motor_control_mode[part].call(msg);
           }
         }
-        ros::Duration d(5);
-        ROS_INFO("sleeping for 5 seconds");
-        d.sleep();
+        ros::Time t0;
+        t0= ros::Time::now();
+        while((ros::Time::now()-t0).toSec()<5){
+            ROS_INFO_THROTTLE(1,"waiting");
+        }
+        //ros::Duration d(5);
+        //ROS_INFO("sleeping for 5 seconds");
+        //d.sleep();
+
         while(std::any_of(motor_status_received.begin(), motor_status_received.end(), [](auto &e){return !e.second;})) {
             stringstream ss; ss << "Waiting to receive motor status from these body parts: ";
             for (const auto &part : body_parts) {
@@ -254,7 +260,7 @@ public:
     map<string,ros::ServiceClient> motor_control_mode, motor_config;
     vector<string> body_parts = {"arm_right", "shoulder_right"};
     map<string, vector<string>> endeffector_jointnames;
-    bool initialized = false;
+
     map<string, bool> motor_status_received;
     map<string, int> init_mode, init_setpoint;
     map<string,vector<int>> real_motor_ids, sim_motor_ids, motor_type;
@@ -287,7 +293,7 @@ int main(int argc, char *argv[]) {
       nh.getParam("simulated", robot.simulated);
     }
 
-    ros::Rate rate(5.0);
+    ros::Rate rate(20);
     while(ros::ok()){
         robot.read();
         if (!robot.simulated)
