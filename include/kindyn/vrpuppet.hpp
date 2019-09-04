@@ -199,7 +199,7 @@ namespace cardsflow {
             ros::ServiceServer ik_srv, ik_two_frames_srv, fk_srv;
             map<string,boost::shared_ptr<actionlib::SimpleActionServer<roboy_control_msgs::MoveEndEffectorAction>>> moveEndEffector_as;
 
-            iDynTree::KinDynComputations kinDynComp, kinDynCompTarget; /// the full robot model
+
             map<string,iDynTree::KinDynComputations> ik_models; /// the robot models for each endeffector
             map<string,iDynTree::InverseKinematics> ik; /// the ik for each endeffector
             map<string,string> ik_base_link; /// the base link of each endeffector
@@ -218,6 +218,7 @@ namespace cardsflow {
                 iDynTree::Vector3       gravity;
             }robotstate;
         public:
+            iDynTree::KinDynComputations kinDynComp, kinDynCompTarget; /// the full robot model
             size_t number_of_dofs = 0; /// number of degrees of freedom of the whole robot
             vector<string> endeffectors; /// names of the endeffectors
             map<string,size_t> endeffector_index;

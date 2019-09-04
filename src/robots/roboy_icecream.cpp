@@ -79,6 +79,8 @@ public:
     bool initPose(std_srvs::Empty::Request &req,
                   std_srvs::Empty::Response &res){
         initialized = false;
+        string elbow_offset_param = "/elbow_right_offset";
+        nh->setParam(elbow_offset_param, 0);
         ROS_INFO("changing control mode to init mode for each part");
         for(auto part:body_parts){
           if (use_motor_config[part]) {
@@ -116,9 +118,6 @@ public:
         while((ros::Time::now()-t0).toSec()<5){
             ROS_INFO_THROTTLE(1,"waiting");
         }
-        //ros::Duration d(5);
-        //ROS_INFO("sleeping for 5 seconds");
-        //d.sleep();
 
         while(std::any_of(motor_status_received.begin(), motor_status_received.end(), [](auto &e){return !e.second;})) {
             stringstream ss; ss << "Waiting to receive motor status from these body parts: ";
@@ -185,6 +184,13 @@ public:
           motor_control_mode[part].call(msg);
           }
         }
+
+
+        const iDynTree::Model &model = kinDynComp.getRobotModel();
+        int elbow_index = model.getJointIndex("elbow_right");
+        ROS_INFO_STREAM("Setting " << elbow_offset_param << "to: " << -1*q[elbow_index]);
+        nh->setParam(elbow_offset_param, -1*q[elbow_index]);
+
         ROS_INFO("pose init done");
         initialized = true;
         return true;
