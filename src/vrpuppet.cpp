@@ -386,10 +386,6 @@ void Robot::update() {
     if(!this->external_robot_state) {
       q = q_target;
     }
-    else {
-      ROS_WARN_STREAM_THROTTLE(1, "q " << q.transpose().format(fmt));
-      ROS_WARN_STREAM_THROTTLE(1, "q_target " << q_target.transpose().format(fmt));
-    }
 
     ros::Time t0 = ros::Time::now();
     iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
