@@ -20,6 +20,7 @@ Robot::Robot() {
     tendon_state_target_pub = nh->advertise<roboy_simulation_msgs::Tendon>("/tendon_state_target", 1);
     joint_state_target_pub = nh->advertise<roboy_simulation_msgs::JointState>("/joint_state_target", 1);
     fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
+    nh->setParam("vr_puppet",true);
 }
 
 Robot::~Robot() {
