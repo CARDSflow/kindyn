@@ -177,6 +177,10 @@ target_link_libraries(shoulder_testbed ${iDynTree_LIBRARIES} ${catkin_LIBRARIES}
 add_executable( roboy2 src/robots/roboy2.cpp)
 target_link_libraries(roboy2 ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
 
+# exohaptic
+add_executable( exohaptic src/robots/exohaptic.cpp)
+target_link_libraries(exohaptic ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
+
 #==============================================================================
 # Installation
 #==============================================================================

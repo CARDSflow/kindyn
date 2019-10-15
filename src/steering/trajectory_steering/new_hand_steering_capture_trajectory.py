@@ -35,7 +35,7 @@ HAND_Y_OFFSET = 0.2  # [m]
 JSON_FILENAME = "new_hand_steering_trajectory.json"
 JOINT_ANGLE_TOLERANCE_FK = 0.01
 
-ENDEFFECTOR_RIGHT = "right_arm"
+ENDEFFECTOR_RIGHT = "exohaptic"
 FRAME_RIGHT = "wrist_right_sphere_link1"
 ENDEFFECTOR_LEFT = "left_arm"
 FRAME_LEFT = "wrist_left_sphere_link1"
