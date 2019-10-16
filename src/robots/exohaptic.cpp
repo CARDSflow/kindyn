@@ -6,6 +6,8 @@
 #include <common_utilities/CommonDefinitions.h>
 #include <roboy_control_msgs/SetControllerParameters.h>
 #include <std_srvs/Empty.h>
+#include <tf/tf.h>
+#include <tf/transform_listener.h>
 
 using namespace std;
 
@@ -32,6 +34,7 @@ public:
         nh->getParam("external_robot_state", external_robot_state);
         ROS_INFO_STREAM("External robot state: " << external_robot_state);
         init(urdf,cardsflow_xml,joint_names);
+        listener.reset(new tf::TransformListener);
         update();
         ROS_INFO_STREAM("Finished setup");
     };
@@ -46,7 +49,81 @@ public:
      * Sends motor commands to the real robot
      */
     void write(){
+        tf::StampedTransform right_hand,left_hand, right_elbow, left_elbow, right_upper_arm, left_upper_arm;
+        bool left_hand_available = true, right_hand_available = true;
+        try{
+            listener->lookupTransform("0_1", "0_4",
+                                     ros::Time(0), right_hand);
+            listener->lookupTransform("0_1", "0_3",
+                                      ros::Time(0), right_elbow);
+            listener->lookupTransform("0_2", "0_3",
+                                      ros::Time(0), right_upper_arm);
+        }
+        catch (tf::TransformException ex){
+            ROS_ERROR_THROTTLE(5,"%s",ex.what());
+            left_hand_available = false;
+        }
+        try{
+            listener->lookupTransform("0_1", "0_7",
+                                      ros::Time(0), left_hand);
+            listener->lookupTransform("0_1", "0_6",
+                                      ros::Time(0), left_elbow);
+            listener->lookupTransform("0_5", "0_6",
+                                      ros::Time(0), left_upper_arm);
+        }
+        catch (tf::TransformException ex){
+            ROS_ERROR_THROTTLE(5,"%s",ex.what());
+            right_hand_available = false;
+        }
 
+        if(left_hand_available) {
+            roboy_middleware_msgs::InverseKinematicsMultipleFrames msg;
+            msg.request.endeffector = "hand_left";
+            msg.request.target_frames = {"hand_left", "elbow_left_link1"};
+            msg.request.type = 1;
+            geometry_msgs::Pose pose;
+            pose.position.x = left_hand.getOrigin().x() ;
+            pose.position.y = left_hand.getOrigin().y() ;
+            pose.position.z = left_hand.getOrigin().z() ;
+            pose.orientation.w = 1;
+            msg.request.poses.push_back(pose);
+            pose.position.x = left_elbow.getOrigin().x() ;
+            pose.position.y = left_elbow.getOrigin().y() ;
+            pose.position.z = left_elbow.getOrigin().z() ;
+            pose.orientation.w = 1;
+            msg.request.poses.push_back(pose);
+            msg.request.weights = {0.9, 0.3};
+
+            if (InverseKinematicsMultipleFramesService(msg.request, msg.response)) {
+                for (int i = 0; i < msg.response.joint_names.size(); i++) {
+                    q_target[joint_index[msg.response.joint_names[i]]] = msg.response.angles[i];
+                }
+            }
+        }
+        if(right_hand_available) {
+            roboy_middleware_msgs::InverseKinematicsMultipleFrames msg;
+            msg.request.endeffector = "hand_right";
+            msg.request.target_frames = {"hand_right", "elbow_right_link1"};
+            msg.request.type = 1;
+            geometry_msgs::Pose pose;
+            pose.position.x = right_hand.getOrigin().x();
+            pose.position.y = right_hand.getOrigin().y();
+            pose.position.z = right_hand.getOrigin().z();
+            pose.orientation.w = 1;
+            msg.request.poses.push_back(pose);
+            pose.position.x = right_elbow.getOrigin().x();
+            pose.position.y = right_elbow.getOrigin().y();
+            pose.position.z = right_elbow.getOrigin().z();
+            pose.orientation.w = 1;
+            msg.request.poses.push_back(pose);
+            msg.request.weights = {0.9, 0.3};
+
+            if (InverseKinematicsMultipleFramesService(msg.request, msg.response)) {
+                for (int i = 0; i < msg.response.joint_names.size(); i++) {
+                    q_target[joint_index[msg.response.joint_names[i]]] = msg.response.angles[i];
+                }
+            }
+        }
     };
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
@@ -63,6 +140,8 @@ public:
     map<string,vector<double>> l_offset, position, velocity, displacement;
     map<string,int> bodyPartIDs;
     map<string,bool> use_motor_config;
+    boost::shared_ptr<tf::TransformListener> listener;
+    float upper_arm_model_length = 0.262;
 };
 
 int main(int argc, char *argv[]) {
@@ -89,7 +168,7 @@ int main(int argc, char *argv[]) {
       nh.getParam("simulated", robot.simulated);
     }
 
-    ros::Rate rate(20);
+    ros::Rate rate(100);
     while(ros::ok()){
         robot.read();
         if (!robot.simulated)

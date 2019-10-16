@@ -641,9 +641,9 @@ bool Robot::InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::R
     color.randColor();
     if(counter-(rand()/(float)RAND_MAX)*10==0){
         publishMesh("robots", "common/meshes/visuals","target.stl", req.pose, 0.005,
-                    "world", "ik_target", counter, 10, color);
+                    "world", "ik_target", counter, 1, color);
     }else{
-        publishCube(req.pose, "world", "ik_target", counter, color, 0.05, 15);
+        publishCube(req.pose, "world", "ik_target", counter, color, 0.005, 1);
     }
 
     if (ik[req.endeffector].solve()) {
@@ -715,6 +715,16 @@ bool Robot::InverseKinematicsMultipleFramesService(roboy_middleware_msgs::Invers
             for (int reqIterator = 0; reqIterator < req.poses.size(); reqIterator++) {
                 iDynTree::Position pos(req.poses[reqIterator].position.x, req.poses[reqIterator].position.y, req.poses[reqIterator].position.z);
                 ik[req.endeffector].addPositionTarget(req.target_frames[reqIterator], pos, req.weights[reqIterator]);
+                static int counter = 6969;
+                counter++;
+                COLOR color(1,1,1,req.weights[reqIterator]);
+                color.randColor();
+                if(counter-(rand()/(float)RAND_MAX)*10==0){
+                    publishMesh("robots", "common/meshes/visuals","target.stl", req.poses[reqIterator], 0.05,
+                                "world", "ik_target", counter, 10, color);
+                }else{
+                    publishCube(req.poses[reqIterator], "world", "ik_target", counter, color, 0.05, 10);
+                }
             }
             break;
         }

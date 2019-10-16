@@ -143,6 +143,7 @@ namespace cardsflow {
              * @return success
              */
             bool parseViapoints(const string &viapoints_file_path, vector<Cable> &cables);
+        public:
             /**
              * Forward kinematic service for endeffectors
              * @param req endeffector, requested joint angles
@@ -162,6 +163,7 @@ namespace cardsflow {
 
             bool InverseKinematicsMultipleFramesService(roboy_middleware_msgs::InverseKinematicsMultipleFrames::Request &req,
                                                         roboy_middleware_msgs::InverseKinematicsMultipleFrames::Response &res);
+        private:
             /**
              * Callback for Interactive Marker Feedback of endeffectors. When the Interactive Marker is released in rviz,
              * the IK routine is called and the solution directly applied to the robot q_target angles
