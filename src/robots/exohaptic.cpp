@@ -92,11 +92,11 @@ public:
             pose.position.z = left_elbow.getOrigin().z() ;
             pose.orientation.w = 1;
             msg.request.poses.push_back(pose);
-            msg.request.weights = {0.9, 0.3};
+            msg.request.weights = {0.9, 0.9};
 
             if (InverseKinematicsMultipleFramesService(msg.request, msg.response)) {
                 for (int i = 0; i < msg.response.joint_names.size(); i++) {
-                    q_target[joint_index[msg.response.joint_names[i]]] = msg.response.angles[i];
+                    q_target[joint_index[msg.response.joint_names[i]]] = (0.3*msg.response.angles[i]+0.7*q_target[joint_index[msg.response.joint_names[i]]]);
                 }
             }
         }
@@ -116,11 +116,11 @@ public:
             pose.position.z = right_elbow.getOrigin().z();
             pose.orientation.w = 1;
             msg.request.poses.push_back(pose);
-            msg.request.weights = {0.9, 0.3};
+            msg.request.weights = {0.9, 0.9};
 
             if (InverseKinematicsMultipleFramesService(msg.request, msg.response)) {
                 for (int i = 0; i < msg.response.joint_names.size(); i++) {
-                    q_target[joint_index[msg.response.joint_names[i]]] = msg.response.angles[i];
+                    q_target[joint_index[msg.response.joint_names[i]]] = (0.3*msg.response.angles[i]+0.7*q_target[joint_index[msg.response.joint_names[i]]]);
                 }
             }
         }
@@ -168,7 +168,7 @@ int main(int argc, char *argv[]) {
       nh.getParam("simulated", robot.simulated);
     }
 
-    ros::Rate rate(100);
+    ros::Rate rate(30);
     while(ros::ok()){
         robot.read();
         if (!robot.simulated)

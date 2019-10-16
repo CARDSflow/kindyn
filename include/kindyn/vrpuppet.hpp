@@ -229,7 +229,8 @@ namespace cardsflow {
             size_t number_of_cables = 0; /// number of cables, ie muscles of the whole robot
             size_t number_of_links = 0; /// number of links of the whole robot
             Matrix4d world_H_base; /// floating base 6-DoF pose
-            vector<Matrix4d> world_to_link_transform, link_to_world_transform, frame_transform;
+            vector<Matrix4d> world_to_link_transform, link_to_world_transform, link_to_world_transform_prev, frame_transform;
+            vector<Matrix4d> target_poses, target_poses_prev;
             Eigen::Matrix<double,6,1> baseVel; /// the velocity of the floating base
             Vector3d gravity; /// gravity vector (default: (0,0,-9.81)
             MatrixXd M; /// The Mass matrix of the robot
@@ -272,13 +273,13 @@ namespace cardsflow {
             int qp_print_level = PL_NONE; /// qpoases print level
             SQProblem qp_solver; /// qpoases quadratic problem solver
             real_t *H, *g, *A, *lb, *ub, *b, *FOpt; /// quadratic problem variables
-            ros::Time last_visualization; /// timestamp for visualization at reasonable intervals
+            ros::Time last_visualization, last_visualization_forced; /// timestamp for visualization at reasonable intervals
             Eigen::IOFormat fmt; /// formator for terminal printouts
             hardware_interface::JointStateInterface joint_state_interface; /// ros control joint state interface
             hardware_interface::EffortJointInterface joint_command_interface; /// ros control joint command interface
             hardware_interface::CardsflowStateInterface cardsflow_state_interface; /// cardsflow state interface
             hardware_interface::CardsflowCommandInterface cardsflow_command_interface; /// cardsflow command interface
-            bool first_update = true;
+            bool first_update_target = true, first_update = true;
         };
     }
 }

@@ -181,6 +181,9 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
 
     world_to_link_transform.resize(number_of_links);
     link_to_world_transform.resize(number_of_links);
+    link_to_world_transform_prev.resize(number_of_links);
+    target_poses.resize(number_of_links);
+    target_poses_prev.resize(number_of_links);
     frame_transform.resize(number_of_links);
     link_to_link_transform = new Matrix3d[number_of_links * number_of_links];
 
@@ -437,6 +440,9 @@ void Robot::update() {
     }
 
     if ((1.0 / (ros::Time::now() - last_visualization).toSec()) < 30) {
+        bool update_forced =  (1.0 / (ros::Time::now() - last_visualization_forced).toSec()) < 0.1;
+        if(update_forced)
+            last_visualization_forced = ros::Time::now();
         { // tendon state publisher
             roboy_simulation_msgs::Tendon msg;
             for (int i = 0; i < number_of_cables; i++) {
@@ -454,21 +460,21 @@ void Robot::update() {
             tendon_state_pub.publish(msg);
         }
         { // robot state publisher
-            static int seq = 0;
-            for (int i = 0; i < number_of_links; i++) {
-                geometry_msgs::PoseStamped msg;
-                msg.header.seq = seq++;
-                msg.header.stamp = ros::Time::now();
-                msg.header.frame_id = link_names[i];
-                Isometry3d iso(link_to_world_transform[i]);
-                tf::poseEigenToMsg(iso, msg.pose);
-                robot_state_pub.publish(msg);
-            }
+                static int seq = 0;
+                for (int i = 0; i < number_of_links; i++) {
+                    if((link_to_world_transform_prev[i]-link_to_world_transform[i]).norm()>0.01 ||update_forced){
+                        geometry_msgs::PoseStamped msg;
+                        msg.header.seq = seq++;
+                        msg.header.stamp = ros::Time::now();
+                        msg.header.frame_id = link_names[i];
+                        Isometry3d iso(link_to_world_transform[i]);
+                        tf::poseEigenToMsg(iso, msg.pose);
+                        robot_state_pub.publish(msg);
+                        link_to_world_transform_prev[i] = link_to_world_transform[i];
+                    }
+                }
         }
         { // robot target publisher
-            if((q_target-q_target_prev).norm()>0.001 || (qd_target-qd_target_prev).norm()>0.001 || first_update) { // only if target changed
-                if(first_update)
-                    first_update = false;
                 q_target_prev = q_target;
                 qd_target_prev = qd_target;
                 iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
@@ -482,18 +488,20 @@ void Robot::update() {
                                                robotstate.gravity);
 
                 static int seq = 0;
-                vector<Matrix4d> target_poses;
                 for (int i = 0; i < number_of_links; i++) {
-                    target_poses.push_back(iDynTree::toEigen(kinDynCompTarget.getWorldTransform(i).asHomogeneousTransform()));
+                    target_poses[i] = iDynTree::toEigen(kinDynCompTarget.getWorldTransform(i).asHomogeneousTransform());
                     Vector3d com = iDynTree::toEigen(model.getLink(i)->getInertia().getCenterOfMass());
                     target_poses[i].block(0, 3, 3, 1) += target_poses[i].block(0, 0, 3, 3) * com;
-                    geometry_msgs::PoseStamped msg;
-                    msg.header.seq = seq++;
-                    msg.header.stamp = ros::Time::now();
-                    msg.header.frame_id = link_names[i];
-                    Isometry3d iso(target_poses[i]);
-                    tf::poseEigenToMsg(iso, msg.pose);
-                    robot_state_target_pub.publish(msg);
+                    if((target_poses_prev[i]-target_poses[i]).norm()>0.01) {
+                        geometry_msgs::PoseStamped msg;
+                        msg.header.seq = seq++;
+                        msg.header.stamp = ros::Time::now();
+                        msg.header.frame_id = link_names[i];
+                        Isometry3d iso(target_poses[i]);
+                        tf::poseEigenToMsg(iso, msg.pose);
+                        robot_state_target_pub.publish(msg);
+                        target_poses_prev[i] = target_poses[i];
+                    }
                 }
 
                 int i=0;
@@ -514,7 +522,6 @@ void Robot::update() {
                     }
                     i++;
                 }
-            }
         }
         { // joint state publisher
             sensor_msgs::JointState cf_msg;
