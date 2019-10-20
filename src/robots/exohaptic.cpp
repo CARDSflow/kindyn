@@ -77,26 +77,64 @@ public:
         }
 
         if(left_hand_available) {
-            roboy_middleware_msgs::InverseKinematicsMultipleFrames msg;
-            msg.request.endeffector = "hand_left";
-            msg.request.target_frames = {"hand_left", "elbow_left_link1"};
-            msg.request.type = 1;
-            geometry_msgs::Pose pose;
-            pose.position.x = left_hand.getOrigin().x() ;
-            pose.position.y = left_hand.getOrigin().y() ;
-            pose.position.z = left_hand.getOrigin().z() ;
-            pose.orientation.w = 1;
-            msg.request.poses.push_back(pose);
-            pose.position.x = left_elbow.getOrigin().x() ;
-            pose.position.y = left_elbow.getOrigin().y() ;
-            pose.position.z = left_elbow.getOrigin().z() ;
-            pose.orientation.w = 1;
-            msg.request.poses.push_back(pose);
-            msg.request.weights = {0.9, 0.9};
+            {
+                roboy_middleware_msgs::InverseKinematicsMultipleFrames msg;
+                msg.request.endeffector = "hand_left";
+                msg.request.target_frames = {"hand_left", "elbow_left_link1"};
+                msg.request.type = 1;
+                geometry_msgs::Pose pose;
+                pose.position.x = left_hand.getOrigin().x();
+                pose.position.y = left_hand.getOrigin().y();
+                pose.position.z = left_hand.getOrigin().z();
+                pose.orientation.w = 1;
+                msg.request.poses.push_back(pose);
+                pose.position.x = left_elbow.getOrigin().x();
+                pose.position.y = left_elbow.getOrigin().y();
+                pose.position.z = left_elbow.getOrigin().z();
+                pose.orientation.w = 1;
+                msg.request.poses.push_back(pose);
+                msg.request.weights = {0.9, 0.9};
 
-            if (InverseKinematicsMultipleFramesService(msg.request, msg.response)) {
-                for (int i = 0; i < msg.response.joint_names.size(); i++) {
-                    q_target[joint_index[msg.response.joint_names[i]]] = (0.3*msg.response.angles[i]+0.7*q_target[joint_index[msg.response.joint_names[i]]]);
+                if (InverseKinematicsMultipleFramesService(msg.request, msg.response)) {
+                    for (int i = 0; i < msg.response.joint_names.size(); i++) {
+                        q_target[joint_index[msg.response.joint_names[i]]] = (0.3 * msg.response.angles[i] + 0.7 *
+                                                                                                             q_target[joint_index[msg.response.joint_names[i]]]);
+                    }
+                }
+            }
+            tf::StampedTransform upper_arm_left, lower_arm_left;
+            try{
+                listener->lookupTransform("world", "upper_arm_left",
+                                          ros::Time(0), upper_arm_left);
+                listener->lookupTransform("world", "lower_arm_left",
+                                          ros::Time(0), lower_arm_left);
+            }
+            catch (tf::TransformException ex){
+                ROS_ERROR_THROTTLE(5,"%s",ex.what());
+            }
+            {
+                roboy_middleware_msgs::InverseKinematicsMultipleFrames msg;
+                msg.request.endeffector = "left_link6";
+                msg.request.target_frames = {"left_link3", "left_link6"};
+                msg.request.type = 1;
+                geometry_msgs::Pose pose;
+                pose.position.x = upper_arm_left.getOrigin().x();
+                pose.position.y = upper_arm_left.getOrigin().y();
+                pose.position.z = upper_arm_left.getOrigin().z();
+                pose.orientation.w = 1;
+                msg.request.poses.push_back(pose);
+                pose.position.x = lower_arm_left.getOrigin().x();
+                pose.position.y = lower_arm_left.getOrigin().y();
+                pose.position.z = lower_arm_left.getOrigin().z();
+                pose.orientation.w = 1;
+                msg.request.poses.push_back(pose);
+                msg.request.weights = {0.9, 0.9};
+
+                if (InverseKinematicsMultipleFramesService(msg.request, msg.response)) {
+                    for (int i = 0; i < msg.response.joint_names.size(); i++) {
+                        q_target[joint_index[msg.response.joint_names[i]]] = (0.3 * msg.response.angles[i] + 0.7 *
+                                                                                                             q_target[joint_index[msg.response.joint_names[i]]]);
+                    }
                 }
             }
         }
