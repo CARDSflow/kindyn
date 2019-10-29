@@ -125,61 +125,9 @@ target_link_libraries(vrpuppet ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOAS
 add_executable( test_idyntree src/utilities/test_idyntree.cpp)
 target_link_libraries(test_idyntree ${iDynTree_LIBRARIES} ${catkin_LIBRARIES})
 
-# test_robot
-add_executable( test_robot src/robots/test_robot.cpp)
-target_link_libraries(test_robot ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
-
-# msj_platform
-add_executable( msj_platform src/robots/msj_platform.cpp)
-target_link_libraries(msj_platform ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
-
-# roboy_upper_body
-add_executable( roboy_upper_body src/robots/roboy_upper_body.cpp)
-target_link_libraries(roboy_upper_body ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
-
-# roboy_arcade_maschine
-add_executable( roboy_arcade_maschine src/robots/roboy_arcade_maschine.cpp)
-target_link_libraries(roboy_arcade_maschine ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
-
-# roboy_xylophone
-add_executable( roboy_xylophone src/robots/roboy_xylophone.cpp)
-target_link_libraries(roboy_xylophone ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
-
-# theClaw
-add_executable( theClaw src/robots/theClaw.cpp)
-target_link_libraries(theClaw ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
-
-# yatr
-add_executable( yatr src/robots/yatr.cpp)
-target_link_libraries(yatr ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
-
-# rikshaw
-add_executable( rikshaw src/robots/rikshaw.cpp)
-target_link_libraries(rikshaw ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
-
-# roboy_head
-add_executable( roboy_head src/robots/roboy_head.cpp)
-target_link_libraries(roboy_head ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
-
-# VRpuppet
-add_executable( VRpuppet src/robots/VRpuppet.cpp)
-target_link_libraries(VRpuppet ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
-
-# roboy_icecream
-add_executable( roboy_icecream src/robots/roboy_icecream.cpp)
-target_link_libraries(roboy_icecream ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
-
-# shoulder_testbed
-add_executable( shoulder_testbed src/robots/shoulder_testbed.cpp)
-target_link_libraries(shoulder_testbed ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
-
-# roboy2
-add_executable( roboy2 src/robots/roboy2.cpp)
-target_link_libraries(roboy2 ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
-
-# exohaptic
-add_executable( exohaptic src/robots/exohaptic.cpp)
-target_link_libraries(exohaptic ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
+# right_arm_testbed
+add_executable( arm_right_testbed src/robots/arm_right_testbed.cpp)
+target_link_libraries(arm_right_testbed ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
 
 #==============================================================================
 # Installation
@@ -191,10 +139,6 @@ install(TARGETS
 )
 
 install(TARGETS
-		msj_platform
-		roboy_upper_body
-		roboy_arcade_maschine
-		roboy_xylophone
 	    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
