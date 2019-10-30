@@ -11,7 +11,11 @@
 #include <tf/tf.h>
 #include <tf/transform_listener.h>
 
-#define myoBrickMeterPerEncoderTick(encoderTicks) ((encoderTicks)/(512.0*4.0)*(M_PI*0.008))
+#define myoBrickMeterPerEncoder0Tick(encoderTicks) ((encoderTicks)/(512.0*4.0*53.0)*(M_PI*0.00845))
+#define myoBrickEncoder0TicksPerMeter(meter) ((meter)*(512.0*4.0*53.0)/(M_PI*0.00845))
+
+#define myoBrickMeterPerEncoder1Tick(encoderTicks) ((encoderTicks)/(4096.0*4.0)*(M_PI*0.00845))
+#define myoBrickEncoder1TicksPerMeter(meter) ((meter)*(4096.0*4.0)/(M_PI*0.00845))
 
 using namespace std;
 
@@ -59,6 +63,7 @@ public:
         msg.request.config.motor = {0,1,2,3};
         msg.request.config.control_mode = {3,3,3,3};
         msg.request.config.Kp = {1,1,1,1};
+        msg.request.config.PWMLimit = {4000000,4000000,4000000,4000000};
         msg.request.config.setpoint = {500000,500000,500000,500000};
         motor_config.call(msg);
 
@@ -67,7 +72,8 @@ public:
         msg.request.config.motor = {0,1,2,3};
         msg.request.config.control_mode = {3,3,3,3};
         msg.request.config.Kp = {1,1,1,1};
-        msg.request.config.setpoint = {255,255,255,255};
+        msg.request.config.PWMLimit = {255,255,255,255};
+        msg.request.config.setpoint = {200,200,200,200};
         motor_config.call(msg);
 
         ros::Time t0;
@@ -81,25 +87,30 @@ public:
         for (int i = 0; i<sim_motor_ids.size();i++) str << i << ": " << position[i] << ", ";
         str << endl;
         for(int i=0;i<sim_motor_ids.size();i++) {
-            l_offset[i] = l[sim_motor_ids[i]] + myoBrickMeterPerEncoderTick(position[i]);
+            if(i<4)
+                l_offset[i] = l[sim_motor_ids[i]] + myoBrickMeterPerEncoder1Tick(position[i]);
+            else
+                l_offset[i] = l[sim_motor_ids[i]] + myoBrickMeterPerEncoder0Tick(position[i]);
             str << sim_motor_ids[i] << "\t|\t" << real_motor_ids[i] << "\t|\t" << position[i] << "\t|\t" << l_offset[i] << endl;
         }
         ROS_INFO_STREAM(str.str());
 
-        ROS_INFO("changing control mode of icebus motors to PWM");
+        ROS_INFO("changing control mode of icebus motors to ENCODER1");
         msg.request.legacy = false;
         msg.request.config.motor = {0,1,2,3};
         msg.request.config.control_mode = {1,1,1,1};
-        msg.request.config.Kp = {100,100,100,100};
-        msg.request.config.setpoint = {500000,500000,500000,500000};
+        msg.request.config.Kp = {1000,1000,1000,1000};
+        msg.request.config.PWMLimit = {4000000,4000000,4000000,4000000};
+        msg.request.config.setpoint = {position[0],position[1],position[2],position[3]};
         motor_config.call(msg);
 
-        ROS_INFO("changing control mode of myocontrol motors to PWM");
+        ROS_INFO("changing control mode of myocontrol motors to POSITION");
         msg.request.legacy = true;
         msg.request.config.motor = {0,1,2,3};
-        msg.request.config.control_mode = {3,3,3,3};
+        msg.request.config.control_mode = {0,0,0,0};
         msg.request.config.Kp = {1,1,1,1};
-        msg.request.config.setpoint = {50,50,50,50};
+        msg.request.config.PWMLimit = {255,255,255,255};
+        msg.request.config.setpoint = {position[4],position[5],position[6],position[7]};
         motor_config.call(msg);
 
         ROS_INFO("pose init done");
@@ -139,25 +150,36 @@ public:
             stringstream str;
             vector<double> l_meter;
             for (int i = 0; i < sim_motor_ids.size(); i++) {
-                l_meter.push_back(-l_target[sim_motor_ids[i]] + l_offset[i]);
+                l_meter.push_back(-l_target[i] + l_offset[i]);
                 str << sim_motor_ids[i] << "\t" << l_meter[i] << "\t";
-                str << myoBrick300NEncoderTicksPerMeter(l_meter[i]) << "\t";
+                if(i<4)
+                    str << myoBrickEncoder1TicksPerMeter(l_meter[i]) << "\t";
+                else
+                    str << myoBrickEncoder0TicksPerMeter(l_meter[i]) << "\t";
             }
             str << endl;
             {
                 roboy_middleware_msgs::MotorCommand msg;
                 msg.legacy = false;
-                msg.motor = {0, 1, 2, 3};
-                for (int i = 0; i < 4; i++)
-                    msg.setpoint.push_back(myoBrick300NEncoderTicksPerMeter(l_meter[i]));
+                msg.motor = {}; //{0, 1, 2, 3};
+                msg.setpoint = {};
+                for (int i = 0; i < 4; i++) {
+                    msg.motor.push_back(real_motor_ids[i]);
+                    msg.setpoint.push_back(myoBrickEncoder1TicksPerMeter(l_meter[i]));
+                }
+//                    msg.setpoint[real_motor_ids[i]] = myoBrickEncoder1TicksPerMeter(l_meter[i]);
                 motor_command.publish(msg);
             }
             {
                 roboy_middleware_msgs::MotorCommand msg;
                 msg.legacy = true;
-                msg.motor = {0, 1, 2, 3};
-                for (int i = 0; i < 4; i++)
-                    msg.setpoint.push_back(myoBrick300NEncoderTicksPerMeter(l_meter[4+i]));
+                msg.motor = {};
+                msg.setpoint = {}; //.resize(4);
+                for (int i = 4; i < 8; i++) {
+                    msg.motor.push_back(real_motor_ids[i]);
+                    msg.setpoint.push_back(myoBrickEncoder0TicksPerMeter(l_meter[i]));
+//                    msg.setpoint[real_motor_ids[i]] = myoBrickEncoder0TicksPerMeter(l_meter[i]);
+                }
                 motor_command.publish(msg);
             }
         }
@@ -171,7 +193,7 @@ public:
 
     map<int,int> pos, initial_pos;
     bool motor_status_received;
-    vector<int> real_motor_ids = {0,1,2,3,5,4,7,6}, sim_motor_ids = {0,1,2,3,4,5,6,7};
+    vector<int> real_motor_ids = {0,1,2,3,3,2,1,0}, sim_motor_ids = {0,1,2,3,4,5,6,7};
     map<int,double> l_offset, position;
     boost::shared_ptr<tf::TransformListener> listener;
 };
