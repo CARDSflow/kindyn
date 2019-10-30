@@ -1,6 +1,8 @@
 #include "kindyn/vrpuppet.hpp"
 #include <thread>
 #include <roboy_middleware_msgs/MotorCommand.h>
+#include <roboy_middleware_msgs/MotorState.h>
+#include <roboy_middleware_msgs/MotorStatus.h>
 #include <roboy_middleware_msgs/ControlMode.h>
 #include <roboy_middleware_msgs/MotorConfigService.h>
 #include <common_utilities/CommonDefinitions.h>
@@ -8,6 +10,8 @@
 #include <std_srvs/Empty.h>
 #include <tf/tf.h>
 #include <tf/transform_listener.h>
+
+#define myoBrickMeterPerEncoderTick(encoderTicks) ((encoderTicks)/(512.0*4.0)*(M_PI*0.008))
 
 using namespace std;
 
@@ -36,8 +40,88 @@ public:
         init(urdf,cardsflow_xml,joint_names);
         listener.reset(new tf::TransformListener);
         update();
+
+        motor_status_sub = nh->subscribe("/roboy/middleware/MotorStatus",1,&RightArmTestbed::MotorStatus,this);
+        motor_state_sub = nh->subscribe("/roboy/middleware/MotorState",1,&RightArmTestbed::MotorState,this);
+        motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
+        init_pose = nh->advertiseService("init_pose",&RightArmTestbed::initPose,this);
+        motor_config = nh->serviceClient<roboy_middleware_msgs::MotorConfigService>( "/roboy/middleware/MotorConfig");
         ROS_INFO_STREAM("Finished setup");
     };
+
+    bool initPose(std_srvs::Empty::Request &req,
+                  std_srvs::Empty::Response &res){
+        initialized = false;
+
+        ROS_INFO("changing control mode of icebus motors to PWM");
+        roboy_middleware_msgs::MotorConfigService msg;
+        msg.request.legacy = false;
+        msg.request.config.motor = {0,1,2,3};
+        msg.request.config.control_mode = {3,3,3,3};
+        msg.request.config.Kp = {1,1,1,1};
+        msg.request.config.setpoint = {500000,500000,500000,500000};
+        motor_config.call(msg);
+
+        ROS_INFO("changing control mode of myocontrol motors to PWM");
+        msg.request.legacy = true;
+        msg.request.config.motor = {0,1,2,3};
+        msg.request.config.control_mode = {3,3,3,3};
+        msg.request.config.Kp = {1,1,1,1};
+        msg.request.config.setpoint = {255,255,255,255};
+        motor_config.call(msg);
+
+        ros::Time t0;
+        t0= ros::Time::now();
+        while((ros::Time::now()-t0).toSec()<5){
+            ROS_INFO_THROTTLE(1,"waiting");
+        }
+
+        stringstream str;
+        str << "saving position offsets:" << endl << "sim motor id   |  real motor id  |   position offset (ticks)  | length offset(m)" << endl;
+        for (int i = 0; i<sim_motor_ids.size();i++) str << i << ": " << position[i] << ", ";
+        str << endl;
+        for(int i=0;i<sim_motor_ids.size();i++) {
+            l_offset[i] = l[sim_motor_ids[i]] + myoBrickMeterPerEncoderTick(position[i]);
+            str << sim_motor_ids[i] << "\t|\t" << real_motor_ids[i] << "\t|\t" << position[i] << "\t|\t" << l_offset[i] << endl;
+        }
+        ROS_INFO_STREAM(str.str());
+
+        ROS_INFO("changing control mode of icebus motors to PWM");
+        msg.request.legacy = false;
+        msg.request.config.motor = {0,1,2,3};
+        msg.request.config.control_mode = {1,1,1,1};
+        msg.request.config.Kp = {100,100,100,100};
+        msg.request.config.setpoint = {500000,500000,500000,500000};
+        motor_config.call(msg);
+
+        ROS_INFO("changing control mode of myocontrol motors to PWM");
+        msg.request.legacy = true;
+        msg.request.config.motor = {0,1,2,3};
+        msg.request.config.control_mode = {3,3,3,3};
+        msg.request.config.Kp = {1,1,1,1};
+        msg.request.config.setpoint = {50,50,50,50};
+        motor_config.call(msg);
+
+        ROS_INFO("pose init done");
+        initialized = true;
+        return true;
+    }
+
+    void MotorStatus(const roboy_middleware_msgs::MotorStatus::ConstPtr &msg){
+        int j = 4;
+        for (int i=0;i<4;i++) {
+            position[j] = msg->position[i];
+            j++;
+        }
+        motor_status_received = true;
+    }
+
+    void MotorState(const roboy_middleware_msgs::MotorState::ConstPtr &msg){
+        for (int i=0;i<4;i++) {
+            position[i] = msg->encoder1_pos[i];
+        }
+        motor_status_received = true;
+    }
 
     /**
      * Updates the robot model
@@ -49,112 +133,47 @@ public:
      * Sends motor commands to the real robot
      */
     void write(){
-        tf::StampedTransform right_hand,left_hand, right_elbow, left_elbow, right_upper_arm, left_upper_arm;
-        bool left_hand_available = true, right_hand_available = true;
-        try{
-            listener->lookupTransform("0_1", "0_4",
-                                     ros::Time(0), right_hand);
-            listener->lookupTransform("0_1", "0_3",
-                                      ros::Time(0), right_elbow);
-            listener->lookupTransform("0_2", "0_3",
-                                      ros::Time(0), right_upper_arm);
+        if(!initialized){
+            ROS_INFO_THROTTLE(1,"waiting for init_pose service call");
+        }else{
+            stringstream str;
+            vector<double> l_meter;
+            for (int i = 0; i < sim_motor_ids.size(); i++) {
+                l_meter.push_back(-l_target[sim_motor_ids[i]] + l_offset[i]);
+                str << sim_motor_ids[i] << "\t" << l_meter[i] << "\t";
+                str << myoBrick300NEncoderTicksPerMeter(l_meter[i]) << "\t";
+            }
+            str << endl;
+            {
+                roboy_middleware_msgs::MotorCommand msg;
+                msg.legacy = false;
+                msg.motor = {0, 1, 2, 3};
+                for (int i = 0; i < 4; i++)
+                    msg.setpoint.push_back(myoBrick300NEncoderTicksPerMeter(l_meter[i]));
+                motor_command.publish(msg);
+            }
+            {
+                roboy_middleware_msgs::MotorCommand msg;
+                msg.legacy = true;
+                msg.motor = {0, 1, 2, 3};
+                for (int i = 0; i < 4; i++)
+                    msg.setpoint.push_back(myoBrick300NEncoderTicksPerMeter(l_meter[4+i]));
+                motor_command.publish(msg);
+            }
         }
-        catch (tf::TransformException ex){
-            ROS_ERROR_THROTTLE(5,"%s",ex.what());
-            left_hand_available = false;
-        }
-        try{
-            listener->lookupTransform("0_1", "0_7",
-                                      ros::Time(0), left_hand);
-            listener->lookupTransform("0_1", "0_6",
-                                      ros::Time(0), left_elbow);
-            listener->lookupTransform("0_5", "0_6",
-                                      ros::Time(0), left_upper_arm);
-        }
-        catch (tf::TransformException ex){
-            ROS_ERROR_THROTTLE(5,"%s",ex.what());
-            right_hand_available = false;
-        }
-
-//        if(left_hand_available) {
-//            {
-//                roboy_middleware_msgs::InverseKinematicsMultipleFrames msg;
-//                msg.request.endeffector = "hand_left";
-//                msg.request.target_frames = {"hand_left", "elbow_left_link1"};
-//                msg.request.type = 1;
-//                geometry_msgs::Pose pose;
-//                pose.position.x = left_hand.getOrigin().x();
-//                pose.position.y = left_hand.getOrigin().y();
-//                pose.position.z = left_hand.getOrigin().z();
-//                pose.orientation.w = 1;
-//                msg.request.poses.push_back(pose);
-//                pose.position.x = left_elbow.getOrigin().x();
-//                pose.position.y = left_elbow.getOrigin().y();
-//                pose.position.z = left_elbow.getOrigin().z();
-//                pose.orientation.w = 1;
-//                msg.request.poses.push_back(pose);
-//                msg.request.weights = {0.9, 0.9};
-//
-//                if (InverseKinematicsMultipleFramesService(msg.request, msg.response)) {
-//                    for (int i = 0; i < msg.response.joint_names.size(); i++) {
-//                        q_target[joint_index[msg.response.joint_names[i]]] = (0.3 * msg.response.angles[i] + 0.7 *
-//                                                                                                             q_target[joint_index[msg.response.joint_names[i]]]);
-//                    }
-//                }
-//            }
-//            tf::StampedTransform upper_arm_left, lower_arm_left;
-//            try{
-//                listener->lookupTransform("world", "upper_arm_left",
-//                                          ros::Time(0), upper_arm_left);
-//                listener->lookupTransform("world", "lower_arm_left",
-//                                          ros::Time(0), lower_arm_left);
-//            }
-//            catch (tf::TransformException ex){
-//                ROS_ERROR_THROTTLE(5,"%s",ex.what());
-//            }
-//        }
-//        if(right_hand_available) {
-//            roboy_middleware_msgs::InverseKinematicsMultipleFrames msg;
-//            msg.request.endeffector = "hand_right";
-//            msg.request.target_frames = {"hand_right", "elbow_right_link1"};
-//            msg.request.type = 1;
-//            geometry_msgs::Pose pose;
-//            pose.position.x = right_hand.getOrigin().x();
-//            pose.position.y = right_hand.getOrigin().y();
-//            pose.position.z = right_hand.getOrigin().z();
-//            pose.orientation.w = 1;
-//            msg.request.poses.push_back(pose);
-//            pose.position.x = right_elbow.getOrigin().x();
-//            pose.position.y = right_elbow.getOrigin().y();
-//            pose.position.z = right_elbow.getOrigin().z();
-//            pose.orientation.w = 1;
-//            msg.request.poses.push_back(pose);
-//            msg.request.weights = {0.9, 0.9};
-//
-//            if (InverseKinematicsMultipleFramesService(msg.request, msg.response)) {
-//                for (int i = 0; i < msg.response.joint_names.size(); i++) {
-//                    q_target[joint_index[msg.response.joint_names[i]]] = (0.3*msg.response.angles[i]+0.7*q_target[joint_index[msg.response.joint_names[i]]]);
-//                }
-//            }
-//        }
     };
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
-    ros::Subscriber motor_status_sub;
+    ros::Subscriber motor_status_sub, motor_state_sub;
     ros::ServiceServer init_pose;
     ros::AsyncSpinner *spinner;
-    map<string,ros::ServiceClient> motor_control_mode, motor_config;
-    vector<string> body_parts = {"head", "shoulder_right", "shoulder_left"};
-    map<string, vector<string>> endeffector_jointnames;
+    ros::ServiceClient motor_control_mode, motor_config;
 
-    map<string, bool> motor_status_received;
-    map<string, int> init_mode, init_setpoint;
-    map<string,vector<int>> real_motor_ids, sim_motor_ids, motor_type;
-    map<string,vector<double>> l_offset, position, velocity, displacement;
-    map<string,int> bodyPartIDs;
-    map<string,bool> use_motor_config;
+    map<int,int> pos, initial_pos;
+    bool motor_status_received;
+    vector<int> real_motor_ids = {0,1,2,3,5,4,7,6}, sim_motor_ids = {0,1,2,3,4,5,6,7};
+    map<int,double> l_offset, position;
     boost::shared_ptr<tf::TransformListener> listener;
-    float upper_arm_model_length = 0.262;
 };
 
 int main(int argc, char *argv[]) {
