@@ -143,6 +143,7 @@ namespace cardsflow {
              * @return success
              */
             bool parseViapoints(const string &viapoints_file_path, vector<Cable> &cables);
+        public:
             /**
              * Forward kinematic service for endeffectors
              * @param req endeffector, requested joint angles
@@ -162,6 +163,7 @@ namespace cardsflow {
 
             bool InverseKinematicsMultipleFramesService(roboy_middleware_msgs::InverseKinematicsMultipleFrames::Request &req,
                                                         roboy_middleware_msgs::InverseKinematicsMultipleFrames::Response &res);
+        private:
             /**
              * Callback for Interactive Marker Feedback of endeffectors. When the Interactive Marker is released in rviz,
              * the IK routine is called and the solution directly applied to the robot q_target angles
@@ -199,7 +201,7 @@ namespace cardsflow {
             ros::ServiceServer ik_srv, ik_two_frames_srv, fk_srv;
             map<string,boost::shared_ptr<actionlib::SimpleActionServer<roboy_control_msgs::MoveEndEffectorAction>>> moveEndEffector_as;
 
-            iDynTree::KinDynComputations kinDynComp, kinDynCompTarget; /// the full robot model
+
             map<string,iDynTree::KinDynComputations> ik_models; /// the robot models for each endeffector
             map<string,iDynTree::InverseKinematics> ik; /// the ik for each endeffector
             map<string,string> ik_base_link; /// the base link of each endeffector
@@ -218,6 +220,7 @@ namespace cardsflow {
                 iDynTree::Vector3       gravity;
             }robotstate;
         public:
+            iDynTree::KinDynComputations kinDynComp, kinDynCompTarget; /// the full robot model
             size_t number_of_dofs = 0; /// number of degrees of freedom of the whole robot
             vector<string> endeffectors; /// names of the endeffectors
             map<string,size_t> endeffector_index;
@@ -226,7 +229,8 @@ namespace cardsflow {
             size_t number_of_cables = 0; /// number of cables, ie muscles of the whole robot
             size_t number_of_links = 0; /// number of links of the whole robot
             Matrix4d world_H_base; /// floating base 6-DoF pose
-            vector<Matrix4d> world_to_link_transform, link_to_world_transform, frame_transform;
+            vector<Matrix4d> world_to_link_transform, link_to_world_transform, link_to_world_transform_prev, frame_transform;
+            vector<Matrix4d> target_poses, target_poses_prev;
             Eigen::Matrix<double,6,1> baseVel; /// the velocity of the floating base
             Vector3d gravity; /// gravity vector (default: (0,0,-9.81)
             MatrixXd M; /// The Mass matrix of the robot
@@ -246,6 +250,7 @@ namespace cardsflow {
             vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments
             bool external_robot_state; /// indicates if we get the robot state externally
             bool simulated = false; /// indicates if the robots is simulated or hardware is used
+            bool initialized = false;
         protected:
             iDynTree::FreeFloatingGeneralizedTorques bias; /// Coriolis+Gravity term
             iDynTree::MatrixDynSize Mass; /// Mass matrix
@@ -268,13 +273,13 @@ namespace cardsflow {
             int qp_print_level = PL_NONE; /// qpoases print level
             SQProblem qp_solver; /// qpoases quadratic problem solver
             real_t *H, *g, *A, *lb, *ub, *b, *FOpt; /// quadratic problem variables
-            ros::Time last_visualization; /// timestamp for visualization at reasonable intervals
+            ros::Time last_visualization, last_visualization_forced; /// timestamp for visualization at reasonable intervals
             Eigen::IOFormat fmt; /// formator for terminal printouts
             hardware_interface::JointStateInterface joint_state_interface; /// ros control joint state interface
             hardware_interface::EffortJointInterface joint_command_interface; /// ros control joint command interface
             hardware_interface::CardsflowStateInterface cardsflow_state_interface; /// cardsflow state interface
             hardware_interface::CardsflowCommandInterface cardsflow_command_interface; /// cardsflow command interface
-            bool first_update = true;
+            bool first_update_target = true, first_update = true;
         };
     }
 }

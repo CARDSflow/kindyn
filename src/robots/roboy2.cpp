@@ -9,19 +9,19 @@
 
 using namespace std;
 
-class RoboyIcecream: public cardsflow::vrpuppet::Robot{
+class Roboy2: public cardsflow::vrpuppet::Robot{
 public:
     /**
      * Constructor
      * @param urdf path to urdf
      * @param cardsflow_xml path to cardsflow xml
      */
-    RoboyIcecream(string urdf, string cardsflow_xml){
+    Roboy2(string urdf, string cardsflow_xml){
 
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
-            ros::init(argc, argv, "roboy_icecream");
+            ros::init(argc, argv, "roboy2");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         spinner = new ros::AsyncSpinner(0);
@@ -71,8 +71,8 @@ public:
         init(urdf,cardsflow_xml,joint_names);
         update();
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
-        motor_status_sub = nh->subscribe("roboy/middleware/MotorStatus",1,&RoboyIcecream::MotorStatus, this);
-        init_pose = nh->advertiseService("init_pose",&RoboyIcecream::initPose,this);
+        motor_status_sub = nh->subscribe("roboy/middleware/MotorStatus",1,&Roboy2::MotorStatus, this);
+        init_pose = nh->advertiseService("init_pose",&Roboy2::initPose,this);
         ROS_INFO_STREAM("Finished setup");
     };
 
@@ -268,7 +268,7 @@ public:
     ros::ServiceServer init_pose;
     ros::AsyncSpinner *spinner;
     map<string,ros::ServiceClient> motor_control_mode, motor_config;
-    vector<string> body_parts = {"head", "shoulder_right", "shoulder_left"};
+    vector<string> body_parts = {"head"};//, "shoulder_left"};
     map<string, vector<string>> endeffector_jointnames;
 
     map<string, bool> motor_status_received;
@@ -297,7 +297,7 @@ int main(int argc, char *argv[]) {
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
 
-    RoboyIcecream robot(urdf, cardsflow_xml);
+    Roboy2 robot(urdf, cardsflow_xml);
 
     if (nh.hasParam("simulated")) {
       nh.getParam("simulated", robot.simulated);
