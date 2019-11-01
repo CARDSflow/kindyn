@@ -173,6 +173,10 @@ target_link_libraries(roboy_icecream ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} v
 add_executable( shoulder_testbed src/robots/shoulder_testbed.cpp)
 target_link_libraries(shoulder_testbed ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
+# roboy_ciie
+add_executable( roboy_ciie src/robots/roboy_ciie.cpp)
+target_link_libraries(roboy_ciie ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
+
 #==============================================================================
 # Installation
 #==============================================================================
