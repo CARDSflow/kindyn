@@ -20,7 +20,7 @@ public:
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
-            ros::init(argc, argv, "roboy_icecream");
+            ros::init(argc, argv, "roboy_ciie");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         for(auto part:body_parts) {
@@ -247,7 +247,7 @@ public:
     ros::Subscriber motor_status_sub;
     ros::ServiceServer init_pose;
     map<string,ros::ServiceClient> motor_control_mode, motor_config;
-    vector<string> body_parts = {"arm_right", "shoulder_right", "arm_left", "shoulder_left"};
+    vector<string> body_parts = {"head"}; //""shoulder_left","shoulder_right",",
     map<string, vector<string>> endeffector_jointnames;
     bool initialized = false;
     map<string, bool> motor_status_received;
