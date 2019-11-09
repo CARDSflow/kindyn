@@ -35,9 +35,10 @@ find_package(catkin REQUIRED COMPONENTS
 		eigen_conversions
 		effort_controllers
 		roboy_control_msgs
+		darkroom
 )
 
-catkin_package( CATKIN_DEPENDS roboy_middleware_msgs common_utilities
+catkin_package( CATKIN_DEPENDS roboy_middleware_msgs common_utilities darkroom
         INCLUDE_DIRS include)
 
 # Eigen
@@ -133,10 +134,6 @@ target_link_libraries(test_robot ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindy
 add_executable( msj_platform src/robots/msj_platform.cpp)
 target_link_libraries(msj_platform ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
-# roboy_upper_body
-add_executable( roboy_upper_body src/robots/roboy_upper_body.cpp)
-target_link_libraries(roboy_upper_body ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
-
 # roboy_arcade_maschine
 add_executable( roboy_arcade_maschine src/robots/roboy_arcade_maschine.cpp)
 target_link_libraries(roboy_arcade_maschine ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
@@ -157,10 +154,6 @@ target_link_libraries(yatr ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 add_executable( rikshaw src/robots/rikshaw.cpp)
 target_link_libraries(rikshaw ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
 
-# roboy_head
-add_executable( roboy_head src/robots/roboy_head.cpp)
-target_link_libraries(roboy_head ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
-
 # VRpuppet
 add_executable( VRpuppet src/robots/VRpuppet.cpp)
 target_link_libraries(VRpuppet ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
@@ -172,10 +165,6 @@ target_link_libraries(roboy_icecream ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} v
 # shoulder_testbed
 add_executable( shoulder_testbed src/robots/shoulder_testbed.cpp)
 target_link_libraries(shoulder_testbed ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} kindyn)
-
-# roboy2
-add_executable( roboy2 src/robots/roboy2.cpp)
-target_link_libraries(roboy2 ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
 
 # exohaptic
 add_executable( exohaptic src/robots/exohaptic.cpp)
@@ -196,7 +185,6 @@ install(TARGETS
 
 install(TARGETS
 		msj_platform
-		roboy_upper_body
 		roboy_arcade_maschine
 		roboy_xylophone
 	    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

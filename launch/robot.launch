@@ -3,7 +3,7 @@
     <arg name="model_name" default="$(arg robot_name)"/>
     <arg name="urdf_file_name" default="model.urdf"/>
     <arg name="start_controllers" default="sphere_axis0 sphere_axis1 sphere_axis2"/>
-    <arg name="simulated" default="false"/>
+    <arg name="simulated" default="true"/>
     <arg name="gazebo" default="false"/>
     <arg name="paused" default="false"/>
     <arg name="use_sim_time" default="false"/>
@@ -16,7 +16,9 @@
     <arg name="y" default="0"/>
     <arg name="z" default="0"/>
     <arg name="physics" default="ode"/>
+    <arg name="darkroom_tracking_enabled" default="true"/>
 
+    <param name="darkroom_tracking_enabled" type="bool" value="$(arg darkroom_tracking_enabled)"  />
     <param name="robot_name" type="string" value="$(arg robot_name)"  />
     <param name="model_name" type="string" value="$(arg model_name)"  />
     <param name="robot_description" textfile="$(find robots)/$(arg model_name)/model.urdf" />

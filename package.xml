@@ -17,6 +17,7 @@
     <depend>controller_interface</depend>
     <depend>roboy_middleware_msgs</depend>
     <depend>roboy_simulation_msgs</depend>
+    <depend>darkroom</depend>
 
     <export>
         <controller_interface plugin="${prefix}/CableLengthController_plugin.xml"/>
