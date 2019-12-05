@@ -8,11 +8,25 @@ rospy.init_node("trajectory")
 
 joint_targets = rospy.Publisher('/joint_targets', JointState, queue_size=1)
 
-axis0 = [0,-math.pi/2,-math.pi/2,-math.pi/2]
-axis1 = [0,0,-math.pi/2,-math.pi/2]
-axis2 = [0,0,0,-math.pi/2]
+def degree2rad(degree):
+    return (math.pi/180*degree)
 
-time = [5,10,15,0]
+# # trajectory 1
+# axis0 = [0,-degree2rad(100),-degree2rad(100),0,0]
+# axis1 = [0,0,0,0,0]
+# axis2 = [0,0,-degree2rad(90),-degree2rad(90),0]
+
+# # trajectory 2
+# axis0 = [0,0,0,0,0]
+# axis1 = [0,-degree2rad(100),-degree2rad(100),0,0]
+# axis2 = [0,0,-degree2rad(90),-degree2rad(90),0]
+
+# trajectory 3
+axis0 = [0,-degree2rad(90),0,0,0]
+axis1 = [0,0,-degree2rad(90),0,0]
+axis2 = [0,0,0,0,0]
+
+time = [5,10,15,20,25]
 sampleTime = 0.01
 axis0_increment = []
 axis1_increment = []
