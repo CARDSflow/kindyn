@@ -11,11 +11,9 @@
 #include <tf/tf.h>
 #include <tf/transform_listener.h>
 
-#define myoBrickMeterPerEncoder0Tick(encoderTicks) ((encoderTicks)/(512.0*4.0*53.0)*(M_PI*0.00845))
-#define myoBrickEncoder0TicksPerMeter(meter) ((meter)*(512.0*4.0*53.0)/(M_PI*0.00845))
+#define myoBrickMeterPerEncoder0Tick(encoderTicks) ((encoderTicks)/(512.0*4.0*53.0)*(M_PI*0.012))
+#define myoBrickEncoder0TicksPerMeter(meter) ((meter)*(512.0*4.0*53.0)/(M_PI*0.012))
 
-#define myoBrickMeterPerEncoder1Tick(encoderTicks) ((encoderTicks)/(4096.0*4.0)*(M_PI*0.00845))
-#define myoBrickEncoder1TicksPerMeter(meter) ((meter)*(4096.0*4.0)/(M_PI*0.00845))
 
 using namespace std;
 
@@ -46,7 +44,7 @@ public:
         update();
 
         motor_status_sub = nh->subscribe("/roboy/middleware/MotorStatus",1,&RightArmTestbed::MotorStatus,this);
-        motor_state_sub = nh->subscribe("/roboy/middleware/MotorState",1,&RightArmTestbed::MotorState,this);
+//        motor_state_sub = nh->subscribe("/roboy/middleware/MotorState",1,&RightArmTestbed::MotorState,this);
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
         init_pose = nh->advertiseService("init_pose",&RightArmTestbed::initPose,this);
         motor_config = nh->serviceClient<roboy_middleware_msgs::MotorConfigService>( "/roboy/middleware/MotorConfig");
@@ -73,7 +71,7 @@ public:
         msg.request.config.control_mode = {3,3,3,3,3,3,3,3};
         msg.request.config.Kp = {1,1,1,1,1,1,1,1};
         msg.request.config.PWMLimit = {500,500,500,500,500,500,500,500};
-        msg.request.config.setpoint = {200,200,200,200,200,200,400,200};
+        msg.request.config.setpoint = {200,200,200,200,200,400,400,200};
         motor_config.call(msg);
 
         ros::Time t0;
@@ -106,7 +104,7 @@ public:
         msg.request.config.motor = {0,1,2,3,4,5,6,7};
         msg.request.config.control_mode = {0,0,0,0,0,0,0,0};
         msg.request.config.Kp = {5,5,5,5,5,5,5,5};
-        msg.request.config.PWMLimit = {1000,1000,1000,1000,1000,1000,1000,1000};
+        msg.request.config.PWMLimit = {2000,2000,2000,2000,2000,2000,2000,2000};
         msg.request.config.setpoint = {(int)position[0],
                                        (int)position[1],
                                        (int)position[2],
@@ -116,7 +114,6 @@ public:
                                        (int)position[6],
                                        (int)position[7]};
         motor_config.call(msg);
-
         ROS_INFO("pose init done");
         initialized = true;
         return true;
@@ -154,10 +151,7 @@ public:
             for (int i = 0; i < sim_motor_ids.size(); i++) {
                 l_meter.push_back(-l_target[i] + l_offset[i]);
                 str << sim_motor_ids[i] << "\t" << l_meter[i] << "\t";
-                if(i<4)
-                    str << myoBrickEncoder1TicksPerMeter(l_meter[i]) << "\t";
-                else
-                    str << myoBrickEncoder0TicksPerMeter(l_meter[i]) << "\t";
+                str << myoBrickEncoder0TicksPerMeter(l_meter[i]) << "\t";
             }
             str << endl;
 //            {
