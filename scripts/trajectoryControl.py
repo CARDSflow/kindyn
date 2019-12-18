@@ -12,21 +12,21 @@ def degree2rad(degree):
     return (math.pi/180*degree)
 
 # trajectory 1
-axis0 = [0,-degree2rad(90)  ,-degree2rad(90),   -degree2rad(90),0]
-axis1 = [0,0,0,0,0]
-axis2 = [0,0                ,-degree2rad(90),   -degree2rad(90),0]
+axis0 = [0,-degree2rad(60)  ,-degree2rad(60),   -degree2rad(60),    -degree2rad(60),   -degree2rad(60),0]
+axis1 = [0,0,0,0,0,0,0]
+axis2 = [0,0                ,-degree2rad(90),   degree2rad(90),    -degree2rad(90),   degree2rad(90),0]
 
 # # trajectory 2
-# axis0 = [0,0,0,0,0]
-# axis1 = [0,-degree2rad(90) ,-degree2rad(90)   ,-degree2rad(90)   ,0]
-# axis2 = [0,0                ,-degree2rad(90)    ,degree2rad(90)     ,0]
+# axis0 = [0,0,0,0,0,0,0]
+# axis1 = [0,-degree2rad(60) ,-degree2rad(60)   ,-degree2rad(60), -degree2rad(60)   ,-degree2rad(60)   ,0]
+# axis2 = [0,0                ,-degree2rad(90)    ,degree2rad(90),-degree2rad(90)    ,degree2rad(90)     ,0]
 
-# # trajectory 3
-# axis0 = [0,-degree2rad(90),0,0,0]
-# axis1 = [0,0,-degree2rad(90),0,0]
-# axis2 = [0,0,0,0,0]
+# # # trajectory 3
+# axis0 = [0,-degree2rad(20)  ,-degree2rad(20),   -degree2rad(20),    -degree2rad(20),   -degree2rad(20),0]
+# axis1 = [0,-degree2rad(20)  ,-degree2rad(20),   -degree2rad(20),    -degree2rad(20),   -degree2rad(20),0]
+# axis2 = [0,0                ,-degree2rad(90),   degree2rad(90),    -degree2rad(90),   degree2rad(90),0]
 
-time = [5,10,15,20,25]
+time = [5,10,15,20,25,30,35]
 sampleTime = 0.01
 axis0_increment = []
 axis1_increment = []
