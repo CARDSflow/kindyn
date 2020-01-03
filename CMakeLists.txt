@@ -129,6 +129,10 @@ target_link_libraries(test_idyntree ${iDynTree_LIBRARIES} ${catkin_LIBRARIES})
 add_executable( arm_right_testbed src/robots/arm_right_testbed.cpp)
 target_link_libraries(arm_right_testbed ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
 
+# head_testbed
+add_executable( head_testbed src/robots/head_testbed.cpp)
+target_link_libraries( head_testbed ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
+
 #==============================================================================
 # Installation
 #==============================================================================
