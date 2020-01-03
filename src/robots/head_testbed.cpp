@@ -12,9 +12,8 @@
 #include <tf/transform_listener.h>
 #include <common_utilities/UDPSocket.hpp>
 
-#define SPINDLE_RADIUS 0.0055
-#define m3MeterPerEncoderTick(encoderTicks) ((encoderTicks/360.0f)*(2.0*M_PI*SPINDLE_RADIUS))
-#define m3EncoderTickPerMeter(meter) ((2.0*M_PI*SPINDLE_RADIUS))
+#define m3MeterPerEncoderTick(encoderTicks,spindelRadius) ((encoderTicks/360.0f)*(2.0*M_PI*spindelRadius))
+#define m3EncoderTickPerMeter(meter,spindelRadius) (meter/(2.0*M_PI*spindelRadius)*360)
 
 #define POSITION 0
 #define VELOCITY 1
@@ -68,12 +67,12 @@ public:
     bool initPose(std_srvs::Empty::Request &req,
                   std_srvs::Empty::Response &res){
         initialized = false;
-        for(auto m:ip_address){
+        for(auto &m:ip_address){
             Kp[m.first] = 1;
             Kd[m.first] = 0;
             Ki[m.first] = 0;
             control_mode[m.first] = DISPLACEMENT;
-            set_points[m.first] = 500;
+            set_points[m.first] = 200;
         }
         ROS_INFO("changing to displacement, setpoint 500");
         controlModeChanged();
@@ -85,9 +84,9 @@ public:
         str << "saving position offsets:" << endl << "sim motor id   |  real motor id  |   position offset [ticks]  | length_sim[m] | length offset[m]" << endl;
         for (int i = 0; i<sim_motor_ids.size();i++) str << i << ": " << motor_position[i] << ", ";
         str << endl;
-        for(auto m:ip_address) {
+        for(auto &m:ip_address) {
             control_mode[m.first] = POSITION;
-            l_offset[m.first] = l[sim_motor_ids[m.first]] + m3MeterPerEncoderTick(motor_position[m.first]);
+            l_offset[m.first] = l[sim_motor_ids[m.first]] + m3MeterPerEncoderTick(motor_position[m.first],spindelRadius[m.first]);
             str << sim_motor_ids[m.first] << "\t|\t" << real_motor_ids[m.first] << "\t|\t" << motor_position[m.first] << "\t|\t" << l[sim_motor_ids[m.first]] << "\t|\t" << l_offset[m.first] << endl;
         }
         ROS_INFO_STREAM(str.str());
@@ -134,7 +133,7 @@ public:
 
                 roboy_middleware_msgs::MotorStatus msg;
                 msg.id = 69;
-                for(auto m:ip_address){
+                for(auto &m:ip_address){
                     msg.position.push_back(motor_position[m.first]);
                     msg.velocity.push_back(motor_velocity[m.first]);
                     msg.displacement.push_back(motor_displacement[m.first]);
@@ -146,23 +145,22 @@ public:
         ROS_INFO("stop receiving udp");
     }
 
-    void sendCommand(){
+    void sendCommand(int m){
         udp_command->client_addr.sin_port = htons(8001);
         udp_command->numbytes = 10;
-        for (auto m:ip_address) {
-            mempcpy(udp_command->buf, &set_points[m.first], 4);
-            mempcpy(&udp_command->buf[4], &m.first, 4);
-            udp_command->numbytes = 10;
-            udp_command->client_addr.sin_addr.s_addr = inet_addr(m.second.c_str());
-            udp_command->sendUDPToClient();
-        }
+        mempcpy(udp_command->buf, &set_points[m], 4);
+        mempcpy(&udp_command->buf[4], &m, 4);
+        udp_command->numbytes = 10;
+        udp_command->client_addr.sin_addr.s_addr = inet_addr(ip_address[m].c_str());
+        udp_command->sendUDPToClient();
     }
 
     void controlModeChanged(){
-        for(auto m:ip_address) {
-            mempcpy(&udp_command->buf[0], &Kd, 4);
-            mempcpy(&udp_command->buf[4], &Ki, 4);
-            mempcpy(&udp_command->buf[8], &Kp, 4);
+        for(auto &m:ip_address) {
+            ROS_INFO("updating control_mode of motor %d with IP %s to control_mode %d",m.first,m.second.c_str(),control_mode[m.first]);
+            mempcpy(&udp_command->buf[0], &Kd[m.first], 4);
+            mempcpy(&udp_command->buf[4], &Ki[m.first], 4);
+            mempcpy(&udp_command->buf[8], &Kp[m.first], 4);
             mempcpy(&udp_command->buf[12], &control_mode[m.first], 4);
             mempcpy(&udp_command->buf[16], &m.first, 4);
 
@@ -171,17 +169,14 @@ public:
             udp_command->client_addr.sin_addr.s_addr = inet_addr(m.second.c_str());
             udp_command->sendUDPToClient();
 
+            ros::Duration d(0.1);
+            d.sleep();
+
             if (control_mode[m.first] == POSITION) {
-                udp_command->numbytes = 10;
                 set_points[m.first] = motor_position[m.first];
-                mempcpy(udp_command->buf, &set_points[m.first], 4);
-                mempcpy(&udp_command->buf[4], &m.first, 4);
-                udp_command->sendUDPToClient();
+                sendCommand(m.first);
             }else{
-                udp_command->numbytes = 10;
-                mempcpy(udp_command->buf, &set_points[m.first], 4);
-                mempcpy(&udp_command->buf[4], &m.first, 4);
-                udp_command->sendUDPToClient();
+                sendCommand(m.first);
             }
         }
     }
@@ -204,21 +199,13 @@ public:
             for (int i = 0; i < sim_motor_ids.size(); i++) {
                 l_meter.push_back(-l_target[i] + l_offset[i]);
                 str << sim_motor_ids[i] << "\t" << l_meter[i] << "\t";
-                str << m3EncoderTickPerMeter(l_meter[i]) << "\t";
+                str << m3EncoderTickPerMeter(l_meter[i],spindelRadius[i]) << "\t";
             }
             str << endl;
-//            {
-//                roboy_middleware_msgs::MotorCommand msg;
-//                msg.legacy = true;
-//                msg.motor = {};
-//                msg.setpoint = {}; //.resize(4);
-//                for (int i = 0; i < 8; i++) {
-//                    msg.motor.push_back(real_motor_ids[i]);
-//                    msg.setpoint.push_back(myoBrickEncoder0TicksPerMeter(l_meter[i]));
-////                    msg.setpoint[real_motor_ids[i]] = myoBrickEncoder0TicksPerMeter(l_meter[i]);
-//                }
-//                motor_command.publish(msg);
-//            }
+            ROS_INFO_STREAM_THROTTLE(1,str.str());
+            for(auto &m:ip_address){
+                set_points[real_motor_ids[m.first]] = m3EncoderTickPerMeter(l_meter[m.first],spindelRadius[m.first]);
+            }
         }
     };
     ros::NodeHandlePtr nh; /// ROS nodehandle
@@ -232,10 +219,12 @@ public:
     map<int,int> pos, initial_pos;
     bool motor_status_received;
     vector<int> real_motor_ids = {0,1,2,3,4,5}, sim_motor_ids = {0,1,2,3,4,5};
+    vector<float> spindelRadius = {0.006,0.006,0.009,0.006,0.009,0.009};
     boost::shared_ptr<tf::TransformListener> listener;
     int counter = 0;
     map<int,int> set_points;
-    map<int,double> l_offset, motor_position, motor_velocity, motor_displacement, motor_pwm;
+    map<int,double> l_offset;
+    map<int,int> motor_position, motor_velocity, motor_displacement, motor_pwm;
     map<int,string> ip_address;
     UDPSocketPtr udp, udp_command;
     boost::shared_ptr<thread> udp_thread;
