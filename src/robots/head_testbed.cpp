@@ -12,9 +12,6 @@
 #include <tf/transform_listener.h>
 #include <common_utilities/UDPSocket.hpp>
 
-#define m3MeterPerEncoderTick(encoderTicks,spindelRadius) ((encoderTicks/360.0f)*(2.0*M_PI*spindelRadius))
-#define m3EncoderTickPerMeter(meter,spindelRadius) (meter/(2.0*M_PI*spindelRadius)*360)
-
 #define POSITION 0
 #define VELOCITY 1
 #define DISPLACEMENT 2
@@ -57,12 +54,20 @@ public:
         udp_thread.reset(new std::thread(&HeadTestbed::receiveStatusUDP, this));
         udp_thread->detach();
 
-        ROS_INFO("waiting a bit for new motors");
-        ros::Duration d(3);
-        d.sleep();
+        while(ip_address.size()!=6 && ros::ok()){
+            ROS_INFO_THROTTLE(1,"waiting for all motors, have %d/6", ip_address.size());
+        }
 
         ROS_INFO_STREAM("Finished setup");
     };
+
+    float m3MeterPerEncoderTick(int motor_pos, float spindelRadius) {
+        return (motor_pos / 360.0f) * (2.0 * M_PI * spindelRadius);
+    }
+
+    int m3EncoderTickPerMeter(float meter,float spindelRadius){
+        return meter/(2.0*M_PI*spindelRadius)*360;
+    }
 
     bool initPose(std_srvs::Empty::Request &req,
                   std_srvs::Empty::Response &res){
@@ -72,11 +77,11 @@ public:
             Kd[m.first] = 0;
             Ki[m.first] = 0;
             control_mode[m.first] = DISPLACEMENT;
-            set_points[m.first] = 200;
+            set_points[m.first] = 1000;
         }
         ROS_INFO("changing to displacement, setpoint 500");
         controlModeChanged();
-        ROS_INFO("waiting 5 sec");
+        ROS_INFO("waiting 3 sec");
         ros::Duration d(3);
         d.sleep();
         ROS_INFO("changing to position control");
@@ -116,7 +121,6 @@ public:
                     inet_ntop(AF_INET, &udp->client_addr.sin_addr, IP, INET_ADDRSTRLEN);
                     ROS_INFO("new motor %d %s", motor, IP);
                     ip_address[motor] = IP;
-                    continue;
                 }
                 int32_t pos = (int32_t) ((uint8_t) udp->buf[7] << 24 | (uint8_t) udp->buf[6] << 16 |
                                          (uint8_t) udp->buf[5] << 8 | (uint8_t) udp->buf[4]);
@@ -196,15 +200,18 @@ public:
         }else{
             stringstream str;
             vector<double> l_meter;
+            str << "-------------------" << endl;
+            char s[200];
             for (int i = 0; i < sim_motor_ids.size(); i++) {
                 l_meter.push_back(-l_target[i] + l_offset[i]);
-                str << sim_motor_ids[i] << "\t" << l_meter[i] << "\t";
-                str << m3EncoderTickPerMeter(l_meter[i],spindelRadius[i]) << "\t";
+                sprintf(s,"motor %d:     %f meter,    %d ticks\n", sim_motor_ids[i],l_meter[i],m3EncoderTickPerMeter(l_meter[i],spindelRadius[i]/1.2));
+                str << s;
             }
             str << endl;
             ROS_INFO_STREAM_THROTTLE(1,str.str());
             for(auto &m:ip_address){
-                set_points[real_motor_ids[m.first]] = m3EncoderTickPerMeter(l_meter[m.first],spindelRadius[m.first]);
+                set_points[real_motor_ids[m.first]] = m3EncoderTickPerMeter(l_meter[m.first],spindelRadius[m.first]/1.2) - 0.1*motor_displacement[m.first];
+                sendCommand(m.first);
             }
         }
     };
