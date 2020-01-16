@@ -15,6 +15,7 @@
 #define POSITION 0
 #define VELOCITY 1
 #define DISPLACEMENT 2
+#define DIRECT_PWM 3
 
 using namespace std;
 
@@ -60,47 +61,6 @@ public:
 
         ROS_INFO_STREAM("Finished setup");
     };
-
-    float m3MeterPerEncoderTick(int motor_pos, float spindelRadius) {
-        return (motor_pos / 360.0f) * (2.0 * M_PI * spindelRadius);
-    }
-
-    int m3EncoderTickPerMeter(float meter,float spindelRadius){
-        return meter/(2.0*M_PI*spindelRadius)*360;
-    }
-
-    bool initPose(std_srvs::Empty::Request &req,
-                  std_srvs::Empty::Response &res){
-        initialized = false;
-        for(auto &m:ip_address){
-            Kp[m.first] = 1;
-            Kd[m.first] = 0;
-            Ki[m.first] = 0;
-            control_mode[m.first] = DISPLACEMENT;
-            set_points[m.first] = 1000;
-        }
-        ROS_INFO("changing to displacement, setpoint 500");
-        controlModeChanged();
-        ROS_INFO("waiting 3 sec");
-        ros::Duration d(3);
-        d.sleep();
-        ROS_INFO("changing to position control");
-        stringstream str;
-        str << "saving position offsets:" << endl << "sim motor id   |  real motor id  |   position offset [ticks]  | length_sim[m] | length offset[m]" << endl;
-        for (int i = 0; i<sim_motor_ids.size();i++) str << i << ": " << motor_position[i] << ", ";
-        str << endl;
-        for(auto &m:ip_address) {
-            control_mode[m.first] = POSITION;
-            l_offset[m.first] = l[sim_motor_ids[m.first]] + m3MeterPerEncoderTick(motor_position[m.first],spindelRadius[m.first]);
-            str << sim_motor_ids[m.first] << "\t|\t" << real_motor_ids[m.first] << "\t|\t" << motor_position[m.first] << "\t|\t" << l[sim_motor_ids[m.first]] << "\t|\t" << l_offset[m.first] << endl;
-        }
-        ROS_INFO_STREAM(str.str());
-        controlModeChanged();
-
-        ROS_INFO("pose init done");
-        initialized = true;
-        return true;
-    }
 
     void receiveStatusUDP() {
         ROS_INFO("start receiving udp");
@@ -185,6 +145,50 @@ public:
         }
     }
 
+    float m3MeterPerEncoderTick(int motor_pos, float spindelRadius) {
+        return (motor_pos / 360.0f) * (2.0 * M_PI * spindelRadius);
+    }
+
+    int m3EncoderTickPerMeter(float meter,float spindelRadius){
+        return meter/(2.0*M_PI*spindelRadius)*360;
+    }
+
+    bool initPose(std_srvs::Empty::Request &req,
+                  std_srvs::Empty::Response &res){
+        initialized = false;
+        for(auto &m:ip_address){
+            Kp[m.first] = 1;
+            Kd[m.first] = 0;
+            Ki[m.first] = 0;
+            control_mode[m.first] = DIRECT_PWM;
+            set_points[m.first] = -300;
+        }
+        ROS_INFO("changing to displacement, setpoint 500");
+        controlModeChanged();
+        ROS_INFO("waiting 3 sec");
+        ros::Duration d(3);
+        d.sleep();
+        ROS_INFO("changing to position control");
+        stringstream str;
+        str << "saving position offsets:" << endl << "sim motor id   |  real motor id  |   position offset [ticks]  | length_sim[m] | length offset[m]" << endl;
+        for (int i = 0; i<sim_motor_ids.size();i++) str << i << ": " << motor_position[i] << ", ";
+        str << endl;
+        for(auto &m:ip_address) {
+            Kp[m.first] = 300;
+            Kd[m.first] = 0;
+            Ki[m.first] = 10;
+            control_mode[m.first] = POSITION;
+            l_offset[m.first] = l[sim_motor_ids[m.first]] + m3MeterPerEncoderTick(motor_position[m.first],spindelRadius[m.first]);
+            str << sim_motor_ids[m.first] << "\t|\t" << real_motor_ids[m.first] << "\t|\t" << motor_position[m.first] << "\t|\t" << l[sim_motor_ids[m.first]] << "\t|\t" << l_offset[m.first] << endl;
+        }
+        ROS_INFO_STREAM(str.str());
+        controlModeChanged();
+
+        ROS_INFO("pose init done");
+        initialized = true;
+        return true;
+    }
+
     /**
      * Updates the robot model
      */
@@ -204,13 +208,25 @@ public:
             char s[200];
             for (int i = 0; i < sim_motor_ids.size(); i++) {
                 l_meter.push_back(-l_target[i] + l_offset[i]);
-                sprintf(s,"motor %d:     %f meter,    %d ticks\n", sim_motor_ids[i],l_meter[i],m3EncoderTickPerMeter(l_meter[i],spindelRadius[i]/1.2));
+                sprintf(s,"motor %d: %f meter, %d ticks, %d disp, %f disp_meter\n", sim_motor_ids[i],
+                        l_meter[i],m3EncoderTickPerMeter(l_meter[i],spindelRadius[i]),
+                        motor_displacement[sim_motor_ids[i]],
+                        motor_displacement[sim_motor_ids[i]]/2000.0f*0.018f
+                        );
                 str << s;
             }
             str << endl;
             ROS_INFO_STREAM_THROTTLE(1,str.str());
             for(auto &m:ip_address){
-                set_points[real_motor_ids[m.first]] = m3EncoderTickPerMeter(l_meter[m.first],spindelRadius[m.first]/1.2) - 0.1*motor_displacement[m.first];
+//                float disp_error = 3000-motor_displacement[real_motor_ids[m.first]];
+//                integral[real_motor_ids[m.first]]+=disp_error *0.1;
+//                if(integral[real_motor_ids[m.first]]>200)
+//                    integral[real_motor_ids[m.first]] = 200;
+//                if(integral[real_motor_ids[m.first]]<-200)
+//                    integral[real_motor_ids[m.first]] = -200;
+                set_points[real_motor_ids[m.first]] = m3EncoderTickPerMeter(l_meter[m.first],spindelRadius[m.first]);
+//                        +0.1*disp_error+integral[real_motor_ids[m.first]];
+//                        m3EncoderTickPerMeter(motor_displacement[real_motor_ids[m.first]]/2000.0f*0.018f,spindelRadius[m.first]);
                 sendCommand(m.first);
             }
         }
@@ -226,7 +242,8 @@ public:
     map<int,int> pos, initial_pos;
     bool motor_status_received;
     vector<int> real_motor_ids = {0,1,2,3,4,5}, sim_motor_ids = {0,1,2,3,4,5};
-    vector<float> spindelRadius = {0.006,0.006,0.009,0.006,0.009,0.009};
+    vector<float> spindelRadius = {0.006,0.006,0.009,0.006,0.009,0.005};
+    vector<float> integral = {0,0,0,0,0,0};
     boost::shared_ptr<tf::TransformListener> listener;
     int counter = 0;
     map<int,int> set_points;
