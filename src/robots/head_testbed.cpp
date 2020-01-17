@@ -55,9 +55,14 @@ public:
         udp_thread.reset(new std::thread(&HeadTestbed::receiveStatusUDP, this));
         udp_thread->detach();
 
-        while(ip_address.size()!=6 && ros::ok()){
+        bool wait_for_all_motors = false;
+        nh->getParam("wait_for_all_motors", wait_for_all_motors);
+
+        while(ip_address.size()!=6 && ros::ok() && wait_for_all_motors){
             ROS_INFO_THROTTLE(1,"waiting for all motors, have %d/6", ip_address.size());
         }
+
+        nh->getParam("external_robot_state", external_robot_state);
 
         ROS_INFO_STREAM("Finished setup");
     };
@@ -161,7 +166,8 @@ public:
             Kd[m.first] = 0;
             Ki[m.first] = 0;
             control_mode[m.first] = DIRECT_PWM;
-            set_points[m.first] = -300;
+            set_points[m.first] = -100;
+            integral[m.first] = 0;
         }
         ROS_INFO("changing to displacement, setpoint 500");
         controlModeChanged();
@@ -202,12 +208,25 @@ public:
         if(!initialized){
             ROS_INFO_THROTTLE(1,"waiting for init_pose service call");
         }else{
+            double Kp_dl = 0, Ki_dl = 0, Kp_disp = 0;
+            nh->getParam("Kp_dl",Kp_dl);
+            nh->getParam("Ki_dl",Ki_dl);
+            nh->getParam("Kp_disp",Kp_disp);
             stringstream str;
             vector<double> l_meter;
             str << "-------------------" << endl;
             char s[200];
             for (int i = 0; i < sim_motor_ids.size(); i++) {
-                l_meter.push_back(-l_target[i] + l_offset[i]);
+                integral[i] += Ki_dl * (l_target[sim_motor_ids[i]]-l[sim_motor_ids[i]]);
+                if(integral[i]>0.05)
+                    integral[i] = 0.05;
+                if(integral[i]<-0.05)
+                    integral[i] = -0.05;
+                l_meter.push_back(
+                        -l_target[sim_motor_ids[i]] + l_offset[sim_motor_ids[i]]-
+                        Kp_dl*(l_target[sim_motor_ids[i]]-l[sim_motor_ids[i]])  - integral[i] +
+                                (400 - motor_displacement[sim_motor_ids[i]]) * Kp_disp
+                );
                 sprintf(s,"motor %d: %f meter, %d ticks, %d disp, %f disp_meter\n", sim_motor_ids[i],
                         l_meter[i],m3EncoderTickPerMeter(l_meter[i],spindelRadius[i]),
                         motor_displacement[sim_motor_ids[i]],
@@ -242,7 +261,7 @@ public:
     map<int,int> pos, initial_pos;
     bool motor_status_received;
     vector<int> real_motor_ids = {0,1,2,3,4,5}, sim_motor_ids = {0,1,2,3,4,5};
-    vector<float> spindelRadius = {0.006,0.006,0.009,0.006,0.009,0.005};
+    vector<float> spindelRadius = {0.005,0.006,0.009,0.006,0.009,0.005};
     vector<float> integral = {0,0,0,0,0,0};
     boost::shared_ptr<tf::TransformListener> listener;
     int counter = 0;
