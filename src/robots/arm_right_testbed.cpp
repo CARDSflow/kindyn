@@ -11,8 +11,8 @@
 #include <tf/tf.h>
 #include <tf/transform_listener.h>
 
-#define myoBrickMeterPerEncoder0Tick(encoderTicks) ((encoderTicks)/(512.0*4.0*53.0)*(M_PI*0.012))
-#define myoBrickEncoder0TicksPerMeter(meter) ((meter)*(512.0*4.0*53.0)/(M_PI*0.012))
+//#define myoBrickMeterPerEncoder0Tick(encoderTicks) ((encoderTicks)/(512.0*4.0*53.0)*(M_PI*0.017))
+//#define myoBrickEncoder0TicksPerMeter(meter) ((meter)*(512.0*4.0*53.0)/(M_PI*0.017))
 
 
 using namespace std;
@@ -85,7 +85,7 @@ public:
         for (int i = 0; i<sim_motor_ids.size();i++) str << i << ": " << position[i] << ", ";
         str << endl;
         for(int i=0;i<sim_motor_ids.size();i++) {
-            l_offset[i] = l[sim_motor_ids[i]] + myoBrickMeterPerEncoder0Tick(position[i]);
+            l_offset[i] = l[sim_motor_ids[i]] + myoBrickMeterPerEncoderTicks(position[i]);
             str << sim_motor_ids[i] << "\t|\t" << real_motor_ids[i] << "\t|\t" << position[i] << "\t|\t" << l[sim_motor_ids[i]] << "\t|\t" << l_offset[i] << endl;
         }
         ROS_INFO_STREAM(str.str());
@@ -119,6 +119,14 @@ public:
         return true;
     }
 
+    float myoBrickMeterPerEncoderTicks(int motor_pos) {
+        return (motor_pos)/(512.0*4.0*53.0)*(M_PI*0.0165);
+    }
+
+    int myoBrickEncoderTicksPerMeter(float meter){
+        return (meter)*(512.0*4.0*53.0)/(M_PI*0.0165);
+    }
+
     void MotorStatus(const roboy_middleware_msgs::MotorStatus::ConstPtr &msg){
         for (int i=0;i<8;i++) {
             position[i] = msg->position[i];
@@ -148,12 +156,29 @@ public:
         }else{
             stringstream str;
             vector<double> l_meter;
+            double Kp_dl = 0, Ki_dl = 0, Kp_disp = 0;
+            nh->getParam("Kp_dl",Kp_dl);
+            nh->getParam("Ki_dl",Ki_dl);
+
             for (int i = 0; i < sim_motor_ids.size(); i++) {
-                l_meter.push_back(-l_target[i] + l_offset[i]);
-                str << sim_motor_ids[i] << "\t" << l_meter[i] << "\t";
-                str << myoBrickEncoder0TicksPerMeter(l_meter[i]) << "\t";
+                float error = l[sim_motor_ids[i]] - l_target[sim_motor_ids[i]];
+                integral[i] += Ki_dl * error;
+                if(integral[i]>0.01)
+                    integral[i] = 0.01;
+                if(integral[i]<-0.01)
+                    integral[i] = -0.01;
+                if(Ki_dl==0){
+                    integral[i] = 0;
+                }
+                l_meter.push_back(
+                        (l_offset[i] - l_target[i]) +
+                        Kp_dl*error + integral[i]
+                );
+                str << sim_motor_ids[i] << "\n" << l_meter[i] << "\n";
+                str << myoBrickEncoderTicksPerMeter(l_meter[i]) << "\n" << error << "\n";
             }
             str << endl;
+            ROS_INFO_STREAM_THROTTLE(1,str.str());
 //            {
 //                roboy_middleware_msgs::MotorCommand msg;
 //                msg.legacy = false;
@@ -173,7 +198,7 @@ public:
                 msg.setpoint = {}; //.resize(4);
                 for (int i = 0; i < 8; i++) {
                     msg.motor.push_back(real_motor_ids[i]);
-                    msg.setpoint.push_back(myoBrickEncoder0TicksPerMeter(l_meter[i]));
+                    msg.setpoint.push_back(myoBrickEncoderTicksPerMeter(l_meter[i]));
 //                    msg.setpoint[real_motor_ids[i]] = myoBrickEncoder0TicksPerMeter(l_meter[i]);
                 }
                 motor_command.publish(msg);
@@ -191,6 +216,7 @@ public:
     bool motor_status_received;
     vector<int> real_motor_ids = {0,1,2,3,4,5,6,7}, sim_motor_ids = {0,1,2,3,4,5,6,7};
     map<int,double> l_offset, position;
+    vector<float> integral = {0,0,0,0,0,0,0,0};
     boost::shared_ptr<tf::TransformListener> listener;
 };
 
@@ -224,7 +250,7 @@ int main(int argc, char *argv[]) {
         if (!robot.simulated)
           robot.write();
         ros::spinOnce();
-        rate.sleep();
+//        rate.sleep();
     }
 
     ROS_INFO("TERMINATING...");
