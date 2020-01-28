@@ -43,11 +43,12 @@ public:
         listener.reset(new tf::TransformListener);
         update();
 
-        motor_status_sub = nh->subscribe("/roboy/middleware/MotorStatus",1,&RightArmTestbed::MotorStatus,this);
-//        motor_state_sub = nh->subscribe("/roboy/middleware/MotorState",1,&RightArmTestbed::MotorState,this);
+//        motor_status_sub = nh->subscribe("/roboy/middleware/MotorStatus",1,&RightArmTestbed::MotorStatus,this);
+        motor_state_sub = nh->subscribe("/roboy/middleware/MotorState",1,&RightArmTestbed::MotorState,this);
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
         init_pose = nh->advertiseService("init_pose",&RightArmTestbed::initPose,this);
         motor_config = nh->serviceClient<roboy_middleware_msgs::MotorConfigService>( "/roboy/middleware/MotorConfig");
+        control_mode = nh->serviceClient<roboy_middleware_msgs::ControlMode>( "/roboy/middleware/ControlMode");
         ROS_INFO_STREAM("Finished setup");
     };
 
@@ -55,24 +56,21 @@ public:
                   std_srvs::Empty::Response &res){
         initialized = false;
 
-//        ROS_INFO("changing control mode of icebus motors to PWM");
-        roboy_middleware_msgs::MotorConfigService msg;
+        ROS_INFO("changing control mode of icebus motors to PWM");
+//        roboy_middleware_msgs::MotorConfigService msg;
 //        msg.request.legacy = false;
-//        msg.request.config.motor = {0,1,2,3};
-//        msg.request.config.control_mode = {3,3,3,3};
-//        msg.request.config.Kp = {1,1,1,1};
-//        msg.request.config.PWMLimit = {4000000,4000000,4000000,4000000};
-//        msg.request.config.setpoint = {500000,500000,500000,500000};
+//        msg.request.config.motor = {0,1,2,3,4,5,6,7};
+//        msg.request.config.control_mode = {3,3,3,3,3,3,3,3};
+//        msg.request.config.Kp = {1,1,1,1,1,1,1,1};
+//        msg.request.config.PWMLimit = {500,500,500,500,500,500,500,500};
+//        msg.request.config.setpoint = {150,150,150,150,150,150,150,150};
 //        motor_config.call(msg);
 
-        ROS_INFO("changing control mode of myocontrol motors to PWM");
-        msg.request.legacy = true;
-        msg.request.config.motor = {0,1,2,3,4,5,6,7};
-        msg.request.config.control_mode = {3,3,3,3,3,3,3,3};
-        msg.request.config.Kp = {1,1,1,1,1,1,1,1};
-        msg.request.config.PWMLimit = {500,500,500,500,500,500,500,500};
-        msg.request.config.setpoint = {200,200,200,200,200,400,400,200};
-        motor_config.call(msg);
+        roboy_middleware_msgs::ControlMode msg;
+        msg.request.control_mode = DIRECT_PWM;
+        msg.request.set_point = 150;
+        msg.request.motor_id = {0,1,2,3,4,5,6,7};
+        control_mode.call(msg);
 
         ros::Time t0;
         t0= ros::Time::now();
@@ -90,30 +88,26 @@ public:
         }
         ROS_INFO_STREAM(str.str());
 
-        ROS_INFO("changing control mode of icebus motors to ENCODER1");
+//        ROS_INFO("changing control mode of icebus motors to POSITION");
 //        msg.request.legacy = false;
-//        msg.request.config.motor = {0,1,2,3};
-//        msg.request.config.control_mode = {1,1,1,1};
-//        msg.request.config.Kp = {1000,1000,1000,1000};
-//        msg.request.config.PWMLimit = {4000000,4000000,4000000,4000000};
-//        msg.request.config.setpoint = {position[0],position[1],position[2],position[3]};
+//        msg.request.config.motor = {0,1,2,3,4,5,6,7};
+//        msg.request.config.control_mode = {0,0,0,0,0,0,0,0};
+//        msg.request.config.Kp = {1,1,1,1,1,1,1,1};
+//        msg.request.config.PWMLimit = {500,500,500,500,500,500,500,500};
+//        msg.request.config.setpoint = {(int)position[0],
+//                                       (int)position[1],
+//                                       (int)position[2],
+//                                       (int)position[3],
+//                                       (int)position[4],
+//                                       (int)position[5],
+//                                       (int)position[6],
+//                                       (int)position[7]};
 //        motor_config.call(msg);
+        msg.request.control_mode = ENCODER0_POSITION;
+        msg.request.set_point = 0;
+        msg.request.motor_id = {0,1,2,3,4,5,6,7};
+        control_mode.call(msg);
 
-        ROS_INFO("changing control mode of myocontrol motors to POSITION");
-        msg.request.legacy = true;
-        msg.request.config.motor = {0,1,2,3,4,5,6,7};
-        msg.request.config.control_mode = {0,0,0,0,0,0,0,0};
-        msg.request.config.Kp = {5,5,5,5,5,5,5,5};
-        msg.request.config.PWMLimit = {2000,2000,2000,2000,2000,2000,2000,2000};
-        msg.request.config.setpoint = {(int)position[0],
-                                       (int)position[1],
-                                       (int)position[2],
-                                       (int)position[3],
-                                       (int)position[4],
-                                       (int)position[5],
-                                       (int)position[6],
-                                       (int)position[7]};
-        motor_config.call(msg);
         ROS_INFO("pose init done");
         initialized = true;
         return true;
@@ -135,10 +129,10 @@ public:
     }
 
     void MotorState(const roboy_middleware_msgs::MotorState::ConstPtr &msg){
-//        for (int i=0;i<4;i++) {
-//            position[i] = msg->encoder1_pos[i];
-//        }
-//        motor_status_received = true;
+        for (int i=0;i<8;i++) {
+            position[i] = msg->encoder0_pos[i];
+        }
+        motor_status_received = true;
     }
 
     /**
@@ -179,23 +173,11 @@ public:
             }
             str << endl;
             ROS_INFO_STREAM_THROTTLE(1,str.str());
-//            {
-//                roboy_middleware_msgs::MotorCommand msg;
-//                msg.legacy = false;
-//                msg.motor = {}; //{0, 1, 2, 3};
-//                msg.setpoint = {};
-//                for (int i = 0; i < 4; i++) {
-//                    msg.motor.push_back(real_motor_ids[i]);
-//                    msg.setpoint.push_back(myoBrickEncoder1TicksPerMeter(l_meter[i]));
-//                }
-////                    msg.setpoint[real_motor_ids[i]] = myoBrickEncoder1TicksPerMeter(l_meter[i]);
-//                motor_command.publish(msg);
-//            }
             {
                 roboy_middleware_msgs::MotorCommand msg;
-                msg.legacy = true;
+                msg.legacy = false;
                 msg.motor = {};
-                msg.setpoint = {}; //.resize(4);
+                msg.setpoint = {};
                 for (int i = 0; i < 8; i++) {
                     msg.motor.push_back(real_motor_ids[i]);
                     msg.setpoint.push_back(myoBrickEncoderTicksPerMeter(l_meter[i]));
@@ -210,11 +192,11 @@ public:
     ros::Subscriber motor_status_sub, motor_state_sub;
     ros::ServiceServer init_pose;
     ros::AsyncSpinner *spinner;
-    ros::ServiceClient motor_control_mode, motor_config;
+    ros::ServiceClient motor_control_mode, motor_config, control_mode;
 
     map<int,int> pos, initial_pos;
     bool motor_status_received;
-    vector<int> real_motor_ids = {0,1,2,3,4,5,6,7}, sim_motor_ids = {0,1,2,3,4,5,6,7};
+    vector<int> real_motor_ids = {7,6,5,4,3,2,1,0}, sim_motor_ids = {0,1,2,3,4,5,6,7};
     map<int,double> l_offset, position;
     vector<float> integral = {0,0,0,0,0,0,0,0};
     boost::shared_ptr<tf::TransformListener> listener;
