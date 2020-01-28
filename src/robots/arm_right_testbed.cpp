@@ -68,7 +68,7 @@ public:
 
         roboy_middleware_msgs::ControlMode msg;
         msg.request.control_mode = DIRECT_PWM;
-        msg.request.set_point = 150;
+        msg.request.set_point = -150;
         msg.request.motor_id = {0,1,2,3,4,5,6,7};
         control_mode.call(msg);
 
@@ -83,7 +83,7 @@ public:
         for (int i = 0; i<sim_motor_ids.size();i++) str << i << ": " << position[i] << ", ";
         str << endl;
         for(int i=0;i<sim_motor_ids.size();i++) {
-            l_offset[i] = l[sim_motor_ids[i]] + myoBrickMeterPerEncoderTicks(position[i]);
+            l_offset[i] = -l[sim_motor_ids[i]] + myoBrickMeterPerEncoderTicks(position[i]);
             str << sim_motor_ids[i] << "\t|\t" << real_motor_ids[i] << "\t|\t" << position[i] << "\t|\t" << l[sim_motor_ids[i]] << "\t|\t" << l_offset[i] << endl;
         }
         ROS_INFO_STREAM(str.str());
@@ -165,7 +165,7 @@ public:
                     integral[i] = 0;
                 }
                 l_meter.push_back(
-                        (l_offset[i] - l_target[i]) +
+                        (l_offset[i] + l_target[i]) +
                         Kp_dl*error + integral[i]
                 );
                 str << sim_motor_ids[i] << "\n" << l_meter[i] << "\n";
@@ -196,7 +196,7 @@ public:
 
     map<int,int> pos, initial_pos;
     bool motor_status_received;
-    vector<int> real_motor_ids = {7,6,5,4,3,2,1,0}, sim_motor_ids = {0,1,2,3,4,5,6,7};
+    vector<int> real_motor_ids = {0,1,2,3,4,5,6,7}, sim_motor_ids = {0,1,2,3,4,5,6,7};
     map<int,double> l_offset, position;
     vector<float> integral = {0,0,0,0,0,0,0,0};
     boost::shared_ptr<tf::TransformListener> listener;

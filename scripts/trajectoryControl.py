@@ -31,15 +31,15 @@ def degree2rad(degree):
 # axis1 = [0,-degree2rad(50),-degree2rad(50),-degree2rad(50),0]
 # axis2 = [0,0,0,0,0,0]
 
-# trajectory 1
-axis0 = [0,-degree2rad(70),0,0]
-axis1 = [0,0,0,0]
-axis2 = [0,0,0,0,0,0]
-
 # # trajectory 1
-# axis0 = [0,0,0,0]
-# axis1 = [0,-degree2rad(50),0,0]
-# axis2 = [0,0,0,0]
+# axis0 = [0,-degree2rad(70),0,0]
+# axis1 = [0,0,0,0]
+# axis2 = [0,0,0,0,0,0]
+
+# trajectory 1
+axis0 = [0,0,0,0]
+axis1 = [0,-degree2rad(70),0,0]
+axis2 = [0,0,0,0]
 
 time = [10,20,30,40]
 sampleTime = 0.01
