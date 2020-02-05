@@ -11,9 +11,7 @@
 #include <tf/tf.h>
 #include <tf/transform_listener.h>
 
-//#define myoBrickMeterPerEncoder0Tick(encoderTicks) ((encoderTicks)/(512.0*4.0*53.0)*(M_PI*0.017))
-//#define myoBrickEncoder0TicksPerMeter(meter) ((meter)*(512.0*4.0*53.0)/(M_PI*0.017))
-
+#define LEGACY
 
 using namespace std;
 
@@ -43,12 +41,17 @@ public:
         listener.reset(new tf::TransformListener);
         update();
 
-//        motor_status_sub = nh->subscribe("/roboy/middleware/MotorStatus",1,&RightArmTestbed::MotorStatus,this);
+#ifdef LEGACY
+        motor_status_sub = nh->subscribe("/roboy/middleware/MotorStatus",1,&RightArmTestbed::MotorStatus,this);
+#else
         motor_state_sub = nh->subscribe("/roboy/middleware/MotorState",1,&RightArmTestbed::MotorState,this);
-        motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
-        init_pose = nh->advertiseService("init_pose",&RightArmTestbed::initPose,this);
+#endif
         motor_config = nh->serviceClient<roboy_middleware_msgs::MotorConfigService>( "/roboy/middleware/MotorConfig");
         control_mode = nh->serviceClient<roboy_middleware_msgs::ControlMode>( "/roboy/middleware/ControlMode");
+        motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
+        init_pose = nh->advertiseService("init_pose",&RightArmTestbed::initPose,this);
+
+
         ROS_INFO_STREAM("Finished setup");
     };
 
@@ -56,21 +59,26 @@ public:
                   std_srvs::Empty::Response &res){
         initialized = false;
 
-        ROS_INFO("changing control mode of icebus motors to PWM");
-//        roboy_middleware_msgs::MotorConfigService msg;
-//        msg.request.legacy = false;
-//        msg.request.config.motor = {0,1,2,3,4,5,6,7};
-//        msg.request.config.control_mode = {3,3,3,3,3,3,3,3};
-//        msg.request.config.Kp = {1,1,1,1,1,1,1,1};
-//        msg.request.config.PWMLimit = {500,500,500,500,500,500,500,500};
-//        msg.request.config.setpoint = {150,150,150,150,150,150,150,150};
-//        motor_config.call(msg);
-
+        int pwm = 0;
+        nh->getParam("pwm",pwm);
+        ROS_INFO("changing control mode of motors to PWM with %d",pwm);
+#ifdef LEGACY
+        roboy_middleware_msgs::MotorConfigService msg;
+        msg.request.legacy = true;
+        msg.request.config.motor = real_motor_ids;
+        msg.request.config.control_mode = {3,3,3,3,3,3,3,3};
+        msg.request.config.Kp = {1,1,1,1,1,1,1,1};
+        msg.request.config.PWMLimit = {500,500,500,500,500,500,500,500};
+        msg.request.config.setpoint = {pwm,pwm,pwm,pwm,pwm,pwm,pwm,pwm};
+        if(!motor_config.call(msg))
+            return false;
+#else
         roboy_middleware_msgs::ControlMode msg;
         msg.request.control_mode = DIRECT_PWM;
-        msg.request.set_point = -150;
+        msg.request.set_point = -pwm;
         msg.request.motor_id = {0,1,2,3,4,5,6,7};
         control_mode.call(msg);
+#endif
 
         ros::Time t0;
         t0= ros::Time::now();
@@ -97,31 +105,34 @@ public:
         for (int i = 0; i<sim_motor_ids.size();i++) str << i << ": " << position[i] << ", ";
         str << endl;
         for(int i=0;i<sim_motor_ids.size();i++) {
+#ifdef LEGACY
+            l_offset[sim_motor_ids[i]] = l[sim_motor_ids[i]] + myoBrickMeterPerEncoderTicks(position[real_motor_ids[i]]);
+#else
             l_offset[sim_motor_ids[i]] = -l[sim_motor_ids[i]] + myoBrickMeterPerEncoderTicks(position[real_motor_ids[i]]);
+#endif
             str << sim_motor_ids[i] << "\t|\t" << real_motor_ids[i] << "\t|\t" << position[real_motor_ids[i]] << "\t|\t" << l[sim_motor_ids[i]] << "\t|\t" << l_offset[sim_motor_ids[i]] << endl;
         }
         ROS_INFO_STREAM(str.str());
+#ifdef LEGACY
+        ROS_INFO("changing control mode of myobus motors to POSITION");
+        msg.request.legacy = true;
+        msg.request.config.motor = real_motor_ids;
+        msg.request.config.control_mode = {0,0,0,0,0,0,0,0};
+        msg.request.config.Kp = {1,1,1,1,1,1,1,1};
+        msg.request.config.PWMLimit = {500,500,500,500,500,500,500,500};
+        for(int id:real_motor_ids){
+            msg.request.config.setpoint.push_back(position[id]);
+        }
 
-//        ROS_INFO("changing control mode of icebus motors to POSITION");
-//        msg.request.legacy = false;
-//        msg.request.config.motor = {0,1,2,3,4,5,6,7};
-//        msg.request.config.control_mode = {0,0,0,0,0,0,0,0};
-//        msg.request.config.Kp = {1,1,1,1,1,1,1,1};
-//        msg.request.config.PWMLimit = {500,500,500,500,500,500,500,500};
-//        msg.request.config.setpoint = {(int)position[0],
-//                                       (int)position[1],
-//                                       (int)position[2],
-//                                       (int)position[3],
-//                                       (int)position[4],
-//                                       (int)position[5],
-//                                       (int)position[6],
-//                                       (int)position[7]};
-//        motor_config.call(msg);
+        if(!motor_config.call(msg))
+            return false;
+#else
+        roboy_middleware_msgs::ControlMode msg;
         msg.request.control_mode = ENCODER0_POSITION;
         msg.request.set_point = 0;
         msg.request.motor_id = {0,1,2,3,4,5,6,7};
         control_mode.call(msg);
-
+#endif
         update();
         ROS_INFO("pose init done");
         initialized = true;
@@ -129,15 +140,23 @@ public:
     }
 
     float myoBrickMeterPerEncoderTicks(int motor_pos) {
+#ifdef LEGACY
+        return ((motor_pos/(53.0f*4.0f*512.0f))*(M_PI*0.0085f));
+#else
         return ((motor_pos/2048.0f)*(M_PI*0.0085f));
+#endif
     }
 
     float myoBrickEncoderTicksPerMeter(float meter){
+#ifdef LEGACY
+        return (meter/(M_PI*0.0085f))*(53.0f*4.0f*512.0f);
+#else
         return (meter/(M_PI*0.0085f))*2048.0f;
+#endif
     }
 
     void MotorStatus(const roboy_middleware_msgs::MotorStatus::ConstPtr &msg){
-        for (int i=0;i<8;i++) {
+        for (int i=0;i<msg->position.size();i++) {
             position[i] = msg->position[i];
         }
         motor_status_received = true;
@@ -166,35 +185,49 @@ public:
             stringstream str;
             vector<float> l_meter;
             l_meter.resize(sim_motor_ids.size());
-            float Kp_dl = 0, Ki_dl = 0, Kp_disp = 0;
+            float Kp_dl = 0, Ki_dl = 0, Kp_disp = 0, integral_limit = 0;
             nh->getParam("Kp_dl",Kp_dl);
             nh->getParam("Ki_dl",Ki_dl);
+            nh->getParam("integral_limit",integral_limit);
 
-            str << endl << "sim_motor_id | l_meter | ticks | error" << endl;
+            str << endl << "sim_motor_id | l_meter | ticks | error | integral" << endl;
             char s[200];
 
             for (int i = 0; i < sim_motor_ids.size(); i++) {
                 int sim_motor_id = sim_motor_ids[i];
                 float error = l[sim_motor_id] - l_target[sim_motor_id];
-                integral[sim_motor_id] += Ki_dl * error;
-                if(integral[sim_motor_id]>0.01)
-                    integral[sim_motor_id] = 0.01;
-                if(integral[sim_motor_id]<-0.01)
-                    integral[sim_motor_id] = -0.01;
                 if(Ki_dl==0){
                     integral[sim_motor_id] = 0;
+                }else {
+                    integral[sim_motor_id] += Ki_dl * error;
+                    if (integral[sim_motor_id] > integral_limit)
+                        integral[sim_motor_id] = integral_limit;
+                    if (integral[sim_motor_id] < -integral_limit)
+                        integral[sim_motor_id] = -integral_limit;
+                    if (Ki_dl == 0) {
+                        integral[sim_motor_id] = 0;
+                    }
                 }
+#ifdef LEGACY
+                l_meter[sim_motor_id] = (l_offset[sim_motor_id] - l_target[sim_motor_id]) +
+                        Kp_dl*error + integral[sim_motor_id];
+#else
                 l_meter[sim_motor_id] = (l_offset[sim_motor_id] + l_target[sim_motor_id]) +
                         Kp_dl*error + integral[sim_motor_id];
-                sprintf(s,     "%d            | %.3f   | %.1f    |  %.3f\n",
-                        sim_motor_id,l_meter[sim_motor_id],myoBrickEncoderTicksPerMeter(l_meter[sim_motor_id]),error);
+#endif
+                sprintf(s,     "%d            | %.3f   | %.1f    |  %.3f   | %.3f\n",
+                        sim_motor_id,l_meter[sim_motor_id],myoBrickEncoderTicksPerMeter(l_meter[sim_motor_id]),error,integral[sim_motor_id]);
                 str <<  s;
             }
             str << endl;
             ROS_INFO_STREAM_THROTTLE(1,str.str());
             {
                 roboy_middleware_msgs::MotorCommand msg;
+#ifdef LEGACY
+                msg.legacy = true;
+#else
                 msg.legacy = false;
+#endif
                 msg.motor = {};
                 msg.setpoint = {};
                 for (int i = 0; i < sim_motor_ids.size(); i++) {
@@ -215,7 +248,12 @@ public:
 
     map<int,int> pos, initial_pos;
     bool motor_status_received;
-    vector<int> real_motor_ids = {0,1,2,3,4,5,6,7}, sim_motor_ids = {7,6,5,4,3,2,1,0};
+#ifdef LEGACY
+    vector<uint8_t> real_motor_ids = {0,1,2,3,5,6,7,8};
+#else
+    vector<int> real_motor_ids = {0,1,2,3,4,5,6,7};
+#endif
+    vector<int> sim_motor_ids = {7,6,5,4,3,2,1,0};
     map<int,float> l_offset, position;
     vector<float> integral = {0,0,0,0,0,0,0,0};
     boost::shared_ptr<tf::TransformListener> listener;
