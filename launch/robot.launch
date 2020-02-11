@@ -31,6 +31,7 @@
     <param name="max_force" type="double" value="100000"  />
     <param name="controller" type="int" value="2"  />
     <param name="external_robot_state" type="bool" value="$(arg external_robot_state)"/>
+
     <node name="controller_manager"
           pkg="controller_manager"
           type="spawner"
@@ -38,9 +39,18 @@
 
     <node name="robot_controller"
           pkg="kindyn"
-          type="$(arg robot_name)"
+          type="left_shoulder"
           respawn="false"
           output="screen"
+
+    />
+
+    <node name="robot_controller1"
+          pkg="kindyn"
+          type="left_elbow"
+          respawn="false"
+          output="screen"
+    
     />
 
     <group if="$(arg gazebo)">
@@ -57,7 +67,7 @@
               -x $(arg x) -y $(arg y) -z $(arg z)"
         />
     </group>
-
+<!--launch-prefix="gdb -ex run"-->
 </launch>
         <!--launch-prefix="gdb -ex run"-->
         <!--launch-prefix="gdb -ex run"-->
