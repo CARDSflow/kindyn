@@ -174,7 +174,7 @@ public:
      */
     void read(){
         update();
-        q[joint_index["elbow_left_axis1"]] = q[joint_index["elbow_left_axis0"]];
+        // q[joint_index["elbow_left_axis1"]] = q[joint_index["elbow_left_axis0"]];
     };
     /**
      * Sends motor commands to the real robot
