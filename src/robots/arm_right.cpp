@@ -11,23 +11,23 @@
 #include <tf/tf.h>
 #include <tf/transform_listener.h>
 
-// #define LEGACY
+#define LEGACY
 
 using namespace std;
 
-class LeftElbow: public cardsflow::vrpuppet::Robot{
+class RightArmTestbed: public cardsflow::vrpuppet::Robot{
 public:
     /**
      * Constructor
      * @param urdf path to urdf
      * @param cardsflow_xml path to cardsflow xml
      */
-    LeftElbow(string urdf, string cardsflow_xml){
+    RightArmTestbed(string urdf, string cardsflow_xml){
 
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
-            ros::init(argc, argv, "left_elbow");
+            ros::init(argc, argv, "right_arm_testbed");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         spinner = new ros::AsyncSpinner(0);
@@ -42,14 +42,14 @@ public:
         update();
 
 #ifdef LEGACY
-        motor_status_sub = nh->subscribe("/roboy/middleware/MotorStatus",1,&LeftElbow::MotorStatus,this);
+        motor_status_sub = nh->subscribe("/roboy/middleware/MotorStatus",1,&RightArmTestbed::MotorStatus,this);
 #else
-        motor_state_sub = nh->subscribe("/roboy/middleware/MotorState",1,&LeftElbow::MotorState,this);
+        motor_state_sub = nh->subscribe("/roboy/middleware/MotorState",1,&RightArmTestbed::MotorState,this);
 #endif
-        motor_config = nh->serviceClient<roboy_middleware_msgs::MotorConfigService>( "/roboy/middleware/joint_sensors/MotorConfig");
-        control_mode = nh->serviceClient<roboy_middleware_msgs::ControlMode>( "/roboy/middleware/joint_sensors/ControlMode");
+        motor_config = nh->serviceClient<roboy_middleware_msgs::MotorConfigService>( "/roboy/middleware/shoulder_right/MotorConfig");
+        control_mode = nh->serviceClient<roboy_middleware_msgs::ControlMode>( "/roboy/middleware/shoulder_right/ControlMode");
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
-        init_pose = nh->advertiseService("elbow_left_init_pose",&LeftElbow::initPose,this);
+        init_pose = nh->advertiseService("arm_right_init_pose",&RightArmTestbed::initPose,this);
 
 
         ROS_INFO_STREAM("Finished setup");
@@ -76,7 +76,7 @@ public:
         roboy_middleware_msgs::ControlMode msg;
         msg.request.control_mode = DIRECT_PWM;
         msg.request.set_point = -pwm;
-        msg.request.motor_id = {5,6};
+        msg.request.motor_id = {0,1,2,3,4,5,6,7};
         control_mode.call(msg);
 #endif
 
@@ -127,10 +127,10 @@ public:
         if(!motor_config.call(msg))
             return false;
 #else
-        // roboy_middleware_msgs::ControlMode msg;
+        roboy_middleware_msgs::ControlMode msg;
         msg.request.control_mode = ENCODER0_POSITION;
         msg.request.set_point = 0;
-        msg.request.motor_id = {5,6};
+        msg.request.motor_id = {0,1,2,3,4,5,6,7};
         control_mode.call(msg);
 #endif
         update();
@@ -163,7 +163,7 @@ public:
     }
 
     void MotorState(const roboy_middleware_msgs::MotorState::ConstPtr &msg){
-        for (int i=5;i<7;i++) {
+        for (int i=0;i<8;i++) {
             position[i] = msg->encoder0_pos[i];
         }
         motor_status_received = true;
@@ -174,7 +174,6 @@ public:
      */
     void read(){
         update();
-        // q[joint_index["elbow_left_axis1"]] = q[joint_index["elbow_left_axis0"]];
     };
     /**
      * Sends motor commands to the real robot
@@ -184,9 +183,8 @@ public:
             ROS_INFO_THROTTLE(1,"waiting for init_pose service call");
         }else{
             stringstream str;
-            map<int,float> l_meter;
-
-            // l_meter.resize(sim_motor_ids.size());
+            vector<float> l_meter;
+            l_meter.resize(sim_motor_ids.size());
             float Kp_dl = 0, Ki_dl = 0, Kp_disp = 0, integral_limit = 0;
             nh->getParam("Kp_dl",Kp_dl);
             nh->getParam("Ki_dl",Ki_dl);
@@ -251,13 +249,13 @@ public:
     map<int,int> pos, initial_pos;
     bool motor_status_received;
 #ifdef LEGACY
-    vector<uint8_t> real_motor_ids = {5,6};
+    vector<uint8_t> real_motor_ids = {0,1,2,3,4,5,6,7};
 #else
-    vector<int> real_motor_ids = {5,6};
+    vector<int> real_motor_ids = {0,1,2,3,4,5,6,7};
 #endif
-    vector<int> sim_motor_ids = {16,17};
+    vector<int> sim_motor_ids = {8,9,10,11,12,13,14,15};
     map<int,float> l_offset, position;
-    vector<float> integral = {0,0};
+    vector<float> integral = {0,0,0,0,0,0,0,0};
     boost::shared_ptr<tf::TransformListener> listener;
 };
 
@@ -265,7 +263,7 @@ int main(int argc, char *argv[]) {
     if (!ros::isInitialized()) {
         int argc = 0;
         char **argv = NULL;
-        ros::init(argc, argv, "elbow_left");
+        ros::init(argc, argv, "arm_right");
     }
     ros::NodeHandle nh;
     string urdf, cardsflow_xml;
@@ -279,7 +277,7 @@ int main(int argc, char *argv[]) {
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
 
-    LeftElbow robot(urdf, cardsflow_xml);
+    RightArmTestbed robot(urdf, cardsflow_xml);
 
     if (nh.hasParam("simulated")) {
       nh.getParam("simulated", robot.simulated);

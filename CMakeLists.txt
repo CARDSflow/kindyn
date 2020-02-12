@@ -131,6 +131,12 @@ target_link_libraries(left_shoulder ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vr
 add_executable( left_elbow src/robots/elbow_left.cpp)
 target_link_libraries(left_elbow ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
 
+## right side
+add_executable( right_shoulder src/robots/arm_right.cpp)
+target_link_libraries(right_shoulder ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
+add_executable( right_elbow src/robots/elbow_right.cpp)
+target_link_libraries(right_elbow ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
+
 # right_arm_testbed
 add_executable( right_arm src/robots/arm_right_testbed.cpp)
 target_link_libraries(right_arm ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)

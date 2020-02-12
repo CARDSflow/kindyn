@@ -46,10 +46,10 @@ public:
 #else
         motor_state_sub = nh->subscribe("/roboy/middleware/MotorState",1,&LeftArmTestbed::MotorState,this);
 #endif
-        motor_config = nh->serviceClient<roboy_middleware_msgs::MotorConfigService>( "/roboy/middleware/shoulder_right/MotorConfig");
-        control_mode = nh->serviceClient<roboy_middleware_msgs::ControlMode>( "/roboy/middleware/shoulder_right/ControlMode");
+        motor_config = nh->serviceClient<roboy_middleware_msgs::MotorConfigService>( "/roboy/middleware/shoulder_left/MotorConfig");
+        control_mode = nh->serviceClient<roboy_middleware_msgs::ControlMode>( "/roboy/middleware/shoulder_left/ControlMode");
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
-        init_pose = nh->advertiseService("arm_init_pose",&LeftArmTestbed::initPose,this);
+        init_pose = nh->advertiseService("arm_left_init_pose",&LeftArmTestbed::initPose,this);
 
 
         ROS_INFO_STREAM("Finished setup");

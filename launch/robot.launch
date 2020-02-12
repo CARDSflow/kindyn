@@ -37,21 +37,38 @@
           type="spawner"
           args="$(arg start_controllers)" />
 
-    <node name="robot_controller"
+    <!-- <node name="robot_controller"
           pkg="kindyn"
           type="left_shoulder"
           respawn="false"
           output="screen"
 
-    />
+    /> -->
 
     <node name="robot_controller1"
           pkg="kindyn"
           type="left_elbow"
           respawn="false"
           output="screen"
-    
+
     />
+
+    <node name="robot_controller2"
+          pkg="kindyn"
+          type="right_shoulder"
+          respawn="false"
+          output="screen"
+
+    />
+
+    <node name="robot_controller3"
+          pkg="kindyn"
+          type="right_elbow"
+          respawn="false"
+          output="screen"
+
+    />
+
 
     <group if="$(arg gazebo)">
         <include file="$(find gazebo_ros)/launch/empty_world.launch">

@@ -15,19 +15,19 @@
 
 using namespace std;
 
-class LeftElbow: public cardsflow::vrpuppet::Robot{
+class RightElbow: public cardsflow::vrpuppet::Robot{
 public:
     /**
      * Constructor
      * @param urdf path to urdf
      * @param cardsflow_xml path to cardsflow xml
      */
-    LeftElbow(string urdf, string cardsflow_xml){
+    RightElbow(string urdf, string cardsflow_xml){
 
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
-            ros::init(argc, argv, "left_elbow");
+            ros::init(argc, argv, "right_elbow");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         spinner = new ros::AsyncSpinner(0);
@@ -42,14 +42,14 @@ public:
         update();
 
 #ifdef LEGACY
-        motor_status_sub = nh->subscribe("/roboy/middleware/MotorStatus",1,&LeftElbow::MotorStatus,this);
+        motor_status_sub = nh->subscribe("/roboy/middleware/MotorStatus",1,&RightElbow::MotorStatus,this);
 #else
-        motor_state_sub = nh->subscribe("/roboy/middleware/MotorState",1,&LeftElbow::MotorState,this);
+        motor_state_sub = nh->subscribe("/roboy/middleware/MotorState",1,&RightElbow::MotorState,this);
 #endif
         motor_config = nh->serviceClient<roboy_middleware_msgs::MotorConfigService>( "/roboy/middleware/joint_sensors/MotorConfig");
         control_mode = nh->serviceClient<roboy_middleware_msgs::ControlMode>( "/roboy/middleware/joint_sensors/ControlMode");
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
-        init_pose = nh->advertiseService("elbow_left_init_pose",&LeftElbow::initPose,this);
+        init_pose = nh->advertiseService("elbow_left_init_pose",&RightElbow::initPose,this);
 
 
         ROS_INFO_STREAM("Finished setup");
@@ -255,7 +255,7 @@ public:
 #else
     vector<int> real_motor_ids = {5,6};
 #endif
-    vector<int> sim_motor_ids = {16,17};
+    vector<int> sim_motor_ids = {18,19};
     map<int,float> l_offset, position;
     vector<float> integral = {0,0};
     boost::shared_ptr<tf::TransformListener> listener;
@@ -265,7 +265,7 @@ int main(int argc, char *argv[]) {
     if (!ros::isInitialized()) {
         int argc = 0;
         char **argv = NULL;
-        ros::init(argc, argv, "elbow_left");
+        ros::init(argc, argv, "elbow_right");
     }
     ros::NodeHandle nh;
     string urdf, cardsflow_xml;
@@ -279,7 +279,7 @@ int main(int argc, char *argv[]) {
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
 
-    LeftElbow robot(urdf, cardsflow_xml);
+    RightElbow robot(urdf, cardsflow_xml);
 
     if (nh.hasParam("simulated")) {
       nh.getParam("simulated", robot.simulated);
