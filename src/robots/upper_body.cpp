@@ -1,10 +1,11 @@
 #include "kindyn/vrpuppet.hpp"
 #include <thread>
-#include <roboy_middleware_msgs/MotorCommand.h>
+#include <roboy_middleware_msgs/MotorControl.h>
 #include <roboy_middleware_msgs/MotorState.h>
 #include <roboy_middleware_msgs/MotorStatus.h>
 #include <roboy_middleware_msgs/ControlMode.h>
 #include <roboy_middleware_msgs/MotorConfigService.h>
+#include <roboy_middleware_msgs/SetStrings.h>
 #include <common_utilities/CommonDefinitions.h>
 #include <roboy_control_msgs/SetControllerParameters.h>
 #include <std_srvs/Empty.h>
@@ -27,7 +28,7 @@ private:
     map<string, ros::ServiceClient> motor_config, motor_control_mode, control_mode;
     map<string, bool> motor_status_received;
     map<int,float> l_offset, position;
-    vector<float> integral = {0,0,0,0,0,0,0,0};
+    map<string, vector<float>> integral;
     boost::shared_ptr<tf::TransformListener> listener;
     std::vector<string> body_parts = {"shoulder_left", "shoulder_right", "elbow_right", "elbow_left"};
     map<string, bool> init_called;
@@ -102,7 +103,8 @@ public:
         }
         std::vector<int> motor_ids;
         try { 
-            nh->getParam(name+"/motor_ids", motor_ids); } 
+            nh->getParam(name+"/motor_ids", motor_ids); 
+        } 
         catch (const std::exception&) { 
             ROS_ERROR("motor ids for %s are not on the parameter server. check motor_config.yaml in robots.", name);
             return false;
@@ -112,12 +114,13 @@ public:
         roboy_middleware_msgs::ControlMode msg;
         msg.request.control_mode = DIRECT_PWM;
         // TODO: fix in plexus PWM direction for the new motorboard
-        msg.request.set_point = pwm;
-        msg.request.motor_id = motor_ids;
+        std::vector<int> set_points(motor_ids.size(), -pwm);
+        for (auto m: motor_ids) msg.request.motor_id.push_back(m);
+        msg.request.set_points = set_points;
 
 
         if (!control_mode[name].call(msg)) {
-            ROS_ERROR("Changing control mode for %s didnt work", s);
+            ROS_ERROR("Changing control mode for %s didnt work", name);
             return false;
         }
 
@@ -159,17 +162,20 @@ public:
 
         ROS_INFO("changing control mode of %s to POSITION", name);
 
-        roboy_middleware_msgs::ControlMode msg;
-        msg.request.control_mode = POSITION; 
+        roboy_middleware_msgs::ControlMode msg1;
+        msg1.request.control_mode = ENCODER0_POSITION; 
         for (int id: motor_ids) {
-            msg.request.set_points.push_back(position[id]);
+            msg1.request.motor_id.push_back(id);
+            msg1.request.set_points.push_back(position[id]);
         }
-        msg.request.motor_id = motor_ids;
-
-        if (!control_mode[name].call(msg)) {
-            ROS_ERROR("Changing control mode for %s didnt work", s);
+        
+        if (!control_mode[name].call(msg1)) {
+            ROS_ERROR("Changing control mode for %s didnt work", name);
             return false;
         }
+
+        vector<float> _integral(motor_ids.size(), 0);
+        integral[name] = _integral;
 
         update();
         ROS_INFO("%s pose init done", name);
@@ -196,9 +202,9 @@ public:
         for (auto body_part: body_parts) {
             std::vector<int> motor_ids;
             try { 
-                nh->getParam(name+"/motor_ids", motor_ids); } 
+                nh->getParam(body_part+"/motor_ids", motor_ids); } 
             catch (const std::exception&) { 
-                ROS_ERROR("motor ids for %s are not on the parameter server. check motor_config.yaml in robots.", name);
+                ROS_ERROR("motor ids for %s are not on the parameter server. check motor_config.yaml in robots.", body_part);
                 return "unknown";
             }
             if (find(motor_ids.begin(), motor_ids.end(), id) != motor_ids.end()) {
@@ -241,12 +247,12 @@ public:
                 try { 
                     nh->getParam(body_part+"/motor_ids", motor_ids); } 
                 catch (const std::exception&) { 
-                    ROS_ERROR("motor ids for %s are not on the parameter server. check motor_config.yaml in robots.", name);
-                    return false;
+                    ROS_ERROR("motor ids for %s are not on the parameter server. check motor_config.yaml in robots.", body_part);
                 }
 
                 stringstream str;
                 map<int,float> l_meter;
+
                 // l_meter.resize(sim_motor_ids.size());
                 
 
@@ -257,15 +263,15 @@ public:
                     int motor_id = motor_ids[i];
                     float error = l[motor_id] - l_target[motor_id];
                     if(Ki_dl==0){
-                        integral[motor_id] = 0;
+                        integral[body_part][motor_id] = 0;
                     }else {
-                        integral[motor_id] += Ki_dl * error;
-                        if (integral[motor_id] > integral_limit)
-                            integral[motor_id] = integral_limit;
-                        if (integral[motor_id] < -integral_limit)
-                            integral[motor_id] = -integral_limit;
+                        integral[body_part][motor_id] += Ki_dl * error;
+                        if (integral[body_part][motor_id] > integral_limit)
+                            integral[body_part][motor_id] = integral_limit;
+                        if (integral[body_part][motor_id] < -integral_limit)
+                            integral[body_part][motor_id] = -integral_limit;
                         if (Ki_dl == 0) {
-                            integral[motor_id] = 0;
+                            integral[body_part][motor_id] = 0;
                         }
                     }
     // #ifdef LEGACY
@@ -273,18 +279,15 @@ public:
     //                         Kp_dl*error + integral[sim_motor_id];
     // #else
                     l_meter[motor_id] = (l_offset[motor_id] + l_target[motor_id]) +
-                            Kp_dl*error + integral[motor_id];
+                            Kp_dl*error + integral[body_part][motor_id];
     // #endif
                     sprintf(s,     "%d            | %.3f   | %.1f    |  %.3f   | %.3f\n",
-                            motor_id,l_meter[motor_id],myoBrickEncoderTicksPerMeter(l_meter[motor_id]),error,integral[motor_id]);
+                            motor_id,l_meter[motor_id],myoBrickEncoderTicksPerMeter(l_meter[motor_id]),error,integral[body_part][motor_id]);
                     str <<  s;
                 }
 
                 str << endl;
                 ROS_INFO_STREAM_THROTTLE(2,str.str());
-
-
-
                 
                 roboy_middleware_msgs::MotorControl msg;
                 msg.motor = {};
@@ -296,6 +299,7 @@ public:
                 motor_command.publish(msg);
                 
         }
+     }
     };
 
 };

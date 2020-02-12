@@ -75,7 +75,7 @@ public:
 #else
         roboy_middleware_msgs::ControlMode msg;
         msg.request.control_mode = DIRECT_PWM;
-        msg.request.set_point = -pwm;
+        msg.request.set_points = {-pwm, -pwm};
         msg.request.motor_id = {5,6};
         control_mode.call(msg);
 #endif
@@ -129,7 +129,7 @@ public:
 #else
         // roboy_middleware_msgs::ControlMode msg;
         msg.request.control_mode = ENCODER0_POSITION;
-        msg.request.set_point = 0;
+        msg.request.set_points = {0,0};
         msg.request.motor_id = {5,6};
         control_mode.call(msg);
 #endif
