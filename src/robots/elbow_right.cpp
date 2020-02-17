@@ -181,7 +181,7 @@ public:
      */
     void write(){
         if(!initialized){
-            ROS_INFO_THROTTLE(1,"waiting for init_pose service call");
+            ROS_INFO_THROTTLE(1,"waiting for elbow_right_init_pose service call");
         }else{
             stringstream str;
             map<int,float> l_meter;

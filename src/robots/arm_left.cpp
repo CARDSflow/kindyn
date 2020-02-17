@@ -96,7 +96,7 @@ public:
             }
         }
         if(!motor_status_received) {
-            ROS_ERROR("didi not receive motor status, try again");
+            ROS_ERROR("didi not receive shoulder left motor status, try again");
             return false;
         }
 
@@ -180,7 +180,7 @@ public:
      */
     void write(){
         if(!initialized){
-            ROS_INFO_THROTTLE(1,"waiting for init_pose service call");
+            ROS_INFO_THROTTLE(1,"waiting for arm_left_init_pose service call");
         }else{
             stringstream str;
             vector<float> l_meter;

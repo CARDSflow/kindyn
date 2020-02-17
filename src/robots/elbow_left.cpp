@@ -76,7 +76,7 @@ public:
         roboy_middleware_msgs::ControlMode msg;
         msg.request.control_mode = DIRECT_PWM;
         msg.request.set_point = -pwm;
-        msg.request.motor_id = {5,6};
+        msg.request.motor_id = {16,17};
         control_mode.call(msg);
 #endif
 
@@ -96,7 +96,7 @@ public:
             }
         }
         if(!motor_status_received) {
-            ROS_ERROR("didi not receive motor status, try again");
+            ROS_ERROR("didi not receive left elbow motor status, try again");
             return false;
         }
 
@@ -130,7 +130,7 @@ public:
         // roboy_middleware_msgs::ControlMode msg;
         msg.request.control_mode = ENCODER0_POSITION;
         msg.request.set_point = 0;
-        msg.request.motor_id = {5,6};
+        msg.request.motor_id = {16,17};
         control_mode.call(msg);
 #endif
         update();
@@ -181,7 +181,7 @@ public:
      */
     void write(){
         if(!initialized){
-            ROS_INFO_THROTTLE(1,"waiting for init_pose service call");
+            ROS_INFO_THROTTLE(1,"waiting for elbow_left_init_pose service call");
         }else{
             stringstream str;
             map<int,float> l_meter;
@@ -251,9 +251,9 @@ public:
     map<int,int> pos, initial_pos;
     bool motor_status_received;
 #ifdef LEGACY
-    vector<uint8_t> real_motor_ids = {5,6};
+    vector<uint8_t> real_motor_ids = {16,17};
 #else
-    vector<int> real_motor_ids = {5,6};
+    vector<int> real_motor_ids = {16,17};
 #endif
     vector<int> sim_motor_ids = {16,17};
     map<int,float> l_offset, position;

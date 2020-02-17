@@ -310,6 +310,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     joint_target_sub = nh->subscribe("/joint_targets", 100, &Robot::JointTarget, this);
     floating_base_sub = nh->subscribe("/floating_base", 100, &Robot::FloatingBase, this);
     ik_srv = nh->advertiseService("/ik", &Robot::InverseKinematicsService, this);
+    execute_ik_srv = nh->advertiseService("/execute_ik",  &Robot::ExecuteIK, this);
     ik_two_frames_srv = nh->advertiseService("/ik_multiple_frames", &Robot::InverseKinematicsMultipleFramesService, this);
     fk_srv = nh->advertiseService("/fk", &Robot::ForwardKinematicsService, this);
     interactive_marker_sub = nh->subscribe("/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
@@ -541,7 +542,8 @@ void Robot::update() {
         }
         last_visualization = ros::Time::now();
     }
-//    ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
+
+   ROS_WARN_STREAM_THROTTLE(1, "q_target " << q_target.transpose().format(fmt));
 //    ROS_INFO_STREAM_THROTTLE(5, "qdd " << qdd.transpose().format(fmt));
 //    ROS_INFO_STREAM_THROTTLE(5, "qd " << qd.transpose().format(fmt));
    ROS_INFO_STREAM_THROTTLE(5, "q " << q.transpose().format(fmt));
@@ -751,6 +753,7 @@ bool Robot::InverseKinematicsMultipleFramesService(roboy_middleware_msgs::Invers
 }
 
 void Robot::InteractiveMarkerFeedback( const visualization_msgs::InteractiveMarkerFeedbackConstPtr &msg){
+    ROS_WARN("Got interactive marker update");
     if(msg->event_type!=visualization_msgs::InteractiveMarkerFeedback::MOUSE_UP)
         return;
     auto it = find(endeffectors.begin(),endeffectors.end(),msg->marker_name);
@@ -769,6 +772,20 @@ void Robot::InteractiveMarkerFeedback( const visualization_msgs::InteractiveMark
         }
     }
 }
+
+bool Robot::ExecuteIK(roboy_middleware_msgs::InverseKinematics::Request &req,
+                        roboy_middleware_msgs::InverseKinematics::Response &res) {
+  auto it = find(endeffectors.begin(),endeffectors.end(),req.endeffector);
+  if(it!=endeffectors.end() && InverseKinematicsService(req, res)) {
+    int index = endeffector_index[req.endeffector];
+    for(int i=0;i<res.joint_names.size();i++){
+        q_target[joint_index[res.joint_names[i]]] = res.angles[i];
+    }
+    return true;
+  }
+  return false;
+}
+
 
 void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg) {
 
@@ -794,6 +811,7 @@ void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg) {
 }
 
 void Robot::JointTarget(const sensor_msgs::JointStateConstPtr &msg){
+    ROS_WARN("Got joint targets msg");
     const iDynTree::Model &model = kinDynComp.getRobotModel();
     int i = 0;
     for (string joint:msg->name) {

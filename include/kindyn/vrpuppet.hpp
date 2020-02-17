@@ -160,6 +160,9 @@ namespace cardsflow {
             bool InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::Request &req,
                                           roboy_middleware_msgs::InverseKinematics::Response &res);
 
+            bool ExecuteIK(roboy_middleware_msgs::InverseKinematics::Request &req,
+                                          roboy_middleware_msgs::InverseKinematics::Response &res);
+
             bool InverseKinematicsMultipleFramesService(roboy_middleware_msgs::InverseKinematicsMultipleFrames::Request &req,
                                                         roboy_middleware_msgs::InverseKinematicsMultipleFrames::Response &res);
             /**
@@ -196,7 +199,7 @@ namespace cardsflow {
             ros::Publisher robot_state_pub, tendon_state_pub, joint_state_pub, cardsflow_joint_states_pub; /// ROS robot pose and tendon publisher
             ros::Publisher robot_state_target_pub, tendon_state_target_pub, joint_state_target_pub; /// target publisher
             ros::Subscriber controller_type_sub, joint_state_sub, joint_target_sub, floating_base_sub, interactive_marker_sub; /// ROS subscribers
-            ros::ServiceServer ik_srv, ik_two_frames_srv, fk_srv;
+            ros::ServiceServer ik_srv, ik_two_frames_srv, fk_srv, execute_ik_srv;
             map<string,boost::shared_ptr<actionlib::SimpleActionServer<roboy_control_msgs::MoveEndEffectorAction>>> moveEndEffector_as;
 
 
