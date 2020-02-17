@@ -9,7 +9,7 @@ rospy.init_node("trajectory")
 
 motor_target = rospy.Publisher('/roboy/middleware/MotorCommand', MotorCommand, queue_size=1)
 
-motor_setpoints = [0,-2000,0,2000,0]
+motor_setpoints = [0,0,-2000,0,2000,0]
 
 time = [5,10,15,20,25,30]
 sampleTime = 0.01
