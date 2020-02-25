@@ -40,18 +40,10 @@
 
     <node name="robot_controller"
           pkg="kindyn"
-          type="left_shoulder"
+          type="$(arg robot_name)"
           respawn="false"
           output="screen"
 
-    />
-
-    <node name="robot_controller1"
-          pkg="kindyn"
-          type="left_elbow"
-          respawn="false"
-          output="screen"
-    
     />
 
     <group if="$(arg gazebo)">
