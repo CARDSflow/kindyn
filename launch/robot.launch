@@ -27,6 +27,7 @@
     <rosparam file="$(find robots)/$(arg model_name)/config/endeffectors.yaml" command="load"/>
     <rosparam file="$(find robots)/$(arg model_name)/config/motor_config.yaml" command="load"/>
     <rosparam param="q_target">[0.0, 0.0, 0.0]</rosparam>
+    <rosparam param="pwm">150</rosparam>
     <param name="min_force" type="double" value="0"  />
     <param name="max_force" type="double" value="100000"  />
     <param name="controller" type="int" value="2"  />
@@ -39,18 +40,10 @@
 
     <node name="robot_controller"
           pkg="kindyn"
-          type="left_shoulder"
+          type="$(arg robot_name)"
           respawn="false"
           output="screen"
 
-    />
-
-    <node name="robot_controller1"
-          pkg="kindyn"
-          type="left_elbow"
-          respawn="false"
-          output="screen"
-    
     />
 
     <group if="$(arg gazebo)">

@@ -30,7 +30,7 @@ private:
     map<int,float> l_offset, position;
     map<string, vector<float>> integral;
     boost::shared_ptr<tf::TransformListener> listener;
-    std::vector<string> body_parts = {"shoulder_left", "shoulder_right", "elbow_right", "elbow_left"};
+    std::vector<string> body_parts = {"shoulder_left", "elbow_left"};
     map<string, bool> init_called;
 
 public:
@@ -114,7 +114,7 @@ public:
         roboy_middleware_msgs::ControlMode msg;
         msg.request.control_mode = DIRECT_PWM;
         // TODO: fix in plexus PWM direction for the new motorboard
-        std::vector<int> set_points(motor_ids.size(), -pwm);
+        std::vector<int> set_points(motor_ids.size(), pwm);
         for (auto m: motor_ids) msg.request.motor_id.push_back(m);
         msg.request.set_points = set_points;
 
@@ -153,7 +153,7 @@ public:
 
         for(int i=0;i<motor_ids.size();i++) {
             int motor_id = motor_ids[i];
-            l_offset[motor_id] = -l[motor_id] + myoBrickMeterPerEncoderTicks(position[motor_id]);
+            l_offset[motor_id] = l[motor_id] + myoBrickMeterPerEncoderTicks(position[motor_id]);
             str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l[motor_id] << "\t|\t" << l_offset[motor_id] << endl;
         }
         
@@ -278,7 +278,7 @@ public:
     //              TODO   l_meter[sim_motor_id] = (l_offset[sim_motor_id] - l_target[sim_motor_id]) +
     //                         Kp_dl*error + integral[sim_motor_id];
     // #else
-                    l_meter[motor_id] = (l_offset[motor_id] + l_target[motor_id]) +
+                    l_meter[motor_id] = (l_offset[motor_id] - l_target[motor_id]) +
                             Kp_dl*error + integral[body_part][motor_id];
     // #endif
                     sprintf(s,     "%d            | %.3f   | %.1f    |  %.3f   | %.3f\n",

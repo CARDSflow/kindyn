@@ -310,8 +310,10 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     joint_target_sub = nh->subscribe("/joint_targets", 100, &Robot::JointTarget, this);
     floating_base_sub = nh->subscribe("/floating_base", 100, &Robot::FloatingBase, this);
     ik_srv = nh->advertiseService("/ik", &Robot::InverseKinematicsService, this);
+    execute_ik_srv = nh->advertiseService("/execute_ik",  &Robot::ExecuteIK, this);
     ik_two_frames_srv = nh->advertiseService("/ik_multiple_frames", &Robot::InverseKinematicsMultipleFramesService, this);
     fk_srv = nh->advertiseService("/fk", &Robot::ForwardKinematicsService, this);
+    link_pose_srv = nh->advertiseService("/get_link_pose", &Robot::GetLinkPoseService, this);
     interactive_marker_sub = nh->subscribe("/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
 }
 
@@ -604,8 +606,67 @@ bool Robot::InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::R
     ik_models[req.endeffector].setRobotState(robotstate.world_H_base, jointPos, robotstate.baseVel,
                                              jointVel, robotstate.gravity);
     ik[req.endeffector].clearProblem();
+
+    ik[req.endeffector].setCostTolerance(0.0001);
+    ik[req.endeffector].setConstraintsTolerance(0.00001);
+
+    ik[req.endeffector].setDefaultTargetResolutionMode(iDynTree::InverseKinematicsTreatTargetAsConstraintNone);
+    ik[req.endeffector].setRotationParametrization(iDynTree::InverseKinematicsRotationParametrizationRollPitchYaw);
+
+    bool ok;
+
+    iDynTree::Transform world_H_base = iDynTree::Transform::Identity();
+    ok = ik[req.endeffector].setFloatingBaseOnFrameNamed(ik_base_link[req.endeffector]);
+    if (!ok) {
+        std::cerr << "InverseKinematics: impossible to set floating base on " << ik_base_link[req.endeffector] << std::endl;
+        return 0;
+    }
+    ik[req.endeffector].addFrameConstraint(ik_base_link[req.endeffector], world_H_base);
+
+
+
+    switch (req.type) {
+        case 0: {
+            Eigen::Isometry3d iso;
+            tf::poseMsgToEigen(req.pose, iso);
+            iDynTree::Transform trans;
+            iDynTree::fromEigen(trans, iso.matrix());
+            ok = ik[req.endeffector].addTarget(req.target_frame, trans);
+            if (!ok) {
+                std::cerr << "InverseKinematics: impossible to add target on  " << req.target_frame << std::endl;
+                return 0;
+            }
+            break;
+        }
+        case 1: {
+            iDynTree::Position pos(req.pose.position.x, req.pose.position.y, req.pose.position.z);
+            ok = ik[req.endeffector].addPositionTarget(req.target_frame, pos);
+            if (!ok) {
+                std::cerr << "InverseKinematics: impossible to add target on  " << req.target_frame << std::endl;
+                return 0;
+            }
+            break;
+        }
+        case 2: {
+            Eigen::Quaterniond q(req.pose.orientation.w, req.pose.orientation.x, req.pose.orientation.y,
+                                 req.pose.orientation.z);
+            Eigen::Matrix3d rot = q.matrix();
+            iDynTree::Rotation r(rot(0, 0), rot(0, 1), rot(0, 2), rot(1, 0), rot(1, 1), rot(1, 2), rot(2, 0), rot(2, 1),
+                                 rot(2, 2));
+            ok = ik[req.endeffector].addRotationTarget(req.target_frame, r);
+            if (!ok) {
+                std::cerr << "InverseKinematics: impossible to add target on  " << req.target_frame << std::endl;
+                return 0;
+            }
+            break;
+        }
+    }
+
+    ik[req.endeffector].setFullJointsInitialCondition(&world_H_base, &(jointPos));
+
+    /*
 //    ik[req.endeffector].setMaxCPUTime(60);
-    ik[req.endeffector].setCostTolerance(0.001);
+//    ik[req.endeffector].setCostTolerance(0.0001);
     // we constrain the base link to stay where it is
     ik[req.endeffector].addTarget(ik_base_link[req.endeffector], ik_models[req.endeffector].model().getFrameTransform(
             ik_models[req.endeffector].getFrameIndex(ik_base_link[req.endeffector])));
@@ -634,6 +695,7 @@ bool Robot::InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::R
             break;
         }
     }
+    */
 
     static int counter = 6969;
     counter++;
@@ -642,9 +704,10 @@ bool Robot::InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::R
     if(counter-(rand()/(float)RAND_MAX)*10==0){
         publishMesh("robots", "common/meshes/visuals","target.stl", req.pose, 0.005,
                     "world", "ik_target", counter, 10, color);
-    }else{
-        publishCube(req.pose, "world", "ik_target", counter, color, 0.05, 15);
     }
+//    else{
+//        publishCube(req.pose, "world", "ik_target", counter, color, 0.05, 15);
+//    }
 
     if (ik[req.endeffector].solve()) {
         iDynTree::Transform base_solution;
@@ -768,6 +831,34 @@ void Robot::InteractiveMarkerFeedback( const visualization_msgs::InteractiveMark
 
         }
     }
+}
+
+bool Robot::ExecuteIK(roboy_middleware_msgs::InverseKinematics::Request &req,
+                        roboy_middleware_msgs::InverseKinematics::Response &res) {
+  auto it = find(endeffectors.begin(),endeffectors.end(),req.endeffector);
+  if(it!=endeffectors.end() && InverseKinematicsService(req, res)) {
+    int index = endeffector_index[req.endeffector];
+    for(int i=0;i<res.joint_names.size();i++){
+        q_target[joint_index[res.joint_names[i]]] = res.angles[i];
+    }
+    return true;
+  }
+  return false;
+}
+
+bool Robot::GetLinkPoseService(roboy_control_msgs::GetLinkPose::Request &req, 
+                                    roboy_control_msgs::GetLinkPose::Response &res) {
+    for (int i = 0; i < number_of_links; i++) {
+        
+        if (req.link_name == link_names[i]) {
+            Isometry3d iso(link_to_world_transform[i]);
+            tf::poseEigenToMsg(iso, res.pose);
+            return true;
+        }
+        
+    }
+    return false;
+
 }
 
 void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg) {
