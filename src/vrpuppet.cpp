@@ -713,8 +713,8 @@ bool Robot::InverseKinematicsService(roboy_middleware_msgs::InverseKinematics::R
         iDynTree::Transform base_solution;
         iDynTree::VectorDynSize q_star;
         ik[req.endeffector].getFullJointsSolution(base_solution, q_star);
-        ROS_INFO_STREAM("ik solution:\n" << "base solution:" << base_solution.toString() << "\njoint solution: "
-                                         << q_star.toString());
+//        ROS_INFO_STREAM("ik solution:\n" << "base solution:" << base_solution.toString() << "\njoint solution: "
+//                                         << q_star.toString());
         for (int i = 0; i < q_star.size(); i++) {
             res.joint_names.push_back(ik[req.endeffector].reducedModel().getJointName(i));
             res.angles.push_back(q_star(i));
