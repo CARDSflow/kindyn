@@ -839,7 +839,9 @@ bool Robot::ExecuteIK(roboy_middleware_msgs::InverseKinematics::Request &req,
   if(it!=endeffectors.end() && InverseKinematicsService(req, res)) {
     int index = endeffector_index[req.endeffector];
     for(int i=0;i<res.joint_names.size();i++){
-        q_target[joint_index[res.joint_names[i]]] = res.angles[i];
+        if (res.joint_names[i].find("wrist") == string::npos) {
+            q_target[joint_index[res.joint_names[i]]] = res.angles[i];
+        }
     }
     return true;
   }
