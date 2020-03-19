@@ -139,7 +139,6 @@ target_link_libraries(right_arm ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpupp
 add_executable( upper_body src/robots/upper_body.cpp)
 target_link_libraries(upper_body ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
 
-
 # head_testbed
 add_executable( head_testbed src/robots/head_testbed.cpp)
 target_link_libraries( head_testbed ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
