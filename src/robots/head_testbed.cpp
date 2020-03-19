@@ -31,7 +31,7 @@ public:
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
-            ros::init(argc, argv, "right_arm_testbed");
+            ros::init(argc, argv, "head_testbed");
         }
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         spinner = new ros::AsyncSpinner(0);
@@ -49,7 +49,7 @@ public:
         motor_status = nh->advertise<roboy_middleware_msgs::MotorStatus>("/roboy/middleware/m3/MotorStatus",1);
 
         uint32_t ip;
-        inet_pton(AF_INET, "192.168.255.255", &ip);
+        inet_pton(AF_INET, "192.168.2.255", &ip);
         udp.reset(new UDPSocket(8000));
         udp_command.reset(new UDPSocket(8001));
         udp_thread.reset(new std::thread(&HeadTestbed::receiveStatusUDP, this));
