@@ -266,6 +266,8 @@ namespace cardsflow {
                                                "wrist_right_axis0",
                                                "wrist_right_axis1",
                                                "wrist_right_axis2"};
+            vector<int> cmc_joint_ids;
+            vector<double> cmc_joint_states;
         protected:
             iDynTree::FreeFloatingGeneralizedTorques bias; /// Coriolis+Gravity term
             iDynTree::MatrixDynSize Mass; /// Mass matrix

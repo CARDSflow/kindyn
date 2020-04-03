@@ -55,7 +55,7 @@
 #include <iDynTree/KinDynComputations.h>
 
 #include "kindyn/controller/cardsflow_command_interface.hpp"
-
+using namespace std;
 class CartesianMotionController
 {
 public:
@@ -109,7 +109,7 @@ public:
     const KDL::JntArray& getPositions() const;
 
     //! Set initial joint configuration
-    bool setStartState(VectorXd jointPos);
+    bool setStartState(vector<double> jointPos);
 
     /**
      * @brief Initialize the solver
@@ -161,7 +161,7 @@ public:
         iDynTree::Vector3       gravity;
     }robotState;
 
-    VectorXd updateController(iDynTree::VectorDynSize rs);
+    VectorXd updateController(vector<double> rs);
     ctrl::Vector6D computeMotionError();
     void targetFrameCallback(const geometry_msgs::PoseStamped& target);
 

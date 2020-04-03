@@ -48,7 +48,9 @@ public:
     }
     ~PDController() {}
 
-    void init(const std::string& name_space){
+    void init(std::vector<double> g){
+
+        m_gains.initRT(PDGains(g[0],g[1]));
     // Connect dynamic reconfigure and overwrite the default values with values
     // on the parameter server. This is done automatically if parameters with
     // the according names exist.

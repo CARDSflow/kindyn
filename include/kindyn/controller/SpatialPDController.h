@@ -67,14 +67,22 @@ public:
         }
 
         // Load default controller gains
-        std::string solver_config = nh.getNamespace() + "/pd_gains";
+        std::string solver_config = "/pd_gains";
+        std::vector<double> trans_x, trans_y, trans_z, rot_x, rot_y, rot_z;
 
-        m_pd_controllers[0].init(solver_config + "/trans_x");
-        m_pd_controllers[1].init(solver_config + "/trans_y");
-        m_pd_controllers[2].init(solver_config + "/trans_z");
-        m_pd_controllers[3].init(solver_config + "/rot_x");
-        m_pd_controllers[4].init(solver_config + "/rot_y");
-        m_pd_controllers[5].init(solver_config + "/rot_z");
+        if (!nh.getParam("/pd_gains/trans_x", trans_x)) trans_x={10.0,0.0};
+        if (!nh.getParam("/pd_gains/trans_y", trans_y)) trans_y={10.0,0.0};
+        if (!nh.getParam("/pd_gains/trans_z", trans_z)) trans_z={10.0,0.0};
+        if (!nh.getParam("/pd_gains/rot_x", rot_x)) rot_x={1.0,0.0};
+        if (!nh.getParam("/pd_gains/rot_y", rot_y)) rot_y={1.0,0.0};
+        if (!nh.getParam("/pd_gains/rot_z", rot_z)) rot_z={1.0,0.0};
+
+        m_pd_controllers[0].init(trans_x);
+        m_pd_controllers[1].init(trans_y);
+        m_pd_controllers[2].init(trans_z);
+        m_pd_controllers[3].init(rot_x);
+        m_pd_controllers[4].init(rot_y);
+        m_pd_controllers[5].init(rot_z);
 
         return true;
     };

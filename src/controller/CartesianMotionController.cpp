@@ -43,6 +43,7 @@
 
 
 #include <urdf/model.h>
+using namespace std;
 
 CartesianMotionController::CartesianMotionController()
 {
@@ -246,7 +247,7 @@ const KDL::JntArray& CartesianMotionController::getPositions() const
 }
 
 
-bool CartesianMotionController::setStartState(VectorXd jointPos)
+bool CartesianMotionController::setStartState(vector<double> jointPos)
 {
     // Copy into internal buffers.
     for (int i = 0; i < m_joint_names.size(); ++i)
@@ -377,17 +378,17 @@ void CartesianMotionController::computeJointControlCmds(const ctrl::Vector6D& er
     updateKinematics();
 }
 
-VectorXd CartesianMotionController::updateController(iDynTree::VectorDynSize rs)
+VectorXd CartesianMotionController::updateController(vector<double> rs)
 {
     robotState.jointPos = rs;
-    for (int i = 0; i < m_joint_names.size(); ++i) {
-        m_current_positions(i) = rs.getVal(i);
+    for (int i = 0; i < m_joint_names.size(); i++) {
+        //m_current_positions(i) = rs[i];
     }
     // Forward Dynamics turns the search for the according joint motion into a
     // control process. So, we control the internal model until we meet the
     // Cartesian target motion. This internal control needs some simulation time
     // steps.
-    ROS_INFO_STREAM_THROTTLE(1,"m_iterations: " << m_iterations);
+    //ROS_INFO_STREAM_THROTTLE(1,"m_iterations: " << m_iterations);
     for (int i = 0; i < m_iterations; ++i)
     {
         // The internal 'simulation time' is deliberately independent of the outer
@@ -412,11 +413,11 @@ ctrl::Vector6D CartesianMotionController::computeMotionError()
 
     m_current_frame = getEndEffectorPose();
 
-    ROS_INFO_STREAM_THROTTLE(1, "current frame " << m_current_frame.p[0] << "\t" << m_current_frame.p[1] << "\t" << m_current_frame.p[2]);
-    ROS_INFO_STREAM_THROTTLE(1, "target_frame " << m_target_frame.p[0] << "\t" << m_target_frame.p[1] << "\t" << m_target_frame.p[2]);
+    //ROS_INFO_STREAM_THROTTLE(1, "current frame " << m_current_frame.p[0] << "\t" << m_current_frame.p[1] << "\t" << m_current_frame.p[2]);
+    //ROS_INFO_STREAM_THROTTLE(1, "target_frame " << m_target_frame.p[0] << "\t" << m_target_frame.p[1] << "\t" << m_target_frame.p[2]);
     // Transformation from target -> current corresponds to error = target - current
     KDL::Frame error_kdl;
-    error_kdl.M = m_target_frame.M * m_current_frame.M.Inverse();
+    error_kdl.M = m_current_frame.M * m_current_frame.M.Inverse();
     error_kdl.p = m_target_frame.p - m_current_frame.p;
 
     // Use Rodrigues Vector for a compact representation of orientation errors

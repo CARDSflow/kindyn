@@ -317,9 +317,18 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     interactive_marker_sub = nh->subscribe("/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
 
     cartesianMotionController.init(*nh);
-    cartesianMotionController.setStartState(q);
-    for (auto j: joint_names) ROS_WARN_STREAM(j);
 
+
+//    for (auto j: joint_names) ROS_WARN_STREAM(j);
+    for (int i=0; i<cmc_joint_names.size(); i++) {
+        auto it = find(joint_names.begin(), joint_names.end(), cmc_joint_names[i]);
+        int idx = std::distance(joint_names.begin(), it);
+        cmc_joint_ids.push_back(idx);
+    }
+    for (auto idx: cmc_joint_ids) {
+        cmc_joint_states.push_back(q[idx]);
+    }
+    cartesianMotionController.setStartState(cmc_joint_states);
 }
 
 VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max) {
@@ -394,11 +403,24 @@ void Robot::update() {
 
 
     if(!this->external_robot_state) {
-        auto q_tar = this->cartesianMotionController.updateController(robotstate.jointPos);
-        for (int i=0; i<q_tar.size(); i++) {
-            auto it = find(joint_names.begin(), joint_names.end(), cmc_joint_names[i]);
-            int idx = std::distance(joint_names.begin(), it);
-            q[idx] = q_tar[i];
+        for (auto idx: cmc_joint_ids) {
+            cmc_joint_states.push_back(robotstate.jointPos.getVal(idx));
+        }
+        auto q_tar = this->cartesianMotionController.updateController(cmc_joint_states);
+//        for (int i=0; i<q_tar.size(); i++) {
+//            auto it = find(joint_names.begin(), joint_names.end(), cmc_joint_names[i]);
+//            int idx = distance(joint_names.begin(), it);
+//            q[idx] = q_tar[i];
+//        }
+
+        for (int i=0; i<q.size(); i++) {
+            auto cmc_it = find(cmc_joint_ids.begin(), cmc_joint_ids.end(), i);
+            if (cmc_it != cmc_joint_ids.end()) {
+                auto cmc_id = distance(cmc_joint_ids.begin(), cmc_it);
+                q[i] = q_tar[cmc_id];
+            } else {
+                q[i] = q_target[i];
+            }
         }
 //        for(int i=q_tar.size(); i<q.size(); i++) {
 //            q[i] = q_target[i];
@@ -848,6 +870,7 @@ void Robot::InteractiveMarkerFeedback( const visualization_msgs::InteractiveMark
                             msg->pose.position.z));
         }
         else {
+            ROS_INFO_STREAM("solving IK with iDynTree");
             roboy_middleware_msgs::InverseKinematics msg2;
             msg2.request.pose = msg->pose;
             msg2.request.endeffector = msg->marker_name;
@@ -868,14 +891,28 @@ void Robot::InteractiveMarkerFeedback( const visualization_msgs::InteractiveMark
 bool Robot::ExecuteIK(roboy_middleware_msgs::InverseKinematics::Request &req,
                         roboy_middleware_msgs::InverseKinematics::Response &res) {
   auto it = find(endeffectors.begin(),endeffectors.end(),req.endeffector);
-  if(it!=endeffectors.end() && InverseKinematicsService(req, res)) {
-    int index = endeffector_index[req.endeffector];
-    for(int i=0;i<res.joint_names.size();i++){
-        if (res.joint_names[i].find("wrist") == string::npos) {
-            q_target[joint_index[res.joint_names[i]]] = res.angles[i];
-        }
-    }
-    return true;
+  if(it!=endeffectors.end()) {
+      if (req.endeffector == "hand_right") {
+          this->cartesianMotionController.m_target_frame = KDL::Frame(
+                  KDL::Rotation::Quaternion(
+                          req.pose.orientation.x,
+                          req.pose.orientation.y,
+                          req.pose.orientation.z,
+                          req.pose.orientation.w),
+                  KDL::Vector(
+                          req.pose.position.x,
+                          req.pose.position.y,
+                          req.pose.position.z));
+          return true;
+      } else if(InverseKinematicsService(req, res)) {
+          int index = endeffector_index[req.endeffector];
+          for(int i=0;i<res.joint_names.size();i++){
+              if (res.joint_names[i].find("wrist") == string::npos) {
+                  q_target[joint_index[res.joint_names[i]]] = res.angles[i];
+              }
+          }
+          return true;
+      }
   }
   return false;
 }
