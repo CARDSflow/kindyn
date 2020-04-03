@@ -315,6 +315,11 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     fk_srv = nh->advertiseService("/fk", &Robot::ForwardKinematicsService, this);
     link_pose_srv = nh->advertiseService("/get_link_pose", &Robot::GetLinkPoseService, this);
     interactive_marker_sub = nh->subscribe("/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
+
+    cartesianMotionController.init(*nh);
+    cartesianMotionController.setStartState(q);
+    for (auto j: joint_names) ROS_WARN_STREAM(j);
+
 }
 
 VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max) {
@@ -386,8 +391,20 @@ VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min
 }
 
 void Robot::update() {
+
+
     if(!this->external_robot_state) {
-      q = q_target;
+        auto q_tar = this->cartesianMotionController.updateController(robotstate.jointPos);
+        for (int i=0; i<q_tar.size(); i++) {
+            auto it = find(joint_names.begin(), joint_names.end(), cmc_joint_names[i]);
+            int idx = std::distance(joint_names.begin(), it);
+            q[idx] = q_tar[i];
+        }
+//        for(int i=q_tar.size(); i<q.size(); i++) {
+//            q[i] = q_target[i];
+//        }
+
+//      q = q_target;
     }
 
     ros::Time t0 = ros::Time::now();
@@ -818,18 +835,33 @@ void Robot::InteractiveMarkerFeedback( const visualization_msgs::InteractiveMark
         return;
     auto it = find(endeffectors.begin(),endeffectors.end(),msg->marker_name);
     if(it!=endeffectors.end()){
-        roboy_middleware_msgs::InverseKinematics msg2;
-        msg2.request.pose = msg->pose;
-        msg2.request.endeffector = msg->marker_name;
-        msg2.request.target_frame = msg->marker_name;
-        msg2.request.type = 1;
-        if(InverseKinematicsService(msg2.request,msg2.response)){
-            int index = endeffector_index[msg->marker_name];
-            for(int i=0;i<msg2.response.joint_names.size();i++){
-                q_target[joint_index[msg2.response.joint_names[i]]] = msg2.response.angles[i];
-            }
-
+        if (msg->marker_name == "hand_right") {
+            this->cartesianMotionController.m_target_frame = KDL::Frame(
+                    KDL::Rotation::Quaternion(
+                            msg->pose.orientation.x,
+                            msg->pose.orientation.y,
+                            msg->pose.orientation.z,
+                            msg->pose.orientation.w),
+                    KDL::Vector(
+                            msg->pose.position.x,
+                            msg->pose.position.y,
+                            msg->pose.position.z));
         }
+        else {
+            roboy_middleware_msgs::InverseKinematics msg2;
+            msg2.request.pose = msg->pose;
+            msg2.request.endeffector = msg->marker_name;
+            msg2.request.target_frame = msg->marker_name;
+            msg2.request.type = 1;
+            if(InverseKinematicsService(msg2.request,msg2.response)){
+                int index = endeffector_index[msg->marker_name];
+                for(int i=0;i<msg2.response.joint_names.size();i++){
+                    q_target[joint_index[msg2.response.joint_names[i]]] = msg2.response.angles[i];
+                }
+
+            }
+        }
+
     }
 }
 

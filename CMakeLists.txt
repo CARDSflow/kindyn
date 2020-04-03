@@ -99,6 +99,15 @@ add_library(ForcePositionController src/controller/forcePositionController.cpp )
 add_dependencies(ForcePositionController roboy_middleware_msgs_generate_messages_cpp roboy_control_msgs_generate_messages_cpp)
 target_link_libraries(ForcePositionController ${catkin_LIBRARIES} CardsflowHardwareInterface)
 
+add_library(CartesianMotionController SHARED
+		include/kindyn/controller/PDController.h
+		include/kindyn/controller/SpatialPDController.h
+			include/kindyn/controller/CartesianMotionController.h
+
+			src/controller/CartesianMotionController.cpp
+		)
+target_link_libraries(CartesianMotionController ${catkin_LIBRARIES})
+
 # kindyn library
 add_library(kindyn SHARED
 		src/robot.cpp
@@ -119,7 +128,7 @@ add_library(vrpuppet SHARED
 		include/kindyn/cable.hpp)
 add_dependencies(vrpuppet roboy_simulation_msgs_generate_messages_cpp roboy_simulation_msgs_msgs_generate_messages_cpp)
 target_link_libraries(vrpuppet ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CardsflowHardwareInterface
-		CableLengthController TorquePositionController ForcePositionController ${OpenMP_CXX_libraries})
+		CableLengthController TorquePositionController ForcePositionController CartesianMotionController ${OpenMP_CXX_libraries})
 
 # testing idyntree
 add_executable( test_idyntree src/utilities/test_idyntree.cpp)
@@ -127,21 +136,21 @@ target_link_libraries(test_idyntree ${iDynTree_LIBRARIES} ${catkin_LIBRARIES})
 
 ## left side
 add_executable( left_shoulder src/robots/arm_left.cpp)
-target_link_libraries(left_shoulder ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
+target_link_libraries(left_shoulder ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn CartesianMotionController)
 add_executable( left_elbow src/robots/elbow_left.cpp)
-target_link_libraries(left_elbow ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
+target_link_libraries(left_elbow ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn CartesianMotionController)
 
 # right_arm_testbed
 add_executable( right_arm src/robots/arm_right_testbed.cpp)
-target_link_libraries(right_arm ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
+target_link_libraries(right_arm ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn CartesianMotionController)
 
 # upper_body
 add_executable( upper_body src/robots/upper_body.cpp)
-target_link_libraries(upper_body ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
+target_link_libraries(upper_body ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn CartesianMotionController)
 
 # head_testbed
 add_executable( head_testbed src/robots/head_testbed.cpp)
-target_link_libraries( head_testbed ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
+target_link_libraries( head_testbed ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn CartesianMotionController)
 
 #==============================================================================
 # Installation

@@ -44,6 +44,7 @@
 #include "kindyn/EigenExtension.hpp"
 #include "kindyn/controller/cardsflow_state_interface.hpp"
 #include "kindyn/controller/cardsflow_command_interface.hpp"
+#include "kindyn/controller/CartesianMotionController.h"
 
 
 #include <actionlib/server/simple_action_server.h>
@@ -256,6 +257,15 @@ namespace cardsflow {
             bool external_robot_state; /// indicates if we get the robot state externally
             bool simulated = false; /// indicates if the robots is simulated or hardware is used
             bool initialized = false;
+            CartesianMotionController cartesianMotionController;
+            vector<string> cmc_joint_names = { "shoulder_right_axis0",
+                                               "shoulder_right_axis1",
+                                               "shoulder_right_axis2",
+                                               "elbow_right_axis0",
+                                               "elbow_right_axis1",
+                                               "wrist_right_axis0",
+                                               "wrist_right_axis1",
+                                               "wrist_right_axis2"};
         protected:
             iDynTree::FreeFloatingGeneralizedTorques bias; /// Coriolis+Gravity term
             iDynTree::MatrixDynSize Mass; /// Mass matrix
