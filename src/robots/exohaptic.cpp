@@ -154,17 +154,29 @@ public:
         static bool dir = false;
         if(simulated){
             if(dir){
-                q_target[joint_index["left_joint0"]]+=0.01;
-                q_target[joint_index["right_joint0"]]-=0.01;
+                q_target[joint_index["left_joint0"]]+=0.001;
+                q_target[joint_index["right_joint0"]]-=0.001;
             }else{
-                q_target[joint_index["left_joint0"]]-=0.01;
-                q_target[joint_index["right_joint0"]]+=0.01;
+                q_target[joint_index["left_joint0"]]-=0.001;
+                q_target[joint_index["right_joint0"]]+=0.001;
             }
             if(q_target[joint_index["left_joint0"]]<=-1){
                 dir = true;
             }
             if(q_target[joint_index["left_joint0"]]>=1){
                 dir = false;
+            }
+            int j=99999;
+            for(auto t:trackedObjects) {
+                geometry_msgs::Pose pose;
+                pose.position.x = t->pose.getOrigin().x();
+                pose.position.y = t->pose.getOrigin().y();
+                pose.position.z = t->pose.getOrigin().z();
+                pose.orientation.x = t->pose.getRotation().x();
+                pose.orientation.y = t->pose.getRotation().y();
+                pose.orientation.z = t->pose.getRotation().z();
+                pose.orientation.w = t->pose.getRotation().w();
+                publishMesh("robots", "exohaptic/meshes/CAD", (t->name+".stl").c_str(),pose,0.001,"world","pose_estimates",j++,1,COLOR(0,0,1,1));
             }
         }else {
             tf::StampedTransform right_hand, left_hand, right_elbow, left_elbow, right_upper_arm, left_upper_arm;
