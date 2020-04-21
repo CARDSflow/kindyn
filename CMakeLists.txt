@@ -174,6 +174,10 @@ target_link_libraries(exohaptic ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpupp
 add_executable( roboy_ciie src/robots/roboy_ciie.cpp)
 target_link_libraries(roboy_ciie ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
 
+# vrsphere
+add_executable( vrsphere src/robots/vrsphere.cpp)
+target_link_libraries(vrsphere ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
+
 #==============================================================================
 # Installation
 #==============================================================================
