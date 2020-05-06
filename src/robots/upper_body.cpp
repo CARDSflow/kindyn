@@ -30,7 +30,7 @@ private:
     map<int,float> l_offset, position;
     map<string, vector<float>> integral;
     boost::shared_ptr<tf::TransformListener> listener;
-    std::vector<string> body_parts = {"shoulder_left", "elbow_left"};
+    std::vector<string> body_parts = {"head"};//}, "elbow_left"};
     map<string, bool> init_called;
 
 public:
@@ -63,10 +63,10 @@ public:
         for (auto body_part: body_parts) {
             init_called[body_part] = false;
             motor_config[body_part] = nh->serviceClient<roboy_middleware_msgs::MotorConfigService>("/roboy/middleware/"+body_part+"/MotorConfig");
-            control_mode[body_part] = nh->serviceClient<roboy_middleware_msgs::ControlMode>( "/roboy/middleware/"+body_part+"ControlMode"); 
+            control_mode[body_part] = nh->serviceClient<roboy_middleware_msgs::ControlMode>( "/roboy/middleware/ControlMode");//+body_part+"ControlMode");
         }
 
-        motor_command = nh->advertise<roboy_middleware_msgs::MotorControl>("/roboy/middleware/MotorCommand",1);
+        motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
         init_pose = nh->advertiseService("init_pose", &UpperBody::initPose,this);
 
         ROS_INFO_STREAM("Finished setup");
@@ -83,7 +83,8 @@ public:
             req.strings = body_parts;
         }
 
-        for (auto body_part: req.strings) {
+        for (string body_part: req.strings) {
+            ROS_WARN_STREAM("init called for: " << body_part);
             auto r = initBodyPart(body_part);
             res.result = r*res.result;
         }
@@ -93,7 +94,7 @@ public:
 
 
     bool initBodyPart(string name) {
-
+        ROS_WARN_STREAM("initBodyPart: " << name);
         int pwm;
         try { 
             nh->getParam("pwm",pwm); } 
@@ -160,7 +161,7 @@ public:
 
         ROS_INFO_STREAM(str.str());
 
-        ROS_INFO("changing control mode of %s to POSITION", name);
+        ROS_INFO_STREAM("changing control mode of %s to POSITION" << name);
 
         roboy_middleware_msgs::ControlMode msg1;
         msg1.request.control_mode = ENCODER0_POSITION; 
@@ -170,7 +171,7 @@ public:
         }
         
         if (!control_mode[name].call(msg1)) {
-            ROS_ERROR("Changing control mode for %s didnt work", name);
+            ROS_ERROR_STREAM("Changing control mode for %s didnt work" << name);
             return false;
         }
 
@@ -178,7 +179,7 @@ public:
         integral[name] = _integral;
 
         update();
-        ROS_INFO("%s pose init done", name);
+        ROS_INFO_STREAM("%s pose init done" << name);
         init_called[name] = true;
         return true;
     }
@@ -186,23 +187,27 @@ public:
     float myoBrickMeterPerEncoderTicks(int motor_pos) {
 // #ifdef LEGACY
             // TODO!!
-//         return ((motor_pos/(53.0f*4.0f*512.0f))*(M_PI*0.0085f));
+         return ((motor_pos/(53.0f*4.0f*512.0f))*(M_PI*0.0085f));
 // #else
-        return ((motor_pos/2048.0f)*(M_PI*0.0085f));
+//        return ((motor_pos/2048.0f)*(M_PI*0.0085f));
 // #endif
     }
 
     float myoBrickEncoderTicksPerMeter(float meter){
-        // TODO divide by 53.0 for legacy motoboards
-        return (meter/(M_PI*0.0085f))*2048.0f;
+        return  (meter/(M_PI*0.0085f))*(53.0f*4.0f*512.0f);
+        // TODO  legacy motoboards
+//        return (meter/(M_PI*0.0085f))*2048.0f;
 
     }
 
     string findBodyPartByMotorId(int id) {
         for (auto body_part: body_parts) {
             std::vector<int> motor_ids;
-            try { 
-                nh->getParam(body_part+"/motor_ids", motor_ids); } 
+            try {
+//                mux.lock();
+                nh->getParam(body_part+"/motor_ids", motor_ids);
+//                mux.unlock();
+            }
             catch (const std::exception&) { 
                 ROS_ERROR("motor ids for %s are not on the parameter server. check motor_config.yaml in robots.", body_part);
                 return "unknown";
@@ -211,7 +216,7 @@ public:
                 return body_part;
             }
         }
-        ROS_ERROR("Seem like motor with id %d does not belong to any body part", id);
+        ROS_WARN_THROTTLE(10,"Seems like motor with id %d does not belong to any body part", id);
         return "unknown";
     }
 
@@ -219,9 +224,15 @@ public:
         for (int i=0; i<msg->global_id.size(); i++) {
             int id = msg->global_id[i];
             position[id] = msg->encoder0_pos[i];
+            if (msg->current[i] > 0) {
+                motor_status_received["head"] = true;
+//                TODO motor_status_received[findBodyPartByMotorId(id)] = true;
+            }
+
         }
-        motor_status_received[findBodyPartByMotorId(msg->global_id[0])] = true;
+
     }
+
 
     /**
      * Updates the robot model
@@ -275,11 +286,11 @@ public:
                         }
                     }
     // #ifdef LEGACY
-    //              TODO   l_meter[sim_motor_id] = (l_offset[sim_motor_id] - l_target[sim_motor_id]) +
-    //                         Kp_dl*error + integral[sim_motor_id];
+                     l_meter[motor_id] = (l_offset[motor_id] - l_target[motor_id]) +
+                             Kp_dl*error + integral[body_part][motor_id];
     // #else
-                    l_meter[motor_id] = (l_offset[motor_id] - l_target[motor_id]) +
-                            Kp_dl*error + integral[body_part][motor_id];
+//                    l_meter[motor_id] = (l_offset[motor_id] - l_target[motor_id]) +
+//                            Kp_dl*error + integral[body_part][motor_id];
     // #endif
                     sprintf(s,     "%d            | %.3f   | %.1f    |  %.3f   | %.3f\n",
                             motor_id,l_meter[motor_id],myoBrickEncoderTicksPerMeter(l_meter[motor_id]),error,integral[body_part][motor_id]);
@@ -289,9 +300,10 @@ public:
                 str << endl;
                 ROS_INFO_STREAM_THROTTLE(2,str.str());
                 
-                roboy_middleware_msgs::MotorControl msg;
+                roboy_middleware_msgs::MotorCommand msg;
                 msg.motor = {};
                 msg.setpoint = {};
+                msg.legacy = true;
                 for (int i = 0; i < motor_ids.size(); i++) {
                     msg.motor.push_back(motor_ids[i]);
                     msg.setpoint.push_back(myoBrickEncoderTicksPerMeter(l_meter[motor_ids[i]]));
