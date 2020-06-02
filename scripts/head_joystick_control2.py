@@ -1,8 +1,11 @@
 import rospy
 from sensor_msgs.msg import JointState, Joy
 from geometry_msgs.msg import PoseStamped
+import pyroboy
 
 
+rospy.init_node('joy_ctl')
+pyroboy.init()
 
 class JoystickRoboy:
 
@@ -11,7 +14,9 @@ class JoystickRoboy:
 		self.joint_pub = rospy.Publisher('/joint_targets', JointState, queue_size=1)
 		self.eyes_pub = rospy.Publisher('/roboy/eyes', PoseStamped, queue_size=1)
 		self.joint_sub = rospy.Subscriber('/cardsflow_joint_states', JointState, self.joint_cb)
-		self.axes_names = ["head_axis1", "head_axis0"]
+		self.face_emotions = ["shy", "hearts", "hypno_color", "kiss", "angry", "talking", "pissed", "img:money", None, None, None, None]
+		self.show_emotions = []
+		self.axes_names = ["head_axis1", "head_axis0", "eyes_axis1", "eyes_axis0"]
 		self.axes = []
 		self.scale = [0.05, -0.05]
 		self.joint_names = []
@@ -19,12 +24,13 @@ class JoystickRoboy:
 
 	def joy_cb(self, msg):
 		self.axes = msg.axes
-	
-	def update(self):
+		self.show_emotions = [x for (x,y) in zip(self.face_emotions,msg.buttons) if y == 1]
+
+	def head_ctl(self):
 		joint_msg = JointState()
 		
 		if len(self.axes) != 0:
-			for i in range(len(self.axes_names)):
+			for i in range(len(self.axes_names[:2])):
 				j = self.axes_names[i]
 				pos = self.get_joint_position(j) + self.scale[i]*self.axes[i]
 				if pos is not None:
@@ -33,6 +39,25 @@ class JoystickRoboy:
 					joint_msg.velocity.append(0)
 					joint_msg.effort.append(0)
 			self.joint_pub.publish(joint_msg)
+
+	def eyes_ctl(self):
+		msg = PoseStamped()
+		if len(self.axes) != 0:
+			msg.pose.position.x = self.axes[self.axes_names.index("eyes_axis1")]
+			msg.pose.position.y = self.axes[self.axes_names.index("eyes_axis0")]	
+			self.eyes_pub.publish(msg)
+	
+	def emotion_ctl(self):
+		if len(self.show_emotions) != 0:
+			for e in self.show_emotions:
+				if e is not None:
+					pyroboy.show_emotion(e)
+			self.show_emotions = []		
+
+	def update(self):
+		self.head_ctl()
+		self.eyes_ctl()
+		self.emotion_ctl()
 
 
 	def joint_cb(self, msg):
@@ -51,7 +76,7 @@ class JoystickRoboy:
 				return None
 
 if __name__ == '__main__':
-	rospy.init_node('joy_ctl')
+	
 	jr = JoystickRoboy()
 	rate = rospy.Rate(200)
 	while not rospy.is_shutdown():
