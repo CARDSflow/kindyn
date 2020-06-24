@@ -72,7 +72,7 @@ public:
         ROS_INFO_STREAM("Finished setup");
     };
 
-    
+
 
 
     bool initPose(roboy_middleware_msgs::SetStrings::Request &req,
@@ -96,17 +96,17 @@ public:
     bool initBodyPart(string name) {
         ROS_WARN_STREAM("initBodyPart: " << name);
         int pwm;
-        try { 
-            nh->getParam("pwm",pwm); } 
-        catch (const std::exception&) { 
+        try {
+            nh->getParam("pwm",pwm); }
+        catch (const std::exception&) {
             ROS_ERROR_STREAM("rosparam pwm is not set. will not init.");
             return false;
         }
         std::vector<int> motor_ids;
-        try { 
-            nh->getParam(name+"/motor_ids", motor_ids); 
-        } 
-        catch (const std::exception&) { 
+        try {
+            nh->getParam(name+"/motor_ids", motor_ids);
+        }
+        catch (const std::exception&) {
             ROS_ERROR("motor ids for %s are not on the parameter server. check motor_config.yaml in robots.", name);
             return false;
         }
@@ -158,7 +158,7 @@ public:
 
         stringstream str;
         str << "saving position offsets:" << endl << "motor id  |   position offset [ticks]  | length_sim[m] | length offset[m]" << endl;
-        
+
         // for (int i = 0; i<motor_ids.size();i++) str << motor_ids[i] << ": " << position[motor_ids[i]] << ", ";
         // str << endl;
 
@@ -167,19 +167,19 @@ public:
             l_offset[motor_id] = l[motor_id] + myoBrickMeterPerEncoderTicks(position[motor_id]);
             str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l[motor_id] << "\t|\t" << l_offset[motor_id] << endl;
         }
-        
+
 
         ROS_INFO_STREAM(str.str());
 
         ROS_INFO_STREAM("changing control mode of %s to POSITION" << name);
 
         roboy_middleware_msgs::ControlMode msg1;
-        msg1.request.control_mode = ENCODER0_POSITION; 
+        msg1.request.control_mode = ENCODER0_POSITION;
         for (int id: motor_ids) {
             msg1.request.motor_id.push_back(id);
             msg1.request.set_points.push_back(position[id]);
         }
-        
+
         if (!control_mode[name].call(msg1)) {
             ROS_ERROR_STREAM("Changing control mode for %s didnt work" << name);
             return false;
@@ -197,14 +197,14 @@ public:
     float myoBrickMeterPerEncoderTicks(int motor_pos) {
 // #ifdef LEGACY
             // TODO!!
-         return ((motor_pos/(53.0f*4.0f*512.0f))*(M_PI*0.0085f));
+         return ((motor_pos/4096.0f)*(M_PI*0.0085f));
 // #else
 //        return ((motor_pos/2048.0f)*(M_PI*0.0085f));
 // #endif
     }
 
     float myoBrickEncoderTicksPerMeter(float meter){
-        return  (meter/(M_PI*0.0085f))*(53.0f*4.0f*512.0f);
+        return  (meter/(M_PI*0.0085f))*(4096.0f);
         // TODO  legacy motoboards
 //        return (meter/(M_PI*0.0085f))*2048.0f;
 
@@ -218,7 +218,7 @@ public:
                 nh->getParam(body_part+"/motor_ids", motor_ids);
 //                mux.unlock();
             }
-            catch (const std::exception&) { 
+            catch (const std::exception&) {
                 ROS_ERROR("motor ids for %s are not on the parameter server. check motor_config.yaml in robots.", body_part);
                 return "unknown";
             }
@@ -266,9 +266,9 @@ public:
                 ROS_WARN_STREAM_THROTTLE(5, body_part << " was not initialized. skipping");
             } else {
                 std::vector<int> motor_ids;
-                try { 
-                    nh->getParam(body_part+"/motor_ids", motor_ids); } 
-                catch (const std::exception&) { 
+                try {
+                    nh->getParam(body_part+"/motor_ids", motor_ids); }
+                catch (const std::exception&) {
                     ROS_ERROR("motor ids for %s are not on the parameter server. check motor_config.yaml in robots.", body_part);
                 }
 
@@ -276,7 +276,7 @@ public:
                 map<int,float> l_meter;
 
                 // l_meter.resize(sim_motor_ids.size());
-                
+
 
                 str << endl << "motor_id | l_meter | ticks | error | integral" << endl;
                 char s[200];
@@ -310,7 +310,7 @@ public:
 
                 str << endl;
                 ROS_INFO_STREAM_THROTTLE(2,str.str());
-                
+
                 roboy_middleware_msgs::MotorCommand msg;
                 msg.motor = {};
                 msg.setpoint = {};
@@ -320,7 +320,7 @@ public:
                     msg.setpoint.push_back(myoBrickEncoderTicksPerMeter(l_meter[motor_ids[i]]));
                 }
                 motor_command.publish(msg);
-                
+
         }
      }
     };
