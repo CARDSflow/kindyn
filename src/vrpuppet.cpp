@@ -140,8 +140,15 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     robotstate.resize(number_of_dofs);
     baseVel.setZero();
     world_H_base.setIdentity();
+    auto qq =  iDynTree::Vector4();
+    qq.zero();
+    qq.setVal(3,1);
+    qq.setVal(2,1);
+    auto rot = iDynTree::Rotation::RotationFromQuaternion(qq);
+
     gravity << 0, 0, -9.81;
     iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
+//    robotstate.world_H_base.setRotation(rot);
     iDynTree::toEigen(robotstate.jointPos) = q;
     iDynTree::fromEigen(robotstate.baseVel, baseVel);
     toEigen(robotstate.jointVel) = qd;
@@ -890,7 +897,16 @@ void Robot::JointTarget(const sensor_msgs::JointStateConstPtr &msg){
     for (string joint:msg->name) {
         int joint_index = model.getJointIndex(joint);
         if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
-            q_target(joint_index) = msg->position[i];
+            if (msg->position[i] > q_max(joint_index)) {
+                q_target(joint_index)  = q_max(joint_index);
+            }
+            else if (msg->position[i] < q_min(joint_index)) {
+                q_target(joint_index)  = q_min(joint_index);
+            }
+            else {
+                q_target(joint_index) = msg->position[i];
+            }
+
             qd_target(joint_index) = msg->velocity[i];
         } else {
             ROS_WARN_THROTTLE(5.0, "joint %s not found in model", joint.c_str());

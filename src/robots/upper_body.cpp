@@ -30,7 +30,7 @@ private:
     map<int,float> l_offset, position;
     map<string, vector<float>> integral;
     boost::shared_ptr<tf::TransformListener> listener;
-    std::vector<string> body_parts = {"head"};//}, "elbow_left"};
+    std::vector<string> body_parts = {"shoulder_left", "head"};//, "shoulder_left"};//}, "elbow_left"};
     map<string, bool> init_called;
 
 public:
@@ -118,6 +118,16 @@ public:
         std::vector<int> set_points(motor_ids.size(), pwm);
         for (auto m: motor_ids) msg.request.motor_id.push_back(m);
         msg.request.set_points = set_points;
+
+        stringstream str1;
+        for(int i=0;i<msg.request.set_points.size();i++) {
+            int motor_id = motor_ids[i];
+
+            str1 << msg.request.motor_id[i] << "\t|\t" << msg.request.set_points[i] << endl;
+        }
+
+
+        ROS_INFO_STREAM(str1.str());
 
 
         if (!control_mode[name].call(msg)) {
@@ -226,6 +236,7 @@ public:
             position[id] = msg->encoder0_pos[i];
             if (msg->current[i] > 0) {
                 motor_status_received["head"] = true;
+                motor_status_received["shoulder_left"] = true;
 //                TODO motor_status_received[findBodyPartByMotorId(id)] = true;
             }
 
