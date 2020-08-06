@@ -30,7 +30,7 @@ private:
     map<int,float> l_offset, position;
     map<string, vector<float>> integral;
     boost::shared_ptr<tf::TransformListener> listener;
-    std::vector<string> body_parts = {"shoulder_left", "head"};//, "shoulder_left"};//}, "elbow_left"};
+    std::vector<string> body_parts = {"shoulder_left", "shoulder_right", "head"};//, "shoulder_left"};//}, "elbow_left"};
     map<string, bool> init_called;
 
 public:
@@ -237,6 +237,7 @@ public:
             if (msg->current[i] > 0) {
                 motor_status_received["head"] = true;
                 motor_status_received["shoulder_left"] = true;
+                motor_status_received["shoulder_right"] = true;
 //                TODO motor_status_received[findBodyPartByMotorId(id)] = true;
             }
 

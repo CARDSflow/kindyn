@@ -27,7 +27,7 @@
     <rosparam file="$(find robots)/$(arg model_name)/config/endeffectors.yaml" command="load"/>
     <rosparam file="$(find robots)/$(arg model_name)/config/motor_config.yaml" command="load"/>
     <rosparam param="q_target">[0.0, 0.0, 0.0]</rosparam>
-    <rosparam param="pwm">150</rosparam>
+    <rosparam param="pwm">700</rosparam>
     <param name="min_force" type="double" value="0"  />
     <param name="max_force" type="double" value="100000"  />
     <param name="controller" type="int" value="2"  />
@@ -44,6 +44,8 @@
          type="$(arg robot_name)"
          respawn="false"
          output="screen"
+
+
    />
 
     <!-- DO NOT HARDCODE NODES -->
