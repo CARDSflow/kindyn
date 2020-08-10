@@ -85,6 +85,7 @@ public:
 
         for (string body_part: req.strings) {
             ROS_WARN_STREAM("init called for: " << body_part);
+            init_called[body_part] = false;
             auto r = initBodyPart(body_part);
             res.result = r*res.result;
         }
