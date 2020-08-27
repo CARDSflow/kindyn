@@ -299,8 +299,16 @@ public:
                         }
                     }
     // #ifdef LEGACY
-                     l_meter[motor_id] = (l_offset[motor_id] - l_target[motor_id]) +
+                    if (motor_id == 16 || motor_id == 17) {
+                        Kp_dl = 0; Ki_dl = 0;
+                        l_meter[motor_id] = (l_offset[motor_id] - l_target[motor_id]) +
                              Kp_dl*error + integral[body_part][motor_id];
+                         } 
+                    else {
+                        l_meter[motor_id] = (l_offset[motor_id] - l_target[motor_id]) +
+                         Kp_dl*error + integral[body_part][motor_id];
+                    }  
+                     
     // #else
 //                    l_meter[motor_id] = (l_offset[motor_id] - l_target[motor_id]) +
 //                            Kp_dl*error + integral[body_part][motor_id];
