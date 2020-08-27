@@ -30,7 +30,7 @@ private:
     map<int,float> l_offset, position;
     map<string, vector<float>> integral;
     boost::shared_ptr<tf::TransformListener> listener;
-    std::vector<string> body_parts = {"shoulder_left", "shoulder_right", "head"};//, "shoulder_left"};//}, "elbow_left"};
+    std::vector<string> body_parts = {"shoulder_left", "shoulder_right", "head", "wrist_left", "wrist_right"};//, "shoulder_left"};//}, "elbow_left"};
     map<string, bool> init_called;
 
 public:
@@ -235,12 +235,19 @@ public:
         for (int i=0; i<msg->global_id.size(); i++) {
             int id = msg->global_id[i];
             position[id] = msg->encoder0_pos[i];
+            auto body_part = findBodyPartByMotorId(id);
             if (msg->current[i] > 0) {
-                motor_status_received["head"] = true;
-                motor_status_received["shoulder_left"] = true;
-                motor_status_received["shoulder_right"] = true;
+                motor_status_received[body_part] = true;
+                // motor_status_received["shoulder_left"] = true;
+                // motor_status_received["shoulder_right"] = true;
+
+
 //                TODO motor_status_received[findBodyPartByMotorId(id)] = true;
             }
+            else {
+                ROS_WARN_THROTTLE(1, "Did not receive %s's motor status for motor with id: %d", (body_part, id));    
+            }
+            
 
         }
 
@@ -301,13 +308,11 @@ public:
     // #ifdef LEGACY
                     if (motor_id == 16 || motor_id == 17) {
                         Kp_dl = 0; Ki_dl = 0;
-                        l_meter[motor_id] = (l_offset[motor_id] - l_target[motor_id]) +
-                             Kp_dl*error + integral[body_part][motor_id];
-                         } 
-                    else {
-                        l_meter[motor_id] = (l_offset[motor_id] - l_target[motor_id]) +
+                        
+                    } 
+                    l_meter[motor_id] = (l_offset[motor_id] - l_target[motor_id]) +
                          Kp_dl*error + integral[body_part][motor_id];
-                    }  
+                    
                      
     // #else
 //                    l_meter[motor_id] = (l_offset[motor_id] - l_target[motor_id]) +
