@@ -73,8 +73,6 @@ public:
     };
 
 
-
-
     bool initPose(roboy_middleware_msgs::SetStrings::Request &req,
                   roboy_middleware_msgs::SetStrings::Response &res){
         res.result = true;
@@ -96,120 +94,239 @@ public:
 
     bool initBodyPart(string name) {
         ROS_WARN_STREAM("initBodyPart: " << name);
-        int pwm;
-        try {
-            nh->getParam("pwm",pwm); }
-        catch (const std::exception&) {
-            ROS_ERROR_STREAM("rosparam pwm is not set. will not init.");
-            return false;
-        }
+        
         std::vector<int> motor_ids;
-        try {
-            nh->getParam(name+"/motor_ids", motor_ids);
-        }
-        catch (const std::exception&) {
-            ROS_ERROR("motor ids for %s are not on the parameter server. check motor_config.yaml in robots.", name);
-            return false;
-        }
-
-        ROS_INFO("changing control mode of motors to PWM with %d",pwm);
-        roboy_middleware_msgs::ControlMode msg;
-        msg.request.control_mode = DIRECT_PWM;
-        // TODO: fix in plexus PWM direction for the new motorboard
-        std::vector<int> set_points(motor_ids.size(), pwm);
-        for (auto m: motor_ids) msg.request.motor_id.push_back(m);
-        msg.request.set_points = set_points;
-
-        stringstream str1;
-        for(int i=0;i<msg.request.set_points.size();i++) {
-            int motor_id = motor_ids[i];
-
-            str1 << msg.request.motor_id[i] << "\t|\t" << msg.request.set_points[i] << endl;
-        }
-
-
-        ROS_INFO_STREAM(str1.str());
-
-
-        if (!control_mode[name].call(msg)) {
-            ROS_ERROR("Changing control mode for %s didnt work", name);
-            return false;
-        }
-
-
-        ros::Time t0;
-        t0= ros::Time::now();
-        double timeout = 0;
-        nh->getParam("timeout",timeout);
-        if(timeout==0) {
-            int seconds = 5;
-            while ((ros::Time::now() - t0).toSec() < 5) {
-                ROS_INFO_THROTTLE(1, "waiting %d", seconds--);
+            try {
+                nh->getParam(name+"/motor_ids", motor_ids);
             }
-        }else{
-            int seconds = timeout;
-            while ((ros::Time::now() - t0).toSec() < timeout) {
-                ROS_INFO_THROTTLE(1, "waiting %d", seconds--);
+            catch (const std::exception&) {
+                ROS_ERROR("motor ids for %s are not on the parameter server. check motor_config.yaml in robots.", name);
+                return false;
             }
+
+        if (name == "wrist_left" || name == "writst_right") {
+            int init_m3_displacement;
+            try {
+                nh->getParam("init_m3_displacement",init_m3_displacement); }
+            catch (const std::exception&) {
+                ROS_ERROR_STREAM("rosparam init_m3_displacement is not set. will not init.");
+                return false;
+            }
+
+            ROS_INFO_STREAM("changing control mode for " << name << " with displacement " << init_m3_displacement);
+            roboy_middleware_msgs::MotorConfigService msg;
+
+            roboy_middleware_msgs::MotorConfig config_msg;
+
+            for (int id: motor_ids) {
+                config_msg.motor.push_back(id);
+                config_msg.setpoint.push_back(init_m3_displacement);
+                config_msg.update_frequency.push_back(100);
+                config_msg.control_mode.push_back(DISPLACEMENT);
+                config_msg.deadband.push_back(0);
+                config_msg.IntegralLimit.push_back(50);
+                config_msg.PWMLimit.push_back(500);
+                config_msg.current_limit.push_back(1);
+                config_msg.Kp.push_back(1);
+                config_msg.Ki.push_back(0);
+                config_msg.Kd.push_back(0);
+            }
+
+            msg.request.config = config_msg;
+
+            auto success = motor_config[name].call(msg);
+            auto res = msg.response.mode;
+            for (int i=0;i<res.size();i++) {
+                success *= res[i] == DISPLACEMENT;
+            }
+            if (!success) {
+                ROS_ERROR_STREAM("Failed to change M3 control mode on " << name << " to DISPLACEMENT");
+                return false;
+            }
+
+            ros::Time t0;
+            t0= ros::Time::now();
+            double timeout = 0;
+            nh->getParam("timeout",timeout);
+            if(timeout==0) {
+                int seconds = 5;
+                while ((ros::Time::now() - t0).toSec() < 5) {
+                    ROS_INFO_THROTTLE(1, "waiting %d", seconds--);
+                }
+            }else{
+                int seconds = timeout;
+                while ((ros::Time::now() - t0).toSec() < timeout) {
+                    ROS_INFO_THROTTLE(1, "waiting %d", seconds--);
+                }
+            }
+            if(!motor_status_received[name]) {
+                ROS_ERROR("did not receive motor status for %s, try again", name);
+                return false;
+            }
+
+            stringstream str;
+            str << "saving position offsets:" << endl << "motor id  |   position offset [ticks]  | length_sim[m] | length offset[m]" << endl;
+
+            // for (int i = 0; i<motor_ids.size();i++) str << motor_ids[i] << ": " << position[motor_ids[i]] << ", ";
+            // str << endl;
+
+            for(int i=0;i<motor_ids.size();i++) {
+                int motor_id = motor_ids[i];
+                l_offset[motor_id] = l[motor_id] + position[motor_id];
+                str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l[motor_id] << "\t|\t" << l_offset[motor_id] << endl;
+            }
+
+
+            ROS_INFO_STREAM(str.str());
+
+            ROS_INFO_STREAM("changing control mode of %s to POSITION" << name);
+
+            // config_msg.update_frequency = std::vector<int> v(motor_ids.size(), 100);
+            // config_msg.control_mode = std::vector<int> v(motor_ids.size(), ENCODER0_POSITION);
+            // config_msg.deadband = std::vector<int> v(motor_ids.size(), 0);
+            // config_msg.IntegralLimit = std::vector<int> v(motor_ids.size(), 50);
+            // config_msg.PWMLimit = std::vector<int> v(motor_ids.size(), 500);
+            // config_msg.current_limit = std::vector<float> v(motor_ids.size(), 1);
+            // config_msg.Kp = std::vector<float> v(motor_ids.size(), 1);
+            // config_msg.Ki = std::vector<float> v(motor_ids.size(), 0);
+            // config_msg.Kd = std::vector<float> v(motor_ids.size(), 0);
+            // config_msg.motor = std::vector<int> v;
+            // config_msg.setpoint = std::vector<int> v;
+
+            for (int id: motor_ids) {
+                config_msg.motor.push_back(id);
+                config_msg.setpoint.push_back(position[id]);
+            }
+
+            msg.request.config = config_msg;
+
+            success = motor_config[name].call(msg);
+            res = msg.response.mode;
+            for (int i=0;i<res.size();i++) {
+                success *= res[i] == ENCODER0_POSITION;
+            }
+
+            if (!success) {
+                ROS_ERROR_STREAM("Failed to change M3 control mode on " << name << " to ENCODER0_POSITION");
+                return false;
+            }
+
+            vector<float> _integral(motor_ids.size(), 0);
+            integral[name] = _integral;
+
         }
-        if(!motor_status_received[name]) {
-            ROS_ERROR("did not receive motor status for %s, try again", name);
-            return false;
+        else {
+            int pwm;
+            try {
+                nh->getParam("pwm",pwm); }
+            catch (const std::exception&) {
+                ROS_ERROR_STREAM("rosparam pwm is not set. will not init.");
+                return false;
+            }
+            
+
+            ROS_INFO("changing control mode of motors to PWM with %d",pwm);
+            roboy_middleware_msgs::ControlMode msg;
+            msg.request.control_mode = DIRECT_PWM;
+            // TODO: fix in plexus PWM direction for the new motorboard
+            std::vector<int> set_points(motor_ids.size(), pwm);
+            for (auto m: motor_ids) msg.request.motor_id.push_back(m);
+            msg.request.set_points = set_points;
+
+            stringstream str1;
+            for(int i=0;i<msg.request.set_points.size();i++) {
+                int motor_id = motor_ids[i];
+
+                str1 << msg.request.motor_id[i] << "\t|\t" << msg.request.set_points[i] << endl;
+            }
+
+
+            ROS_INFO_STREAM(str1.str());
+
+
+            if (!control_mode[name].call(msg)) {
+                ROS_ERROR("Changing control mode for %s didnt work", name);
+                return false;
+            }
+
+
+            ros::Time t0;
+            t0= ros::Time::now();
+            double timeout = 0;
+            nh->getParam("timeout",timeout);
+            if(timeout==0) {
+                int seconds = 5;
+                while ((ros::Time::now() - t0).toSec() < 5) {
+                    ROS_INFO_THROTTLE(1, "waiting %d", seconds--);
+                }
+            }else{
+                int seconds = timeout;
+                while ((ros::Time::now() - t0).toSec() < timeout) {
+                    ROS_INFO_THROTTLE(1, "waiting %d", seconds--);
+                }
+            }
+            if(!motor_status_received[name]) {
+                ROS_ERROR("did not receive motor status for %s, try again", name);
+                return false;
+            }
+
+            stringstream str;
+            str << "saving position offsets:" << endl << "motor id  |   position offset [ticks]  | length_sim[m] | length offset[m]" << endl;
+
+            // for (int i = 0; i<motor_ids.size();i++) str << motor_ids[i] << ": " << position[motor_ids[i]] << ", ";
+            // str << endl;
+
+            for(int i=0;i<motor_ids.size();i++) {
+                int motor_id = motor_ids[i];
+                l_offset[motor_id] = l[motor_id] + position[motor_id];
+                str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l[motor_id] << "\t|\t" << l_offset[motor_id] << endl;
+            }
+
+
+            ROS_INFO_STREAM(str.str());
+
+            ROS_INFO_STREAM("changing control mode of %s to POSITION" << name);
+
+            roboy_middleware_msgs::ControlMode msg1;
+            msg1.request.control_mode = ENCODER0_POSITION;
+            for (int id: motor_ids) {
+                msg1.request.motor_id.push_back(id);
+                msg1.request.set_points.push_back(position[id]);
+            }
+
+            if (!control_mode[name].call(msg1)) {
+                ROS_ERROR_STREAM("Changing control mode for %s didnt work" << name);
+                return false;
+            }
+
+            vector<float> _integral(motor_ids.size(), 0);
+            integral[name] = _integral;
+
+        
         }
-
-        stringstream str;
-        str << "saving position offsets:" << endl << "motor id  |   position offset [ticks]  | length_sim[m] | length offset[m]" << endl;
-
-        // for (int i = 0; i<motor_ids.size();i++) str << motor_ids[i] << ": " << position[motor_ids[i]] << ", ";
-        // str << endl;
-
-        for(int i=0;i<motor_ids.size();i++) {
-            int motor_id = motor_ids[i];
-            l_offset[motor_id] = l[motor_id] + myoBrickMeterPerEncoderTicks(position[motor_id]);
-            str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l[motor_id] << "\t|\t" << l_offset[motor_id] << endl;
-        }
-
-
-        ROS_INFO_STREAM(str.str());
-
-        ROS_INFO_STREAM("changing control mode of %s to POSITION" << name);
-
-        roboy_middleware_msgs::ControlMode msg1;
-        msg1.request.control_mode = ENCODER0_POSITION;
-        for (int id: motor_ids) {
-            msg1.request.motor_id.push_back(id);
-            msg1.request.set_points.push_back(position[id]);
-        }
-
-        if (!control_mode[name].call(msg1)) {
-            ROS_ERROR_STREAM("Changing control mode for %s didnt work" << name);
-            return false;
-        }
-
-        vector<float> _integral(motor_ids.size(), 0);
-        integral[name] = _integral;
 
         update();
         ROS_INFO_STREAM("%s pose init done" << name);
         init_called[name] = true;
         return true;
+        
     }
 
-    float myoBrickMeterPerEncoderTicks(int motor_pos) {
-// #ifdef LEGACY
-            // TODO!!
-         return ((motor_pos/4096.0f)*(M_PI*0.0085f));
-// #else
-//        return ((motor_pos/2048.0f)*(M_PI*0.0085f));
-// #endif
-    }
+//     float myoBrickMeterPerEncoderTicks(int motor_pos) {
+// // #ifdef LEGACY
+//             // TODO!!
+//          return ((motor_pos/4096.0f)*(M_PI*0.0085f));
+// // #else
+// //        return ((motor_pos/2048.0f)*(M_PI*0.0085f));
+// // #endif
+//     }
 
-    float myoBrickEncoderTicksPerMeter(float meter){
-        return  (meter/(M_PI*0.0085f))*(4096.0f);
-        // TODO  legacy motoboards
-//        return (meter/(M_PI*0.0085f))*2048.0f;
+//     float myoBrickEncoderTicksPerMeter(float meter){
+//         return  (meter/(M_PI*0.0085f))*(4096.0f);
+//         // TODO  legacy motoboards
+// //        return (meter/(M_PI*0.0085f))*2048.0f;
 
-    }
+//     }
 
     string findBodyPartByMotorId(int id) {
         for (auto body_part: body_parts) {
@@ -233,10 +350,12 @@ public:
 
     void MotorState(const roboy_middleware_msgs::MotorState::ConstPtr &msg){
         for (int i=0; i<msg->global_id.size(); i++) {
+            
             int id = msg->global_id[i];
+            ROS_INFO_STREAM("ID: " << id);
             position[id] = msg->encoder0_pos[i];
             auto body_part = findBodyPartByMotorId(id);
-            if (msg->current[i] > 0) {
+            if (msg->current[i] > 0 && body_part != "unknown") {
                 motor_status_received[body_part] = true;
                 // motor_status_received["shoulder_left"] = true;
                 // motor_status_received["shoulder_right"] = true;
@@ -319,7 +438,7 @@ public:
 //                            Kp_dl*error + integral[body_part][motor_id];
     // #endif
                     sprintf(s,     "%d            | %.3f   | %.1f    |  %.3f   | %.3f\n",
-                            motor_id,l_meter[motor_id],myoBrickEncoderTicksPerMeter(l_meter[motor_id]),error,integral[body_part][motor_id]);
+                            motor_id,l_meter[motor_id],l_meter[motor_id]),error,integral[body_part][motor_id];
                     str <<  s;
                 }
 
@@ -332,7 +451,7 @@ public:
                 msg.legacy = true;
                 for (int i = 0; i < motor_ids.size(); i++) {
                     msg.motor.push_back(motor_ids[i]);
-                    msg.setpoint.push_back(myoBrickEncoderTicksPerMeter(l_meter[motor_ids[i]]));
+                    msg.setpoint.push_back(l_meter[motor_ids[i]]);
                 }
                 motor_command.publish(msg);
 
