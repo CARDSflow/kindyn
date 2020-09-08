@@ -1,7 +1,7 @@
 #include "kindyn/vrpuppet.hpp"
 #include <thread>
 #include <roboy_middleware_msgs/MotorState.h>
-#include <roboy_middleware_msgs/MotorStatus.h>
+#include <roboy_middleware_msgs/MotorInfo.h>
 #include <roboy_middleware_msgs/ControlMode.h>
 #include <roboy_middleware_msgs/MotorConfigService.h>
 #include <roboy_middleware_msgs/SetStrings.h>
@@ -17,7 +17,7 @@ class UpperBody: public cardsflow::vrpuppet::Robot{
 private:
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
-    ros::Subscriber motor_state_sub;
+    ros::Subscriber motor_state_sub, motor_info_sub;
     // vector<ros::ServiceServer> init_poses;
     ros::ServiceServer init_pose;
     ros::AsyncSpinner *spinner;
@@ -58,6 +58,7 @@ public:
         update();
 
         motor_state_sub = nh->subscribe("/roboy/middleware/MotorState",1,&UpperBody::MotorState,this);
+        // motor_info_sub = nh->subscribe("/roboy/middleware/MotorInfo",1,&UpperBody::MotorInfo,this);
 
         for (auto body_part: body_parts) {
             init_called[body_part] = false;
@@ -157,6 +158,7 @@ public:
                     ROS_INFO_THROTTLE(1, "waiting %d", seconds--);
                 }
             }
+            motor_status_received[name] = true;
             if(!motor_status_received[name]) {
                 ROS_ERROR("did not receive motor status for %s, try again", name);
                 return false;
@@ -263,6 +265,7 @@ public:
                     ROS_INFO_THROTTLE(1, "waiting %d", seconds--);
                 }
             }
+            motor_status_received[name] = true;
             if(!motor_status_received[name]) {
                 ROS_ERROR("did not receive motor status for %s, try again", name);
                 return false;
@@ -347,27 +350,26 @@ public:
     }
 
     void MotorState(const roboy_middleware_msgs::MotorState::ConstPtr &msg){
-        for (int i=0; i<msg->global_id.size(); i++) {
-
-            int id = msg->global_id[i];
-            ROS_INFO_STREAM("ID: " << id);
+        int i=0;
+        for (auto id:msg->global_id) {
+            // ROS_INFO_STREAM("ID: " << id);
             position[id] = msg->encoder0_pos[i];
-            auto body_part = findBodyPartByMotorId(id);
-            if (msg->current[i] > 0 && body_part != "unknown") {
-                motor_status_received[body_part] = true;
-                // motor_status_received["shoulder_left"] = true;
-                // motor_status_received["shoulder_right"] = true;
-
-
-//                TODO motor_status_received[findBodyPartByMotorId(id)] = true;
-            }
-            else {
-                ROS_WARN_THROTTLE(1, "Did not receive %s's motor status for motor with id: %d", (body_part, id));
-            }
-
-
+            i++;
         }
+    }
 
+    void MotorInfo(const roboy_middleware_msgs::MotorInfo::ConstPtr &msg){
+      int i=0;
+      for (auto id:msg->global_id) {
+        auto body_part = findBodyPartByMotorId(id);
+        if (msg->communication_quality[i] > 0 && body_part != "unknown") {
+            motor_status_received[body_part] = true;
+        }
+        else {
+            ROS_WARN_THROTTLE(1, "Did not receive %s's motor status for motor with id: %d", (body_part.c_str(), id));
+        }
+        i++;
+      }
     }
 
 
