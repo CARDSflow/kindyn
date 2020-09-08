@@ -1,6 +1,5 @@
 #include "kindyn/vrpuppet.hpp"
 #include <thread>
-#include <roboy_middleware_msgs/MotorControl.h>
 #include <roboy_middleware_msgs/MotorState.h>
 #include <roboy_middleware_msgs/MotorStatus.h>
 #include <roboy_middleware_msgs/ControlMode.h>
@@ -94,7 +93,7 @@ public:
 
     bool initBodyPart(string name) {
         ROS_WARN_STREAM("initBodyPart: " << name);
-        
+
         std::vector<int> motor_ids;
             try {
                 nh->getParam(name+"/motor_ids", motor_ids);
@@ -119,14 +118,13 @@ public:
             roboy_middleware_msgs::MotorConfig config_msg;
 
             for (int id: motor_ids) {
-                config_msg.motor.push_back(id);
+                config_msg.global_id.push_back(id);
                 config_msg.setpoint.push_back(init_m3_displacement);
                 config_msg.update_frequency.push_back(100);
                 config_msg.control_mode.push_back(DISPLACEMENT);
                 config_msg.deadband.push_back(0);
                 config_msg.IntegralLimit.push_back(50);
                 config_msg.PWMLimit.push_back(500);
-                config_msg.current_limit.push_back(1);
                 config_msg.Kp.push_back(1);
                 config_msg.Ki.push_back(0);
                 config_msg.Kd.push_back(0);
@@ -194,7 +192,7 @@ public:
             // config_msg.setpoint = std::vector<int> v;
 
             for (int id: motor_ids) {
-                config_msg.motor.push_back(id);
+                config_msg.global_id.push_back(id);
                 config_msg.setpoint.push_back(position[id]);
             }
 
@@ -223,21 +221,21 @@ public:
                 ROS_ERROR_STREAM("rosparam pwm is not set. will not init.");
                 return false;
             }
-            
+
 
             ROS_INFO("changing control mode of motors to PWM with %d",pwm);
             roboy_middleware_msgs::ControlMode msg;
             msg.request.control_mode = DIRECT_PWM;
             // TODO: fix in plexus PWM direction for the new motorboard
-            std::vector<int> set_points(motor_ids.size(), pwm);
-            for (auto m: motor_ids) msg.request.motor_id.push_back(m);
+            std::vector<float> set_points(motor_ids.size(), pwm);
+            for (auto m: motor_ids) msg.request.global_id.push_back(m);
             msg.request.set_points = set_points;
 
             stringstream str1;
             for(int i=0;i<msg.request.set_points.size();i++) {
                 int motor_id = motor_ids[i];
 
-                str1 << msg.request.motor_id[i] << "\t|\t" << msg.request.set_points[i] << endl;
+                str1 << msg.request.global_id[i] << "\t|\t" << msg.request.set_points[i] << endl;
             }
 
 
@@ -290,7 +288,7 @@ public:
             roboy_middleware_msgs::ControlMode msg1;
             msg1.request.control_mode = ENCODER0_POSITION;
             for (int id: motor_ids) {
-                msg1.request.motor_id.push_back(id);
+                msg1.request.global_id.push_back(id);
                 msg1.request.set_points.push_back(position[id]);
             }
 
@@ -302,14 +300,14 @@ public:
             vector<float> _integral(motor_ids.size(), 0);
             integral[name] = _integral;
 
-        
+
         }
 
         update();
         ROS_INFO_STREAM("%s pose init done" << name);
         init_called[name] = true;
         return true;
-        
+
     }
 
 //     float myoBrickMeterPerEncoderTicks(int motor_pos) {
@@ -350,7 +348,7 @@ public:
 
     void MotorState(const roboy_middleware_msgs::MotorState::ConstPtr &msg){
         for (int i=0; i<msg->global_id.size(); i++) {
-            
+
             int id = msg->global_id[i];
             ROS_INFO_STREAM("ID: " << id);
             position[id] = msg->encoder0_pos[i];
@@ -364,9 +362,9 @@ public:
 //                TODO motor_status_received[findBodyPartByMotorId(id)] = true;
             }
             else {
-                ROS_WARN_THROTTLE(1, "Did not receive %s's motor status for motor with id: %d", (body_part, id));    
+                ROS_WARN_THROTTLE(1, "Did not receive %s's motor status for motor with id: %d", (body_part, id));
             }
-            
+
 
         }
 
@@ -424,19 +422,13 @@ public:
                             integral[body_part][motor_id] = 0;
                         }
                     }
-    // #ifdef LEGACY
                     if (motor_id == 16 || motor_id == 17) {
                         Kp_dl = 0; Ki_dl = 0;
-                        
-                    } 
+
+                    }
                     l_meter[motor_id] = (l_offset[motor_id] - l_target[motor_id]) +
                          Kp_dl*error + integral[body_part][motor_id];
-                    
-                     
-    // #else
-//                    l_meter[motor_id] = (l_offset[motor_id] - l_target[motor_id]) +
-//                            Kp_dl*error + integral[body_part][motor_id];
-    // #endif
+
                     sprintf(s,     "%d            | %.3f   | %.1f    |  %.3f   | %.3f\n",
                             motor_id,l_meter[motor_id],l_meter[motor_id]),error,integral[body_part][motor_id];
                     str <<  s;
@@ -446,11 +438,10 @@ public:
                 ROS_INFO_STREAM_THROTTLE(2,str.str());
 
                 roboy_middleware_msgs::MotorCommand msg;
-                msg.motor = {};
+                msg.global_id = {};
                 msg.setpoint = {};
-                msg.legacy = true;
                 for (int i = 0; i < motor_ids.size(); i++) {
-                    msg.motor.push_back(motor_ids[i]);
+                    msg.global_id.push_back(motor_ids[i]);
                     msg.setpoint.push_back(l_meter[motor_ids[i]]);
                 }
                 motor_command.publish(msg);
