@@ -16,6 +16,7 @@ Robot::Robot() {
 
     joint_state_pub = nh->advertise<roboy_simulation_msgs::JointState>("/rviz_joint_states", 1);
     cardsflow_joint_states_pub = nh->advertise<sensor_msgs::JointState>("/cardsflow_joint_states", 1);
+  
     robot_state_target_pub = nh->advertise<geometry_msgs::PoseStamped>("/robot_state_target", 1);
     tendon_state_target_pub = nh->advertise<roboy_simulation_msgs::Tendon>("/tendon_state_target", 1);
     joint_state_target_pub = nh->advertise<roboy_simulation_msgs::JointState>("/joint_state_target", 1);
@@ -680,7 +681,7 @@ void Robot::forwardKinematics(double dt) {
                     q[j] = joint_state[j][0];
                     break;
             }
-       ROS_INFO_THROTTLE(1,"%s control type %d", joint_names[j].c_str(), controller_type[j]);
+            ROS_INFO_THROTTLE(1,"%s control type %d", joint_names[j].c_str(), controller_type[j]);
         }
         for (int l = 0; l < number_of_cables; l++) {
             boost::numeric::odeint::integrate(
@@ -833,6 +834,30 @@ void Robot::controllerType(const roboy_simulation_msgs::ControllerTypeConstPtr &
                   msg->type==CARDSflow::ControllerType::torque_position_controller?"torque_position_controller":
                   msg->type==CARDSflow::ControllerType::force_position_controller?"force_position_controller":"UNKNOWN"));
         controller_type[distance(joint_names.begin(), it)] = msg->type;
+    }
+}
+
+void Robot::JointTarget(const sensor_msgs::JointStateConstPtr &msg){
+    const iDynTree::Model &model = kinDynComp.getRobotModel();
+    int i = 0;
+    for (string joint:msg->name) {
+        int joint_index = model.getJointIndex(joint);
+        if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
+            if (msg->position[i] > q_max(joint_index)) {
+                q_target(joint_index)  = q_max(joint_index);
+            }
+            else if (msg->position[i] < q_min(joint_index)) {
+                q_target(joint_index)  = q_min(joint_index);
+            }
+            else {
+                q_target(joint_index) = msg->position[i];
+            }
+
+            qd_target(joint_index) = msg->velocity[i];
+        } else {
+            ROS_WARN_THROTTLE(5.0, "joint %s not found in model", joint.c_str());
+        }
+        i++;
     }
 }
 
@@ -1070,29 +1095,7 @@ void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg) {
     }
 }
 
-void Robot::JointTarget(const sensor_msgs::JointStateConstPtr &msg){
-    const iDynTree::Model &model = kinDynComp.getRobotModel();
-    int i = 0;
-    for (string joint:msg->name) {
-        int joint_index = model.getJointIndex(joint);
-        if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
-            if (msg->position[i] > q_max(joint_index)) {
-                q_target(joint_index)  = q_max(joint_index);
-            }
-            else if (msg->position[i] < q_min(joint_index)) {
-                q_target(joint_index)  = q_min(joint_index);
-            }
-            else {
-                q_target(joint_index) = msg->position[i];
-            }
 
-            qd_target(joint_index) = msg->velocity[i];
-        } else {
-            ROS_WARN_THROTTLE(5.0, "joint %s not found in model", joint.c_str());
-        }
-        i++;
-    }
-}
 
 void Robot::FloatingBase(const geometry_msgs::PoseConstPtr &msg) {
     Isometry3d iso;
