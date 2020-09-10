@@ -2,7 +2,7 @@
     <arg name="robot_name" default="msj_platform"/>
     <arg name="model_name" default="$(arg robot_name)"/>
     <arg name="urdf_file_name" default="model.urdf"/>
-    <arg name="start_controllers" default="sphere_axis0 sphere_axis1 sphere_axis2"/>
+    <arg name="start_controllers" default="shoulder_right_axis0 shoulder_right_axis1 shoulder_right_axis2"/>
     <arg name="simulated" default="false"/>
     <arg name="gazebo" default="false"/>
     <arg name="paused" default="false"/>

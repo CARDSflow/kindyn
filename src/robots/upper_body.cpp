@@ -458,6 +458,22 @@ public:
 
 };
 
+/**
+ * controller manager update thread. Here you can define how fast your controllers should run
+ * @param cm pointer to the controller manager
+ */
+void update(controller_manager::ControllerManager *cm) {
+    ros::Time prev_time = ros::Time::now();
+    ros::Rate rate(200); // changing this value affects the control speed of your running controllers
+    while (ros::ok()) {
+        const ros::Time time = ros::Time::now();
+        const ros::Duration period = time - prev_time;
+        cm->update(time, period);
+        prev_time = time;
+        rate.sleep();
+    }
+}
+
 int main(int argc, char *argv[]) {
     if (!ros::isInitialized()) {
         int argc = 0;
@@ -477,10 +493,14 @@ int main(int argc, char *argv[]) {
 
 
     UpperBody robot(urdf, cardsflow_xml);
+    controller_manager::ControllerManager cm(&robot);
 
     if (nh.hasParam("simulated")) {
       nh.getParam("simulated", robot.simulated);
     }
+
+    thread update_thread(update, &cm);
+    update_thread.detach();
 
     ros::Rate rate(30);
     while(ros::ok()){
@@ -492,6 +512,7 @@ int main(int argc, char *argv[]) {
     }
 
     ROS_INFO("TERMINATING...");
+    update_thread.join();
 
     return 0;
 }
