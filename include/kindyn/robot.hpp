@@ -174,6 +174,8 @@ namespace cardsflow {
              */
             void JointState(const sensor_msgs::JointStateConstPtr &msg);
 
+            void JointTarget(const sensor_msgs::JointStateConstPtr &msg);
+
             /**
              * Callback for the floating base world pose. This can come from gazebo, the real robot or else where.
              * @param msg message containing the 6 DoF pose of the floating base
@@ -208,9 +210,9 @@ namespace cardsflow {
 
             ros::NodeHandlePtr nh; /// ROS node handle
             boost::shared_ptr <ros::AsyncSpinner> spinner; /// async ROS spinner
-            ros::Publisher robot_state_pub, tendon_state_pub, joint_state_pub; /// ROS robot pose and tendon publisher
+            ros::Publisher robot_state_pub, tendon_state_pub, joint_state_pub, cardsflow_joint_states_pub; /// ROS robot pose and tendon publisher
             ros::Publisher robot_state_target_pub, tendon_state_target_pub, joint_state_target_pub; /// target publisher
-            ros::Subscriber controller_type_sub, joint_state_sub, floating_base_sub, interactive_marker_sub; /// ROS subscribers
+            ros::Subscriber controller_type_sub, joint_state_sub, floating_base_sub, interactive_marker_sub, joint_target_sub; /// ROS subscribers
             ros::ServiceServer ik_srv, ik_two_frames_srv, fk_srv;
             map<string,boost::shared_ptr<actionlib::SimpleActionServer<roboy_control_msgs::MoveEndEffectorAction>>> moveEndEffector_as;
 
@@ -265,8 +267,12 @@ namespace cardsflow {
 
             MatrixXd S, P, V, W; /// matrices of cable model
             vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments
+            bool simulated = false; /// indicates if the robots is simulated or hardware is used
+            bool external_robot_state; /// indicates if we get the robot state externally
+
         protected:
             iDynTree::FreeFloatingGeneralizedTorques bias; /// Coriolis+Gravity term
+
             iDynTree::MatrixDynSize Mass; /// Mass matrix
 
             bool torque_position_controller_active = false, force_position_controller_active = false, cable_length_controller_active = false;

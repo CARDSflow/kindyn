@@ -14,7 +14,8 @@ Robot::Robot() {
     robot_state_pub = nh->advertise<geometry_msgs::PoseStamped>("/robot_state", 1);
     tendon_state_pub = nh->advertise<roboy_simulation_msgs::Tendon>("/tendon_state", 1);
 
-    joint_state_pub = nh->advertise<roboy_simulation_msgs::JointState>("/joint_state", 1);
+    joint_state_pub = nh->advertise<roboy_simulation_msgs::JointState>("/rviz_joint_states", 1);
+    cardsflow_joint_states_pub = nh->advertise<sensor_msgs::JointState>("/cardsflow_joint_states", 1);
     robot_state_target_pub = nh->advertise<geometry_msgs::PoseStamped>("/robot_state_target", 1);
     tendon_state_target_pub = nh->advertise<roboy_simulation_msgs::Tendon>("/tendon_state_target", 1);
     joint_state_target_pub = nh->advertise<roboy_simulation_msgs::JointState>("/joint_state_target", 1);
@@ -333,8 +334,9 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         k++;
     }
 
+    joint_target_sub = nh->subscribe("/joint_targets", 100, &Robot::JointTarget, this);
     controller_type_sub = nh->subscribe("/controller_type", 100, &Robot::controllerType, this);
-    joint_state_sub = nh->subscribe("/joint_states", 100, &Robot::JointState, this);
+    // joint_state_sub = nh->subscribe("/joint_states", 100, &Robot::JointState, this);
     floating_base_sub = nh->subscribe("/floating_base", 100, &Robot::FloatingBase, this);
     ik_srv = nh->advertiseService("/ik", &Robot::InverseKinematicsService, this);
     ik_two_frames_srv = nh->advertiseService("/ik_multiple_frames", &Robot::InverseKinematicsMultipleFramesService, this);
@@ -597,8 +599,10 @@ void Robot::update() {
             }
         }
         { // joint state publisher
+            sensor_msgs::JointState cf_msg;
             roboy_simulation_msgs::JointState msg;
             msg.names = joint_names;
+            cf_msg.name = joint_names;
             for (int i = 1; i < number_of_links; i++) {
                 Matrix4d pose = iDynTree::toEigen(kinDynComp.getWorldTransform(i).asHomogeneousTransform());
                 Vector3d axis;
@@ -609,8 +613,14 @@ void Robot::update() {
                 msg.torque.push_back(torques[i - 1]);
                 msg.q.push_back(q[i-1]);
                 msg.qd.push_back(qd[i-1]);
+
+                cf_msg.position.push_back(q[i-1]);
+                cf_msg.velocity.push_back(qd[i-1]);
+
             }
             joint_state_pub.publish(msg);
+            cardsflow_joint_states_pub.publish(cf_msg);
+
         }
         last_visualization = ros::Time::now();
     }
@@ -619,6 +629,7 @@ void Robot::update() {
     ROS_INFO_STREAM_THROTTLE(5, "qd " << qd.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "q " << q.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "l " << l.transpose().format(fmt));
+    ROS_INFO_STREAM_THROTTLE(5, "l_target " << l_target.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "ld " << Ld[0].transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "torques " << torques.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "cable_forces " << cable_forces.transpose().format(fmt));
@@ -669,7 +680,7 @@ void Robot::forwardKinematics(double dt) {
                     q[j] = joint_state[j][0];
                     break;
             }
-//        ROS_INFO("%s control type %d", joint_names[j].c_str(), controller_type[j]);
+       ROS_INFO_THROTTLE(1,"%s control type %d", joint_names[j].c_str(), controller_type[j]);
         }
         for (int l = 0; l < number_of_cables; l++) {
             boost::numeric::odeint::integrate(
@@ -1054,6 +1065,30 @@ void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg) {
             qd(joint_index) = msg->velocity[i];
         } else {
             ROS_ERROR("joint %s not found in model", joint.c_str());
+        }
+        i++;
+    }
+}
+
+void Robot::JointTarget(const sensor_msgs::JointStateConstPtr &msg){
+    const iDynTree::Model &model = kinDynComp.getRobotModel();
+    int i = 0;
+    for (string joint:msg->name) {
+        int joint_index = model.getJointIndex(joint);
+        if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
+            if (msg->position[i] > q_max(joint_index)) {
+                q_target(joint_index)  = q_max(joint_index);
+            }
+            else if (msg->position[i] < q_min(joint_index)) {
+                q_target(joint_index)  = q_min(joint_index);
+            }
+            else {
+                q_target(joint_index) = msg->position[i];
+            }
+
+            qd_target(joint_index) = msg->velocity[i];
+        } else {
+            ROS_WARN_THROTTLE(5.0, "joint %s not found in model", joint.c_str());
         }
         i++;
     }

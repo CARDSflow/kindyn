@@ -1,4 +1,5 @@
-#include "kindyn/vrpuppet.hpp"
+// #include "kindyn/vrpuppet.hpp"
+#include "kindyn/robot.hpp"
 #include <thread>
 #include <roboy_middleware_msgs/MotorState.h>
 #include <roboy_middleware_msgs/MotorInfo.h>
@@ -13,7 +14,7 @@
 
 using namespace std;
 
-class UpperBody: public cardsflow::vrpuppet::Robot{
+class UpperBody: public cardsflow::kindyn::Robot{
 private:
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
@@ -378,6 +379,8 @@ public:
      */
     void read(){
         update();
+        if (!external_robot_state)
+            forwardKinematics(0.00001);
     };
     /**
      * Sends motor commands to the real robot
@@ -431,7 +434,7 @@ public:
                     l_meter[motor_id] = (l_offset[motor_id] - l_target[motor_id]) +
                          Kp_dl*error + integral[body_part][motor_id];
 
-                    sprintf(s,     "%d            | %.3f   | %.1f    |  %.3f   | %.3f\n",
+                    sprintf(s,     "%d            | %.6f   | %.6f    |  %.6f   | %.6f\n",
                             motor_id,l_meter[motor_id],l_meter[motor_id]),error,integral[body_part][motor_id];
                     str <<  s;
                 }
@@ -446,6 +449,7 @@ public:
                     msg.global_id.push_back(motor_ids[i]);
                     msg.setpoint.push_back(l_meter[motor_ids[i]]);
                 }
+                // ROS_WARN_STREAM_THROTTLE(1, msg);
                 motor_command.publish(msg);
 
         }
