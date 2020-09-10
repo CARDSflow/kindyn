@@ -380,7 +380,7 @@ public:
     void read(){
         update();
         if (!external_robot_state)
-            forwardKinematics(0.001);
+            forwardKinematics(0.0001);
     };
     /**
      * Sends motor commands to the real robot
@@ -449,8 +449,8 @@ public:
                     msg.global_id.push_back(motor_ids[i]);
                     msg.setpoint.push_back(l_meter[motor_ids[i]]);
                 }
-                ROS_WARN_STREAM_THROTTLE(1, msg);
-                // motor_command.publish(msg);
+                // ROS_WARN_STREAM_THROTTLE(1, msg);
+                motor_command.publish(msg);
 
         }
      }

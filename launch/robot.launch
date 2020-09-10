@@ -2,7 +2,8 @@
     <arg name="robot_name" default="msj_platform"/>
     <arg name="model_name" default="$(arg robot_name)"/>
     <arg name="urdf_file_name" default="model.urdf"/>
-    <arg name="start_controllers" default="shoulder_left_axis0 shoulder_left_axis1 shoulder_left_axis2 elbow_left_axis0 elbow_left_axis1"/>
+    <arg name="start_controllers" default="head_axis0 head_axis1 head_axis2"/>
+    <!-- <arg name="start_controllers" default="shoulder_left_axis0 shoulder_left_axis1 shoulder_left_axis2 elbow_left_axis0 elbow_left_axis1"/> -->
     <arg name="simulated" default="false"/>
     <arg name="gazebo" default="false"/>
     <arg name="paused" default="false"/>
