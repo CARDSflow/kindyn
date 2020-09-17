@@ -62,7 +62,7 @@ public:
 
         for (auto body_part: body_parts) {
             init_called[body_part] = false;
-            motor_config[body_part] = nh->serviceClient<roboy_middleware_msgs::MotorConfigService>("/roboy/middleware/"+body_part+"/MotorConfig");
+            motor_config[body_part] = nh->serviceClient<roboy_middleware_msgs::MotorConfigService>("/roboy/middleware/MotorConfig");
             control_mode[body_part] = nh->serviceClient<roboy_middleware_msgs::ControlMode>( "/roboy/middleware/ControlMode");//+body_part+"ControlMode");
         }
 
@@ -104,130 +104,159 @@ public:
                 return false;
             }
 
-        if (name == "wrist_left" || name == "writst_right") {
-            int init_m3_displacement;
-            try {
-                nh->getParam("init_m3_displacement",init_m3_displacement); }
-            catch (const std::exception&) {
-                ROS_ERROR_STREAM("rosparam init_m3_displacement is not set. will not init.");
-                return false;
-            }
-
-            ROS_INFO_STREAM("changing control mode for " << name << " with displacement " << init_m3_displacement);
-            roboy_middleware_msgs::MotorConfigService msg;
-
-            roboy_middleware_msgs::MotorConfig config_msg;
-
-            for (int id: motor_ids) {
-                config_msg.global_id.push_back(id);
-                config_msg.setpoint.push_back(init_m3_displacement);
-                config_msg.update_frequency.push_back(100);
-                config_msg.control_mode.push_back(DISPLACEMENT);
-                config_msg.deadband.push_back(0);
-                config_msg.IntegralLimit.push_back(50);
-                config_msg.PWMLimit.push_back(500);
-                config_msg.Kp.push_back(1);
-                config_msg.Ki.push_back(0);
-                config_msg.Kd.push_back(0);
-            }
-
-            msg.request.config = config_msg;
-
-            auto success = motor_config[name].call(msg);
-            auto res = msg.response.mode;
-            for (int i=0;i<res.size();i++) {
-                success *= res[i] == DISPLACEMENT;
-            }
-            if (!success) {
-                ROS_ERROR_STREAM("Failed to change M3 control mode on " << name << " to DISPLACEMENT");
-                return false;
-            }
-
-            ros::Time t0;
-            t0= ros::Time::now();
-            double timeout = 0;
-            nh->getParam("timeout",timeout);
-            if(timeout==0) {
-                int seconds = 5;
-                while ((ros::Time::now() - t0).toSec() < 5) {
-                    ROS_INFO_THROTTLE(1, "waiting %d", seconds--);
-                }
-            }else{
-                int seconds = timeout;
-                while ((ros::Time::now() - t0).toSec() < timeout) {
-                    ROS_INFO_THROTTLE(1, "waiting %d", seconds--);
-                }
-            }
-            motor_status_received[name] = true;
-            if(!motor_status_received[name]) {
-                ROS_ERROR("did not receive motor status for %s, try again", name);
-                return false;
-            }
-
-            stringstream str;
-            str << "saving position offsets:" << endl << "motor id  |   position offset [ticks]  | length_sim[m] | length offset[m]" << endl;
-
-            // for (int i = 0; i<motor_ids.size();i++) str << motor_ids[i] << ": " << position[motor_ids[i]] << ", ";
-            // str << endl;
-
-            for(int i=0;i<motor_ids.size();i++) {
-                int motor_id = motor_ids[i];
-                l_offset[motor_id] = l[motor_id] + position[motor_id];
-                str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l[motor_id] << "\t|\t" << l_offset[motor_id] << endl;
-            }
-
-
-            ROS_INFO_STREAM(str.str());
-
-            ROS_INFO_STREAM("changing control mode of %s to POSITION" << name);
-
-            // config_msg.update_frequency = std::vector<int> v(motor_ids.size(), 100);
-            // config_msg.control_mode = std::vector<int> v(motor_ids.size(), ENCODER0_POSITION);
-            // config_msg.deadband = std::vector<int> v(motor_ids.size(), 0);
-            // config_msg.IntegralLimit = std::vector<int> v(motor_ids.size(), 50);
-            // config_msg.PWMLimit = std::vector<int> v(motor_ids.size(), 500);
-            // config_msg.current_limit = std::vector<float> v(motor_ids.size(), 1);
-            // config_msg.Kp = std::vector<float> v(motor_ids.size(), 1);
-            // config_msg.Ki = std::vector<float> v(motor_ids.size(), 0);
-            // config_msg.Kd = std::vector<float> v(motor_ids.size(), 0);
-            // config_msg.motor = std::vector<int> v;
-            // config_msg.setpoint = std::vector<int> v;
-
-            for (int id: motor_ids) {
-                config_msg.global_id.push_back(id);
-                config_msg.setpoint.push_back(position[id]);
-            }
-
-            msg.request.config = config_msg;
-
-            success = motor_config[name].call(msg);
-            res = msg.response.mode;
-            for (int i=0;i<res.size();i++) {
-                success *= res[i] == ENCODER0_POSITION;
-            }
-
-            if (!success) {
-                ROS_ERROR_STREAM("Failed to change M3 control mode on " << name << " to ENCODER0_POSITION");
-                return false;
-            }
-
-            vector<float> _integral(motor_ids.size(), 0);
-            integral[name] = _integral;
-
-        }
-        else {
+//        if (name == "wrist_left" || name == "wrist_right") {
+//            int init_m3_displacement;
+//            try {
+//                nh->getParam("init_m3_displacement",init_m3_displacement); }
+//            catch (const std::exception&) {
+//                ROS_ERROR_STREAM("rosparam init_m3_displacement is not set. will not init.");
+//                return false;
+//            }
+//
+//            ROS_INFO_STREAM("changing control mode for " << name << " with displacement " << init_m3_displacement);
+//            roboy_middleware_msgs::MotorConfigService msg;
+//
+//            roboy_middleware_msgs::MotorConfig config_msg;
+//
+//            for (int id: motor_ids) {
+//                config_msg.global_id.push_back(id);
+//                config_msg.setpoint.push_back(init_m3_displacement);
+//                config_msg.update_frequency.push_back(100);
+//                config_msg.control_mode.push_back(DISPLACEMENT);
+//                config_msg.deadband.push_back(0);
+//                config_msg.IntegralLimit.push_back(50);
+//                config_msg.PWMLimit.push_back(500);
+//                config_msg.Kp.push_back(1);
+//                config_msg.Ki.push_back(0);
+//                config_msg.Kd.push_back(0);
+//            }
+//
+//            msg.request.config = config_msg;
+//
+//            auto success = motor_config[name].call(msg);
+//            auto res = msg.response.mode;
+//            for (int i=0;i<res.size();i++) {
+//                success *= res[i] == DISPLACEMENT;
+//            }
+//            if (!success) {
+//                ROS_ERROR_STREAM("Failed to change M3 control mode on " << name << " to DISPLACEMENT");
+//                return false;
+//            }
+//
+//            ros::Time t0;
+//            t0= ros::Time::now();
+//            double timeout = 0;
+//            nh->getParam("timeout",timeout);
+//            if(timeout==0) {
+//                int seconds = 5;
+//                while ((ros::Time::now() - t0).toSec() < 5) {
+//                    ROS_INFO_THROTTLE(1, "waiting %d", seconds--);
+//                }
+//            }else{
+//                int seconds = timeout;
+//                while ((ros::Time::now() - t0).toSec() < timeout) {
+//                    ROS_INFO_THROTTLE(1, "waiting %d", seconds--);
+//                }
+//            }
+//            motor_status_received[name] = true;
+//            if(!motor_status_received[name]) {
+//                ROS_ERROR("did not receive motor status for %s, try again", name);
+//                return false;
+//            }
+//
+//            stringstream str;
+//            str << "saving position offsets:" << endl << "motor id  |   position offset [ticks]  | length_sim[m] | length offset[m]" << endl;
+//
+//            // for (int i = 0; i<motor_ids.size();i++) str << motor_ids[i] << ": " << position[motor_ids[i]] << ", ";
+//            // str << endl;
+//
+//            for(int i=0;i<motor_ids.size();i++) {
+//                int motor_id = motor_ids[i];
+//                ROS_WARN_STREAM("motor id " << motor_id);
+//                l_offset[motor_id] = l[motor_id] + position[motor_id];
+//                str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l[motor_id] << "\t|\t" << l_offset[motor_id] << endl;
+//            }
+//
+//
+//            ROS_INFO_STREAM(str.str());
+//
+//            ROS_INFO_STREAM("changing control mode of %s to POSITION" << name);
+//
+//            // config_msg.update_frequency = std::vector<int> v(motor_ids.size(), 100);
+//            // config_msg.control_mode = std::vector<int> v(motor_ids.size(), ENCODER0_POSITION);
+//            // config_msg.deadband = std::vector<int> v(motor_ids.size(), 0);
+//            // config_msg.IntegralLimit = std::vector<int> v(motor_ids.size(), 50);
+//            // config_msg.PWMLimit = std::vector<int> v(motor_ids.size(), 500);
+//            // config_msg.current_limit = std::vector<float> v(motor_ids.size(), 1);
+//            // config_msg.Kp = std::vector<float> v(motor_ids.size(), 1);
+//            // config_msg.Ki = std::vector<float> v(motor_ids.size(), 0);
+//            // config_msg.Kd = std::vector<float> v(motor_ids.size(), 0);
+//            // config_msg.motor = std::vector<int> v;
+//            // config_msg.setpoint = std::vector<int> v;
+//
+//            roboy_middleware_msgs::MotorConfig config_msg1;
+//
+//            for (int id: motor_ids) {
+//                config_msg1.global_id.push_back(id);
+//                config_msg1.setpoint.push_back(position[id]);
+//                config_msg1.update_frequency.push_back(100);
+//                config_msg1.control_mode.push_back(ENCODER0_POSITION);
+//                config_msg1.deadband.push_back(0);
+//                config_msg1.IntegralLimit.push_back(50);
+//                config_msg1.PWMLimit.push_back(500);
+//                config_msg1.Kp.push_back(1);
+//                config_msg1.Ki.push_back(0);
+//                config_msg1.Kd.push_back(0);
+//            }
+//
+//            msg.request.config = config_msg1;
+//
+//            // for (int id: motor_ids) {
+//            //     config_msg.global_id.push_back(id);
+//            //     config_msg.setpoint.push_back(position[id]);
+//            // }
+//
+//            // msg.request.config = config_msg;
+//
+//            success = motor_config[name].call(msg);
+//            res = msg.response.mode;
+//            for (int i=0;i<res.size();i++) {
+//                success *= res[i] == ENCODER0_POSITION;
+//            }
+//
+//            if (!success) {
+//                ROS_ERROR_STREAM("Failed to change M3 control mode on " << name << " to ENCODER0_POSITION");
+//                return false;
+//            }
+//
+//            vector<float> _integral(motor_ids.size(), 0);
+//            integral[name] = _integral;
+//
+//        }
+//        else {
             int pwm;
             try {
-                nh->getParam("pwm",pwm); }
+                if (name == "wrist_left" || name == "wrist_right") {
+                    nh->getParam("init_m3_displacement", pwm);
+                } else {
+                    nh->getParam("pwm",pwm);
+                }
+            }
             catch (const std::exception&) {
-                ROS_ERROR_STREAM("rosparam pwm is not set. will not init.");
+                ROS_ERROR_STREAM("rosparam pwm or init_m3_displacement is not set. will not init.");
                 return false;
             }
 
 
             ROS_INFO("changing control mode of motors to PWM with %d",pwm);
             roboy_middleware_msgs::ControlMode msg;
-            msg.request.control_mode = DIRECT_PWM;
+
+
+            if (name == "wrist_left" || name == "wrist_right") {
+                msg.request.control_mode = DISPLACEMENT;
+            } else {
+                msg.request.control_mode = DIRECT_PWM;
+            }
             // TODO: fix in plexus PWM direction for the new motorboard
             std::vector<float> set_points(motor_ids.size(), pwm);
             for (auto m: motor_ids) msg.request.global_id.push_back(m);
@@ -279,6 +308,7 @@ public:
 
             for(int i=0;i<motor_ids.size();i++) {
                 int motor_id = motor_ids[i];
+                ROS_WARN_STREAM(name << " info print");
                 l_offset[motor_id] = l[motor_id] + position[motor_id];
                 str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l[motor_id] << "\t|\t" << l_offset[motor_id] << endl;
             }
@@ -304,7 +334,7 @@ public:
             integral[name] = _integral;
 
 
-        }
+//        }
 
         update();
         ROS_INFO_STREAM("%s pose init done" << name);
