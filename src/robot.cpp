@@ -22,7 +22,13 @@ Robot::Robot() {
     joint_state_target_pub = nh->advertise<roboy_simulation_msgs::JointState>("/joint_state_target", 1);
     fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
     nh->getParam("external_robot_target", external_robot_target);
+    nh->getParam("external_robot_state", external_robot_state);
     nh->setParam("vr_puppet",false);
+
+    if (this->external_robot_state) {
+        ROS_WARN("Subscribing to external joint state");
+        joint_state_sub = nh->subscribe("/external_joint_states", 100, &Robot::JointState, this);
+    }
 }
 
 Robot::~Robot() {
@@ -1081,20 +1087,22 @@ void Robot::InteractiveMarkerFeedback( const visualization_msgs::InteractiveMark
 }
 
 void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg) {
+    ROS_WARN_STREAM_THROTTLE(1,"external joint states sub");
     const iDynTree::Model &model = kinDynComp.getRobotModel();
     int i = 0;
     for (string joint:msg->name) {
-        int joint_index = model.getJointIndex(joint);
-        if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
-            q(joint_index) = msg->position[i];
-            qd(joint_index) = msg->velocity[i];
-        } else {
-            ROS_ERROR("joint %s not found in model", joint.c_str());
+        if (std::count(joint_names.begin(), joint_names.end(), joint)) {
+            int joint_index = model.getJointIndex(joint);
+            if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
+                q(joint_index) = msg->position[i];
+//                qd(joint_index) = msg->velocity[i];
+            } else {
+                ROS_ERROR("joint %s not found in model", joint.c_str());
+            }
         }
         i++;
     }
 }
-
 
 
 void Robot::FloatingBase(const geometry_msgs::PoseConstPtr &msg) {
