@@ -424,6 +424,7 @@ public:
         nh->getParam("integral_limit",integral_limit);
 
         for (auto body_part: body_parts) {
+
             if (!init_called[body_part]) {
                 ROS_WARN_STREAM_THROTTLE(5, body_part << " was not initialized. skipping");
             } else {
@@ -480,10 +481,12 @@ public:
                 msg.setpoint = {};
                 for (int i = 0; i < motor_ids.size(); i++) {
                     msg.global_id.push_back(motor_ids[i]);
+
 //                    ROS_INFO_STREAM("motor id: " << motor_ids[i] << " l: " << l[motor_ids[i]] << " l_target: " << l_target[motor_ids[i]]);
                     auto setpoint = -l[motor_ids[i]] + l_offset[motor_ids[i]];
                     msg.setpoint.push_back(setpoint);
 //                    msg.setpoint.push_back(l_meter[motor_ids[i]]);
+
                 }
                 // ROS_WARN_STREAM_THROTTLE(1, msg);
                 motor_command.publish(msg);
