@@ -107,6 +107,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     }
 
     q.resize(number_of_dofs);
+    q_actual.resize(number_of_dofs);
     qd.resize(number_of_dofs);
     qdd.resize(number_of_dofs);
     qdd_torque_control.resize(number_of_dofs);
@@ -123,6 +124,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     qdd_target_prev.resize(number_of_dofs);
 
     q.setZero();
+    q_actual.setZero();
     qd.setZero();
     qdd.setZero();
     q_target.setZero();
@@ -1094,7 +1096,8 @@ void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg) {
         if (std::count(joint_names.begin(), joint_names.end(), joint)) {
             int joint_index = model.getJointIndex(joint);
             if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
-                q(joint_index) = msg->position[i];
+//                q(joint_index) = msg->position[i];
+                q_actual(joint_index) = msg->position[i];
 //                qd(joint_index) = msg->velocity[i];
             } else {
                 ROS_ERROR("joint %s not found in model", joint.c_str());
