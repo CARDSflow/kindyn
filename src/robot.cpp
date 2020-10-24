@@ -11,25 +11,9 @@ Robot::Robot() {
     nh = ros::NodeHandlePtr(new ros::NodeHandle);
     spinner.reset(new ros::AsyncSpinner(0));
     spinner->start();
-    robot_state_pub = nh->advertise<geometry_msgs::PoseStamped>("/robot_state", 1);
-    tendon_state_pub = nh->advertise<roboy_simulation_msgs::Tendon>("/tendon_state", 1);
 
-    joint_state_pub = nh->advertise<roboy_simulation_msgs::JointState>("/rviz_joint_states", 1);
-    cardsflow_joint_states_pub = nh->advertise<sensor_msgs::JointState>("/cardsflow_joint_states", 1);
-  
-    robot_state_target_pub = nh->advertise<geometry_msgs::PoseStamped>("/robot_state_target", 1);
-    tendon_state_target_pub = nh->advertise<roboy_simulation_msgs::Tendon>("/tendon_state_target", 1);
-    joint_state_target_pub = nh->advertise<roboy_simulation_msgs::JointState>("/joint_state_target", 1);
-    fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
-    nh->getParam("external_robot_target", external_robot_target);
-    nh->getParam("external_robot_state", external_robot_state);
-    nh->setParam("vr_puppet",false);
-
-    if (this->external_robot_state) {
-        ROS_WARN("Subscribing to external joint state");
-        joint_state_sub = nh->subscribe("/external_joint_states", 100, &Robot::JointState, this);
-    }
 }
+
 
 Robot::~Robot() {
 //    delete[] H;
@@ -42,7 +26,32 @@ Robot::~Robot() {
     delete[] link_to_link_transform;
 }
 
+
+void Robot::updateSubscriptions() {
+    ROS_INFO_STREAM("advertising " << topic_root+"/robot_state");
+    robot_state_pub = nh->advertise<geometry_msgs::PoseStamped>(topic_root+"/robot_state", 1);
+    tendon_state_pub = nh->advertise<roboy_simulation_msgs::Tendon>(topic_root+"/tendon_state", 1);
+
+    joint_state_pub = nh->advertise<roboy_simulation_msgs::JointState>(topic_root+"/rviz_joint_states", 1);
+    cardsflow_joint_states_pub = nh->advertise<sensor_msgs::JointState>(topic_root+"/cardsflow_joint_states", 1);
+
+    robot_state_target_pub = nh->advertise<geometry_msgs::PoseStamped>(topic_root+"/robot_state_target", 1);
+    tendon_state_target_pub = nh->advertise<roboy_simulation_msgs::Tendon>(topic_root+"/tendon_state_target", 1);
+    joint_state_target_pub = nh->advertise<roboy_simulation_msgs::JointState>(topic_root+"/joint_state_target", 1);
+    fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
+    nh->getParam("external_robot_target", external_robot_target);
+    nh->getParam("external_robot_state", external_robot_state);
+    nh->setParam("vr_puppet",false);
+
+    if (this->external_robot_state) {
+        ROS_WARN("Subscribing to external joint state");
+        joint_state_sub = nh->subscribe(topic_root+"/external_joint_states", 100, &Robot::JointState, this);
+    }
+}
+
 void Robot::init(string urdf_file_path, string viapoints_file_path, vector<string> joint_names_ordered) {
+
+    updateSubscriptions();
     // Helper class to load the model from an external format
     iDynTree::ModelLoader mdlLoader;
     bool ok ;
@@ -330,25 +339,25 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
 
         make6DofMarker(false,visualization_msgs::InteractiveMarkerControl::MOVE_3D,pos,false,0.15,"world",ef.c_str());
 
-        moveEndEffector_as[ef].reset(
-                new actionlib::SimpleActionServer<roboy_control_msgs::MoveEndEffectorAction>(
-                        *(nh.get()), ("CARDSflow/MoveEndEffector/"+ef).c_str(),
-                        boost::bind(&Robot::MoveEndEffector, this, _1), false));
-        moveEndEffector_as[ef]->start();
+//        moveEndEffector_as[ef].reset(
+//                new actionlib::SimpleActionServer<roboy_control_msgs::MoveEndEffectorAction>(
+//                        *(nh.get()), ("CARDSflow/MoveEndEffector/"+ef).c_str(),
+//                        boost::bind(&Robot::MoveEndEffector, this, _1), false));
+//        moveEndEffector_as[ef]->start();
 
         Ld[k].resize(number_of_cables);
         Ld[k].setZero();
         k++;
     }
 
-    joint_target_sub = nh->subscribe("/joint_targets", 100, &Robot::JointTarget, this);
+    joint_target_sub = nh->subscribe(topic_root+"/joint_targets", 100, &Robot::JointTarget, this);
     controller_type_sub = nh->subscribe("/controller_type", 100, &Robot::controllerType, this);
     // joint_state_sub = nh->subscribe("/joint_states", 100, &Robot::JointState, this);
-    floating_base_sub = nh->subscribe("/floating_base", 100, &Robot::FloatingBase, this);
-    ik_srv = nh->advertiseService("/ik", &Robot::InverseKinematicsService, this);
-    ik_two_frames_srv = nh->advertiseService("/ik_multiple_frames", &Robot::InverseKinematicsMultipleFramesService, this);
-    fk_srv = nh->advertiseService("/fk", &Robot::ForwardKinematicsService, this);
-    interactive_marker_sub = nh->subscribe("/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
+    floating_base_sub = nh->subscribe(topic_root+"/floating_base", 100, &Robot::FloatingBase, this);
+    ik_srv = nh->advertiseService(topic_root+"/ik", &Robot::InverseKinematicsService, this);
+    ik_two_frames_srv = nh->advertiseService(topic_root+"/ik_multiple_frames", &Robot::InverseKinematicsMultipleFramesService, this);
+    fk_srv = nh->advertiseService(topic_root+"/fk", &Robot::ForwardKinematicsService, this);
+    interactive_marker_sub = nh->subscribe(topic_root+"/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
 }
 
 VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max) {

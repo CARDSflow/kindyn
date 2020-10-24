@@ -67,7 +67,7 @@ public:
         joint = hw->getHandle(joint_name); // throws on failure
         joint_index = joint.getJointIndex();
         last_update = ros::Time::now();
-        joint_command = nh.subscribe((joint_name+"/target").c_str(),1,&CableLengthController::JointPositionCommand, this);
+//        joint_command = nh.subscribe((joint_name+"/target").c_str(),1,&CableLengthController::JointPositionCommand, this);
         controller_parameter_srv = nh.advertiseService((joint_name+"/params").c_str(),& CableLengthController::setControllerParameters, this);
         return true;
     }

@@ -128,6 +128,8 @@ namespace cardsflow {
                 ROS_WARN_STREAM_THROTTLE(1, "writing virtual, "
                         "you probably forgot to implement your own write function?!");
             };
+
+            void updateSubscriptions();
         private:
 
             /**
@@ -269,6 +271,7 @@ namespace cardsflow {
             vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments
             bool simulated = false; /// indicates if the robots is simulated or hardware is used
             bool external_robot_state; /// indicates if we get the robot state externally
+            string topic_root;
 
         protected:
             iDynTree::FreeFloatingGeneralizedTorques bias; /// Coriolis+Gravity term
