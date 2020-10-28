@@ -5,8 +5,8 @@ from geometry_msgs.msg import PoseStamped
 import pyroboy
 
 
-rospy.init_node('joy_ctl')
-pyroboy.init()
+# rospy.init_node('joy_ctl')
+# pyroboy.init()
 
 
 class JoystickRoboy:
@@ -14,11 +14,11 @@ class JoystickRoboy:
     def __init__(self):
         self.joy_sub = rospy.Subscriber('/joy', Joy, self.joy_cb)
         self.joint_pub = rospy.Publisher(
-            '/joint_targets', JointState, queue_size=1)
+            '/roboy/brain/joint_targets', JointState, queue_size=1)
         self.eyes_pub = rospy.Publisher(
-            '/roboy/eyes', PoseStamped, queue_size=1)
+            '/roboy/pinky/eyes', PoseStamped, queue_size=1)
         self.joint_sub = rospy.Subscriber(
-            '/cardsflow_joint_states', JointState, self.joint_cb)
+            '/roboy/brain/cardsflow_joint_states', JointState, self.joint_cb)
         self.face_emotions = ["shy", "hearts", "hypno_color", "kiss",
                               "angry", "talking", "pissed", "img:money", None, None, None, None]
         self.show_emotions = []
