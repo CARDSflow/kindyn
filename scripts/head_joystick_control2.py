@@ -2,6 +2,7 @@
 import rospy
 from sensor_msgs.msg import JointState, Joy
 from geometry_msgs.msg import PoseStamped
+from roboy_control_msgs.msg import Emotion
 import pyroboy
 
 
@@ -12,13 +13,14 @@ import pyroboy
 class JoystickRoboy:
 
     def __init__(self):
+        self.topic_root = "/roboy/pinky"
         self.joy_sub = rospy.Subscriber('/joy', Joy, self.joy_cb)
         self.joint_pub = rospy.Publisher(
-            '/roboy/brain/joint_targets', JointState, queue_size=1)
+            self.topic_root + '/joint_targets', JointState, queue_size=1)
         self.eyes_pub = rospy.Publisher(
-            '/roboy/pinky/eyes', PoseStamped, queue_size=1)
+            self.topic_root + '/eyes', PoseStamped, queue_size=1)
         self.joint_sub = rospy.Subscriber(
-            '/roboy/brain/cardsflow_joint_states', JointState, self.joint_cb)
+            self.topic_root + '/cardsflow_joint_states', JointState, self.joint_cb)
         self.face_emotions = ["shy", "hearts", "hypno_color", "kiss",
                               "angry", "talking", "pissed", "img:money", None, None, None, None]
         self.show_emotions = []
@@ -29,6 +31,9 @@ class JoystickRoboy:
         self.scale = [0.01, -0.01]
         self.joint_names = []
         self.joint_positions = []
+
+        self.emotion_pub = rospy.Publisher("/roboy/brain/cognition/face/emotion", Emotion, queue_size=1)
+
 
     def joy_cb(self, msg):
         self.prev_axes = self.axes
@@ -64,7 +69,10 @@ class JoystickRoboy:
         if len(self.show_emotions) != 0:
             for e in self.show_emotions:
                 if e is not None:
-                    pyroboy.show_emotion(e)
+                    msg = Emotion()
+                    msg.emotion = e
+                    self.emotion_pub.publish(msg)
+                    # pyroboy.show_emotion(e)
             self.show_emotions = []
 
     def update(self):
