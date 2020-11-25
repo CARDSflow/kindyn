@@ -28,7 +28,7 @@ class JoystickRoboy:
                            "head_axis0", "eyes_axis1", "eyes_axis0"]
         self.axes = []
         self.prev_axes = []
-        self.scale = [0.01, -0.01]
+        self.scale = [0.05, -0.05]
         self.joint_names = []
         self.joint_positions = []
 

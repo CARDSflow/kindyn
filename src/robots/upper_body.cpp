@@ -30,7 +30,7 @@ private:
     map<int,float> l_offset, position;
     map<string, vector<float>> integral;
     boost::shared_ptr<tf::TransformListener> listener;
-    std::vector<string> body_parts = {"shoulder_left", "shoulder_right", "head", "wrist_left", "wrist_right"};//, "shoulder_left"};//}, "elbow_left"};
+    std::vector<string> body_parts = { "shoulder_right", "shoulder_left","head"};//, "wrist_left", "wrist_right"};//, "shoulder_left"};//}, "elbow_left"};
     map<string, bool> init_called;
 
 public:
@@ -60,7 +60,7 @@ public:
         init(urdf,cardsflow_xml,joint_names);
 //        listener.reset(new tf::TransformListener);
         update();
-        
+
 
         motor_state_sub = nh->subscribe(topic_root + "middleware/MotorState",1,&UpperBody::MotorState,this);
         // motor_info_sub = nh->subscribe(topic_root + "middleware/MotorInfo",1,&UpperBody::MotorInfo,this);
@@ -271,7 +271,7 @@ public:
     void read(){
         update();
         if (!external_robot_state)
-            forwardKinematics(0.001);
+            forwardKinematics(0.005);
     };
     /**
      * Sends motor commands to the real robot
@@ -330,7 +330,7 @@ public:
  */
 void update(controller_manager::ControllerManager *cm) {
     ros::Time prev_time = ros::Time::now();
-    ros::Rate rate(200); // changing this value affects the control speed of your running controllers
+    ros::Rate rate(500); // changing this value affects the control speed of your running controllers
     while (ros::ok()) {
         const ros::Time time = ros::Time::now();
         const ros::Duration period = time - prev_time;
@@ -371,13 +371,13 @@ int main(int argc, char *argv[]) {
     thread update_thread(update, &cm);
     update_thread.detach();
 
-    ros::Rate rate(30);
+    ros::Rate rate(200);
     while(ros::ok()){
         robot.read();
         if (!robot.simulated)
           robot.write();
         ros::spinOnce();
-//        rate.sleep();
+        rate.sleep();
     }
 
     ROS_INFO("TERMINATING...");

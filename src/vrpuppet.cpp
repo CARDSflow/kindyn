@@ -906,8 +906,7 @@ void Robot::JointTarget(const sensor_msgs::JointStateConstPtr &msg){
             else {
                 q_target(joint_index) = msg->position[i];
             }
-
-            qd_target(joint_index) = msg->velocity[i];
+            //qd_target(joint_index) = msg->velocity[i];
         } else {
             ROS_WARN_THROTTLE(5.0, "joint %s not found in model", joint.c_str());
         }

@@ -3,13 +3,16 @@
     <arg name="robot_model" default="pinky"/>
     <arg name="model_name" default="$(arg robot_name)"/>
     <arg name="urdf_file_name" default="model.urdf"/>
+    <!--<arg name="cardsflow_file_name" default="cardsflow.xml"/>-->
     <!--<arg name="start_controllers" default="head_axis0 head_axis1 head_axis2"/>-->
      <!--<arg name="start_controllers" default="head_axis0 head_axis1 head_axis2 shoulder_left_axis0 shoulder_left_axis1 shoulder_left_axis2 elbow_left_axis0 elbow_left_axis1"/>-->
     <arg name="start_controllers" default="$(arg robot_model)_shoulder_left_axis0 $(arg robot_model)_shoulder_left_axis1 $(arg robot_model)_shoulder_left_axis2
                                             $(arg robot_model)_elbow_left_axis0 $(arg robot_model)_elbow_left_axis1
+                                            $(arg robot_model)_wrist_left_axis0 $(arg robot_model)_wrist_left_axis1 $(arg robot_model)_wrist_left_axis2
                                             $(arg robot_model)_head_axis0 $(arg robot_model)_head_axis1 $(arg robot_model)_head_axis2
                                             $(arg robot_model)_shoulder_right_axis0 $(arg robot_model)_shoulder_right_axis1 $(arg robot_model)_shoulder_right_axis2
-                                            $(arg robot_model)_elbow_right_axis0 $(arg robot_model)_elbow_right_axis1 "/>
+                                            $(arg robot_model)_elbow_right_axis0 $(arg robot_model)_elbow_right_axis1
+                                            $(arg robot_model)_wrist_right_axis0 $(arg robot_model)_wrist_right_axis1 $(arg robot_model)_wrist_right_axis2"/>
     <arg name="simulated" default="false"/>
     <arg name="gazebo" default="false"/>
     <arg name="paused" default="false"/>
@@ -29,6 +32,7 @@
     <param name="robot_description" textfile="$(find robots)/$(arg model_name)/model.urdf" />
     <param name="urdf_file_path" type="string" value="$(find robots)/$(arg robot_name)/$(arg urdf_file_name)" />
     <param name="cardsflow_xml" type="string" value="$(find robots)/$(arg model_name)/cardsflow.xml" />
+    <!--<param name="cardsflow_xml" type="string" value="$(find robots)/$(arg model_name)/$(arg cardsflow_file_name" />-->
     <param name="simulated" type="bool" value="$(arg simulated)"/>
     <rosparam file="$(find robots)/$(arg model_name)/config/controller.yaml" command="load"/>
     <rosparam file="$(find robots)/$(arg model_name)/config/endeffectors.yaml" command="load"/>

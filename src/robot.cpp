@@ -856,6 +856,8 @@ void Robot::JointTarget(const sensor_msgs::JointStateConstPtr &msg){
     const iDynTree::Model &model = kinDynComp.getRobotModel();
     int i = 0;
     for (string joint:msg->name) {
+
+
         int joint_index = model.getJointIndex(joint);
         if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
             if (msg->position[i] > q_max(joint_index)) {
@@ -867,8 +869,9 @@ void Robot::JointTarget(const sensor_msgs::JointStateConstPtr &msg){
             else {
                 q_target(joint_index) = msg->position[i];
             }
+            ROS_WARN_STREAM(q_target(joint_index));
 
-            qd_target(joint_index) = msg->velocity[i];
+//            qd_target(joint_index) = msg->velocity[i];
         } else {
             ROS_WARN_THROTTLE(5.0, "joint %s not found in model", joint.c_str());
         }
