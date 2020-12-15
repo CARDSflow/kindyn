@@ -28,11 +28,11 @@ class JoystickRoboy:
                            "head_axis0", "eyes_axis1", "eyes_axis0"]
         self.axes = []
         self.prev_axes = []
-        self.scale = [0.05, -0.05]
+        self.scale = [0.03, -0.03]
         self.joint_names = []
         self.joint_positions = []
 
-        self.emotion_pub = rospy.Publisher("/roboy/brain/cognition/face/emotion", Emotion, queue_size=1)
+        self.emotion_pub = rospy.Publisher("/roboy/pinky/cognition/face/emotion", Emotion, queue_size=1)
 
 
     def joy_cb(self, msg):
@@ -47,7 +47,7 @@ class JoystickRoboy:
         if len(self.axes) != 0 and len(self.joint_positions) != 0:
             for i in range(len(self.axes_names[:2])):
                 j = self.axes_names[i]
-                pos = self.get_joint_position(j) + self.scale[i]*self.axes[i]
+                pos = self.get_joint_position(j) - self.scale[i]*self.axes[i]
                 if pos is not None:
                     joint_msg.name.append(j)
                     joint_msg.position.append(pos)

@@ -47,8 +47,9 @@
     <node name="$(arg robot_model)_controller_manager"
           pkg="controller_manager"
           type="spawner"
-          args="$(arg start_controllers)" />
+          args="$(arg start_controllers)"
 
+/>
 
     <node name="$(arg robot_model)_robot_controller"
          pkg="kindyn"
@@ -56,6 +57,7 @@
          args="$(arg robot_model)"
          respawn="false"
          output="screen"
+
 
    />
 
@@ -74,10 +76,7 @@
               -x $(arg x) -y $(arg y) -z $(arg z)"
         />
     </group>
-<!--launch-prefix="gdb -ex run"-->
-</launch>
-        <!--launch-prefix="gdb -ex run"-->
-        <!--launch-prefix="gdb -ex run"-->
-        <!-- FOR DEBUGGING USE THIS launch-prefix="xterm -e gdb -se devel/lib/myo_master/multiJoint" FOR VALGRIND USE THIS launch-prefix="valgrind -log-file=/home/roboy/workspace/ros_hierarchy/valgrind.log -leak-check=full"-->
 
-        <!-- args="-c /home/roboy/workspace/roboy-ros-control/src/roboy_powerlink/powerlink/output/mnobd.cdc"-->
+
+</launch>
+        <!-- launch-prefix="gdb -ex run - - args"-->
