@@ -52,6 +52,7 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Vector3.h>
 #include <std_msgs/Float32.h>
+#include <std_srvs/Trigger.h>
 #include <sensor_msgs/JointState.h>
 #include <roboy_simulation_msgs/Tendon.h>
 #include <roboy_simulation_msgs/ControllerType.h>
@@ -62,6 +63,7 @@
 #include <roboy_middleware_msgs/MotorCommand.h>
 #include <roboy_middleware_msgs/MotorStatus.h>
 #include <roboy_control_msgs/MoveEndEffectorAction.h>
+#include <roboy_control_msgs/Strings.h>
 
 #include <tf/tf.h>
 #include <tf/transform_broadcaster.h>
@@ -210,12 +212,15 @@ namespace cardsflow {
              */
             void controllerType(const roboy_simulation_msgs::ControllerTypeConstPtr &msg);
 
+            void ZeroJoints(const roboy_control_msgs::StringsPtr &msg);
+            bool FreezeService(std_srvs::Trigger::Request &req,std_srvs::Trigger::Response &res);
+
             ros::NodeHandlePtr nh; /// ROS node handle
             boost::shared_ptr <ros::AsyncSpinner> spinner; /// async ROS spinner
             ros::Publisher robot_state_pub, tendon_state_pub, joint_state_pub, cardsflow_joint_states_pub; /// ROS robot pose and tendon publisher
             ros::Publisher robot_state_target_pub, tendon_state_target_pub, joint_state_target_pub; /// target publisher
-            ros::Subscriber controller_type_sub, joint_state_sub, floating_base_sub, interactive_marker_sub, joint_target_sub; /// ROS subscribers
-            ros::ServiceServer ik_srv, ik_two_frames_srv, fk_srv;
+            ros::Subscriber controller_type_sub, joint_state_sub, floating_base_sub, interactive_marker_sub, joint_target_sub, zero_joints_sub; /// ROS subscribers
+            ros::ServiceServer ik_srv, ik_two_frames_srv, fk_srv, freeze_srv;
             map<string,boost::shared_ptr<actionlib::SimpleActionServer<roboy_control_msgs::MoveEndEffectorAction>>> moveEndEffector_as;
 
 

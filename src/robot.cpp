@@ -357,7 +357,9 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     ik_srv = nh->advertiseService(topic_root+"/ik", &Robot::InverseKinematicsService, this);
     ik_two_frames_srv = nh->advertiseService(topic_root+"/ik_multiple_frames", &Robot::InverseKinematicsMultipleFramesService, this);
     fk_srv = nh->advertiseService(topic_root+"/fk", &Robot::ForwardKinematicsService, this);
+    freeze_srv = nh->advertiseService(topic_root+"/freeze", &Robot::FreezeService, this);
     interactive_marker_sub = nh->subscribe(topic_root+"/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
+    zero_joints_sub = nh->subscribe(topic_root+"/zero_joints", 1, &Robot::ZeroJoints,this);
 }
 
 VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max) {
@@ -880,6 +882,37 @@ void Robot::JointTarget(const sensor_msgs::JointStateConstPtr &msg){
             i++;
         }
     }
+
+}
+
+void Robot::ZeroJoints(const roboy_control_msgs::StringsPtr &msg) {
+
+    if (msg->names.empty()) {
+        for (int i = 1; i < number_of_links; i++) {
+            q_target.setZero();
+        }
+    }
+    else {
+        const iDynTree::Model &model = kinDynComp.getRobotModel();
+        for (string joint: msg->names) {
+            ROS_INFO_STREAM("zero " << joint);
+            int joint_index = model.getJointIndex(joint);
+            if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
+                q_target(joint_index) = 0;
+                ROS_INFO_STREAM("done");
+            }
+    };
+}
+}
+
+bool Robot::FreezeService(std_srvs::Trigger::Request &req,
+                          std_srvs::Trigger::Response &res) {
+    for (int i = 1; i < number_of_links; i++) {
+        q_target = q;
+    }
+    res.message = "Robot stopped until the next joint target message";
+    res.success = true;
+    return true;
 
 }
 
