@@ -27,6 +27,7 @@ private:
     map<int,int> pos, initial_pos;
     map<string, ros::ServiceClient> motor_config, motor_control_mode, control_mode;
     map<string, bool> motor_status_received;
+    map<int, bool> communication_established; // keeps track of communication quality for each motor
     map<int,float> l_offset, position;
     map<string, vector<float>> integral;
     boost::shared_ptr<tf::TransformListener> listener;
@@ -63,7 +64,7 @@ public:
 
 
         motor_state_sub = nh->subscribe(topic_root + "middleware/MotorState",1,&UpperBody::MotorState,this);
-        // motor_info_sub = nh->subscribe(topic_root + "middleware/MotorInfo",1,&UpperBody::MotorInfo,this);
+        motor_info_sub = nh->subscribe(topic_root + "middleware/MotorInfo",1,&UpperBody::MotorInfo,this);
 
         for (auto body_part: body_parts) {
             init_called[body_part] = false;
@@ -222,6 +223,7 @@ public:
 
 
     string findBodyPartByMotorId(int id) {
+        string ret = "unknown";
         for (auto body_part: body_parts) {
             std::vector<int> motor_ids;
             try {
@@ -231,14 +233,14 @@ public:
             }
             catch (const std::exception&) {
                 ROS_ERROR("motor ids for %s are not on the parameter server. check motor_config.yaml in robots.", body_part);
-                return "unknown";
+                return ret;
             }
             if (find(motor_ids.begin(), motor_ids.end(), id) != motor_ids.end()) {
                 return body_part;
             }
         }
-        ROS_WARN_THROTTLE(10,"Seems like motor with id %d does not belong to any body part", id);
-        return "unknown";
+        ROS_WARN_ONCE("Seems like motor with id %d does not belong to any body part", id);
+        return ret;
     }
 
     void MotorState(const roboy_middleware_msgs::MotorState::ConstPtr &msg){
@@ -251,17 +253,40 @@ public:
     }
 
     void MotorInfo(const roboy_middleware_msgs::MotorInfo::ConstPtr &msg){
-      int i=0;
-      for (auto id:msg->global_id) {
-        auto body_part = findBodyPartByMotorId(id);
-        if (msg->communication_quality[i] > 0 && body_part != "unknown") {
-            motor_status_received[body_part] = true;
+        for (int i=0;i<msg->global_id.size();i++) {
+            auto id = int(msg->global_id[i]);
+            auto body_part = findBodyPartByMotorId(id);
+//            ROS_INFO_STREAM(body_part);
+            if (body_part != "unknown") {
+                if (msg->communication_quality[i] > 0 ) {
+                    motor_status_received[body_part] = true;
+                    //            communication_established[id] = true;
+                }
+                else {
+                    //            communication_established[id] = false;
+                    ROS_WARN_THROTTLE(1,"Did not receive motor status for motor with id: %d. %s Body part is disabled.", (id, body_part));
+
+                    if(init_called[body_part])
+                        init_called[body_part] = false;
+                }
+            }
+
         }
-        else {
-            ROS_WARN_THROTTLE(1, "Did not receive %s's motor status for motor with id: %d", (body_part.c_str(), id));
-        }
-        i++;
-      }
+//      int i=0;
+//      for (auto id:msg->global_id) {
+//           ROS_INFO_STREAM("ID: " << id);
+//        auto body_part = findBodyPartByMotorId(id);
+//        if (msg->communication_quality[i] > 0 && body_part != "unknown") {
+//            motor_status_received[body_part] = true;
+////            communication_established[id] = true;
+//        }
+//        else {
+////            communication_established[id] = false;
+//            ROS_WARN_THROTTLE(1, "Did not receive %s's motor status for motor with id: %d. Body part is disabled.", (body_part.c_str(), id));
+//            init_called[body_part] = false;
+//        }
+//        i++;
+//      }
     }
 
 
@@ -285,7 +310,7 @@ public:
 
         for (auto body_part: body_parts) {
             if (!init_called[body_part]) {
-                ROS_WARN_STREAM_THROTTLE(5, body_part << " was not initialized. skipping");
+                ROS_WARN_STREAM_THROTTLE(1, body_part << " was not initialized. skipping");
             } else {
                 std::vector<int> motor_ids;
                 try {
