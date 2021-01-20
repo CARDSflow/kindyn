@@ -6,6 +6,8 @@
 #include <roboy_middleware_msgs/ControlMode.h>
 #include <roboy_middleware_msgs/MotorConfigService.h>
 #include <roboy_middleware_msgs/SetStrings.h>
+#include <roboy_middleware_msgs/SystemStatus.h>
+#include <roboy_middleware_msgs/BodyPart.h>
 #include <common_utilities/CommonDefinitions.h>
 #include <roboy_control_msgs/SetControllerParameters.h>
 #include <std_srvs/Empty.h>
@@ -17,7 +19,7 @@ using namespace std;
 class UpperBody: public cardsflow::kindyn::Robot{
 private:
     ros::NodeHandlePtr nh; /// ROS nodehandle
-    ros::Publisher motor_command; /// motor command publisher
+    ros::Publisher motor_command, system_status_pub; /// motor command publisher
     ros::Subscriber motor_state_sub, motor_info_sub;
     // vector<ros::ServiceServer> init_poses;
     ros::ServiceServer init_pose;
@@ -33,6 +35,7 @@ private:
     boost::shared_ptr<tf::TransformListener> listener;
     std::vector<string> body_parts = { "shoulder_right", "shoulder_left","head"};//, "wrist_left", "wrist_right"};//, "shoulder_left"};//}, "elbow_left"};
     map<string, bool> init_called;
+    boost::shared_ptr<std::thread> system_status_thread;
 
 public:
     /**
@@ -75,10 +78,34 @@ public:
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>(topic_root + "middleware/MotorCommand",1);
         init_pose = nh->advertiseService(topic_root + "init_pose", &UpperBody::initPose,this);
 
+        system_status_pub = nh->advertise<roboy_middleware_msgs::SystemStatus>(topic_root + "control/SystemStatus",1);
+        system_status_thread = boost::shared_ptr<std::thread>(new std::thread(&UpperBody::SystemStatusPublisher, this));
+        system_status_thread->detach();
+
         ROS_INFO_STREAM("Finished setup");
     };
 
+    ~UpperBody() {
+        if (system_status_thread->joinable())
+            system_status_thread->join();
+    }
 
+    void SystemStatusPublisher() {
+        ros::Rate rate(100);
+        while (ros::ok()) {
+            auto msg = roboy_middleware_msgs::SystemStatus();
+            msg.header.stamp = ros::Time::now();
+            auto body_part = roboy_middleware_msgs::BodyPart();
+            for (auto part: body_parts) {
+                body_part.name = part;
+                body_part.status = init_called[part];
+                msg.body_parts.push_back(body_part);
+            }
+            system_status_pub.publish(msg);
+            rate.sleep();
+        }
+
+    }
 
 
     bool initPose(roboy_middleware_msgs::SetStrings::Request &req,
