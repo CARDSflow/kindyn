@@ -29,15 +29,15 @@ Robot::~Robot() {
 
 void Robot::updateSubscriptions() {
     ROS_INFO_STREAM("advertising " << topic_root+"/robot_state");
-    robot_state_pub = nh->advertise<geometry_msgs::PoseStamped>(topic_root+"/robot_state", 1);
-    tendon_state_pub = nh->advertise<roboy_simulation_msgs::Tendon>(topic_root+"/tendon_state", 1);
+    robot_state_pub = nh->advertise<geometry_msgs::PoseStamped>(topic_root+"control/robot_state", 1);
+    tendon_state_pub = nh->advertise<roboy_simulation_msgs::Tendon>(topic_root+"control/tendon_state", 1);
 
-    joint_state_pub = nh->advertise<roboy_simulation_msgs::JointState>(topic_root+"/rviz_joint_states", 1);
-    cardsflow_joint_states_pub = nh->advertise<sensor_msgs::JointState>(topic_root+"/cardsflow_joint_states", 1);
+    joint_state_pub = nh->advertise<roboy_simulation_msgs::JointState>(topic_root+"control/rviz_joint_states", 1);
+    cardsflow_joint_states_pub = nh->advertise<sensor_msgs::JointState>(topic_root+"control/cardsflow_joint_states", 1);
 
-    robot_state_target_pub = nh->advertise<geometry_msgs::PoseStamped>(topic_root+"/robot_state_target", 1);
-    tendon_state_target_pub = nh->advertise<roboy_simulation_msgs::Tendon>(topic_root+"/tendon_state_target", 1);
-    joint_state_target_pub = nh->advertise<roboy_simulation_msgs::JointState>(topic_root+"/joint_state_target", 1);
+    robot_state_target_pub = nh->advertise<geometry_msgs::PoseStamped>(topic_root+"control/robot_state_target", 1);
+    tendon_state_target_pub = nh->advertise<roboy_simulation_msgs::Tendon>(topic_root+"control/tendon_state_target", 1);
+    joint_state_target_pub = nh->advertise<roboy_simulation_msgs::JointState>(topic_root+"control/joint_state_target", 1);
     fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
     nh->getParam("external_robot_target", external_robot_target);
     nh->getParam("external_robot_state", external_robot_state);
@@ -350,16 +350,16 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         k++;
     }
 
-    joint_target_sub = nh->subscribe(topic_root+"/joint_targets", 100, &Robot::JointTarget, this);
+    joint_target_sub = nh->subscribe(topic_root+"control/joint_targets", 100, &Robot::JointTarget, this);
     controller_type_sub = nh->subscribe("/controller_type", 100, &Robot::controllerType, this);
     // joint_state_sub = nh->subscribe("/joint_states", 100, &Robot::JointState, this);
-    floating_base_sub = nh->subscribe(topic_root+"/floating_base", 100, &Robot::FloatingBase, this);
-    ik_srv = nh->advertiseService(topic_root+"/ik", &Robot::InverseKinematicsService, this);
-    ik_two_frames_srv = nh->advertiseService(topic_root+"/ik_multiple_frames", &Robot::InverseKinematicsMultipleFramesService, this);
-    fk_srv = nh->advertiseService(topic_root+"/fk", &Robot::ForwardKinematicsService, this);
-    freeze_srv = nh->advertiseService(topic_root+"/freeze", &Robot::FreezeService, this);
-    interactive_marker_sub = nh->subscribe(topic_root+"/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
-    zero_joints_sub = nh->subscribe(topic_root+"/zero_joints", 1, &Robot::ZeroJoints,this);
+    floating_base_sub = nh->subscribe(topic_root+"control/floating_base", 100, &Robot::FloatingBase, this);
+    ik_srv = nh->advertiseService(topic_root+"control/ik", &Robot::InverseKinematicsService, this);
+    ik_two_frames_srv = nh->advertiseService(topic_root+"control/ik_multiple_frames", &Robot::InverseKinematicsMultipleFramesService, this);
+    fk_srv = nh->advertiseService(topic_root+"control/fk", &Robot::ForwardKinematicsService, this);
+    freeze_srv = nh->advertiseService(topic_root+"control/freeze", &Robot::FreezeService, this);
+    interactive_marker_sub = nh->subscribe(topic_root+"control/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
+    zero_joints_sub = nh->subscribe(topic_root+"control/zero_joints", 1, &Robot::ZeroJoints,this);
 }
 
 VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max) {

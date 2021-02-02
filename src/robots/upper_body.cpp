@@ -293,8 +293,12 @@ public:
                     //            communication_established[id] = false;
                     ROS_WARN_THROTTLE(1,"Did not receive motor status for motor with id: %d. %s Body part is disabled.", (id, body_part));
 
-                    if(init_called[body_part])
-                        init_called[body_part] = false;
+                    // TODO fix triceps
+                    if (id != 18 && body_part != "shoulder_right") {
+                        if(init_called[body_part])
+                            init_called[body_part] = false;
+                    }
+
                 }
             }
 
