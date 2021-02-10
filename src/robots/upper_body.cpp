@@ -33,7 +33,7 @@ private:
     map<int,float> l_offset, position;
     map<string, vector<float>> integral;
     boost::shared_ptr<tf::TransformListener> listener;
-    std::vector<string> body_parts = { "shoulder_right", "shoulder_left","head"};//, "wrist_left", "wrist_right"};//, "shoulder_left"};//}, "elbow_left"};
+    std::vector<string> body_parts = { "shoulder_right", "shoulder_left","head", "wrist_right","wrist_left"};//, "shoulder_left"};//}, "elbow_left"};
     map<string, bool> init_called;
     boost::shared_ptr<std::thread> system_status_thread;
 
@@ -141,7 +141,7 @@ public:
         int pwm;
         try {
             if (name == "wrist_left" || name == "wrist_right") {
-                nh->getParam("init_m3_displacement", pwm);
+                nh->getParam("m3_pwm", pwm);
             } else {
                 nh->getParam("pwm",pwm);
             }
@@ -156,11 +156,11 @@ public:
         roboy_middleware_msgs::ControlMode msg;
 
 
-        if (name == "wrist_left" || name == "wrist_right") {
-            msg.request.control_mode = DISPLACEMENT;
-        } else {
+        // if (name == "wrist_left" || name == "wrist_right") {
+        //     msg.request.control_mode = DISPLACEMENT;
+        // } else {
             msg.request.control_mode = DIRECT_PWM;
-        }
+        // }
         // TODO: fix in plexus PWM direction for the new motorboard
         std::vector<float> set_points(motor_ids.size(), pwm);
         for (auto m: motor_ids) msg.request.global_id.push_back(m);

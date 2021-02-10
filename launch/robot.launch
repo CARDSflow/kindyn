@@ -5,7 +5,7 @@
     <arg name="urdf_file_name" default="model.urdf"/>
     <!--<arg name="cardsflow_file_name" default="cardsflow.xml"/>-->
     <!--<arg name="start_controllers" default="head_axis0 head_axis1 head_axis2"/>-->
-     <!--<arg name="start_controllers" default="head_axis0 head_axis1 head_axis2 shoulder_left_axis0 shoulder_left_axis1 shoulder_left_axis2 elbow_left_axis0 elbow_left_axis1"/>-->
+     <!-- <arg name="start_controllers" default="$(arg robot_model)_head_axis0 $(arg robot_model)_head_axis1 $(arg robot_model)_head_axis2 $(arg robot_model)_shoulder_left_axis0 $(arg robot_model)_shoulder_left_axis1 $(arg robot_model)_shoulder_left_axis2 $(arg robot_model)_elbow_left_axis0 $(arg robot_model)_elbow_left_axis1"/> -->
     <arg name="start_controllers" default="$(arg robot_model)_shoulder_left_axis0 $(arg robot_model)_shoulder_left_axis1 $(arg robot_model)_shoulder_left_axis2
                                             $(arg robot_model)_elbow_left_axis0 $(arg robot_model)_elbow_left_axis1
                                             $(arg robot_model)_wrist_left_axis0 $(arg robot_model)_wrist_left_axis1 $(arg robot_model)_wrist_left_axis2
@@ -39,6 +39,7 @@
     <rosparam file="$(find robots)/$(arg model_name)/config/motor_config.yaml" command="load"/>
     <rosparam param="q_target">[0.0, 0.0, 0.0]</rosparam>
     <rosparam param="pwm">3.0</rosparam>
+    <rosparam param="m3_pwm">50.0</rosparam>
     <param name="min_force" type="double" value="0"  />
     <param name="max_force" type="double" value="100000"  />
     <param name="controller" type="int" value="2"  />
