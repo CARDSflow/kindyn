@@ -81,6 +81,7 @@ public:
         system_status_pub = nh->advertise<roboy_middleware_msgs::SystemStatus>(topic_root + "control/SystemStatus",1);
         system_status_thread = boost::shared_ptr<std::thread>(new std::thread(&UpperBody::SystemStatusPublisher, this));
         system_status_thread->detach();
+        nh->setParam("initialized", init_called);
 
         ROS_INFO_STREAM("Finished setup");
     };
@@ -243,6 +244,8 @@ public:
         update();
         ROS_INFO_STREAM("%s pose init done" << name);
         init_called[name] = true;
+        nh->setParam("initialized", init_called);
+
         return true;
 
 
@@ -295,8 +298,11 @@ public:
 
                     // TODO fix triceps
                     //if (id != 18 && body_part != "shoulder_right") {
-                        if(init_called[body_part])
+                        if(init_called[body_part]) {
                             init_called[body_part] = false;
+                            nh->setParam("initialized", init_called);
+                        }
+                            
                     //}
 
                 }
