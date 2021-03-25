@@ -99,7 +99,7 @@ public:
             auto body_part = roboy_middleware_msgs::BodyPart();
             for (auto part: body_parts) {
                 body_part.name = part;
-                body_part.status = init_called[part];
+                body_part.status = !init_called[part];
                 msg.body_parts.push_back(body_part);
             }
             system_status_pub.publish(msg);
@@ -294,7 +294,7 @@ public:
                 }
                 else {
                     //            communication_established[id] = false;
-                    ROS_WARN_THROTTLE(1,"Did not receive motor status for motor with id: %d. %s Body part is disabled.", (id, body_part));
+                    ROS_WARN_THROTTLE(10,"Did not receive motor status for motor with id: %d. %s Body part is disabled.", (id, body_part));
 
                     // TODO fix triceps
                     //if (id != 18 && body_part != "shoulder_right") {

@@ -643,14 +643,14 @@ void Robot::update() {
         last_visualization = ros::Time::now();
     }
     ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "qdd " << qdd.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "qd " << qd.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "q " << q.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "l " << l.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "l_target " << l_target.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "ld " << Ld[0].transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "torques " << torques.transpose().format(fmt));
-    ROS_INFO_STREAM_THROTTLE(5, "cable_forces " << cable_forces.transpose().format(fmt));
+    // ROS_INFO_STREAM_THROTTLE(5, "qdd " << qdd.transpose().format(fmt));
+    // ROS_INFO_STREAM_THROTTLE(5, "qd " << qd.transpose().format(fmt));
+    // ROS_INFO_STREAM_THROTTLE(5, "q " << q.transpose().format(fmt));
+    // ROS_INFO_STREAM_THROTTLE(5, "l " << l.transpose().format(fmt));
+    // ROS_INFO_STREAM_THROTTLE(5, "l_target " << l_target.transpose().format(fmt));
+    // ROS_INFO_STREAM_THROTTLE(5, "ld " << Ld[0].transpose().format(fmt));
+    // ROS_INFO_STREAM_THROTTLE(5, "torques " << torques.transpose().format(fmt));
+    // ROS_INFO_STREAM_THROTTLE(5, "cable_forces " << cable_forces.transpose().format(fmt));
 }
 
 void Robot::forwardKinematics(double dt) {
@@ -698,7 +698,7 @@ void Robot::forwardKinematics(double dt) {
                     q[j] = joint_state[j][0];
                     break;
             }
-            ROS_INFO_THROTTLE(1,"%s control type %d", joint_names[j].c_str(), controller_type[j]);
+            ROS_INFO_THROTTLE(10,"%s control type %d", joint_names[j].c_str(), controller_type[j]);
         }
         for (int l = 0; l < number_of_cables; l++) {
             boost::numeric::odeint::integrate(
@@ -722,7 +722,7 @@ void Robot::forwardKinematics(double dt) {
     }
 
     integration_time += dt;
-    ROS_INFO_THROTTLE(5, "forward kinematics calculated for %lf s", integration_time);
+    ROS_INFO_THROTTLE(10, "forward kinematics calculated for %lf s", integration_time);
 }
 
 void Robot::update_V() {
@@ -886,11 +886,12 @@ void Robot::JointTarget(const sensor_msgs::JointStateConstPtr &msg){
 }
 
 void Robot::ZeroJoints(const roboy_control_msgs::StringsPtr &msg) {
-
+    //ROS_WARN(msg->names);
     if (msg->names.empty()) {
-        for (int i = 1; i < number_of_links; i++) {
-            q_target.setZero();
-        }
+        ROS_WARN_STREAM("Setting all joint targets to zero");
+        //for (int i = 1; i < number_of_links; i++) {
+        q_target.setZero();
+        //}
     }
     else {
         const iDynTree::Model &model = kinDynComp.getRobotModel();
@@ -899,7 +900,7 @@ void Robot::ZeroJoints(const roboy_control_msgs::StringsPtr &msg) {
             int joint_index = model.getJointIndex(joint);
             if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
                 q_target(joint_index) = 0;
-                ROS_INFO_STREAM("done");
+                //ROS_INFO_STREAM("done");
             }
     };
 }
