@@ -662,11 +662,26 @@ void Robot::forwardKinematics(double dt) {
         qdd_force_control = M.block(6, 6, number_of_dofs, number_of_dofs).inverse() * (L_t * cable_forces - CG);
 
 //    #pragma omp parallel for
+    std::stringstream ss;
+    ss << "\n";
+
     for(int i = 0; i<endeffectors.size();i++) {
         int dof_offset = endeffector_dof_offset[i];
         MatrixXd L_endeffector = L.block(0,dof_offset,number_of_cables,endeffector_number_of_dofs[i]);
+        L_endeffector = L_endeffector + 1e-2 * MatrixXd::Identity(L_endeffector.rows(), L_endeffector.cols());
         MatrixXd L_endeffector_inv = EigenExtension::Pinv(L_endeffector);
         VectorXd qd_temp =  L_endeffector_inv * Ld[i];
+
+        auto L_ee_mean = L_endeffector.mean();
+        auto L_ee_max = L_endeffector.maxCoeff();
+        auto L_ee_min = L_endeffector.minCoeff();
+        auto L_ee_inv_mean = L_endeffector_inv.mean();
+        auto L_ee_inv_max = L_endeffector_inv.maxCoeff();
+        auto L_ee_inv_min = L_endeffector_inv.minCoeff();
+        ss  << endeffectors[i] << " | " \
+            << " # Mean " << L_ee_mean << ", " << L_ee_inv_mean \
+            << " # Max " << L_ee_max << ", " << L_ee_inv_max \
+            << " # Min " << L_ee_min << ", " << L_ee_inv_min << "\n";
 
         for (int j = dof_offset; j < endeffector_number_of_dofs[i]+dof_offset; j++) {
             switch(controller_type[j]){
@@ -680,6 +695,8 @@ void Robot::forwardKinematics(double dt) {
                     q[j] = joint_state[j][0];
                     break;
                 case CARDSflow::ControllerType::cable_length_controller:
+                    ss << j << " " << dof_offset << " " << j-dof_offset << \
+                        " " << qd_temp[j-dof_offset] << " " << joint_state[j][0] << "\n";
                     boost::numeric::odeint::integrate(
                             [this, j, qd_temp, dof_offset](const state_type &x, state_type &dxdt, double t) {
                                 dxdt[1] = 0;
@@ -709,6 +726,13 @@ void Robot::forwardKinematics(double dt) {
             l_int[l] = motor_state[l][0];
         }
     }
+    ss << "\n";
+    ss << "shoulder_left0 " << q[0] << " shoulder_right0 " << q[11] << "\n";
+    ss << "shoulder_left1 " << q[1] << " shoulder_right1 " << q[12] << "\n";
+    ss << "shoulder_left2 " << q[2] << " shoulder_right2 " << q[13] << "\n";
+    ss << "elbow_left " << q[3] <<  " elbow_right " << q[14] << "\n";
+    ROS_INFO_THROTTLE(5, "### %s", ss.str().c_str());
+
     // respect joint limits
     for(int i=0;i<number_of_joints;i++){
         if(q[i]<q_min[i]){
@@ -720,7 +744,6 @@ void Robot::forwardKinematics(double dt) {
             qd[i] = 0;
         }
     }
-
     integration_time += dt;
     ROS_INFO_THROTTLE(10, "forward kinematics calculated for %lf s", integration_time);
 }
