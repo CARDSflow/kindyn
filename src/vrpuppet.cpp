@@ -99,6 +99,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     }
 
     q.resize(number_of_dofs);
+
     qd.resize(number_of_dofs);
     qdd.resize(number_of_dofs);
     qdd_torque_control.resize(number_of_dofs);
@@ -115,6 +116,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     qdd_target_prev.resize(number_of_dofs);
 
     q.setZero();
+
     qd.setZero();
     qdd.setZero();
     q_target.setZero();

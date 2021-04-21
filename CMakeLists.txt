@@ -104,6 +104,7 @@ add_library(kindyn SHARED
 		src/robot.cpp
 		src/EigenExtension.cpp
 		include/kindyn/EigenExtension.hpp
+		include/kindyn/RunningAverage.hpp
 		include/kindyn/robot.hpp
 		include/kindyn/cable.hpp)
 add_dependencies(kindyn roboy_simulation_msgs_generate_messages_cpp roboy_simulation_msgs_msgs_generate_messages_cpp)

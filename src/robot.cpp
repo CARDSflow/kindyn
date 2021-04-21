@@ -45,7 +45,7 @@ void Robot::updateSubscriptions() {
 
     if (this->external_robot_state) {
         ROS_WARN("Subscribing to external joint state");
-        joint_state_sub = nh->subscribe(topic_root+"/external_joint_states", 100, &Robot::JointState, this);
+        joint_state_sub = nh->subscribe("/joints", 100, &Robot::JointState, this);
     }
 }
 
@@ -116,6 +116,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     }
 
     q.resize(number_of_dofs);
+    q_prev.resize(number_of_dofs);
     qd.resize(number_of_dofs);
     qdd.resize(number_of_dofs);
     qdd_torque_control.resize(number_of_dofs);
@@ -132,6 +133,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     qdd_target_prev.resize(number_of_dofs);
 
     q.setZero();
+    q_prev.setZero();
     qd.setZero();
     qdd.setZero();
     q_target.setZero();
@@ -360,6 +362,9 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     freeze_srv = nh->advertiseService(topic_root+"control/freeze", &Robot::FreezeService, this);
     interactive_marker_sub = nh->subscribe(topic_root+"control/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
     zero_joints_sub = nh->subscribe(topic_root+"control/zero_joints", 1, &Robot::ZeroJoints,this);
+
+    time_prev = ros::Time::now();
+    ra =  RunningAverage();
 }
 
 VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max) {
@@ -431,6 +436,7 @@ VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min
 }
 
 void Robot::update() {
+
     ros::Time t0 = ros::Time::now();
     iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
     iDynTree::toEigen(robotstate.jointPos) = q;
@@ -644,7 +650,7 @@ void Robot::update() {
     }
     ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
     // ROS_INFO_STREAM_THROTTLE(5, "qdd " << qdd.transpose().format(fmt));
-    // ROS_INFO_STREAM_THROTTLE(5, "qd " << qd.transpose().format(fmt));
+     ROS_INFO_STREAM_THROTTLE(1, "qd " << qd.transpose().format(fmt));
     // ROS_INFO_STREAM_THROTTLE(5, "q " << q.transpose().format(fmt));
     // ROS_INFO_STREAM_THROTTLE(5, "l " << l.transpose().format(fmt));
     // ROS_INFO_STREAM_THROTTLE(5, "l_target " << l_target.transpose().format(fmt));
@@ -665,6 +671,7 @@ void Robot::forwardKinematics(double dt) {
     for(int i = 0; i<endeffectors.size();i++) {
         int dof_offset = endeffector_dof_offset[i];
         MatrixXd L_endeffector = L.block(0,dof_offset,number_of_cables,endeffector_number_of_dofs[i]);
+        L_endeffector = L_endeffector + 1e-2 * MatrixXd::Identity(L_endeffector.rows(), L_endeffector.cols());
         MatrixXd L_endeffector_inv = EigenExtension::Pinv(L_endeffector);
         VectorXd qd_temp =  L_endeffector_inv * Ld[i];
 
@@ -685,8 +692,10 @@ void Robot::forwardKinematics(double dt) {
                                 dxdt[1] = 0;
                                 dxdt[0] = qd_temp[j-dof_offset];
                             }, joint_state[j], integration_time, integration_time + dt, dt);
+
                     qd[j] = qd_temp[j-dof_offset];
-                    q[j] = joint_state[j][0];
+                    if (!external_robot_state)
+                        q[j] = joint_state[j][0];
                     break;
                 case CARDSflow::ControllerType::force_position_controller:
                     boost::numeric::odeint::integrate(
@@ -1140,12 +1149,21 @@ void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg) {
     ROS_WARN_STREAM_THROTTLE(1,"external joint states sub");
     const iDynTree::Model &model = kinDynComp.getRobotModel();
     int i = 0;
+    q_prev = q;
+    time_prev = ros::Time::now();
     for (string joint:msg->name) {
         if (std::count(joint_names.begin(), joint_names.end(), joint)) {
             int joint_index = model.getJointIndex(joint);
             if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
-                q(joint_index) = msg->position[i];
+
+                auto delta = (ros::Time::now().toSec()-time_prev.toSec());
+
+                q(joint_index) = remainder(msg->position[i], 2.0 * M_PI); //ra.Update(remainder(msg->position[i], 2.0 * M_PI));
+                qd(joint_index) = (q(joint_index)-q_prev(joint_index))/delta;
 //                qd(joint_index) = msg->velocity[i];
+                //if (joint=="elbow_left_axis0")
+                //    ROS_INFO_STREAM(remainder(msg->position[i], 2.0 * M_PI) << "\tdelta: " << delta.toSec());
+
             } else {
                 ROS_ERROR("joint %s not found in model", joint.c_str());
             }

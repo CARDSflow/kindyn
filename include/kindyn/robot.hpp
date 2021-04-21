@@ -43,6 +43,7 @@
 
 #include "kindyn/cable.hpp"
 #include "kindyn/EigenExtension.hpp"
+#include "kindyn/RunningAverage.hpp"
 #include "kindyn/controller/cardsflow_state_interface.hpp"
 #include "kindyn/controller/cardsflow_command_interface.hpp"
 
@@ -261,7 +262,7 @@ namespace cardsflow {
             Vector3d gravity; /// gravity vector (default: (0,0,-9.81)
             MatrixXd M; /// The Mass matrix of the robot
             VectorXd CG; /// The Coriolis+Gravity term of the robot
-            VectorXd q, qd, qdd; /// joint positon, velocity, acceleration
+            VectorXd q, qd, qdd, q_prev; /// joint positon, velocity, acceleration
             VectorXd q_min, q_max; /// joint limits
             VectorXd q_target, qd_target, qdd_target; /// joint positon, velocity, acceleration targets
             VectorXd q_target_prev, qd_target_prev, qdd_target_prev; /// joint positon, velocity, acceleration targets
@@ -271,12 +272,13 @@ namespace cardsflow {
             VectorXd cable_forces; /// the cable forces in Newton
             vector<VectorXd> ld; /// tendon length changes for each controller
             MatrixXd L, L_t; /// L and -L^T
-
+            ros::Time time_prev;
             MatrixXd S, P, V, W; /// matrices of cable model
             vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments
             bool simulated = false; /// indicates if the robots is simulated or hardware is used
             bool external_robot_state; /// indicates if we get the robot state externally
             string topic_root;
+            RunningAverage ra;
 
         protected:
             iDynTree::FreeFloatingGeneralizedTorques bias; /// Coriolis+Gravity term

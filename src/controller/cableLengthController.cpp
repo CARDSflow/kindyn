@@ -83,9 +83,12 @@ public:
         double q_target = joint.getJointPositionCommand();
         MatrixXd L = joint.getL();
         double p_error = q - q_target;
+        if (joint_name == "elbow_left_axis0") {
+            ROS_INFO_STREAM_THROTTLE(1, "elbow error " << p_error);
+        }
         // we use the joint_index column of the L matrix to calculate the result for this joint only
         VectorXd ld = L.col(joint_index) * (Kd * (p_error - p_error_last)/period.toSec() + Kp * p_error);
-//        ROS_INFO_STREAM_THROTTLE(1, ld.transpose());
+        ROS_INFO_STREAM_THROTTLE(1, ld.transpose());
         joint.setMotorCommand(ld);
         p_error_last = p_error;
         last_update = time;
