@@ -163,6 +163,10 @@ def move_all(move_style=MoveStyle.SEQUENTIALLY,
         targets_wr = np.linspace(wrist_range[0], wrist_range[1], wrist_samples)
         targets_head = np.linspace(head_range[0], head_range[1], head_samples)
 
+    if move_style == MoveStyle.RANDOMLY and not is_simulated:
+        rospy.logerr("Random movement on real robot is prohibited")
+        return
+
     for t, te, tw, th in zip(targets, targets_el, targets_wr, targets_head):
         msg.position = [t, te, tw, tw, t, te, tw, tw, th]
         msg.velocity = [0] * len(msg.name)
