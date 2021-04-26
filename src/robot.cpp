@@ -665,6 +665,7 @@ void Robot::forwardKinematics(double dt) {
     for(int i = 0; i<endeffectors.size();i++) {
         int dof_offset = endeffector_dof_offset[i];
         MatrixXd L_endeffector = L.block(0,dof_offset,number_of_cables,endeffector_number_of_dofs[i]);
+        L_endeffector = L_endeffector + 1e-2 * MatrixXd::Identity(L_endeffector.rows(), L_endeffector.cols());
         MatrixXd L_endeffector_inv = EigenExtension::Pinv(L_endeffector);
         VectorXd qd_temp =  L_endeffector_inv * Ld[i];
 
@@ -709,6 +710,7 @@ void Robot::forwardKinematics(double dt) {
             l_int[l] = motor_state[l][0];
         }
     }
+
     // respect joint limits
     for(int i=0;i<number_of_joints;i++){
         if(q[i]<q_min[i]){
@@ -720,7 +722,6 @@ void Robot::forwardKinematics(double dt) {
             qd[i] = 0;
         }
     }
-
     integration_time += dt;
     ROS_INFO_THROTTLE(10, "forward kinematics calculated for %lf s", integration_time);
 }
