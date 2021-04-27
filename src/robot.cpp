@@ -526,6 +526,30 @@ void Robot::update() {
         }
     }
 
+
+
+    //for (int i=0; i< endeffectors.size(); i++)
+    //ROS_INFO_STREAM_THROTTLE(1, "ld 0 " << Ld[0].transpose().format(fmt));
+
+    if (external_robot_state) {
+        double dt= 0.005;
+        for (int c = 0; c < number_of_cables; c++) {
+            boost::numeric::odeint::integrate(
+                    [this, i, c](const state_type &x, state_type &dxdt, double t) {
+                        dxdt[1] = 0;
+                        dxdt[0] = Ld[0][c];
+                    }, motor_state[c], integration_time, integration_time + dt, dt);
+            l[c] += motor_state[c][0];
+        }
+        integration_time += dt;
+        ROS_INFO_STREAM_THROTTLE(1, "l_int [17]: \t" << l_int[17] << " \tl_target: \t" << l_target[17] << " \tl: \t" << l[17]);//.transpose().format(fmt));
+        //ROS_INFO_STREAM_THROTTLE(1, "l_target [17] [18]: \t" << l_int[17] << "\t" << l_int[18]);//.transpose().format(fmt));
+    }
+
+//                //qd[j] = qd_temp[j-dof_offset];
+//                if (!external_robot_state)
+//                    q[j] = joint_state[j][0];
+
     /*
     ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
     ROS_INFO_STREAM_THROTTLE(5, "qdd " << qdd.transpose().format(fmt));
@@ -650,7 +674,7 @@ void Robot::update() {
     }
     ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
     // ROS_INFO_STREAM_THROTTLE(5, "qdd " << qdd.transpose().format(fmt));
-     ROS_INFO_STREAM_THROTTLE(1, "qd " << qd.transpose().format(fmt));
+    //ROS_INFO_STREAM_THROTTLE(1, "qd " << qd.transpose().format(fmt));
     // ROS_INFO_STREAM_THROTTLE(5, "q " << q.transpose().format(fmt));
     // ROS_INFO_STREAM_THROTTLE(5, "l " << l.transpose().format(fmt));
     // ROS_INFO_STREAM_THROTTLE(5, "l_target " << l_target.transpose().format(fmt));
@@ -661,6 +685,7 @@ void Robot::update() {
 
 void Robot::forwardKinematics(double dt) {
     const iDynTree::Model &model = kinDynComp.model();
+
 
     if(torque_position_controller_active) // we do the calculations only if there is a controller active
         qdd_torque_control = M.block(6, 6, number_of_dofs, number_of_dofs).inverse() * (-torques - CG);
@@ -1146,7 +1171,7 @@ void Robot::InteractiveMarkerFeedback( const visualization_msgs::InteractiveMark
 }
 
 void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg) {
-    ROS_WARN_STREAM_THROTTLE(1,"external joint states sub");
+    ROS_WARN_STREAM_THROTTLE(10,"external joint states sub");
     const iDynTree::Model &model = kinDynComp.getRobotModel();
     int i = 0;
     q_prev = q;

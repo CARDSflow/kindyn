@@ -347,7 +347,7 @@ public:
 
         for (auto body_part: body_parts) {
             if (!init_called[body_part]) {
-                ROS_WARN_STREAM_THROTTLE(1, body_part << " was not initialized. skipping");
+                ROS_WARN_STREAM_THROTTLE(10, body_part << " was not initialized. skipping");
             } else {
                 std::vector<int> motor_ids;
                 try {
