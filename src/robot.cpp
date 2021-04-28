@@ -743,6 +743,7 @@ void Robot::forwardKinematics(double dt) {
             l_int[l] = motor_state[l][0];
         }
     }
+
     // respect joint limits
     for(int i=0;i<number_of_joints;i++){
         if(q[i]<q_min[i]){
@@ -754,7 +755,6 @@ void Robot::forwardKinematics(double dt) {
             qd[i] = 0;
         }
     }
-
     integration_time += dt;
     ROS_INFO_THROTTLE(10, "forward kinematics calculated for %lf s", integration_time);
 }
