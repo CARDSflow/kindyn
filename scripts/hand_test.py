@@ -9,7 +9,7 @@ motorcmd_pub = rospy.Publisher(topic_root + "middleware/MotorCommand", MotorComm
                                queue_size=1)
 rate = rospy.Rate(100)
 
-def move_fingers(right_hand=True, targets=None):
+def move_fingers(right_hand=True, targets=None, finger = "INDEX"):
     """
     :param target: array of finger target values between 0 (open hand) and 1 (closed hand)
     right_hand: True (right hand); False (left hand)
@@ -26,74 +26,80 @@ def move_fingers(right_hand=True, targets=None):
         ids_rl = right_ids
     else:
         ids_rl = left_ids
-    targets_relevant = []
-    ids_picked = []
 
-    for j in range(len(targets)):  # check if there are 0- values -> motor is not commanded
-        if targets[j] > 0.0:
-            ids_picked.append(ids_rl[j])
-            targets_relevant.append(targets[j])
-    hand_msg.global_id = ids_picked
+    if finger == "INDEX":
+        id_picked = ids_rl[0]
+    elif finger == "MIDDLE":
+        id_picked = ids_rl[1]
+    elif finger == "RING":
+        id_picked = ids_rl[2]
+    elif finger == "THUMB":
+        id_picked = ids_rl[3]
+    elif finger == "ALL":
+        id_picked = ids_rl
+    else:
+        rospy.logwarn("Warning: No finger chosen to move")
+        id_picked = []
+        targets = []
+
+    hand_msg.global_id = id_picked
 
     # make sure values are within the limits
-    targets = clamp_values(targets_relevant, min_allowed_value=0.0, max_allowed_value=1.0)
-    hand_msg.setpoint = [i * 800 for i in targets]
+    targets = clamp_values(targets, min_allowed_value=0.0, max_allowed_value=1.0)
+    targets_scaled = [i * 800 for i in targets]
+    targets_scaled = clamp_values(targets, min_allowed_value=0.0, max_allowed_value=800.0) # 2nd security check
+    rospy.loginfo("targets_scaled: " + str(targets_scaled))
+    hand_msg.setpoint = targets_scaled  # multiply all values in the array with 800
     motorcmd_pub.publish(hand_msg)
 
 def clamp_values(targets, min_allowed_value, max_allowed_value):
     for t in range(len(targets)):
         if targets[t] < min_allowed_value:
             targets[t] = min_allowed_value
-            print("Warning: target value too low -> clamped it")
+            rospy.logwarn("Warning: target value too low -> clamped it")
         elif targets[t] > max_allowed_value:
             targets[t] = max_allowed_value
-            print("Warning: target value too high -> clamped it")
+            rospy.logwarn("Warning: target value too high -> clamped it")
     return targets
 
-
-def move_pointer_finger(right_hand=True, intervals=11):
-    ranges = [0, 1]
-
+def move_single_finger(right_hand=True, intervals=11, ranges=[0, 1], finger="INDEX"):
+    """
+    pos. values for fingers:  "INDEX" / "MIDDLE" / "RING" / "THUMB"
+    """
     for i in range(2):
         if not i % 2:
-            print(right_hand, "pointer finger close")
+            rospy.loginfo(str(right_hand) + " " + finger + " finger close")
             target_value = np.linspace(ranges[0], ranges[1], intervals)  # start with 0 (open) -> 1 (close)
             for pos in target_value:
-                targets = [0, pos, pos,
-                           pos]  # put the current pos value in a 4-element list TODO: what is the pointer finger
-                print(targets)
-                move_fingers(right_hand, targets)
+                targets = [pos]  # set the current finger goal position
+                rospy.loginfo(targets)
+                move_fingers(right_hand, targets, finger)
         else:
-            print(right_hand, "pointer finger open")
+            rospy.loginfo(str(right_hand) + " " + finger + " pointer finger open")
             target_value = np.linspace(ranges[1], ranges[0], intervals)  # start with 1 -> 0
             for pos in target_value:
-                targets = [0, pos, pos, pos]
-                print(targets)
-                move_fingers(right_hand, targets)
+                targets = [pos]
+                rospy.loginfo(targets)
+                move_fingers(right_hand, targets, finger)
 
 
-def move_each_finger_individually(right_hand=True, intervals=11):
-    ranges = [0, 1]
-
+def move_fingers_choreography(right_hand=True, intervals=11, ranges=[0, 1]):
+    # move all fingers except index finger, such that index finger is pointing somewhere
     for i in range(2):
         if not i % 2:
+            rospy.loginfo(str(right_hand) + " fingers close")
+            target_value = np.linspace(ranges[0], ranges[1], intervals)  # start with 0 -> 1
             for pos in target_value:
-                pos2 = pos - 100
-                pos3 = pos - 200
-                pos4 = pos - 300
-                targets = [pos, max(0, pos2), max(0, pos3), max(0,
-                                                                pos4)]  # put the current pos value in a 4-element list TODO: what is the pointer finger
-                move_fingers(right_hand, targets)
+                targets = [0, pos, pos, pos]  # put the current pos value in a 4-element list
+                rospy.loginfo(targets)
+                move_fingers(right_hand, targets, "ALL")
         else:
-            print(right_hand, "finger by finger open")
+            rospy.loginfo(str(right_hand) + " fingers open")
             target_value = np.linspace(ranges[1], ranges[0], intervals)  # start with 1 -> 0
             for pos in target_value:
-                pos2 = pos + 100
-                pos3 = pos + 200
-                pos4 = pos + 300
-                targets = [pos, min(800, pos2), min(800, pos3), min(800, pos4)]
-                move_fingers(right_hand, targets)
+                targets = [0, pos, pos, pos]  # put the current pos value in a 4-element list
+                rospy.loginfo(targets)
+                move_fingers(right_hand, targets, "ALL")
 
-
-move_pointer_finger(right_hand=True, intervals=11)
-# move_each_finger_individually(right_hand = True)
+#move_single_finger(right_hand=True, intervals=11, ranges = [0, 1], finger = "INDEX")
+move_fingers_choreography(right_hand=True, intervals=11, ranges=[0, 1])
