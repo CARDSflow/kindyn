@@ -1,13 +1,10 @@
-// #include "kindyn/vrpuppet.hpp"
-#include "kindyn/robot.hpp"
+#include "kindyn/vrpuppet.hpp"
 #include <thread>
 #include <roboy_middleware_msgs/MotorState.h>
 #include <roboy_middleware_msgs/MotorInfo.h>
 #include <roboy_middleware_msgs/ControlMode.h>
 #include <roboy_middleware_msgs/MotorConfigService.h>
 #include <roboy_middleware_msgs/SetStrings.h>
-#include <roboy_middleware_msgs/SystemStatus.h>
-#include <roboy_middleware_msgs/BodyPart.h>
 #include <common_utilities/CommonDefinitions.h>
 #include <roboy_control_msgs/SetControllerParameters.h>
 #include <std_srvs/Empty.h>
@@ -16,10 +13,10 @@
 
 using namespace std;
 
-class UpperBody: public cardsflow::kindyn::Robot{
+class PuppetUpperBody: public cardsflow::vrpuppet::Robot{
 private:
     ros::NodeHandlePtr nh; /// ROS nodehandle
-    ros::Publisher motor_command, system_status_pub; /// motor command publisher
+    ros::Publisher motor_command; /// motor command publisher
     ros::Subscriber motor_state_sub, motor_info_sub;
     // vector<ros::ServiceServer> init_poses;
     ros::ServiceServer init_pose;
@@ -29,13 +26,11 @@ private:
     map<int,int> pos, initial_pos;
     map<string, ros::ServiceClient> motor_config, motor_control_mode, control_mode;
     map<string, bool> motor_status_received;
-    map<int, bool> communication_established; // keeps track of communication quality for each motor
     map<int,float> l_offset, position;
     map<string, vector<float>> integral;
     boost::shared_ptr<tf::TransformListener> listener;
-    std::vector<string> body_parts = { "shoulder_right", "shoulder_left","head", "wrist_right","wrist_left"};//, "shoulder_left"};//}, "elbow_left"};
+    std::vector<string> body_parts = {"shoulder_left", "shoulder_right", "head", "wrist_left", "wrist_right"};//, "shoulder_left"};//}, "elbow_left"};
     map<string, bool> init_called;
-    boost::shared_ptr<std::thread> system_status_thread;
 
 public:
     /**
@@ -43,14 +38,13 @@ public:
      * @param urdf path to urdf
      * @param cardsflow_xml path to cardsflow xml
      */
-    UpperBody(string urdf, string cardsflow_xml, string robot_model){
+    PuppetUpperBody(string urdf, string cardsflow_xml){
 
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
-            ros::init(argc, argv, robot_model + "upper_body");
+            ros::init(argc, argv, "vrpuppet_upper_body");
         }
-
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         spinner = new ros::AsyncSpinner(0);
         spinner->start();
@@ -59,55 +53,24 @@ public:
         nh->getParam("joint_names", joint_names);
         nh->getParam("external_robot_state", external_robot_state);
         ROS_INFO_STREAM("External robot state: " << external_robot_state);
-        topic_root = "/roboy/" + robot_model + "/";
-
         init(urdf,cardsflow_xml,joint_names);
-//        listener.reset(new tf::TransformListener);
+        listener.reset(new tf::TransformListener);
         update();
 
-
-        motor_state_sub = nh->subscribe(topic_root + "middleware/MotorState",1,&UpperBody::MotorState,this);
-        motor_info_sub = nh->subscribe(topic_root + "middleware/MotorInfo",1,&UpperBody::MotorInfo,this);
+        motor_state_sub = nh->subscribe("/roboy/pinky/middleware/MotorState",1,&PuppetUpperBody::MotorState,this);
+        // motor_info_sub = nh->subscribe("/roboy/pinky/middleware/MotorInfo",1,&PuppetUpperBody::MotorInfo,this);
 
         for (auto body_part: body_parts) {
             init_called[body_part] = false;
-            motor_config[body_part] = nh->serviceClient<roboy_middleware_msgs::MotorConfigService>(topic_root + "middleware/"+body_part+"/MotorConfig");
-            control_mode[body_part] = nh->serviceClient<roboy_middleware_msgs::ControlMode>( topic_root + "middleware/ControlMode");//+body_part+"ControlMode");
+            motor_config[body_part] = nh->serviceClient<roboy_middleware_msgs::MotorConfigService>("/roboy/pinky/middleware/MotorConfig");
+            control_mode[body_part] = nh->serviceClient<roboy_middleware_msgs::ControlMode>( "/roboy/pinky/middleware/ControlMode");//+body_part+"ControlMode");
         }
 
-        motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>(topic_root + "middleware/MotorCommand",1);
-        init_pose = nh->advertiseService(topic_root + "init_pose", &UpperBody::initPose,this);
-
-        system_status_pub = nh->advertise<roboy_middleware_msgs::SystemStatus>(topic_root + "control/SystemStatus",1);
-        system_status_thread = boost::shared_ptr<std::thread>(new std::thread(&UpperBody::SystemStatusPublisher, this));
-        system_status_thread->detach();
-        nh->setParam("initialized", init_called);
+        motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/pinky/middleware/MotorCommand",1);
+        init_pose = nh->advertiseService("init_pose", &PuppetUpperBody::initPose,this);
 
         ROS_INFO_STREAM("Finished setup");
     };
-
-    ~UpperBody() {
-        if (system_status_thread->joinable())
-            system_status_thread->join();
-    }
-
-    void SystemStatusPublisher() {
-        ros::Rate rate(100);
-        while (ros::ok()) {
-            auto msg = roboy_middleware_msgs::SystemStatus();
-            msg.header.stamp = ros::Time::now();
-            auto body_part = roboy_middleware_msgs::BodyPart();
-            for (auto part: body_parts) {
-                body_part.name = part;
-                body_part.status = !init_called[part];
-                msg.body_parts.push_back(body_part);
-            }
-            system_status_pub.publish(msg);
-            rate.sleep();
-        }
-
-    }
-
 
     bool initPose(roboy_middleware_msgs::SetStrings::Request &req,
                   roboy_middleware_msgs::SetStrings::Response &res){
@@ -160,7 +123,7 @@ public:
         // if (name == "wrist_left" || name == "wrist_right") {
         //     msg.request.control_mode = DISPLACEMENT;
         // } else {
-            msg.request.control_mode = DIRECT_PWM;
+        msg.request.control_mode = DIRECT_PWM;
         // }
         // TODO: fix in plexus PWM direction for the new motorboard
         std::vector<float> set_points(motor_ids.size(), pwm);
@@ -214,8 +177,7 @@ public:
         for(int i=0;i<motor_ids.size();i++) {
             int motor_id = motor_ids[i];
             ROS_WARN_STREAM(name << " info print");
-            //l_offset[motor_id] = l[motor_id] + position[motor_id];
-            l_offset[motor_id] = position[motor_id];
+            l_offset[motor_id] = l[motor_id] + position[motor_id];
             str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l[motor_id] << "\t|\t" << l_offset[motor_id] << endl;
         }
 
@@ -299,42 +261,24 @@ public:
 
                     // TODO fix triceps
                     //if (id != 18 && body_part != "shoulder_right") {
-                        if(init_called[body_part]) {
-                            init_called[body_part] = false;
-                            nh->setParam("initialized", init_called);
-                        }
-                            
+                    if(init_called[body_part]) {
+                        init_called[body_part] = false;
+                        nh->setParam("initialized", init_called);
+                    }
+
                     //}
 
                 }
             }
 
         }
-//      int i=0;
-//      for (auto id:msg->global_id) {
-//           ROS_INFO_STREAM("ID: " << id);
-//        auto body_part = findBodyPartByMotorId(id);
-//        if (msg->communication_quality[i] > 0 && body_part != "unknown") {
-//            motor_status_received[body_part] = true;
-////            communication_established[id] = true;
-//        }
-//        else {
-////            communication_established[id] = false;
-//            ROS_WARN_THROTTLE(1, "Did not receive %s's motor status for motor with id: %d. Body part is disabled.", (body_part.c_str(), id));
-//            init_called[body_part] = false;
-//        }
-//        i++;
-//      }
     }
-
 
     /**
      * Updates the robot model
      */
     void read(){
         update();
-        //if (!external_robot_state)
-            forwardKinematics(0.001);
     };
     /**
      * Sends motor commands to the real robot
@@ -348,7 +292,7 @@ public:
 
         for (auto body_part: body_parts) {
             if (!init_called[body_part]) {
-                ROS_WARN_STREAM_THROTTLE(10, body_part << " was not initialized. skipping");
+                ROS_WARN_STREAM_THROTTLE(5, body_part << " was not initialized. skipping");
             } else {
                 std::vector<int> motor_ids;
                 try {
@@ -365,6 +309,34 @@ public:
 
                 str << endl << "motor_id | l_meter | ticks | error | integral" << endl;
                 char s[200];
+
+                for (int i = 0; i < motor_ids.size(); i++) {
+                    int motor_id = motor_ids[i];
+                    float error = l[motor_id] - l_target[motor_id];
+                    if(Ki_dl==0){
+                        integral[body_part][motor_id] = 0;
+                    }else {
+                        integral[body_part][motor_id] += Ki_dl * error;
+                        if (integral[body_part][motor_id] > integral_limit)
+                            integral[body_part][motor_id] = integral_limit;
+                        if (integral[body_part][motor_id] < -integral_limit)
+                            integral[body_part][motor_id] = -integral_limit;
+                        if (Ki_dl == 0) {
+                            integral[body_part][motor_id] = 0;
+                        }
+                    }
+//                    if (motor_id == 16 || motor_id == 17) {
+//                        Kp_dl = 0; Ki_dl = 0;
+//
+//                    }
+                    l_meter[motor_id] = (l_offset[motor_id] - l_target[motor_id]) +
+                                        Kp_dl*error + integral[body_part][motor_id];
+
+                    sprintf(s,     "%d            | %.3f   | %.1f    |  %.3f   | %.3f\n",
+                            motor_id,l_meter[motor_id],l_meter[motor_id]),error,integral[body_part][motor_id];
+                    str <<  s;
+                }
+
                 str << endl;
                 ROS_INFO_STREAM_THROTTLE(2,str.str());
 
@@ -373,49 +345,22 @@ public:
                 msg.setpoint = {};
                 for (int i = 0; i < motor_ids.size(); i++) {
                     msg.global_id.push_back(motor_ids[i]);
-//                    ROS_INFO_STREAM("motor id: " << motor_ids[i] << " l: " << l[motor_ids[i]] << " l_target: " << l_target[motor_ids[i]]);
-                    //auto setpoint = -l[motor_ids[i]] + l_offset[motor_ids[i]];
-                    auto setpoint = l_int[motor_ids[i]] + l_offset[motor_ids[i]];
-                    if (motor_ids[i]==17) {
-                        //ROS_INFO_STREAM(l_int[motor_ids[i]] << )
-                        ROS_INFO_STREAM_THROTTLE(1, setpoint);
-                    }
-                    msg.setpoint.push_back(setpoint);
-//                    msg.setpoint.push_back(l_meter[motor_ids[i]]);
+                    msg.setpoint.push_back(l_meter[motor_ids[i]]);
                 }
-                // ROS_WARN_STREAM_THROTTLE(1, msg);
                 motor_command.publish(msg);
 
+            }
         }
-     }
     };
 
 };
 
-/**
- * controller manager update thread. Here you can define how fast your controllers should run
- * @param cm pointer to the controller manager
- */
-void update(controller_manager::ControllerManager *cm) {
-    ros::Time prev_time = ros::Time::now();
-    ros::Rate rate(500); // changing this value affects the control speed of your running controllers
-    while (ros::ok()) {
-        const ros::Time time = ros::Time::now();
-        const ros::Duration period = time - prev_time;
-        cm->update(time, period);
-        prev_time = time;
-        rate.sleep();
-    }
-}
-
 int main(int argc, char *argv[]) {
-
-    string robot_model(argv[1]);
-    ROS_INFO_STREAM("launching " << robot_model);
+    ROS_INFO("Puppet Upper body starting...");
     if (!ros::isInitialized()) {
         int argc = 0;
         char **argv = NULL;
-        ros::init(argc, argv, robot_model + "_upper_body");
+        ros::init(argc, argv, "puppet_upper_body");
     }
     ros::NodeHandle nh;
     string urdf, cardsflow_xml;
@@ -429,27 +374,22 @@ int main(int argc, char *argv[]) {
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
 
-    UpperBody robot(urdf, cardsflow_xml,robot_model);
-    controller_manager::ControllerManager cm(&robot);
+    PuppetUpperBody robot(urdf, cardsflow_xml);
 
     if (nh.hasParam("simulated")) {
-      nh.getParam("simulated", robot.simulated);
+        nh.getParam("simulated", robot.simulated);
     }
 
-    thread update_thread(update, &cm);
-    update_thread.detach();
-
-    ros::Rate rate(200);
+    ros::Rate rate(30);
     while(ros::ok()){
         robot.read();
         if (!robot.simulated)
-          robot.write();
+            robot.write();
         ros::spinOnce();
-        rate.sleep();
+//        rate.sleep();
     }
 
     ROS_INFO("TERMINATING...");
-    update_thread.join();
 
     return 0;
 }

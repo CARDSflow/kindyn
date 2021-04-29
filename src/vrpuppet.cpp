@@ -11,14 +11,14 @@ Robot::Robot() {
     nh = ros::NodeHandlePtr(new ros::NodeHandle);
     spinner.reset(new ros::AsyncSpinner(0));
     spinner->start();
-    robot_state_pub = nh->advertise<geometry_msgs::PoseStamped>("/robot_state", 1);
-    tendon_state_pub = nh->advertise<roboy_simulation_msgs::Tendon>("/tendon_state", 1);
+    robot_state_pub = nh->advertise<geometry_msgs::PoseStamped>("/roboy/pinky/control/robot_state", 1);
+    tendon_state_pub = nh->advertise<roboy_simulation_msgs::Tendon>("/roboy/pinky/control/tendon_state", 1);
 
-    joint_state_pub = nh->advertise<roboy_simulation_msgs::JointState>("/rviz_joint_states", 1);
-    cardsflow_joint_states_pub = nh->advertise<sensor_msgs::JointState>("/cardsflow_joint_states", 1);
-    robot_state_target_pub = nh->advertise<geometry_msgs::PoseStamped>("/robot_state_target", 1);
-    tendon_state_target_pub = nh->advertise<roboy_simulation_msgs::Tendon>("/tendon_state_target", 1);
-    joint_state_target_pub = nh->advertise<roboy_simulation_msgs::JointState>("/joint_state_target", 1);
+    joint_state_pub = nh->advertise<roboy_simulation_msgs::JointState>("/roboy/pinky/control/rviz_joint_states", 1);
+    cardsflow_joint_states_pub = nh->advertise<sensor_msgs::JointState>("/roboy/pinky/control/cardsflow_joint_states", 1);
+    robot_state_target_pub = nh->advertise<geometry_msgs::PoseStamped>("/roboy/pinky/control/robot_state_target", 1);
+    tendon_state_target_pub = nh->advertise<roboy_simulation_msgs::Tendon>("/roboy/pinky/control/tendon_state_target", 1);
+    joint_state_target_pub = nh->advertise<roboy_simulation_msgs::JointState>("/roboy/pinky/control/joint_state_target", 1);
     fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
     nh->setParam("vr_puppet",true);
 }
@@ -314,9 +314,9 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
 
     if (this->external_robot_state) {
         ROS_WARN("Subscribing to external joint state");
-        joint_state_sub = nh->subscribe("/external_joint_states", 100, &Robot::JointState, this);
+        joint_state_sub = nh->subscribe("/joints", 100, &Robot::JointState, this);
     }
-    joint_target_sub = nh->subscribe("/joint_targets", 100, &Robot::JointTarget, this);
+    joint_target_sub = nh->subscribe("/roboy/pinky/control/joint_targets", 100, &Robot::JointTarget, this);
     floating_base_sub = nh->subscribe("/floating_base", 100, &Robot::FloatingBase, this);
     ik_srv = nh->advertiseService("/ik", &Robot::InverseKinematicsService, this);
     execute_ik_srv = nh->advertiseService("/execute_ik",  &Robot::ExecuteIK, this);
@@ -872,24 +872,30 @@ bool Robot::GetLinkPoseService(roboy_control_msgs::GetLinkPose::Request &req,
 
 void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg) {
 
-    // if (initialized) {
-      const iDynTree::Model &model = kinDynComp.getRobotModel();
-      int i = 0;
+    ROS_WARN_STREAM_THROTTLE(10,"external joint states sub");
+    const iDynTree::Model &model = kinDynComp.getRobotModel();
+    int i = 0;
+    //q_prev = q;
+    //time_prev = ros::Time::now();
+    for (string joint:msg->name) {
+        if (std::count(joint_names.begin(), joint_names.end(), joint)) {
+            int joint_index = model.getJointIndex(joint);
+            if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
 
-      for (string joint:msg->name) {
-          float offset = 0;
-          if(joint=="elbow_right")
-            nh->getParam("elbow_right_offset", offset);
-          int joint_index = model.getJointIndex(joint);
-          if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
-              q(joint_index) = msg->position[i]+offset;
-              qd(joint_index) = msg->velocity[i];
-          } else {
-              ROS_WARN_THROTTLE(5.0, "joint %s not found in model", joint.c_str());
-          }
-          i++;
-      }
-    // }
+                //auto delta = (ros::Time::now().toSec()-time_prev.toSec());
+
+                q(joint_index) = remainder(msg->position[i], 2.0 * M_PI); //ra.Update(remainder(msg->position[i], 2.0 * M_PI));
+                //qd(joint_index) = (q(joint_index)-q_prev(joint_index))/delta;
+//                qd(joint_index) = msg->velocity[i];
+                //if (joint=="elbow_left_axis0")
+                //    ROS_INFO_STREAM(remainder(msg->position[i], 2.0 * M_PI) << "\tdelta: " << delta.toSec());
+
+            } else {
+                ROS_ERROR("joint %s not found in model", joint.c_str());
+            }
+        }
+        i++;
+    }
 
 }
 

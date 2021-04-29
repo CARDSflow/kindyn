@@ -55,7 +55,7 @@
 
     <node name="$(arg robot_model)_robot_controller"
          pkg="kindyn"
-         type="$(arg robot_name)"
+         type="puppet_$(arg robot_name)"
          args="$(arg robot_model)"
          respawn="false"
          output="screen"

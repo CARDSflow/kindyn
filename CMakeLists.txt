@@ -128,7 +128,11 @@ target_link_libraries(test_idyntree ${iDynTree_LIBRARIES} ${catkin_LIBRARIES})
 
 # upper_body
 add_executable( upper_body src/robots/upper_body.cpp)
+
 target_link_libraries(upper_body ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
+
+add_executable(puppet_upper_body src/robots/vrpuppet_upper_body.cpp)
+target_link_libraries(puppet_upper_body ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
 
 #==============================================================================
 # Installation

@@ -272,7 +272,7 @@ namespace cardsflow {
             VectorXd cable_forces; /// the cable forces in Newton
             vector<VectorXd> ld; /// tendon length changes for each controller
             MatrixXd L, L_t; /// L and -L^T
-            ros::Time time_prev;
+            vector<ros::Time> time_prev;
             MatrixXd S, P, V, W; /// matrices of cable model
             vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments
             bool simulated = false; /// indicates if the robots is simulated or hardware is used
