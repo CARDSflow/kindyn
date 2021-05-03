@@ -20,21 +20,22 @@ def move_fingers(right_hand=True, targets=None, finger = "INDEX"):
         targets = [0, 0, 0, 0]
 
     # just take the ids with actual values (>0)
-    right_ids = [42, 42, 44, 45]
-    left_ids = [38, 39, 40, 41]
+
+    right_ids = [42, 43, 44, 45] #42: Thumb; #44: MIDDLE ;#43 no movement; #45: no movement
+    left_ids = [40, 39, 38, 41] # 40: THUMB; ; #39: Ring; #38: MIDDLE; #41: INDEX;
     if right_hand:
         ids_rl = right_ids
     else:
         ids_rl = left_ids
 
     if finger == "INDEX":
-        id_picked = ids_rl[0]
-    elif finger == "MIDDLE":
-        id_picked = ids_rl[1]
-    elif finger == "RING":
-        id_picked = ids_rl[2]
-    elif finger == "THUMB":
         id_picked = ids_rl[3]
+    elif finger == "MIDDLE":
+        id_picked = ids_rl[2]
+    elif finger == "RING":
+        id_picked = ids_rl[1]
+    elif finger == "THUMB":
+        id_picked = ids_rl[0]
     elif finger == "ALL":
         id_picked = ids_rl
     else:
@@ -42,12 +43,12 @@ def move_fingers(right_hand=True, targets=None, finger = "INDEX"):
         id_picked = []
         targets = []
 
-    hand_msg.global_id = id_picked
+    hand_msg.global_id = id_picked # TODO fix parenthensis
 
     # make sure values are within the limits
     targets = clamp_values(targets, min_allowed_value=0.0, max_allowed_value=1.0)
     targets_scaled = [i * 800 for i in targets]
-    targets_scaled = clamp_values(targets, min_allowed_value=0.0, max_allowed_value=800.0) # 2nd security check
+    targets_scaled = clamp_values(targets_scaled, min_allowed_value=0.0, max_allowed_value=800.0) # 2nd security check
     rospy.loginfo("targets_scaled: " + str(targets_scaled))
     hand_msg.setpoint = targets_scaled  # multiply all values in the array with 800
     motorcmd_pub.publish(hand_msg)
@@ -62,7 +63,7 @@ def clamp_values(targets, min_allowed_value, max_allowed_value):
             rospy.logwarn("Warning: target value too high -> clamped it")
     return targets
 
-def move_single_finger(right_hand=True, intervals=11, ranges=[0, 1], finger="INDEX"):
+def move_single_finger(right_hand=True, intervals=101, ranges=[0, 1], finger="INDEX"):
     """
     pos. values for fingers:  "INDEX" / "MIDDLE" / "RING" / "THUMB"
     """
@@ -83,23 +84,27 @@ def move_single_finger(right_hand=True, intervals=11, ranges=[0, 1], finger="IND
                 move_fingers(right_hand, targets, finger)
 
 
-def move_fingers_choreography(right_hand=True, intervals=11, ranges=[0, 1]):
+def move_fingers_choreography(right_hand=True, intervals=101, ranges=[0, 1]):
     # move all fingers except index finger, such that index finger is pointing somewhere
     for i in range(2):
         if not i % 2:
             rospy.loginfo(str(right_hand) + " fingers close")
             target_value = np.linspace(ranges[0], ranges[1], intervals)  # start with 0 -> 1
             for pos in target_value:
-                targets = [0, pos, pos, pos]  # put the current pos value in a 4-element list
+                targets = [pos, pos, pos, 0]  # put the current pos value in a 4-element list
                 rospy.loginfo(targets)
                 move_fingers(right_hand, targets, "ALL")
         else:
             rospy.loginfo(str(right_hand) + " fingers open")
             target_value = np.linspace(ranges[1], ranges[0], intervals)  # start with 1 -> 0
             for pos in target_value:
-                targets = [0, pos, pos, pos]  # put the current pos value in a 4-element list
+                targets = [pos, pos, pos, 0]  # put the current pos value in a 4-element list
                 rospy.loginfo(targets)
                 move_fingers(right_hand, targets, "ALL")
 
-#move_single_finger(right_hand=True, intervals=11, ranges = [0, 1], finger = "INDEX")
-move_fingers_choreography(right_hand=True, intervals=11, ranges=[0, 1])
+while motorcmd_pub.get_num_connections() == 0:
+    rospy.loginfo("Waiting for a connection")
+    rospy.sleep(1)
+
+#move_single_finger(right_hand=True, intervals=101, ranges = [0, 1], finger = "RING")
+move_fingers_choreography(right_hand=False, intervals=101, ranges=[0, 1])
