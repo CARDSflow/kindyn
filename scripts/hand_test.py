@@ -21,8 +21,8 @@ def move_fingers(right_hand=True, targets=None, finger = "INDEX"):
 
     # just take the ids with actual values (>0)
 
-    right_ids = [42, 43, 44, 45] #42: Thumb; #44: MIDDLE ;#43 no movement; #45: no movement
-    left_ids = [40, 39, 38, 41] # 40: THUMB; ; #39: Ring; #38: MIDDLE; #41: INDEX;
+    right_ids = [42, 45, 44, 43] #42: Thumb; #45: RING; #44: MIDDLE; #43 INDEX;
+    left_ids = [40, 39, 38, 41] # 40: THUMB; #39: RING; #38: MIDDLE; #41: INDEX;
     if right_hand:
         ids_rl = right_ids
     else:
