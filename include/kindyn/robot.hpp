@@ -132,6 +132,7 @@ namespace cardsflow {
             };
 
             void updateSubscriptions();
+            int GetJointIdByName(string joint);
         private:
 
             /**
@@ -214,6 +215,7 @@ namespace cardsflow {
 
             void ZeroJoints(const roboy_control_msgs::StringsPtr &msg);
             bool FreezeService(std_srvs::Trigger::Request &req,std_srvs::Trigger::Response &res);
+
 
             ros::NodeHandlePtr nh; /// ROS node handle
             boost::shared_ptr <ros::AsyncSpinner> spinner; /// async ROS spinner

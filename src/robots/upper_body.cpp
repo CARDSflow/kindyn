@@ -2,6 +2,7 @@
 #include "kindyn/robot.hpp"
 #include <thread>
 #include <roboy_middleware_msgs/MotorState.h>
+#include <roboy_middleware_msgs/RoboyState.h>
 #include <roboy_middleware_msgs/MotorInfo.h>
 #include <roboy_middleware_msgs/ControlMode.h>
 #include <roboy_middleware_msgs/MotorConfigService.h>
@@ -20,7 +21,7 @@ class UpperBody: public cardsflow::kindyn::Robot{
 private:
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command, system_status_pub; /// motor command publisher
-    ros::Subscriber motor_state_sub, motor_info_sub;
+    ros::Subscriber motor_state_sub, motor_info_sub, roboy_state_sub;
     // vector<ros::ServiceServer> init_poses;
     ros::ServiceServer init_pose;
     ros::AsyncSpinner *spinner;
@@ -36,6 +37,7 @@ private:
     std::vector<string> body_parts = { "shoulder_right", "shoulder_left","head", "wrist_right","wrist_left"};//, "shoulder_left"};//}, "elbow_left"};
     map<string, bool> init_called;
     boost::shared_ptr<std::thread> system_status_thread;
+    ros::Time prev_roboy_state_time;
 
 public:
     /**
@@ -67,6 +69,7 @@ public:
 
 
         motor_state_sub = nh->subscribe(topic_root + "middleware/MotorState",1,&UpperBody::MotorState,this);
+        roboy_state_sub = nh->subscribe(topic_root + "middleware/RoboyState",1,&UpperBody::RoboyState,this);
         motor_info_sub = nh->subscribe(topic_root + "middleware/MotorInfo",1,&UpperBody::MotorInfo,this);
 
         for (auto body_part: body_parts) {
@@ -282,6 +285,10 @@ public:
         }
     }
 
+    void RoboyState(const roboy_middleware_msgs::RoboyState::ConstPtr &msg) {
+        prev_roboy_state_time = msg->header.stamp;
+    }
+
     void MotorInfo(const roboy_middleware_msgs::MotorInfo::ConstPtr &msg){
         for (int i=0;i<msg->global_id.size();i++) {
             auto id = int(msg->global_id[i]);
@@ -301,6 +308,31 @@ public:
                         if(init_called[body_part]) {
                             init_called[body_part] = false;
                             nh->setParam("initialized", init_called);
+
+                            // set respecitve body part joint targets to 0
+                            string endeffector;
+                            nh->getParam(body_part+"/endeffector", endeffector);
+                            if ( !endeffector.empty() ) {
+                                vector<string> ik_joints;
+                                nh->getParam((endeffector + "/joints"), ik_joints);
+                                if (ik_joints.empty()) {
+                                    ROS_ERROR(
+                                            "endeffector %s has no joints defined, check your endeffector.yaml or parameter server.  skipping...",
+                                            body_part.c_str());
+                                }
+                                else {
+
+                                    for (auto joint: ik_joints) {
+                                        int joint_index = GetJointIdByName(joint);
+                                        if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
+                                            q_target(joint_index) = 0;
+                                            ROS_WARN_STREAM("Set target 0 for " << joint);
+                                        }
+                                    }
+
+                                }
+                            }
+
                         }
                             
                     //}
@@ -339,6 +371,19 @@ public:
      * Sends motor commands to the real robot
      */
     void write(){
+
+        // check if plexus is alive
+        auto diff = ros::Time::now() - prev_roboy_state_time;
+        if (diff.toSec() > 1) {
+            for (auto body_part: body_parts) {
+                init_called[body_part] = false;
+                nh->setParam("initialized", init_called);
+                // reset the joint targets
+                q_target.setZero();
+            }
+            ROS_ERROR_STREAM_THROTTLE(5, "No messages from roboy_plexus. Will not be sending MotorCommand...");
+            return;
+        }
 
         float Kp_dl = 0, Ki_dl = 0, Kp_disp = 0, integral_limit = 0;
         nh->getParam("Kp_dl",Kp_dl);

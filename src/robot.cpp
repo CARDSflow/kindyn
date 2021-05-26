@@ -621,6 +621,7 @@ void Robot::update() {
             roboy_simulation_msgs::JointState msg;
             msg.names = joint_names;
             cf_msg.name = joint_names;
+            cf_msg.header.stamp = ros::Time::now();
             for (int i = 1; i < number_of_links; i++) {
                 Matrix4d pose = iDynTree::toEigen(kinDynComp.getWorldTransform(i).asHomogeneousTransform());
                 Vector3d axis;
@@ -631,6 +632,7 @@ void Robot::update() {
                 msg.torque.push_back(torques[i - 1]);
                 msg.q.push_back(q[i-1]);
                 msg.qd.push_back(qd[i-1]);
+
 
                 cf_msg.position.push_back(q[i-1]);
                 cf_msg.velocity.push_back(qd[i-1]);
@@ -1263,6 +1265,17 @@ void Robot::MoveEndEffector(const roboy_control_msgs::MoveEndEffectorGoalConstPt
         ROS_WARN("MoveEndEffector: FAILED");
         moveEndEffector_as[goal->endeffector]->setAborted(result, "failed");
     }
+}
+
+int Robot::GetJointIdByName(string joint) {
+    const iDynTree::Model &model = kinDynComp.getRobotModel();
+    int joint_index = model.getJointIndex(joint);
+    if (joint_index == iDynTree::JOINT_INVALID_INDEX) {
+        ROS_WARN_THROTTLE(5.0, "joint %s not found in model", joint.c_str());
+
+    }
+    return joint_index;
+
 }
 
 bool Robot::parseViapoints(const string &viapoints_file_path, vector<Cable> &cables) {
