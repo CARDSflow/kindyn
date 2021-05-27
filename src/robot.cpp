@@ -535,37 +535,37 @@ void Robot::update() {
     //for (int i=0; i< endeffectors.size(); i++)
     //ROS_INFO_STREAM_THROTTLE(1, "ld 0 " << Ld[0].transpose().format(fmt));
 
-//    if (external_robot_state) {
-//        double dt= 0.005;
-////        for (int c = 0; c < number_of_cables; c++) {
-////            boost::numeric::odeint::integrate(
-////                    [this, i, c](const state_type &x, state_type &dxdt, double t) {
-////                        dxdt[1] = 0;
-////                        dxdt[0] = Ld[0][c];
-////                    }, motor_state[c], integration_time, integration_time + dt, dt);
-////            l_int[c] = motor_state[c][0];
-////        }
-////
-//
-//        //ROS_INFO_STREAM_THROTTLE(1, "l_target [17] [18]: \t" << l_int[17] << "\t" << l_int[18]);//.transpose().format(fmt));
-//        for(int i = 0; i<endeffectors.size();i++) {
-//            int dof_offset = endeffector_dof_offset[i];
-//            for (int l = 0; l < number_of_cables; l++) {
-//                boost::numeric::odeint::integrate(
-//                        [this, i, l](const state_type &x, state_type &dxdt, double t) {
-//                            dxdt[1] = 0;
-//                            dxdt[0] = Ld[i][l];
-//                        }, motor_state[l], integration_time, integration_time + dt, dt);
-//                l_int[l] = motor_state[l][0];
-//
-//            }
-//            break;
+    if (external_robot_state) {
+        double dt= 0.005;
+//        for (int c = 0; c < number_of_cables; c++) {
+//            boost::numeric::odeint::integrate(
+//                    [this, i, c](const state_type &x, state_type &dxdt, double t) {
+//                        dxdt[1] = 0;
+//                        dxdt[0] = Ld[0][c];
+//                    }, motor_state[c], integration_time, integration_time + dt, dt);
+//            l_int[c] = motor_state[c][0];
 //        }
-//        ROS_INFO_STREAM_THROTTLE(1, "Ld[0][17]: \t" << Ld[0][17] << "\tmotor_state[0]: \t" << motor_state[17][0] << "\tmotor_state[1]: \t" << motor_state[17][1]);
-//        ROS_INFO_STREAM_THROTTLE(1, "l_int [17]: \t" << l_int[17] << " \tl_target: \t" << l_target[17] << " \tl: \t" << l[17]);//.transpose().format(fmt));
-//        integration_time += dt;
 //
-//    }
+
+        //ROS_INFO_STREAM_THROTTLE(1, "l_target [17] [18]: \t" << l_int[17] << "\t" << l_int[18]);//.transpose().format(fmt));
+        for(int i = 0; i<endeffectors.size();i++) {
+            int dof_offset = endeffector_dof_offset[i];
+            for (int l = 0; l < number_of_cables; l++) {
+                boost::numeric::odeint::integrate(
+                        [this, i, l](const state_type &x, state_type &dxdt, double t) {
+                            dxdt[1] = 0;
+                            dxdt[0] = Ld[i][l];
+                        }, motor_state[l], integration_time, integration_time + dt, dt);
+                l_int[l] = motor_state[l][0];
+
+            }
+            break;
+        }
+        ROS_INFO_STREAM_THROTTLE(1, "Ld[0][17]: \t" << Ld[0][17] << "\tmotor_state[0]: \t" << motor_state[17][0] << "\tmotor_state[1]: \t" << motor_state[17][1]);
+        ROS_INFO_STREAM_THROTTLE(1, "l_int [17]: \t" << l_int[17] << " \tl_target: \t" << l_target[17] << " \tl: \t" << l[17]);//.transpose().format(fmt));
+        integration_time += dt;
+
+    }
 
 //                //qd[j] = qd_temp[j-dof_offset];
 //                if (!external_robot_state)
@@ -763,7 +763,7 @@ void Robot::forwardKinematics(double dt) {
                     }, motor_state[l], integration_time, integration_time + dt, dt);
             l_int[l] = motor_state[l][0];
         }
-        ROS_INFO_STREAM_THROTTLE(1, "fk l_int[17: " << l_int[17]);
+        ROS_INFO_STREAM_THROTTLE(1, "fk l_int[17]: " << l_int[17]);
     }
 
     // respect joint limits
@@ -1193,7 +1193,7 @@ void Robot::InteractiveMarkerFeedback( const visualization_msgs::InteractiveMark
 }
 
 void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg) {
-    ROS_WARN_STREAM_THROTTLE(10,"external joint states sub");
+    ROS_WARN_STREAM_THROTTLE(1,"external joint states sub");
     const iDynTree::Model &model = kinDynComp.getRobotModel();
     int i = 0;
     q_prev = q;

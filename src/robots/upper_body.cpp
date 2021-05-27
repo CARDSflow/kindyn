@@ -214,8 +214,8 @@ public:
         for(int i=0;i<motor_ids.size();i++) {
             int motor_id = motor_ids[i];
             ROS_WARN_STREAM(name << " info print");
-            //l_offset[motor_id] = l[motor_id] + position[motor_id];
-            l_offset[motor_id] = position[motor_id];
+            l_offset[motor_id] = l[motor_id] + position[motor_id];
+            //l_offset[motor_id] = position[motor_id];
             str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l[motor_id] << "\t|\t" << l_offset[motor_id] << endl;
         }
 
@@ -333,7 +333,7 @@ public:
      */
     void read(){
         update();
-        //if (!external_robot_state)
+        if (!external_robot_state)
             forwardKinematics(0.001);
     };
     /**
@@ -375,16 +375,16 @@ public:
                     msg.global_id.push_back(motor_ids[i]);
 //                    ROS_INFO_STREAM("motor id: " << motor_ids[i] << " l: " << l[motor_ids[i]] << " l_target: " << l_target[motor_ids[i]]);
                     //auto setpoint = -l[motor_ids[i]] + l_offset[motor_ids[i]];
-                    auto setpoint = l_int[motor_ids[i]] + l_offset[motor_ids[i]];
+                    auto setpoint = -l_int[motor_ids[i]] + l_offset[motor_ids[i]];
                     if (motor_ids[i]==17) {
                         //ROS_INFO_STREAM(l_int[motor_ids[i]] << )
-                        ROS_INFO_STREAM_THROTTLE(1, setpoint);
+                        ROS_INFO_STREAM_THROTTLE(1, "setpoint " << setpoint << " | position " <<  position[motor_ids[i]]);
                     }
                     msg.setpoint.push_back(setpoint);
 //                    msg.setpoint.push_back(l_meter[motor_ids[i]]);
                 }
                 // ROS_WARN_STREAM_THROTTLE(1, msg);
-                motor_command.publish(msg);
+                //motor_command.publish(msg);
 
         }
      }
