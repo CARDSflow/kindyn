@@ -48,7 +48,6 @@ def move_fingers(right_hand=True, targets=None, finger = "INDEX"):
     # make sure values are within the limits
     targets = clamp_values(targets, min_allowed_value=0.0, max_allowed_value=1.0)
     targets_scaled = [i * 800 for i in targets]
-    targets_scaled = clamp_values(targets_scaled, min_allowed_value=0.0, max_allowed_value=800.0) # 2nd security check
     rospy.loginfo("targets_scaled: " + str(targets_scaled))
     hand_msg.setpoint = targets_scaled  # multiply all values in the array with 800
     motorcmd_pub.publish(hand_msg)
