@@ -112,6 +112,10 @@ namespace cardsflow {
              */
             void init(string urdf_file_path, string viapoints_file_path, vector<string> joint_names);
             /**
+             * Tendon update
+             */
+            void tendon_update(bool is_external);
+            /**
              * Updates the model
              */
             void update();
@@ -219,7 +223,7 @@ namespace cardsflow {
 
             ros::NodeHandlePtr nh; /// ROS node handle
             boost::shared_ptr <ros::AsyncSpinner> spinner; /// async ROS spinner
-            ros::Publisher robot_state_pub, tendon_state_pub, joint_state_pub, cardsflow_joint_states_pub; /// ROS robot pose and tendon publisher
+            ros::Publisher robot_state_pub, tendon_state_pub, tendon_ext_state_pub, joint_state_pub, cardsflow_joint_states_pub; /// ROS robot pose and tendon publisher
             ros::Publisher robot_state_target_pub, tendon_state_target_pub, joint_state_target_pub; /// target publisher
             ros::Subscriber controller_type_sub, joint_state_sub, floating_base_sub, interactive_marker_sub, joint_target_sub, zero_joints_sub; /// ROS subscribers
             ros::ServiceServer ik_srv, ik_two_frames_srv, fk_srv, freeze_srv;
@@ -259,15 +263,17 @@ namespace cardsflow {
             size_t number_of_links = 0; /// number of links of the whole robot
             Matrix4d world_H_base; /// floating base 6-DoF pose
             vector<Matrix4d> world_to_link_transform, link_to_world_transform, frame_transform;
+            vector<Matrix4d> world_to_link_transform_ext, link_to_world_transform_ext, frame_transform_ext;
             Eigen::Matrix<double,6,1> baseVel; /// the velocity of the floating base
             Vector3d gravity; /// gravity vector (default: (0,0,-9.81)
             MatrixXd M; /// The Mass matrix of the robot
             VectorXd CG; /// The Coriolis+Gravity term of the robot
             VectorXd q, qd, qdd; /// joint positon, velocity, acceleration
+            VectorXd q_ext, qd_ext, qdd_ext; /// external joint positon, velocity, acceleration
             VectorXd q_min, q_max; /// joint limits
             VectorXd q_target, qd_target, qdd_target; /// joint positon, velocity, acceleration targets
             VectorXd q_target_prev, qd_target_prev, qdd_target_prev; /// joint positon, velocity, acceleration targets
-            VectorXd l_int, l, l_target; /// tendon length and length change
+            VectorXd l_int, l, l_target, l_ext; /// tendon length and length change
             vector<VectorXd> Ld; // tendon velocity per endeffector
             VectorXd torques; /// joint torques
             VectorXd cable_forces; /// the cable forces in Newton
@@ -288,7 +294,7 @@ namespace cardsflow {
             bool torque_position_controller_active = false, force_position_controller_active = false, cable_length_controller_active = false;
             VectorXd qdd_torque_control, qdd_force_control;
 
-            vector<Cable> cables; /// all cables of the robot
+            vector<Cable> cables, cables_ext; /// all cables of the robot
             vector <VectorXd> joint_axis; /// joint axis of each joint
             vector <string> link_names, joint_names; /// link and joint names of the robot
             map<string, int> link_index, joint_index; /// link and joint indices of the robot

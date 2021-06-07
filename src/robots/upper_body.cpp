@@ -9,6 +9,7 @@
 #include <roboy_middleware_msgs/SetStrings.h>
 #include <roboy_middleware_msgs/SystemStatus.h>
 #include <roboy_middleware_msgs/BodyPart.h>
+#include <roboy_simulation_msgs/Tendon.h>
 #include <common_utilities/CommonDefinitions.h>
 #include <roboy_control_msgs/SetControllerParameters.h>
 #include <std_srvs/Empty.h>
@@ -20,7 +21,7 @@ using namespace std;
 class UpperBody: public cardsflow::kindyn::Robot{
 private:
     ros::NodeHandlePtr nh; /// ROS nodehandle
-    ros::Publisher motor_command, system_status_pub; /// motor command publisher
+    ros::Publisher motor_command, system_status_pub, tendon_motor_pub; /// motor command publisher
     ros::Subscriber motor_state_sub, motor_info_sub, roboy_state_sub;
     // vector<ros::ServiceServer> init_poses;
     ros::ServiceServer init_pose;
@@ -31,7 +32,7 @@ private:
     map<string, ros::ServiceClient> motor_config, motor_control_mode, control_mode;
     map<string, bool> motor_status_received;
     map<int, bool> communication_established; // keeps track of communication quality for each motor
-    map<int,float> l_offset, position;
+    map<int,float> l_offset, position, tendon_length;
     map<string, vector<float>> integral;
     boost::shared_ptr<tf::TransformListener> listener;
     std::vector<string> body_parts = { "shoulder_right", "shoulder_left","head", "wrist_right","wrist_left"};//, "shoulder_left"};//}, "elbow_left"};
@@ -84,6 +85,9 @@ public:
         system_status_pub = nh->advertise<roboy_middleware_msgs::SystemStatus>(topic_root + "control/SystemStatus",1);
         system_status_thread = boost::shared_ptr<std::thread>(new std::thread(&UpperBody::SystemStatusPublisher, this));
         system_status_thread->detach();
+
+        tendon_motor_pub = nh->advertise<roboy_simulation_msgs::Tendon>(topic_root + "control/tendon_state_motor", 1);
+
         nh->setParam("initialized", init_called);
 
         ROS_INFO_STREAM("Finished setup");
@@ -277,12 +281,19 @@ public:
     }
 
     void MotorState(const roboy_middleware_msgs::MotorState::ConstPtr &msg){
+
         int i=0;
         for (auto id:msg->global_id) {
-            // ROS_INFO_STREAM("ID: " << id);
             position[id] = msg->encoder0_pos[i];
+            tendon_length[id] = l_offset[id] - position[id];
             i++;
         }
+
+        roboy_simulation_msgs::Tendon tendon_msg;
+        for (int j=0; j < tendon_length.size(); j++){
+            tendon_msg.l.push_back(tendon_length[j]);
+        }
+//        tendon_motor_pub.publish(tendon_msg);
     }
 
     void RoboyState(const roboy_middleware_msgs::RoboyState::ConstPtr &msg) {
@@ -364,8 +375,9 @@ public:
      */
     void read(){
         update();
-        if (!external_robot_state)
-            forwardKinematics(0.005);
+        forwardKinematics(0.005);
+//        if (!external_robot_state)
+//            forwardKinematics(0.005);
     };
     /**
      * Sends motor commands to the real robot
