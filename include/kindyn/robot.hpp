@@ -29,6 +29,8 @@
 
 #pragma once
 
+#include "kindyn/filter/joints_kalmanfilter.h"
+
 #include <ros/ros.h>
 #include <Eigen/Core>
 #include <Eigen/Dense>
@@ -84,6 +86,7 @@
 #include <common_utilities/rviz_visualization.hpp>
 #include <visualization_msgs/InteractiveMarkerFeedback.h>
 #include <thread>
+
 
 using namespace qpOASES;
 using namespace std;
@@ -223,7 +226,7 @@ namespace cardsflow {
 
             ros::NodeHandlePtr nh; /// ROS node handle
             boost::shared_ptr <ros::AsyncSpinner> spinner; /// async ROS spinner
-            ros::Publisher robot_state_pub, tendon_state_pub, tendon_ext_state_pub, joint_state_pub, cardsflow_joint_states_pub; /// ROS robot pose and tendon publisher
+            ros::Publisher robot_state_pub, tendon_state_pub, tendon_ext_state_pub, joint_state_pub, cardsflow_joint_states_pub, ekf_joint_states_pub; /// ROS robot pose and tendon publisher
             ros::Publisher robot_state_target_pub, tendon_state_target_pub, joint_state_target_pub; /// target publisher
             ros::Subscriber controller_type_sub, joint_state_sub, floating_base_sub, interactive_marker_sub, joint_target_sub, zero_joints_sub; /// ROS subscribers
             ros::ServiceServer ik_srv, ik_two_frames_srv, fk_srv, freeze_srv;
@@ -248,6 +251,20 @@ namespace cardsflow {
                 iDynTree::VectorDynSize jointVel;
                 iDynTree::Vector3       gravity;
             }robotstate;
+            struct iDynTreeRobotStateExt
+            {
+                void resize(int nrOfInternalDOFs)
+                {
+                    jointPos.resize(nrOfInternalDOFs);
+                    jointVel.resize(nrOfInternalDOFs);
+                }
+
+                iDynTree::Transform world_H_base;
+                iDynTree::VectorDynSize jointPos;
+                iDynTree::Twist         baseVel;
+                iDynTree::VectorDynSize jointVel;
+                iDynTree::Vector3       gravity;
+            }robotstate_ext;
         public:
             /**
              * Integrates the robot equation of motions using odeint
@@ -270,6 +287,7 @@ namespace cardsflow {
             VectorXd CG; /// The Coriolis+Gravity term of the robot
             VectorXd q, qd, qdd; /// joint positon, velocity, acceleration
             VectorXd q_ext, qd_ext, qdd_ext; /// external joint positon, velocity, acceleration
+            VectorXd q_ekf, qd_ekf; /// ekf joint positon, velocity, acceleration
             VectorXd q_min, q_max; /// joint limits
             VectorXd q_target, qd_target, qdd_target; /// joint positon, velocity, acceleration targets
             VectorXd q_target_prev, qd_target_prev, qdd_target_prev; /// joint positon, velocity, acceleration targets
@@ -317,6 +335,8 @@ namespace cardsflow {
             hardware_interface::CardsflowCommandInterface cardsflow_command_interface; /// cardsflow command interface
             bool first_update = true;
             bool external_robot_target = false;
+
+            BFL::KinDynEKF *ekf_;
         };
     }
 }

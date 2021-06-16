@@ -35,6 +35,7 @@ void Robot::updateSubscriptions() {
 
     joint_state_pub = nh->advertise<roboy_simulation_msgs::JointState>(topic_root+"control/rviz_joint_states", 1);
     cardsflow_joint_states_pub = nh->advertise<sensor_msgs::JointState>(topic_root+"control/cardsflow_joint_states", 1);
+    ekf_joint_states_pub = nh->advertise<sensor_msgs::JointState>(topic_root+"control/ekf_joint_states", 1);
 
     robot_state_target_pub = nh->advertise<geometry_msgs::PoseStamped>(topic_root+"control/robot_state_target", 1);
     tendon_state_target_pub = nh->advertise<roboy_simulation_msgs::Tendon>(topic_root+"control/tendon_state_target", 1);
@@ -46,7 +47,7 @@ void Robot::updateSubscriptions() {
 
     if (this->external_robot_state) {
         ROS_WARN("Subscribing to external joint state");
-        joint_state_sub = nh->subscribe(topic_root+"/external_joint_states", 100, &Robot::JointState, this);
+        joint_state_sub = nh->subscribe(topic_root+"/sensing/external_joint_states", 100, &Robot::JointState, this);
     }
 }
 
@@ -126,6 +127,8 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     q_ext.resize(number_of_dofs);
     qd_ext.resize(number_of_dofs);
     qdd_ext.resize(number_of_dofs);
+    q_ekf.resize(number_of_dofs);
+    qd_ekf.resize(number_of_dofs);
     qdd_torque_control.resize(number_of_dofs);
     qdd_torque_control.setZero();
     qdd_force_control.resize(number_of_dofs);
@@ -145,6 +148,8 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     q_ext.setZero();
     qd_ext.setZero();
     qdd_ext.setZero();
+    q_ekf.setZero();
+    qd_ekf.setZero();
     q_target.setZero();
     qd_target.setZero();
     qdd_target.setZero();
@@ -189,6 +194,9 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     controller_type.resize(number_of_cables, CARDSflow::ControllerType::cable_length_controller);
     joint_state.resize(number_of_dofs);
     motor_state.resize(number_of_cables);
+
+    ekf_ = new BFL::KinDynEKF(number_of_joints);
+
     // ros control
     for (int joint = 0; joint < number_of_dofs; joint++) {
         ROS_INFO("initializing controllers for joint %d %s", joint, joint_names[joint].c_str());
@@ -380,6 +388,12 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         k++;
     }
 
+    /**
+     * Filtering setup
+     */
+    // TODO: Make dt becomes a parameter!
+    ekf_->initialize(q, 0.005);
+
     joint_target_sub = nh->subscribe(topic_root+"control/joint_targets", 100, &Robot::JointTarget, this);
     controller_type_sub = nh->subscribe("/controller_type", 100, &Robot::controllerType, this);
     // joint_state_sub = nh->subscribe("/joint_states", 100, &Robot::JointState, this);
@@ -460,57 +474,12 @@ VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min
     return f_opt;
 }
 
-void Robot::tendon_update(bool is_external) {
-
-    VectorXd q_in, qd_in;
-
-    if(is_external){
-        q_in = q_ext;
-        qd_in = qd_ext;
-    }else{
-        q_in = q;
-        qd_in = qd;
-    }
-
-    ros::Time t0 = ros::Time::now();
-
-    iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
-    iDynTree::toEigen(robotstate.jointPos) = q_in;
-    iDynTree::fromEigen(robotstate.baseVel, baseVel);
-    toEigen(robotstate.jointVel) = qd_in;
-    toEigen(robotstate.gravity) = gravity;
-
-    kinDynComp.setRobotState(robotstate.world_H_base, robotstate.jointPos, robotstate.baseVel, robotstate.jointVel,
-                             robotstate.gravity);
-    kinDynComp.generalizedBiasForces(bias);
-    kinDynComp.getFreeFloatingMassMatrix(Mass);
-
-    const iDynTree::Model &model = kinDynComp.model();
-    for (int i = 0; i < number_of_links; i++) {
-        Matrix4d pose = iDynTree::toEigen(kinDynComp.getWorldTransform(i).asHomogeneousTransform());
-        Vector3d com = iDynTree::toEigen(model.getLink(i)->getInertia().getCenterOfMass());
-        pose.block(0, 3, 3, 1) += pose.block(0, 0, 3, 3) * com;
-
-        if(is_external){
-            world_to_link_transform_ext[i] = pose.inverse();
-            link_to_world_transform_ext[i] = pose;
-            frame_transform_ext[i] = iDynTree::toEigen(model.getFrameTransform(i).asHomogeneousTransform());
-        }else{
-            world_to_link_transform[i] = pose.inverse();
-            link_to_world_transform[i] = pose;
-            frame_transform[i] = iDynTree::toEigen(model.getFrameTransform(i).asHomogeneousTransform());
-        }
-    }
-}
-
 void Robot::update() {
-
     ros::Time::now();
-
     iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
-    iDynTree::toEigen(robotstate.jointPos) = q_ext;
+    iDynTree::toEigen(robotstate.jointPos) = q_ekf;
     iDynTree::fromEigen(robotstate.baseVel, baseVel);
-    toEigen(robotstate.jointVel) = qd_ext;
+    toEigen(robotstate.jointVel) = qd_ekf;
     toEigen(robotstate.gravity) = gravity;
 
     kinDynComp.setRobotState(robotstate.world_H_base, robotstate.jointPos, robotstate.baseVel, robotstate.jointVel,
@@ -555,12 +524,6 @@ void Robot::update() {
         frame_transform[i] = iDynTree::toEigen(model.getFrameTransform(i).asHomogeneousTransform());
     }
 
-    // TODO: tendon_update(false) must be called later, otherwise CG, M would be updated according to ext pose
-//    tendon_update(true);
-//    tendon_update(false);
-//    CG = toEigen(bias.jointTorques());
-//    M = toEigen(Mass);
-
     P.setZero(6 * number_of_links, 6 * number_of_links);
     P.block(0, 0, 6, 6).setIdentity(6, 6);
     for (int k = 1; k < number_of_links; k++) {
@@ -589,8 +552,10 @@ void Robot::update() {
         i++;
     }
 
+    // -----------------------------------------------------------------------------------------------------------
+
     i=0;
-    for (auto muscle:cables) {
+    for (auto muscle:cables_ext) {
         l_ext[i] = 0;
         int j=0;
         for (auto vp:muscle.viaPoints) {
@@ -695,6 +660,22 @@ void Robot::update() {
             }
             tendon_ext_state_pub.publish(msg);
         }
+        {
+            roboy_simulation_msgs::Tendon msg;
+            for (int i = 0; i < number_of_cables; i++) {
+                msg.name.push_back(cables_ext[i].name);
+//                msg.force.push_back(cable_forces[i]);
+                msg.l.push_back(l_target[i]);
+//                msg.ld.push_back(Ld[0][i]); // TODO: only first endeffector Ld is send here
+//                msg.number_of_viapoints.push_back(cables_ext[i].viaPoints.size());
+//                for (auto vp:cables_ext[i].viaPoints) {
+//                    geometry_msgs::Vector3 VP;
+//                    tf::vectorEigenToMsg(vp->global_coordinates, VP);
+//                    msg.viapoints.push_back(VP);
+//                }
+            }
+            tendon_state_target_pub.publish(msg);
+        }
         { // robot state publisher
             static int seq = 0;
             for (int i = 0; i < number_of_links; i++) {
@@ -702,7 +683,7 @@ void Robot::update() {
                 msg.header.seq = seq++;
                 msg.header.stamp = ros::Time::now();
                 msg.header.frame_id = link_names[i];
-                Isometry3d iso(link_to_world_transform[i]);
+                Isometry3d iso(link_to_world_transform_ext[i]);
                 tf::poseEigenToMsg(iso, msg.pose);
                 robot_state_pub.publish(msg);
             }
@@ -784,6 +765,15 @@ void Robot::update() {
             cardsflow_joint_states_pub.publish(cf_msg);
 
         }
+        {
+            sensor_msgs::JointState ekf_msg;
+            ekf_msg.name = joint_names;
+            ekf_msg.header.stamp = ros::Time::now();
+            for (int i = 1; i < number_of_links; i++) {
+                ekf_msg.position.push_back(q_ekf[i-1]);
+            }
+            ekf_joint_states_pub.publish(ekf_msg);
+        }
         last_visualization = ros::Time::now();
     }
     ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
@@ -845,14 +835,14 @@ void Robot::forwardKinematics(double dt) {
             }
             ROS_INFO_THROTTLE(10,"%s control type %d", joint_names[j].c_str(), controller_type[j]);
         }
-        for (int l = 0; l < number_of_cables; l++) {
-            boost::numeric::odeint::integrate(
-                    [this, i, l](const state_type &x, state_type &dxdt, double t) {
-                        dxdt[1] = 0;
-                        dxdt[0] = Ld[i][l];
-                    }, motor_state[l], integration_time, integration_time + dt, dt);
-            l_int[l] = motor_state[l][0];
-        }
+//        for (int l = 0; l < number_of_cables; l++) {
+//            boost::numeric::odeint::integrate(
+//                    [this, i, l](const state_type &x, state_type &dxdt, double t) {
+//                        dxdt[1] = 0;
+//                        dxdt[0] = Ld[i][l];
+//                    }, motor_state[l], integration_time, integration_time + dt, dt);
+//            l_int[l] = motor_state[l][0];
+//        }
     }
 
     // respect joint limits
@@ -866,6 +856,10 @@ void Robot::forwardKinematics(double dt) {
             qd[i] = 0;
         }
     }
+
+    ekf_->update(dt, qd, q_ext);
+    ekf_->getEstimate(q_ekf, qd_ekf);
+
     integration_time += dt;
     ROS_INFO_THROTTLE(10, "forward kinematics calculated for %lf s", integration_time);
 }
@@ -1282,7 +1276,7 @@ void Robot::InteractiveMarkerFeedback( const visualization_msgs::InteractiveMark
 }
 
 void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg) {
-    ROS_WARN_STREAM_THROTTLE(1,"external joint states sub");
+    ROS_WARN_STREAM_THROTTLE(10,"external joint states sub");
     const iDynTree::Model &model = kinDynComp.getRobotModel();
     int i = 0;
     for (string joint:msg->name) {
