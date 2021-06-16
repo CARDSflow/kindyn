@@ -1,6 +1,7 @@
 #include "kindyn/vrpuppet.hpp"
 #include <thread>
 #include <roboy_middleware_msgs/MotorState.h>
+#include <roboy_middleware_msgs/RoboyState.h>
 #include <roboy_middleware_msgs/MotorInfo.h>
 #include <roboy_middleware_msgs/ControlMode.h>
 #include <roboy_middleware_msgs/MotorConfigService.h>
@@ -17,7 +18,7 @@ class PuppetUpperBody: public cardsflow::vrpuppet::Robot{
 private:
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command; /// motor command publisher
-    ros::Subscriber motor_state_sub, motor_info_sub;
+    ros::Subscriber motor_state_sub, motor_info_sub, roboy_state_sub;
     // vector<ros::ServiceServer> init_poses;
     ros::ServiceServer init_pose;
     ros::AsyncSpinner *spinner;
@@ -31,6 +32,7 @@ private:
     boost::shared_ptr<tf::TransformListener> listener;
     std::vector<string> body_parts = {"shoulder_left", "shoulder_right", "head", "wrist_left", "wrist_right"};//, "shoulder_left"};//}, "elbow_left"};
     map<string, bool> init_called;
+    ros::Time prev_roboy_state_time;
 
 public:
     /**
@@ -58,6 +60,7 @@ public:
         update();
 
         motor_state_sub = nh->subscribe("/roboy/pinky/middleware/MotorState",1,&PuppetUpperBody::MotorState,this);
+        roboy_state_sub = nh->subscribe("/roboy/pinky/middleware/RoboyState",1,&PuppetUpperBody::RoboyState,this);
         // motor_info_sub = nh->subscribe("/roboy/pinky/middleware/MotorInfo",1,&PuppetUpperBody::MotorInfo,this);
 
         for (auto body_part: body_parts) {
@@ -67,7 +70,7 @@ public:
         }
 
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/pinky/middleware/MotorCommand",1);
-        init_pose = nh->advertiseService("init_pose", &PuppetUpperBody::initPose,this);
+        init_pose = nh->advertiseService("/roboy/pinky/init_pose", &PuppetUpperBody::initPose,this);
 
         ROS_INFO_STREAM("Finished setup");
     };
@@ -244,6 +247,9 @@ public:
             i++;
         }
     }
+    void RoboyState(const roboy_middleware_msgs::RoboyState::ConstPtr &msg) {
+        prev_roboy_state_time = msg->header.stamp;
+    }
 
     void MotorInfo(const roboy_middleware_msgs::MotorInfo::ConstPtr &msg){
         for (int i=0;i<msg->global_id.size();i++) {
@@ -285,6 +291,20 @@ public:
      */
     void write(){
 
+
+        // check if plexus is alive
+        auto diff = ros::Time::now() - prev_roboy_state_time;
+        if (diff.toSec() > 1) {
+            for (auto body_part: body_parts) {
+                init_called[body_part] = false;
+                nh->setParam("initialized", init_called);
+                // reset the joint targets
+                q_target.setZero();
+            }
+            ROS_ERROR_STREAM_THROTTLE(5, "No messages from roboy_plexus. Will not be sending MotorCommand...");
+            return;
+        }
+
         float Kp_dl = 0, Ki_dl = 0, Kp_disp = 0, integral_limit = 0;
         nh->getParam("Kp_dl",Kp_dl);
         nh->getParam("Ki_dl",Ki_dl);
@@ -307,38 +327,38 @@ public:
                 // l_meter.resize(sim_motor_ids.size());
 
 
-                str << endl << "motor_id | l_meter | ticks | error | integral" << endl;
-                char s[200];
+//                str << endl << "motor_id | l_meter | ticks | error | integral" << endl;
+//                char s[200];
 
                 for (int i = 0; i < motor_ids.size(); i++) {
                     int motor_id = motor_ids[i];
                     float error = l[motor_id] - l_target[motor_id];
-                    if(Ki_dl==0){
-                        integral[body_part][motor_id] = 0;
-                    }else {
-                        integral[body_part][motor_id] += Ki_dl * error;
-                        if (integral[body_part][motor_id] > integral_limit)
-                            integral[body_part][motor_id] = integral_limit;
-                        if (integral[body_part][motor_id] < -integral_limit)
-                            integral[body_part][motor_id] = -integral_limit;
-                        if (Ki_dl == 0) {
-                            integral[body_part][motor_id] = 0;
-                        }
-                    }
+//                    if(Ki_dl==0){
+//                        integral[body_part][motor_id] = 0;
+//                    }else {
+//                        integral[body_part][motor_id] += Ki_dl * error;
+//                        if (integral[body_part][motor_id] > integral_limit)
+//                            integral[body_part][motor_id] = integral_limit;
+//                        if (integral[body_part][motor_id] < -integral_limit)
+//                            integral[body_part][motor_id] = -integral_limit;
+//                        if (Ki_dl == 0) {
+//                            integral[body_part][motor_id] = 0;
+//                        }
+//                    }
 //                    if (motor_id == 16 || motor_id == 17) {
 //                        Kp_dl = 0; Ki_dl = 0;
 //
 //                    }
-                    l_meter[motor_id] = (l_offset[motor_id] - l_target[motor_id]) +
-                                        Kp_dl*error + integral[body_part][motor_id];
+                    l_meter[motor_id] = (l_offset[motor_id] - l_target[motor_id]) ;//+
+//                                        Kp_dl*error + integral[body_part][motor_id];
 
-                    sprintf(s,     "%d            | %.3f   | %.1f    |  %.3f   | %.3f\n",
-                            motor_id,l_meter[motor_id],l_meter[motor_id]),error,integral[body_part][motor_id];
-                    str <<  s;
+//                    sprintf(s,     "%d            | %.3f   | %.1f    |  %.3f   | %.3f\n",
+//                            motor_id,l_meter[motor_id],l_meter[motor_id]),error,integral[body_part][motor_id];
+//                    str <<  s;
                 }
 
-                str << endl;
-                ROS_INFO_STREAM_THROTTLE(2,str.str());
+//                str << endl;
+//                ROS_INFO_STREAM_THROTTLE(2,str.str());
 
                 roboy_middleware_msgs::MotorCommand msg;
                 msg.global_id = {};
