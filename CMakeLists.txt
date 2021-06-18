@@ -57,6 +57,12 @@ include_directories(${iDynTree_INCLUDE_DIRS})
 find_package(qpOASES REQUIRED)
 include_directories(${qpOASES_INCLUDE_DIRS})
 
+# BFL
+# bfl (Bayesian Filtering Library) is a third party package that uses pkg-config
+pkg_check_modules(BFL REQUIRED orocos-bfl)
+include_directories(${BFL_INCLUDE_DIRS})
+link_directories(${BFL_LIBRARY_DIRS})
+
 # find openmp support
 find_package(OpenMP)
 if (OPENMP_FOUND)
@@ -102,11 +108,15 @@ target_link_libraries(ForcePositionController ${catkin_LIBRARIES} CardsflowHardw
 # kindyn library
 add_library(kindyn SHARED
 		src/robot.cpp
+		src/filter/joints_kalmanfilter.cpp
+		src/filter/nonlinearanalyticconditionalgaussianjointangles.cpp
 		src/EigenExtension.cpp
 		include/kindyn/EigenExtension.hpp
 		include/kindyn/RunningAverage.hpp
 		include/kindyn/robot.hpp
-		include/kindyn/cable.hpp)
+		include/kindyn/cable.hpp
+		include/kindyn/filter/joints_kalmanfilter.h
+		include/kindyn/filter/nonlinearanalyticconditionalgaussianjointangles.h)
 add_dependencies(kindyn roboy_simulation_msgs_generate_messages_cpp roboy_simulation_msgs_msgs_generate_messages_cpp)
 target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CardsflowHardwareInterface
 		CableLengthController TorquePositionController ForcePositionController ${OpenMP_CXX_libraries})
@@ -120,7 +130,7 @@ add_library(vrpuppet SHARED
 		include/kindyn/cable.hpp)
 add_dependencies(vrpuppet roboy_simulation_msgs_generate_messages_cpp roboy_simulation_msgs_msgs_generate_messages_cpp)
 target_link_libraries(vrpuppet ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CardsflowHardwareInterface
-		CableLengthController TorquePositionController ForcePositionController ${OpenMP_CXX_libraries})
+		CableLengthController TorquePositionController ForcePositionController ${OpenMP_CXX_libraries} ${BFL_LIBRARIES})
 
 # testing idyntree
 add_executable( test_idyntree src/utilities/test_idyntree.cpp)

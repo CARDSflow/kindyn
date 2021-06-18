@@ -28,6 +28,8 @@
 
 #pragma once
 
+#include "kindyn/filter/joints_kalmanfilter.h"
+
 #include <ros/ros.h>
 #include <Eigen/Core>
 #include <Eigen/Dense>
@@ -201,7 +203,7 @@ namespace cardsflow {
 
             ros::NodeHandlePtr nh; /// ROS node handle
             boost::shared_ptr <ros::AsyncSpinner> spinner; /// async ROS spinner
-            ros::Publisher robot_state_pub, tendon_state_pub, joint_state_pub, cardsflow_joint_states_pub; /// ROS robot pose and tendon publisher
+            ros::Publisher robot_state_pub, tendon_state_pub, joint_state_pub, cardsflow_joint_states_pub, ekf_joint_states_pub; /// ROS robot pose and tendon publisher
             ros::Publisher robot_state_target_pub, tendon_state_target_pub, joint_state_target_pub; /// target publisher
             ros::Subscriber controller_type_sub, joint_state_sub, joint_target_sub, floating_base_sub, interactive_marker_sub; /// ROS subscribers
             ros::ServiceServer ik_srv, ik_two_frames_srv, fk_srv, execute_ik_srv, link_pose_srv;
@@ -241,6 +243,8 @@ namespace cardsflow {
             MatrixXd M; /// The Mass matrix of the robot
             VectorXd CG; /// The Coriolis+Gravity term of the robot
             VectorXd q, qd, qdd; /// joint positon, velocity, acceleration
+            VectorXd q_ext, qd_ext, qdd_ext; /// external joint positon, velocity, acceleration
+            VectorXd q_ekf, qd_ekf; /// ekf joint positon, velocity, acceleration
             VectorXd q_min, q_max; /// joint limits
             VectorXd q_target, qd_target, qdd_target; /// joint positon, velocity, acceleration targets
             VectorXd q_target_prev, qd_target_prev, qdd_target_prev; /// joint positon, velocity, acceleration targets
@@ -279,12 +283,15 @@ namespace cardsflow {
             SQProblem qp_solver; /// qpoases quadratic problem solver
             real_t *H, *g, *A, *lb, *ub, *b, *FOpt; /// quadratic problem variables
             ros::Time last_visualization; /// timestamp for visualization at reasonable intervals
+            ros::Time time_prev;
             Eigen::IOFormat fmt; /// formator for terminal printouts
             hardware_interface::JointStateInterface joint_state_interface; /// ros control joint state interface
             hardware_interface::EffortJointInterface joint_command_interface; /// ros control joint command interface
             hardware_interface::CardsflowStateInterface cardsflow_state_interface; /// cardsflow state interface
             hardware_interface::CardsflowCommandInterface cardsflow_command_interface; /// cardsflow command interface
             bool first_update = true;
+
+            BFL::KinDynEKF *ekf_;
         };
     }
 }

@@ -16,6 +16,7 @@ Robot::Robot() {
 
     joint_state_pub = nh->advertise<roboy_simulation_msgs::JointState>("/roboy/pinky/control/rviz_joint_states", 1);
     cardsflow_joint_states_pub = nh->advertise<sensor_msgs::JointState>("/roboy/pinky/control/cardsflow_joint_states", 1);
+//    ekf_joint_states_pub = nh->advertise<sensor_msgs::JointState>(topic_root+"control/ekf_joint_states", 1);
     robot_state_target_pub = nh->advertise<geometry_msgs::PoseStamped>("/roboy/pinky/control/robot_state_target", 1);
     tendon_state_target_pub = nh->advertise<roboy_simulation_msgs::Tendon>("/roboy/pinky/control/tendon_state_target", 1);
     joint_state_target_pub = nh->advertise<roboy_simulation_msgs::JointState>("/roboy/pinky/control/joint_state_target", 1);
@@ -99,9 +100,13 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     }
 
     q.resize(number_of_dofs);
-
     qd.resize(number_of_dofs);
     qdd.resize(number_of_dofs);
+    q_ext.resize(number_of_dofs);
+    qd_ext.resize(number_of_dofs);
+    qdd_ext.resize(number_of_dofs);
+    q_ekf.resize(number_of_dofs);
+    qd_ekf.resize(number_of_dofs);
     qdd_torque_control.resize(number_of_dofs);
     qdd_torque_control.setZero();
     qdd_force_control.resize(number_of_dofs);
@@ -116,9 +121,13 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     qdd_target_prev.resize(number_of_dofs);
 
     q.setZero();
-
     qd.setZero();
     qdd.setZero();
+    q_ext.setZero();
+    qd_ext.setZero();
+    qdd_ext.setZero();
+    q_ekf.setZero();
+    qd_ekf.setZero();
     q_target.setZero();
     qd_target.setZero();
     qdd_target.setZero();
@@ -167,6 +176,10 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
 
     joint_state.resize(number_of_dofs);
     motor_state.resize(number_of_cables);
+
+    ekf_ = new BFL::KinDynEKF(number_of_joints);
+    time_prev = ros::Time::now();
+
     // ros control
     for (int joint = 0; joint < number_of_dofs; joint++) {
         ROS_INFO("initializing controllers for joint %d %s", joint, joint_names[joint].c_str());
@@ -312,9 +325,15 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         k++;
     }
 
+    /**
+     * Filtering setup
+     */
+    // TODO: Make dt becomes a parameter!
+    ekf_->initialize(q, 0.005);
+
     if (this->external_robot_state) {
         ROS_WARN("Subscribing to external joint state");
-        joint_state_sub = nh->subscribe("/joints", 100, &Robot::JointState, this);
+        joint_state_sub = nh->subscribe("/roboy/pinky/sensing/external_joint_states", 100, &Robot::JointState, this);
     }
     joint_target_sub = nh->subscribe("/roboy/pinky/control/joint_targets", 100, &Robot::JointTarget, this);
     floating_base_sub = nh->subscribe("/floating_base", 100, &Robot::FloatingBase, this);
@@ -433,6 +452,9 @@ void Robot::update() {
     for (auto muscle:cables) {
         l[i] = 0;
         int j=0;
+
+//        stringstream str;
+//        str << "---------------------------------------" << endl;
         for (auto vp:muscle.viaPoints) {
             if (!vp->fixed_to_world) { // move viapoint with link
                 vp->global_coordinates = link_to_world_transform[vp->link_index].block(0, 3, 3, 1) +
@@ -441,11 +463,16 @@ void Robot::update() {
             }
             if(j>0){
                 l[i] += (muscle.viaPoints[j]->global_coordinates-muscle.viaPoints[j-1]->global_coordinates).norm();
+//                str << "l[" << i << "] = " << l[i] << endl;
             }
             j++;
         }
+//        str << "---------------------------------------" << endl;
+//        ROS_INFO_STREAM(str.str());
+
         i++;
     }
+
 
     if ((1.0 / (ros::Time::now() - last_visualization).toSec()) < 30) {
         { // tendon state publisher
@@ -531,6 +558,7 @@ void Robot::update() {
             sensor_msgs::JointState cf_msg;
             roboy_simulation_msgs::JointState msg;
             msg.names = joint_names;
+            cf_msg.header.stamp = ros::Time::now();
             cf_msg.name = joint_names;
             for (int i = 1; i < number_of_links; i++) {
                 Matrix4d pose = iDynTree::toEigen(kinDynComp.getWorldTransform(i).asHomogeneousTransform());
@@ -876,17 +904,14 @@ void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg) {
     const iDynTree::Model &model = kinDynComp.getRobotModel();
     int i = 0;
     //q_prev = q;
-    //time_prev = ros::Time::now();
     for (string joint:msg->name) {
         if (std::count(joint_names.begin(), joint_names.end(), joint)) {
             int joint_index = model.getJointIndex(joint);
             if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
+                q_ext(joint_index) = remainder(msg->position[i], 2.0 * M_PI); //ra.Update(remainder(msg->position[i], 2.0 * M_PI));
 
-                //auto delta = (ros::Time::now().toSec()-time_prev.toSec());
-
-                q(joint_index) = remainder(msg->position[i], 2.0 * M_PI); //ra.Update(remainder(msg->position[i], 2.0 * M_PI));
-                //qd(joint_index) = (q(joint_index)-q_prev(joint_index))/delta;
-//                qd(joint_index) = msg->velocity[i];
+//                qd(joint_index) = (q(joint_index)-q_prev(joint_index))/delta;
+                qd_ext(joint_index) = 0.0; //msg->velocity[i];
                 //if (joint=="elbow_left_axis0")
                 //    ROS_INFO_STREAM(remainder(msg->position[i], 2.0 * M_PI) << "\tdelta: " << delta.toSec());
 
@@ -896,6 +921,11 @@ void Robot::JointState(const sensor_msgs::JointStateConstPtr &msg) {
         }
         i++;
     }
+
+    auto delta = (ros::Time::now().toSec()-time_prev.toSec());
+    ekf_->update(delta, qd_ext, q_ext);
+    ekf_->getEstimate(q, qd);
+    time_prev = ros::Time::now();
 
 }
 
