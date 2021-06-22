@@ -114,14 +114,17 @@ namespace cardsflow {
              * @param joint_names a vector of joint_names to be considered from the model
              */
             void init(string urdf_file_path, string viapoints_file_path, vector<string> joint_names);
-            /**
-             * Tendon update
-             */
-            void tendon_update(bool is_external);
+
             /**
              * Updates the model
              */
             void update();
+
+            /**
+             * Interpolate q_target
+             */
+
+            void move_to_zero_position(string name);
 
             /**
              * This is the read function and should implement reading the state of your robot
@@ -251,20 +254,6 @@ namespace cardsflow {
                 iDynTree::VectorDynSize jointVel;
                 iDynTree::Vector3       gravity;
             }robotstate;
-            struct iDynTreeRobotStateExt
-            {
-                void resize(int nrOfInternalDOFs)
-                {
-                    jointPos.resize(nrOfInternalDOFs);
-                    jointVel.resize(nrOfInternalDOFs);
-                }
-
-                iDynTree::Transform world_H_base;
-                iDynTree::VectorDynSize jointPos;
-                iDynTree::Twist         baseVel;
-                iDynTree::VectorDynSize jointVel;
-                iDynTree::Vector3       gravity;
-            }robotstate_ext;
         public:
             /**
              * Integrates the robot equation of motions using odeint

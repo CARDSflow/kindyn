@@ -474,12 +474,32 @@ VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min
     return f_opt;
 }
 
+void Robot::move_to_zero_position(string name) {
+//    const iDynTree::Model &model = kinDynComp.getRobotModel();
+    int n_samples = 300;
+    q.setZero();
+    VectorXd delta = (q - q_ext) / n_samples;
+    q_target = q_ext;
+//    ROS_INFO_STREAM("***** 000" << q_target);
+    for(int i=0; i < n_samples; i++) {
+//        int joint_index = model.getJointIndex(name);
+        q_target += delta;
+        update();
+        forwardKinematics(0.005);
+//        ROS_INFO_STREAM("***** +++" << q_target);
+    }
+//    ROS_INFO_STREAM("***** 111" << q_target);
+
+    q.setZero();
+//    ekf_->initialize(q, 0.005);
+}
+
 void Robot::update() {
     ros::Time::now();
     iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
-    iDynTree::toEigen(robotstate.jointPos) = q_ekf;
+    iDynTree::toEigen(robotstate.jointPos) = q_ext;
     iDynTree::fromEigen(robotstate.baseVel, baseVel);
-    toEigen(robotstate.jointVel) = qd_ekf;
+    toEigen(robotstate.jointVel) = qd_ext;
     toEigen(robotstate.gravity) = gravity;
 
     kinDynComp.setRobotState(robotstate.world_H_base, robotstate.jointPos, robotstate.baseVel, robotstate.jointVel,
@@ -555,7 +575,7 @@ void Robot::update() {
     // -----------------------------------------------------------------------------------------------------------
 
     i=0;
-    for (auto muscle:cables_ext) {
+    for (auto muscle:cables) {
         l_ext[i] = 0;
         int j=0;
         for (auto vp:muscle.viaPoints) {
@@ -857,8 +877,13 @@ void Robot::forwardKinematics(double dt) {
         }
     }
 
-    ekf_->update(dt, qd, q_ext);
-    ekf_->getEstimate(q_ekf, qd_ekf);
+    if(ekf_->isInitialized()) {
+        ekf_->update(dt, qd, q_ext);
+        ekf_->getEstimate(q_ekf, qd_ekf);
+    }else{
+        q_ekf = q_ext;
+        qd_ekf = qd_ext;
+    }
 
     integration_time += dt;
     ROS_INFO_THROTTLE(10, "forward kinematics calculated for %lf s", integration_time);

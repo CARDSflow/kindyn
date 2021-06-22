@@ -18,7 +18,7 @@ namespace BFL
         // create SYSTEM MODEL
         ColumnVector sysNoise_Mu(number_of_joints_*2);  sysNoise_Mu = 0;
         SymmetricMatrix sysNoise_Cov(number_of_joints_*2); sysNoise_Cov = 0;
-        for (unsigned int i=1; i<=number_of_joints_*2; i++) sysNoise_Cov(i,i) = pow(1.0,2);
+        for (unsigned int i=1; i<=number_of_joints_*2; i++) sysNoise_Cov(i,i) = pow(100.0,2);
         Gaussian system_Uncertainty(sysNoise_Mu, sysNoise_Cov);
         sys_pdf_   = new NonLinearAnalyticConditionalGaussianJointAngles(system_Uncertainty);
         sys_pdf_->initialize(number_of_joints_);
