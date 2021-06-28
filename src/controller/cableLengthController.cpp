@@ -61,6 +61,7 @@ public:
         spinner.reset(new ros::AsyncSpinner(0));
         spinner->start();
         controller_state = nh.advertise<roboy_simulation_msgs::ControllerType>("/controller_type",1);
+        error_pub = nh.advertise<std_msgs::Float32>("/joint/error",1);
         ros::Rate r(10);
         while(controller_state.getNumSubscribers()==0) // we wait until the controller state is available
             r.sleep();
@@ -79,16 +80,28 @@ public:
      * @param period period since last control
      */
     void update(const ros::Time &time, const ros::Duration &period) {
-        double q = joint.getPosition();
-        double q_target = joint.getJointPositionCommand();
-        MatrixXd L = joint.getL();
-        double p_error = q - q_target;
-        // we use the joint_index column of the L matrix to calculate the result for this joint only
-        VectorXd ld = L.col(joint_index) * (Kd * (p_error - p_error_last)/period.toSec() + Kp * p_error);
+        try {
+            double q = joint.getExternalPosition();  //joint.getPosition(); joint.getPosition(); //
+            double q_target = joint.getJointPositionCommand();
+            MatrixXd L = joint.getL();
+            float p_error = q - q_target;
+//            if (joint.getName() == "shoulder_left_axis1") {
+//                auto msg = std_msgs::Float32();
+//                msg.data = p_error;
+//                error_pub.publish(msg);
+//////            ROS_INFO_STREAM(1, joint.getName() << " CLC error: " << p_error);
+//            }
+            // we use the joint_index column of the L matrix to calculate the result for this joint only
+            VectorXd ld = L.col(joint_index) * (Kd * (p_error - p_error_last)/period.toSec() + Kp * p_error);
+            //ROS_INFO_STREAM(period.toSec() << "\t" <<ld[20]);
 //        ROS_INFO_STREAM_THROTTLE(1, ld.transpose());
-        joint.setMotorCommand(ld);
-        p_error_last = p_error;
-        last_update = time;
+            joint.setMotorCommand(ld);
+            p_error_last = p_error;
+            last_update = time;
+        } catch(std::runtime_error& ex) {
+            ROS_ERROR("Exception: [%s]", ex.what());
+        }
+
     }
 
     /**
@@ -127,13 +140,14 @@ public:
         Kp = req.kp;
         Kd = req.kd;
         res.success = true;
+        ROS_INFO_STREAM("Updated CLC gains: Kp " << Kp << " Kd: " << Kd);
         return true;
     }
 private:
-    double Kp = 100, Kd = 0; /// PD gains
+    double Kp = 15.0, Kd = 0.0; /// PD gains
     double p_error_last = 0; /// last error
     ros::NodeHandle nh; /// ROS nodehandle
-    ros::Publisher controller_state; /// publisher for controller state
+    ros::Publisher controller_state, error_pub; /// publisher for controller state
     ros::ServiceServer controller_parameter_srv; /// service for controller parameters
     boost::shared_ptr<ros::AsyncSpinner> spinner; /// ROS async spinner
     hardware_interface::CardsflowHandle joint; /// cardsflow joint handle for access to joint/cable model state

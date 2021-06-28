@@ -120,6 +120,10 @@ namespace cardsflow {
              */
             void update();
 
+            void update_ext();
+
+            void update_target();
+
             /**
              * Interpolate q_target
              */
@@ -231,12 +235,12 @@ namespace cardsflow {
             boost::shared_ptr <ros::AsyncSpinner> spinner; /// async ROS spinner
             ros::Publisher robot_state_pub, tendon_state_pub, tendon_ext_state_pub, joint_state_pub, cardsflow_joint_states_pub, ekf_joint_states_pub; /// ROS robot pose and tendon publisher
             ros::Publisher robot_state_target_pub, tendon_state_target_pub, joint_state_target_pub; /// target publisher
-            ros::Subscriber controller_type_sub, joint_state_sub, floating_base_sub, interactive_marker_sub, joint_target_sub, zero_joints_sub; /// ROS subscribers
+            ros::Subscriber controller_type_sub, joint_state_sub, joint_state_sub1, floating_base_sub, interactive_marker_sub, joint_target_sub, zero_joints_sub; /// ROS subscribers
             ros::ServiceServer ik_srv, ik_two_frames_srv, fk_srv, freeze_srv;
             map<string,boost::shared_ptr<actionlib::SimpleActionServer<roboy_control_msgs::MoveEndEffectorAction>>> moveEndEffector_as;
 
 
-            iDynTree::KinDynComputations kinDynComp, kinDynCompTarget; /// the full robot model
+            iDynTree::KinDynComputations kinDynComp, kinDynCompTarget, kinDynCompExt; /// the full robot model
             map<string,iDynTree::KinDynComputations> ik_models; /// the robot models for each endeffector
             map<string,iDynTree::InverseKinematics> ik; /// the ik for each endeffector
             map<string,string> ik_base_link; /// the base link of each endeffector

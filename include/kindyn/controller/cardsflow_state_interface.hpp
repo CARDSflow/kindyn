@@ -53,7 +53,7 @@ namespace hardware_interface {
          * @param CG pointer to the Coriolis+Gravity vector
         */
         CardsflowStateHandle(const std::string &name, int joint_index, const double *pos, const double *vel,
-                             const double *acc, const MatrixXd *L, const MatrixXd *M, const VectorXd *CG);
+                             const double *acc, const double *ext_pos, const MatrixXd *L, const MatrixXd *M, const VectorXd *CG);
 
         /**
          * Returns the joint name
@@ -72,6 +72,13 @@ namespace hardware_interface {
          * @return joint position
          */
         double getPosition() const;
+
+        /**
+         * Returns the joint position from external sensing
+         * @return joint position
+         */
+        double getExternalPosition() const;
+
 
         /**
          * Returns the currect joint velocity
@@ -109,6 +116,7 @@ namespace hardware_interface {
         const double *pos_; /// joint position
         const double *vel_; /// joint velocity
         const double *acc_; /// joint acceleration
+        const double *ext_pos_;
         const VectorXd *CG_; /// Coriolis+Gravity vector
         const MatrixXd *L_, *M_; /// L/M matrices
     };

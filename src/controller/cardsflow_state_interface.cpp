@@ -12,9 +12,9 @@ namespace hardware_interface
       * @param vel A pointer to the storage for this joint's velocity
 
       */
-    CardsflowStateHandle::CardsflowStateHandle(const std::string& name, int joint_index, const double* pos, const double* vel, const double* acc,
+    CardsflowStateHandle::CardsflowStateHandle(const std::string& name, int joint_index, const double* pos, const double* vel, const double* acc, const double* ext_pos,
                                                const MatrixXd *L, const MatrixXd *M, const VectorXd *CG)
-            : name_(name), joint_index_(joint_index), pos_(pos), vel_(vel), acc_(acc), L_(L), M_(M), CG_(CG)
+            : name_(name), joint_index_(joint_index), pos_(pos), vel_(vel), acc_(acc), ext_pos_(ext_pos), L_(L), M_(M), CG_(CG)
     {
         if (!pos)
         {
@@ -33,6 +33,7 @@ namespace hardware_interface
     std::string CardsflowStateHandle::getName() const {return name_;}
     int CardsflowStateHandle::getJointIndex()  const { return joint_index_;}
     double CardsflowStateHandle::getPosition()  const {assert(pos_); return *pos_;}
+    double CardsflowStateHandle::getExternalPosition()  const {assert(ext_pos_); return *ext_pos_;}
     double CardsflowStateHandle::getVelocity()  const {assert(vel_); return *vel_;}
     double CardsflowStateHandle::getAcceleration()  const {assert(acc_); return *acc_;}
     MatrixXd CardsflowStateHandle::getL()    const {return *L_;}

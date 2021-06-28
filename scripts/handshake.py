@@ -7,7 +7,7 @@ from std_msgs.msg import Empty
 
 rospy.init_node("handshake")
 topic_root = 'roboy/pinky/'
-publisher = rospy.Publisher(topic_root + "joint_targets", JointState, queue_size=1)
+publisher = rospy.Publisher(topic_root + "simulation/joint_targets", JointState, queue_size=1)
 msg = JointState()
 hand_msg = MotorCommand()
 hand_msg.global_id = [42,42,44,45]
@@ -146,7 +146,7 @@ def shake():
 def shoulder():
     ranges = [-1.5,-0.05]
     samples = 200
-    msg.name = ["shoulder_right_axis1"]
+    msg.name = ["shoulder_left_axis1"]
     msg.velocity = [0]*len(msg.name)
     msg.effort = [0]*len(msg.name)
     for i in range(6):
@@ -157,7 +157,7 @@ def shoulder():
             for t2 in targets:
                 msg.position = [t2]
                 publisher.publish(msg)
-                rospy.sleep(0.01)
+                rospy.sleep(0.1)
 
         else:
             print("down")
@@ -166,11 +166,11 @@ def shoulder():
             for t2 in targets:
                 msg.position = [t2]
                 publisher.publish(msg)
-                rospy.sleep(0.01)
+                rospy.sleep(0.1)
             # rospy.sleep(2.0)
             # msg.position = [-0.3]
 
-def head(axis, ranges):
+def head(axis, ranges, sleep=0.05, reps=6):
     # ranges = [-0.56,0.56]
     samples = 100
     msg.name = [axis]
@@ -183,10 +183,10 @@ def head(axis, ranges):
     for t2 in targets:
         msg.position = [t2]
         publisher.publish(msg)
-        rospy.sleep(0.01)
+        rospy.sleep(sleep)
 
 
-    for i in range(6):
+    for i in range(reps):
         if not i%2:
             print("up")
             targets = np.linspace(ranges[-1],ranges[0], samples)
@@ -194,7 +194,7 @@ def head(axis, ranges):
             for t2 in targets:
                 msg.position = [t2]
                 publisher.publish(msg)
-                rospy.sleep(0.01)
+                rospy.sleep(sleep)
 
         else:
             print("down")
@@ -203,7 +203,7 @@ def head(axis, ranges):
             for t2 in targets:
                 msg.position = [t2]
                 publisher.publish(msg)
-                rospy.sleep(0.01)
+                rospy.sleep(sleep)
             # rospy.sleep(2.0)
             # msg.position = [-0.3]
 
@@ -212,7 +212,7 @@ def head(axis, ranges):
     for t2 in targets:
         msg.position = [t2]
         publisher.publish(msg)
-        rospy.sleep(0.01)
+        rospy.sleep(sleep)
 
 def do_handshake():
     rospy.set_param("trajectory_active", True)
@@ -241,9 +241,9 @@ def cb2(req):
     do_handshake()
 
 rospy.sleep(1)
-close_hand()
-rospy.sleep(2.0)
-open_hand()
+# close_hand()
+# rospy.sleep(2.0)
+# open_hand()
 
 # handshake_srv = rospy.Service(topic_root + "control/handshake", Trigger, cb1)
 # handshake_sub = rospy.Subscriber(topic_root + "control/handshake", Empty, cb2)
@@ -253,7 +253,10 @@ open_hand()
 # raw_motorcmd()
 # shoulder()
 # shake()
-# head("head_axis1",[-0.56,0.56])
+# shoulder()
+# head("head_axis2",[-0.6,0.6],sleep=0.02)
+# head("head_axis0",[-0.6,0.6],sleep=0.02)
+head("shoulder_right_axis1",[0.0,-0.6],sleep=0.04)
 # head("head_axis0",[-0.4,0.4])
 # head("head_axis2",[-0.5,0.5])
 #joint_cmd = [{"shoulder_right_axis1": -0.4}, {"elbow_right_axis0": 0.3, "elbow_right_axis0": 0.0}]

@@ -234,23 +234,104 @@ public:
             return false;
         }
 
-        write_initialization(name);
+        int seconds = 2;
+        t0 = ros::Time::now();
+        while ((ros::Time::now() - t0).toSec() < 1) {
+            ROS_INFO_THROTTLE(1, "waiting %d", seconds--);
+        }
 
-        stringstream str;
-        str << "saving position offsets:" << endl << "motor id  |   position offset [ticks]  | length_sim[m] | length offset[m]" << endl;
+        //write_initialization(name);
 
-        // for (int i = 0; i<motor_ids.size();i++) str << motor_ids[i] << ": " << position[motor_ids[i]] << ", ";
-        // str << endl;
+//        t0 = ros::Time::now();
+//        while ((ros::Time::now() - t0).toSec() < 2) {
+//            ROS_INFO_THROTTLE(1, "waiting %d", seconds--);
+//        }
+//
+//        ROS_INFO("changing control mode of motors to PWM with %d",pwm);
+//        roboy_middleware_msgs::ControlMode msg2;
+//
+//
+//        // if (name == "wrist_left" || name == "wrist_right") {
+//        //     msg.request.control_mode = DISPLACEMENT;
+//        // } else {
+//        msg2.request.control_mode = DIRECT_PWM;
+//        // }
+//        // TODO: fix in plexus PWM direction for the new motorboard
+//        //std::vector<float> set_points(motor_ids.size(), pwm);
+//        for (auto m: motor_ids) msg2.request.global_id.push_back(m);
+//        msg2.request.set_points = set_points;
+//
+////        stringstream str1;
+//        for(int i=0;i<msg2.request.set_points.size();i++) {
+//            int motor_id = motor_ids[i];
+//
+////            str1 << msg.request.global_id[i] << "\t|\t" << msg.request.set_points[i] << endl;
+//        }
+//
+//
+////        ROS_INFO_STREAM(str1.str());
+//
+//
+//        if (!control_mode[name].call(msg2)) {
+//            ROS_ERROR("Changing control mode for %s didnt work", name);
+//            return false;
+//        }
+//
+////        ros::Time t0;
+//        t0= ros::Time::now();
+//        timeout = 0;
+//        nh->getParam("timeout",timeout);
+//        if(timeout==0) {
+//            int seconds = 5;
+//            while ((ros::Time::now() - t0).toSec() < 5) {
+//                ROS_INFO_THROTTLE(1, "waiting %d", seconds--);
+//            }
+//        }else{
+//            int seconds = timeout;
+//            while ((ros::Time::now() - t0).toSec() < timeout) {
+//                ROS_INFO_THROTTLE(1, "waiting %d", seconds--);
+//            }
+//        }
+//        motor_status_received[name] = true;
+//        if(!motor_status_received[name]) {
+//            ROS_ERROR("did not receive motor status for %s, try again", name);
+//            return false;
+//        }
+//
+//        ROS_INFO_STREAM("changing control mode of %s to POSITION" << name);
+//
+//        roboy_middleware_msgs::ControlMode msg3;
+//        msg3.request.control_mode = ENCODER0_POSITION;
+//        for (int id: motor_ids) {
+//            msg3.request.global_id.push_back(id);
+//            msg3.request.set_points.push_back(position[id]);
+//        }
+//
+//        if (!control_mode[name].call(msg3)) {
+//            ROS_ERROR_STREAM("Changing control mode for %s didnt work" << name);
+//            return false;
+//        }
+//
+//        t0 = ros::Time::now();
+//        while ((ros::Time::now() - t0).toSec() < 2) {
+//            ROS_INFO_THROTTLE(1, "waiting %d", seconds--);
+//        }
+//
+//        stringstream str;
+//        str << "saving position offsets:" << endl << "motor id  |   position offset [ticks]  | length_sim[m] | length offset[m]" << endl;
+//
+//        // for (int i = 0; i<motor_ids.size();i++) str << motor_ids[i] << ": " << position[motor_ids[i]] << ", ";
+//        // str << endl;
 
         for(int i=0;i<motor_ids.size();i++) {
             int motor_id = motor_ids[i];
             ROS_WARN_STREAM(name << " info print");
             l_offset[motor_id] = l[motor_id] + position[motor_id];
-            str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l[motor_id] << "\t|\t" << l_offset[motor_id] << endl;
+//            str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l[motor_id] << "\t|\t" << l_offset[motor_id] << endl;
         }
 
 
-        ROS_INFO_STREAM(str.str());
+//        ROS_INFO_STREAM(str.str());
 
 //        ROS_INFO_STREAM("changing control mode of %s to POSITION" << name);
 //
@@ -281,7 +362,7 @@ public:
 //        VectorXd delta = (q - q_ext) / 500;
 //        ROS_INFO_STREAM_THROTTLE(0.5, "******* " << delta);
 
-        update();
+//        update();
 
 //        set_point.setZero();
 //        prev_set_point.setZero();
@@ -415,18 +496,21 @@ public:
      * Updates the robot model
      */
     void read(){
-//        ROS_INFO_STREAM("***** 0 " << q[11]);
-        update();
+        if (init_called["head"] || init_called["shoulder_left"] || init_called["shoulder_right"]) {
+            //        ROS_INFO_STREAM("***** 0 " << q[11]);
+            update();
 //        ROS_INFO_STREAM("***** 1 " << q[11]);
-        forwardKinematics(0.005);
+            forwardKinematics(0.005);
 //        ROS_INFO_STREAM("***** 2 " << q[11]);
 //        if (!external_robot_state)
 //            forwardKinematics(0.005);
+        }
+
     };
 
     void write_initialization(string body_part){
 
-        ros::Rate init_rate(40);
+        ros::Rate init_rate(20);
 
         std::vector<int> motor_ids;
         try {
@@ -434,6 +518,9 @@ public:
         catch (const std::exception&) {
             ROS_ERROR("motor ids for %s are not on the parameter server. check motor_config.yaml in robots.", body_part);
         }
+
+//        update_ext();
+        update_target();
 
         roboy_middleware_msgs::MotorCommand msg;
         msg.global_id = {};
@@ -451,8 +538,19 @@ public:
         //float error = 999.0;
         //auto setpoint = position[id];
 //        auto setpoint_vel = 0.;
+
+
+        ROS_INFO_STREAM("id \t" << " pos: \t" << " l_target: \t"  << " l_ext: \t" << "error");
+        for (auto motor_id: motor_ids) {
+            auto error = l_ext[motor_id] - l_target[motor_id];
+            ROS_INFO_STREAM(motor_id << " |\t " << position[motor_id] << " |\t " << l_target[motor_id] << " |\t " << l_ext[motor_id] << " |\t " << error);
+        }
+
         float accumulated_error = 0.0;
-        do {
+        //do {
+
+            update_ext();
+
             accumulated_error = 0;
             msg.global_id = {};
             msg.setpoint = {};
@@ -465,15 +563,30 @@ public:
                 auto setpoint_vel = Kp_dl * error;
                 setpoint += setpoint_vel;
 
-                msg.global_id.push_back(motor_id);
-                msg.setpoint.push_back(setpoint);
+                if(abs(error) > 0.001) {
+                    msg.global_id.push_back(motor_id);
+                    msg.setpoint.push_back(setpoint);
+                }
             }
 
             motor_command.publish(msg);
             init_rate.sleep();
             ROS_INFO_STREAM_THROTTLE(1, "accumulated error: " << accumulated_error);
 
-        } while (abs(accumulated_error) > motor_ids.size()*0.0025);
+        //} while (abs(accumulated_error) > motor_ids.size()*0.001);
+
+//        int seconds = 2;
+//        ros::Time t0;
+//        t0= ros::Time::now();
+//        while ((ros::Time::now() - t0).toSec() < 2) {
+//            ROS_INFO_THROTTLE(1, "waiting %d", seconds--);
+//        }
+//
+//        ROS_INFO_STREAM("id \t" << " pos_err: \t" << "error");
+//        for (auto motor_id: motor_ids) {
+//            auto error = l_ext[motor_id] - l_target[motor_id];
+//            ROS_INFO_STREAM(motor_id << " |\t " << position[motor_id] << " |\t  " << set_point[motor_id] << " |\t " << error);
+//        }
 
 //        while(abs(accumulated_error) > 0.01) {
 //            accumulated_error = 0;
@@ -690,11 +803,14 @@ void update(controller_manager::ControllerManager *cm) {
     ros::Time prev_time = ros::Time::now();
     ros::Rate rate(500); // changing this value affects the control speed of your running controllers
     while (ros::ok()) {
-        const ros::Time time = ros::Time::now();
-        const ros::Duration period = time - prev_time;
-        cm->update(time, period);
-        prev_time = time;
-        rate.sleep();
+
+            const ros::Time time = ros::Time::now();
+            const ros::Duration period = time - prev_time;
+            cm->update(time, period);
+            prev_time = time;
+            rate.sleep();
+
+
     }
 }
 
@@ -729,7 +845,7 @@ int main(int argc, char *argv[]) {
     thread update_thread(update, &cm);
     update_thread.detach();
 
-    ros::Rate rate(200);
+    ros::Rate rate(100);
     while(ros::ok()){
         robot.read();
         if (!robot.simulated)
