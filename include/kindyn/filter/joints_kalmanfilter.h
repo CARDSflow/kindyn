@@ -35,7 +35,9 @@ namespace BFL {
         * \param diagnostics_res returns false if the diagnostics found that the sensor measurements are inconsistent
         * returns true on successfull update
         */
-        bool update(double dt, const Eigen::VectorXd &model_action, const Eigen::VectorXd &meas_state);
+        bool model_update(double dt, const Eigen::VectorXd &model_action);
+
+        bool sensor_update(const Eigen::VectorXd &meas_state);
 
         /** initialize the extended Kalman filter
          * \param prior the prior robot pose

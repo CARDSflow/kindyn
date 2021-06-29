@@ -201,7 +201,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     for (int joint = 0; joint < number_of_dofs; joint++) {
         ROS_INFO("initializing controllers for joint %d %s", joint, joint_names[joint].c_str());
         // connect and register the cardsflow state interface
-        hardware_interface::CardsflowStateHandle state_handle(joint_names[joint], joint, &q[joint], &qd[joint],
+        hardware_interface::CardsflowStateHandle state_handle(joint_names[joint], joint, &q_ext[joint], &qd[joint],
                                                               &qdd[joint], &L, &M, &CG
 
         );
@@ -212,7 +212,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
                                                        &q_target[joint], &qd_target[joint], &torques[joint], &ld[joint]);
         cardsflow_command_interface.registerHandle(pos_handle);
         // connect and register the cardsflow state interface
-        hardware_interface::JointStateHandle state_handle2(joint_names[joint], &q[joint], &qd[joint], &q_target[joint]);
+        hardware_interface::JointStateHandle state_handle2(joint_names[joint], &q_ext[joint], &qd[joint], &q_target[joint]);
         joint_state_interface.registerHandle(state_handle2);
 
         // connect and register the cardsflow command interface
@@ -388,12 +388,6 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         k++;
     }
 
-    /**
-     * Filtering setup
-     */
-    // TODO: Make dt becomes a parameter!
-    ekf_->initialize(q, 0.005);
-
     joint_target_sub = nh->subscribe(topic_root+"control/joint_targets", 100, &Robot::JointTarget, this);
     controller_type_sub = nh->subscribe("/controller_type", 100, &Robot::controllerType, this);
     // joint_state_sub = nh->subscribe("/joint_states", 100, &Robot::JointState, this);
@@ -404,6 +398,12 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     freeze_srv = nh->advertiseService(topic_root+"control/freeze", &Robot::FreezeService, this);
     interactive_marker_sub = nh->subscribe(topic_root+"control/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
     zero_joints_sub = nh->subscribe(topic_root+"control/zero_joints", 1, &Robot::ZeroJoints,this);
+
+    /**
+     * Filtering setup
+     */
+    // TODO: Make dt becomes a parameter!
+    ekf_->initialize(q_ext, 0.005);
 }
 
 VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min, VectorXd &f_max) {
@@ -476,35 +476,35 @@ VectorXd Robot::resolve_function(MatrixXd &A_eq, VectorXd &b_eq, VectorXd &f_min
 
 void Robot::update() {
     ros::Time::now();
-    iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
-    iDynTree::toEigen(robotstate.jointPos) = q_ekf;
-    iDynTree::fromEigen(robotstate.baseVel, baseVel);
-    toEigen(robotstate.jointVel) = qd_ekf;
-    toEigen(robotstate.gravity) = gravity;
-
-    kinDynComp.setRobotState(robotstate.world_H_base, robotstate.jointPos, robotstate.baseVel, robotstate.jointVel,
-                             robotstate.gravity);
-    kinDynComp.generalizedBiasForces(bias);
-    kinDynComp.getFreeFloatingMassMatrix(Mass);
-
-    const iDynTree::Model &model_ext = kinDynComp.model();
-    for (int i = 0; i < number_of_links; i++) {
-        Matrix4d pose = iDynTree::toEigen(kinDynComp.getWorldTransform(i).asHomogeneousTransform());
-        Vector3d com = iDynTree::toEigen(model_ext.getLink(i)->getInertia().getCenterOfMass());
-        pose.block(0, 3, 3, 1) += pose.block(0, 0, 3, 3) * com;
-
-        world_to_link_transform_ext[i] = pose.inverse();
-        link_to_world_transform_ext[i] = pose;
-        frame_transform_ext[i] = iDynTree::toEigen(model_ext.getFrameTransform(i).asHomogeneousTransform());
-    }
+//    iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
+//    iDynTree::toEigen(robotstate.jointPos) = q_ext;
+//    iDynTree::fromEigen(robotstate.baseVel, baseVel);
+//    toEigen(robotstate.jointVel) = qd_ext;
+//    toEigen(robotstate.gravity) = gravity;
+//
+//    kinDynComp.setRobotState(robotstate.world_H_base, robotstate.jointPos, robotstate.baseVel, robotstate.jointVel,
+//                             robotstate.gravity);
+//    kinDynComp.generalizedBiasForces(bias);
+//    kinDynComp.getFreeFloatingMassMatrix(Mass);
+//
+//    const iDynTree::Model &model_ext = kinDynComp.model();
+//    for (int i = 0; i < number_of_links; i++) {
+//        Matrix4d pose = iDynTree::toEigen(kinDynComp.getWorldTransform(i).asHomogeneousTransform());
+//        Vector3d com = iDynTree::toEigen(model_ext.getLink(i)->getInertia().getCenterOfMass());
+//        pose.block(0, 3, 3, 1) += pose.block(0, 0, 3, 3) * com;
+//
+//        world_to_link_transform_ext[i] = pose.inverse();
+//        link_to_world_transform_ext[i] = pose;
+//        frame_transform_ext[i] = iDynTree::toEigen(model_ext.getFrameTransform(i).asHomogeneousTransform());
+//    }
 
     // -----------------------------------------------------------------------------------------------------------
 
     ros::Time t0 = ros::Time::now();
     iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
-    iDynTree::toEigen(robotstate.jointPos) = q;
+    iDynTree::toEigen(robotstate.jointPos) = q_ext;
     iDynTree::fromEigen(robotstate.baseVel, baseVel);
-    toEigen(robotstate.jointVel) = qd;
+    toEigen(robotstate.jointVel) = qd_ext;
     toEigen(robotstate.gravity) = gravity;
 
     kinDynComp.setRobotState(robotstate.world_H_base, robotstate.jointPos, robotstate.baseVel, robotstate.jointVel,
@@ -554,23 +554,23 @@ void Robot::update() {
 
     // -----------------------------------------------------------------------------------------------------------
 
-    i=0;
-    for (auto muscle:cables_ext) {
-        l_ext[i] = 0;
-        int j=0;
-        for (auto vp:muscle.viaPoints) {
-            if (!vp->fixed_to_world) { // move viapoint with link
-                vp->global_coordinates = link_to_world_transform_ext[vp->link_index].block(0, 3, 3, 1) +
-                                         link_to_world_transform_ext[vp->link_index].block(0, 0, 3, 3) *
-                                         vp->local_coordinates;
-            }
-            if(j>0){
-                l_ext[i] += (muscle.viaPoints[j]->global_coordinates-muscle.viaPoints[j-1]->global_coordinates).norm();
-            }
-            j++;
-        }
-        i++;
-    }
+//    i=0;
+//    for (auto muscle:cables_ext) {
+//        l_ext[i] = 0;
+//        int j=0;
+//        for (auto vp:muscle.viaPoints) {
+//            if (!vp->fixed_to_world) { // move viapoint with link
+//                vp->global_coordinates = link_to_world_transform_ext[vp->link_index].block(0, 3, 3, 1) +
+//                                         link_to_world_transform_ext[vp->link_index].block(0, 0, 3, 3) *
+//                                         vp->local_coordinates;
+//            }
+//            if(j>0){
+//                l_ext[i] += (muscle.viaPoints[j]->global_coordinates-muscle.viaPoints[j-1]->global_coordinates).norm();
+//            }
+//            j++;
+//        }
+//        i++;
+//    }
 
 //    ROS_INFO_THROTTLE(1,"model update takes %f seconds", (ros::Time::now()-t0).toSec());
 //    t0 = ros::Time::now();
@@ -683,7 +683,7 @@ void Robot::update() {
                 msg.header.seq = seq++;
                 msg.header.stamp = ros::Time::now();
                 msg.header.frame_id = link_names[i];
-                Isometry3d iso(link_to_world_transform_ext[i]);
+                Isometry3d iso(link_to_world_transform[i]);
                 tf::poseEigenToMsg(iso, msg.pose);
                 robot_state_pub.publish(msg);
             }
@@ -795,6 +795,14 @@ void Robot::forwardKinematics(double dt) {
     if(force_position_controller_active) // we do the calculations only if there is a controller active
         qdd_force_control = M.block(6, 6, number_of_dofs, number_of_dofs).inverse() * (L_t * cable_forces - CG);
 
+    // Reset at current q_ekf
+    ekf_->sensor_update(q_ext);
+    ekf_->getEstimate(q_ekf, qd_ekf);
+    for(int i=0;i<number_of_joints;i++){
+        joint_state[i][0] = q_ekf[i]; // q_ekf
+        joint_state[i][1] = qd_ekf[i]; // qd_ekf
+    }
+
 //    #pragma omp parallel for
     for(int i = 0; i<endeffectors.size();i++) {
         int dof_offset = endeffector_dof_offset[i];
@@ -857,8 +865,43 @@ void Robot::forwardKinematics(double dt) {
         }
     }
 
-    ekf_->update(dt, qd, q_ext);
-    ekf_->getEstimate(q_ekf, qd_ekf);
+    ekf_->model_update(dt, q);
+
+    iDynTree::fromEigen(robotstate.world_H_base, world_H_base);
+    iDynTree::toEigen(robotstate.jointPos) = q;
+    iDynTree::fromEigen(robotstate.baseVel, baseVel);
+    toEigen(robotstate.jointVel) = qd;
+    toEigen(robotstate.gravity) = gravity;
+
+    kinDynCompTarget.setRobotState(robotstate.world_H_base, robotstate.jointPos, robotstate.baseVel,
+                                   robotstate.jointVel,
+                                   robotstate.gravity);
+
+    vector<Matrix4d> next_poses;
+    for (int i = 0; i < number_of_links; i++) {
+        next_poses.push_back(iDynTree::toEigen(kinDynCompTarget.getWorldTransform(i).asHomogeneousTransform()));
+        Vector3d com = iDynTree::toEigen(model.getLink(i)->getInertia().getCenterOfMass());
+        next_poses[i].block(0, 3, 3, 1) += next_poses[i].block(0, 0, 3, 3) * com;
+    }
+
+    int i=0;
+    for (auto muscle:cables) {
+        l_ext[i] = 0;
+        int j = 0;
+        vector<Vector3d> ext_viapoints;
+        for (auto vp:muscle.viaPoints) {
+            if (!vp->fixed_to_world) { // move viapoint with link
+                ext_viapoints.push_back(next_poses[vp->link_index].block(0, 3, 3, 1) +
+                                        next_poses[vp->link_index].block(0, 0, 3, 3) *
+                                        vp->local_coordinates);
+            }
+            if (j > 0) {
+                l_ext[i] += (ext_viapoints[j] - ext_viapoints[j - 1]).norm();
+            }
+            j++;
+        }
+        i++;
+    }
 
     integration_time += dt;
     ROS_INFO_THROTTLE(10, "forward kinematics calculated for %lf s", integration_time);

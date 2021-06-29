@@ -32,7 +32,7 @@ private:
     map<string, ros::ServiceClient> motor_config, motor_control_mode, control_mode;
     map<string, bool> motor_status_received;
     map<int, bool> communication_established; // keeps track of communication quality for each motor
-    map<int,float> l_offset, position, tendon_length;
+    map<int,float> l_offset, position, tendon_length, set_point;
     map<string, vector<float>> integral, error_last;
     boost::shared_ptr<tf::TransformListener> listener;
     std::vector<string> body_parts = {"shoulder_right", "shoulder_left","head", "wrist_right","wrist_left"};//, "shoulder_left"};//}, "elbow_left"};
@@ -376,13 +376,8 @@ public:
      * Updates the robot model
      */
     void read(){
-//        ROS_INFO_STREAM("***** 0 " << q[11]);
         update();
-//        ROS_INFO_STREAM("***** 1 " << q[11]);
         forwardKinematics(0.005);
-//        ROS_INFO_STREAM("***** 2 " << q[11]);
-//        if (!external_robot_state)
-//            forwardKinematics(0.005);
     };
     /**
      * Sends motor commands to the real robot
@@ -401,18 +396,11 @@ public:
             return;
         }
 
-        float Kp_dl = 0, Kd_dl = 0, Ki_dl = 0, Kp_disp = 0, integral_limit = 0.01;
-        if (nh->hasParam("Kp_dl"))
-            nh->getParam("Kp_dl",Kp_dl);
-        if (nh->hasParam("Kd_dl"))
-            nh->getParam("Kd_dl",Kd_dl);
-        if (nh->hasParam("Ki_dl")) nh->getParam("Ki_dl",Ki_dl);
-        if (nh->hasParam("integral_limit")) nh->getParam("integral_limit",integral_limit);
-
         for (auto body_part: body_parts) {
             if (!init_called[body_part]) {
                 ROS_WARN_STREAM_THROTTLE(10, body_part << " was not initialized. skipping");
             } else {
+//             if(body_part == "shoulder_right"){
                 std::vector<int> motor_ids;
                 try {
                     nh->getParam(body_part+"/motor_ids", motor_ids); }
@@ -421,89 +409,29 @@ public:
                 }
 
                 stringstream str;
-                map<int,float> l_meter;
-
-                // l_meter.resize(sim_motor_ids.size());
-
-
-                // str << endl << "motor_id | l_meter | ticks | error | integral" << endl;
-                // char s[200];
-                // str << endl;
-                // ROS_INFO_STREAM_THROTTLE(2,str.str());
-
-//                str << endl << "motor_id | l_meter | ticks | error | integral" << endl;
-//                char s[200];
                 roboy_middleware_msgs::MotorCommand msg;
                 msg.global_id = {};
                 msg.setpoint = {};
 
-//                for (int i = 0; i < motor_ids.size(); i++) {
-//                   int motor_id = motor_ids[i];
-//                   // double l_change = l[motor_id] - l_offset[motor_id];
-//
-//                   double error = -l_target[motor_id] + l[motor_id] ;
-//                   if(Ki_dl==0){
-//                       integral[body_part][motor_id] = 0;
-//                   }else {
-//                       integral[body_part][motor_id] += Ki_dl * error;
-//                       if (integral[body_part][motor_id] > integral_limit)
-//                           integral[body_part][motor_id] = integral_limit;
-//                       if (integral[body_part][motor_id] < -integral_limit)
-//                           integral[body_part][motor_id] = -integral_limit;
-//                       if (Ki_dl == 0) {
-//                           integral[body_part][motor_id] = 0;
-//                       }
-//                   }
-//                   l_meter[motor_id] = (-l[motor_ids[i]] + l_offset[motor_ids[i]]) +
-//                        Kp_dl*error + integral[body_part][motor_id];
-//
-////                   sprintf(s,     "%d            | %.6f   | %.6f    |  %.6f   | %.6f\n",
-////                           motor_id,l_meter[motor_id],l_meter[motor_id]),error,integral[body_part][motor_id];
-////                   str <<  s;
-//                    ROS_INFO_STREAM(motor_id << "\t" << error);
-//                    msg.global_id.push_back(motor_id);
-//                    msg.setpoint.push_back(l_meter[motor_id]);
-//                }
-//
-//                ROS_INFO_STREAM_THROTTLE(1,msg);
-//                motor_command.publish(msg);
-//                str << endl;
-//                ROS_INFO_STREAM_THROTTLE(2,str.str());
-
-
                 for (int i = 0; i < motor_ids.size(); i++) {
-
-                   float error = l_ext[motor_ids[i]] - l_target[motor_ids[i]] ;
-
-//                   if(Ki_dl==0){
-//                       integral[body_part][motor_ids[i]] = 0;
-//                   }else {
-//                       integral[body_part][motor_ids[i]] += Ki_dl * error;
-//                       if (integral[body_part][motor_ids[i]] > integral_limit)
-//                           integral[body_part][motor_ids[i]] = integral_limit;
-//                       if (integral[body_part][motor_ids[i]] < -integral_limit)
-//                           integral[body_part][motor_ids[i]] = -integral_limit;
-//                       if (Ki_dl == 0) {
-//                           integral[body_part][motor_ids[i]] = 0;
-//                       }
-//                   }
-
                     msg.global_id.push_back(motor_ids[i]);
-//                    ROS_INFO_STREAM("motor id: " << motor_ids[i] << " l: " << l[motor_ids[i]] << " l_target: " << l_target[motor_ids[i]]);
-                    auto setpoint = -l[motor_ids[i]] + l_offset[motor_ids[i]]
-                            + Kp_dl*error + Kd_dl * (error - error_last[body_part][motor_ids[i]])/diff.toSec(); //+ integral[body_part][motor_ids[i]];
+                    auto setpoint = -l_ext[motor_ids[i]] + l_offset[motor_ids[i]];
                     msg.setpoint.push_back(setpoint);
-//                    msg.setpoint.push_back(l_meter[motor_ids[i]]);
 
-                    error_last[body_part][motor_ids[i]] = error;
+                    if(set_point.find(motor_ids[i]) != set_point.end()) {
+                        if (abs(set_point[motor_ids[i]] - setpoint) > 0.001)
+                            str << motor_ids[i] << ":" << setpoint << ", ";
+                    }else{
+                        str << motor_ids[i] << "*:*" << setpoint << ", ";
+                    }
 
+                    set_point[motor_ids[i]] = setpoint;
                 }
                 motor_command.publish(msg);
-//                 ROS_WARN_STREAM_THROTTLE(1, msg);
-
-
+                if(!str.str().empty())
+                    ROS_WARN_STREAM(str.str());
+            }
         }
-     }
     };
 
 };
