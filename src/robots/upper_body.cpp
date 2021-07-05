@@ -1,5 +1,5 @@
 // #include "kindyn/vrpuppet.hpp"
-#include "kindyn/robot.hpp"
+#include "kindyn/robot_new.hpp"
 #include <thread>
 #include <roboy_middleware_msgs/MotorState.h>
 #include <roboy_middleware_msgs/RoboyState.h>
@@ -33,6 +33,7 @@ private:
     map<string, bool> motor_status_received;
     map<int, bool> communication_established; // keeps track of communication quality for each motor
     map<int,float> l_offset, position, tendon_length, set_point;
+    VectorXd l_current;
     map<string, vector<float>> integral, error_last;
     boost::shared_ptr<tf::TransformListener> listener;
     std::vector<string> body_parts = {"shoulder_right", "shoulder_left","head", "wrist_right","wrist_left"};//, "shoulder_left"};//}, "elbow_left"};
@@ -66,6 +67,9 @@ public:
 
         init(urdf,cardsflow_xml,joint_names);
 //        listener.reset(new tf::TransformListener);
+        l_current.resize(kinematics.number_of_cables);
+        l_current.setZero();
+
         update();
 
 
@@ -218,11 +222,28 @@ public:
         // for (int i = 0; i<motor_ids.size();i++) str << motor_ids[i] << ": " << position[motor_ids[i]] << ", ";
         // str << endl;
 
+
+        // Make sure we get current actual joint state
+        t0= ros::Time::now();
+        int seconds = 2;
+        while ((ros::Time::now() - t0).toSec() < 2) {
+            ROS_INFO_THROTTLE(1, "waiting %d for external joint state", seconds--);
+        }
+
+        // Get current tendon length
+        kinematics.setRobotState(q, qd);
+        kinematics.getRobotCableFromJoints(l_current);
+
+        for(int i=0;i<kinematics.number_of_joints;i++){
+            q_target[i] = q[i];
+            qd_target[i] = qd[i];
+        }
+
         for(int i=0;i<motor_ids.size();i++) {
             int motor_id = motor_ids[i];
             ROS_WARN_STREAM(name << " info print");
-            l_offset[motor_id] = l[motor_id] + position[motor_id];
-            str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l[motor_id] << "\t|\t" << l_offset[motor_id] << endl;
+            l_offset[motor_id] = l_current[motor_id] + position[motor_id];
+            str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l_current[motor_id] << "\t|\t" << l_offset[motor_id] << endl;
         }
 
 
@@ -336,7 +357,7 @@ public:
                                 else {
 
                                     for (auto joint: ik_joints) {
-                                        int joint_index = GetJointIdByName(joint);
+                                        int joint_index = kinematics.GetJointIdByName(joint);
                                         if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
                                             q_target(joint_index) = 0;
                                             ROS_WARN_STREAM("Set target 0 for " << joint);
@@ -377,7 +398,7 @@ public:
      */
     void read(){
         update();
-        forwardKinematics(0.005);
+//        forwardKinematics(0.005);
     };
     /**
      * Sends motor commands to the real robot
@@ -415,7 +436,7 @@ public:
 
                 for (int i = 0; i < motor_ids.size(); i++) {
                     msg.global_id.push_back(motor_ids[i]);
-                    auto setpoint = -l_ext[motor_ids[i]] + l_offset[motor_ids[i]];
+                    auto setpoint = -l_next[motor_ids[i]] + l_offset[motor_ids[i]];
                     msg.setpoint.push_back(setpoint);
 
                     if(set_point.find(motor_ids[i]) != set_point.end()) {

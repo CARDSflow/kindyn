@@ -108,12 +108,16 @@ target_link_libraries(ForcePositionController ${catkin_LIBRARIES} CardsflowHardw
 
 # kindyn library
 add_library(kindyn SHARED
-		src/robot.cpp
+#        src/robot.cpp
+		src/robot_new.cpp
+		src/kinematics.cpp
 		src/filter/joints_kalmanfilter.cpp
 		src/filter/nonlinearanalyticconditionalgaussianjointangles.cpp
 		src/EigenExtension.cpp
 		include/kindyn/EigenExtension.hpp
-		include/kindyn/robot.hpp
+#		include/kindyn/robot.hpp
+		include/kindyn/robot_new.hpp
+		include/kindyn/kinematics.hpp
 		include/kindyn/cable.hpp
 		include/kindyn/filter/joints_kalmanfilter.h
 		include/kindyn/filter/nonlinearanalyticconditionalgaussianjointangles.h)

@@ -124,9 +124,10 @@ public:
         double q_target = joint.getJointPositionCommand();
         MatrixXd L = joint.getL();
         double p_error = wrap_pos_neg_pi(q - q_target);
+//        p_error = std::max(-0.15, std::min(p_error, 0.15));
         // we use the joint_index column of the L matrix to calculate the result for this joint only
         VectorXd ld = L.col(joint_index) * (Kd * (p_error - p_error_last)/period.toSec() + Kp * p_error);
-//        ROS_INFO_STREAM_THROTTLE(1, ld.transpose());
+        ROS_WARN_STREAM_THROTTLE(1, joint_index << "\t" << p_error);
         joint.setMotorCommand(ld);
         p_error_last = p_error;
         last_update = time;
@@ -171,7 +172,7 @@ public:
         return true;
     }
 private:
-    double Kp = 100, Kd = 1.0; /// PD gains
+    double Kp = 100, Kd = 0.0; /// PD gains
     double p_error_last = 0; /// last error
     ros::NodeHandle nh; /// ROS nodehandle
     ros::Publisher controller_state; /// publisher for controller state
