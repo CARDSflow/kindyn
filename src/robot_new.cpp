@@ -83,6 +83,8 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     /**
      * Register ROS control
      */
+    Kp_dl = new double(100.0);
+    Kd_dl = new double(0.0);
     for (int joint = 0; joint < kinematics.number_of_dofs; joint++) {
         ROS_INFO("initializing controllers for joint %d %s", joint, kinematics.joint_names[joint].c_str());
         // connect and register the cardsflow state interface
@@ -94,10 +96,13 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
 
         // connect and register the cardsflow command interface
         hardware_interface::CardsflowHandle pos_handle(cardsflow_state_interface.getHandle(kinematics.joint_names[joint]),
-                                                       &q_target[joint], &qd_target[joint], &kinematics.torques[joint], &ld[joint]);
+                                                       &q_target[joint], &qd_target[joint], &kinematics.torques[joint], &ld[joint],
+                                                       Kp_dl, Kd_dl);
         cardsflow_command_interface.registerHandle(pos_handle);
     }
     registerInterface(&cardsflow_command_interface);
+
+    ekf_ = new BFL::KinDynEKF(kinematics.number_of_joints);
 
     /**
      * Initialize at zero for simulation
@@ -160,10 +165,27 @@ void Robot::update(){
 
     // TODO: Run the below code in critical section to avoid Mutex with the JointState and PROBABLY the controller
 
+    VectorXd q_ekf, qd_ekf;
+    q_ekf.resize(kinematics.number_of_dofs);
+    qd_ekf.resize(kinematics.number_of_dofs);
+
+    if(ekf_->isInitialized()) {
+        ekf_->sensor_update(q);
+        ekf_->getEstimate(q_ekf, qd_ekf);
+    }else{
+        q_ekf = q;
+        qd_ekf = qd;
+    }
+
     /**
      * Update Jacobians matrix L with current joint state
      */
-    kinematics.setRobotState(q, qd);
+    kinematics.setRobotState(q_ekf, qd_ekf);
+
+    VectorXd l;
+    l.resize(kinematics.number_of_cables);
+    kinematics.getRobotCableFromJoints(l);
+
     kinematics.updateJacobians();
 
     /**
@@ -186,10 +208,25 @@ void Robot::update(){
         }
     }
 
+    if (nh->hasParam("k_dt"))
+        nh->getParam("k_dt", k_dt);
+    if (nh->hasParam("Kp_dl"))
+        nh->getParam("Kp_dl", *Kp_dl);
+    if (nh->hasParam("Kd_dl"))
+        nh->getParam("Kd_dl", *Kd_dl);
+
+    ROS_WARN_STREAM_THROTTLE(3, "k_dt=" << k_dt);
     // Do one step forward Kinematics with current tendon velocity Ld and current state
-    vector<VectorXd> state_next = kinematics.oneStepForward(0.005, q, qd, Ld);
+    vector<VectorXd> state_next = kinematics.oneStepForward(k_dt, q, qd, Ld);
 
     // ----------------------------------------------------------------------------
+
+    VectorXd q_next;
+    q_next.resize(kinematics.number_of_joints);
+    for(int i=0;i<kinematics.number_of_joints;i++){
+        q_next[i] = state_next[0][i];
+    }
+    ekf_->model_update(k_dt, q_next);
 
     if(simulated){
         for(int i=0;i<kinematics.number_of_joints;i++){
@@ -199,6 +236,18 @@ void Robot::update(){
     }else{
         kinematics.setRobotState(state_next[0], state_next[1]);
         kinematics.getRobotCableFromJoints(l_next);
+
+//        stringstream ss;
+//        for(int i=8; i<11; i++){
+//            ss << i << ": " << abs(state_next[0][i] - q[i]) << ", ";
+//        }
+//        ROS_WARN_STREAM_THROTTLE(1, "q_next_error " << ss.str());
+//
+//        stringstream ss2;
+//        for(int i=20; i<26; i++){
+//            ss2 << i << ": " << abs(l_next[i] - l[i]) << ", ";
+//        }
+//        ROS_WARN_STREAM_THROTTLE(1, "l_next_error " << ss2.str());
     }
     ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
 }
@@ -261,32 +310,36 @@ void Robot::publishViz(){
                 kinematics.getRobotCableFromJoints(l_target);
             }
         }
-//        { // joint state publisher
-//            sensor_msgs::JointState cf_msg;
-//            roboy_simulation_msgs::JointState msg;
-//            msg.names = joint_names;
-//            cf_msg.name = joint_names;
-//            cf_msg.header.stamp = ros::Time::now();
-//            for (int i = 1; i < number_of_links; i++) {
-//                Matrix4d pose = iDynTree::toEigen(kinDynComp.getWorldTransform(i).asHomogeneousTransform());
-//                Vector3d axis;
-//                axis << joint_axis[i - 1][3], joint_axis[i - 1][4], joint_axis[i - 1][5];
-//                axis = pose.block(0, 0, 3, 3) * axis;
-//
-//                msg.origin.push_back(convertEigenToGeometry(pose.topRightCorner(3, 1)));
-//                msg.axis.push_back(convertEigenToGeometry(axis));
-//                msg.torque.push_back(torques[i - 1]);
-//                msg.q.push_back(q[i-1]);
-//                msg.qd.push_back(qd[i-1]);
-//
-//                cf_msg.position.push_back(q[i-1]);
-//                cf_msg.velocity.push_back(qd[i-1]);
-//
-//            }
-//            joint_state_pub.publish(msg);
-//            cardsflow_joint_states_pub.publish(cf_msg);
-//
-//        }
+        { // joint state publisher
+            sensor_msgs::JointState cf_msg;
+            roboy_simulation_msgs::JointState msg;
+            msg.names = kinematics.joint_names;
+            cf_msg.name = kinematics.joint_names;
+            cf_msg.header.stamp = ros::Time::now();
+
+            kinematics.setRobotState(q, qd);
+
+            for (int i = 1; i < kinematics.number_of_links; i++) {
+
+                Matrix4d pose = kinematics.getPoseFromJoint(i);
+                Vector3d axis;
+                axis << kinematics.joint_axis[i - 1][3], kinematics.joint_axis[i - 1][4], kinematics.joint_axis[i - 1][5];
+                axis = pose.block(0, 0, 3, 3) * axis;
+
+                msg.origin.push_back(convertEigenToGeometry(pose.topRightCorner(3, 1)));
+                msg.axis.push_back(convertEigenToGeometry(axis));
+                msg.torque.push_back(kinematics.torques[i - 1]);
+                msg.q.push_back(q[i-1]);
+                msg.qd.push_back(qd[i-1]);
+
+                cf_msg.position.push_back(q[i-1]);
+                cf_msg.velocity.push_back(qd[i-1]);
+
+            }
+            joint_state_pub.publish(msg);
+            cardsflow_joint_states_pub.publish(cf_msg);
+
+        }
     }
 }
 

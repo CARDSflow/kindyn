@@ -48,6 +48,7 @@ namespace cardsflow {
             void setRobotState(VectorXd q_in, VectorXd qd_in);
 
             vector<Matrix4d> getRobotPosesFromJoints();
+            Matrix4d getPoseFromJoint(int index);
             void getRobotCableFromJoints(VectorXd &l_out);
 
             /**

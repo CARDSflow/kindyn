@@ -89,7 +89,7 @@ namespace BFL {
     bool BFL::KinDynEKF::model_update(double dt, const Eigen::VectorXd &model_action) {
         // only update filter when it is initialized
         if (!filter_initialized_) {
-            ROS_INFO("Cannot update filter when filter was not initialized first.");
+            ROS_WARN_STREAM_THROTTLE(5, "Cannot update filter when filter was not initialized first.");
             return false;
         }
 

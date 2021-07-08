@@ -234,10 +234,12 @@ public:
         kinematics.setRobotState(q, qd);
         kinematics.getRobotCableFromJoints(l_current);
 
-        for(int i=0;i<kinematics.number_of_joints;i++){
-            q_target[i] = q[i];
-            qd_target[i] = qd[i];
-        }
+        ekf_->initialize(q, k_dt);
+
+//        for(int i=0;i<kinematics.number_of_joints;i++){
+//            q_target[i] = q[i];
+//            qd_target[i] = qd[i];
+//        }
 
         for(int i=0;i<motor_ids.size();i++) {
             int motor_id = motor_ids[i];
@@ -440,8 +442,9 @@ public:
                     msg.setpoint.push_back(setpoint);
 
                     if(set_point.find(motor_ids[i]) != set_point.end()) {
+                        double err = abs(set_point[motor_ids[i]] - setpoint);
                         if (abs(set_point[motor_ids[i]] - setpoint) > 0.001)
-                            str << motor_ids[i] << ":" << setpoint << ", ";
+                            str << motor_ids[i] << ":" << err << ", ";
                     }else{
                         str << motor_ids[i] << "*:*" << setpoint << ", ";
                     }

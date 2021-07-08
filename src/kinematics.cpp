@@ -400,6 +400,11 @@ vector<Matrix4d> Kinematics::getRobotPosesFromJoints(){
     return link_to_world_transform;
 }
 
+Matrix4d Kinematics::getPoseFromJoint(int index){
+    Matrix4d pose = iDynTree::toEigen(kinDynComp.getWorldTransform(index).asHomogeneousTransform());
+    return pose;
+}
+
 void Kinematics::getRobotCableFromJoints(VectorXd &l_out){
 //    setRobotState(q_in, qd_in);
     int i=0;

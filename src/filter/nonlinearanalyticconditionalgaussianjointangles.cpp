@@ -38,14 +38,6 @@ namespace BFL
         ColumnVector state = ConditionalArgumentGet(0);
         ColumnVector vel  = ConditionalArgumentGet(1);
 
-//        state(1) += cos(state(6)) * vel(1);
-//        state(2) += sin(state(6)) * vel(1);
-//        state(6) += vel(2);
-
-//        state(1) += vel(1);
-//        state(2) += vel(2);
-//        state(3) += vel(3);
-
         for (unsigned int i=1; i<=number_of_joints_; i++){
             state(i) += 0.005*vel(i);
         }
@@ -58,15 +50,6 @@ namespace BFL
         if (i==0)//derivative to the first conditional argument (x)
         {
             ColumnVector vel = ConditionalArgumentGet(1);
-//            double yaw = ConditionalArgumentGet(0)(6);
-
-//            df(1,3)=-vel_trans*sin(yaw);
-//            df(2,3)= vel_trans*cos(yaw);
-
-//            df(1,1)= vel(1);
-//            df(2,2)= vel(2);
-//            df(3,3)= vel(3);
-
             for (unsigned int i=1; i<=number_of_joints_; i++){
                 df(i, i) = vel(i);
             }

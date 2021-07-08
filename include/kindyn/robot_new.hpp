@@ -146,6 +146,10 @@ namespace cardsflow {
             Eigen::IOFormat fmt; /// formator for terminal printouts
             bool external_robot_state; /// indicates if we get the robot state externally
             bool external_robot_target = false;
+            double k_dt = 0.005;
+            double *Kp_dl, *Kd_dl;
+
+            BFL::KinDynEKF *ekf_;
         };
     };
 }
