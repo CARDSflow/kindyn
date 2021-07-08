@@ -39,7 +39,7 @@ namespace BFL
         ColumnVector vel  = ConditionalArgumentGet(1);
 
         for (unsigned int i=1; i<=number_of_joints_; i++){
-            state(i) += 0.005*vel(i);
+            state(i) += vel(i);
         }
 
         return state + AdditiveNoiseMuGet();

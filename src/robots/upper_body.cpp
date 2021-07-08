@@ -225,16 +225,14 @@ public:
 
         // Make sure we get current actual joint state
         t0= ros::Time::now();
-        int seconds = 2;
-        while ((ros::Time::now() - t0).toSec() < 2) {
+        int seconds = 1;
+        while ((ros::Time::now() - t0).toSec() < 1) {
             ROS_INFO_THROTTLE(1, "waiting %d for external joint state", seconds--);
         }
 
         // Get current tendon length
         kinematics.setRobotState(q, qd);
         kinematics.getRobotCableFromJoints(l_current);
-
-        ekf_->initialize(q, k_dt);
 
 //        for(int i=0;i<kinematics.number_of_joints;i++){
 //            q_target[i] = q[i];
@@ -336,6 +334,8 @@ public:
                     //            communication_established[id] = true;
                 }
                 else {
+                    if (body_part != "wrist_left" && body_part != "wrist_right")
+                    {
                     //            communication_established[id] = false;
                     ROS_WARN_THROTTLE(10,"Did not receive motor status for motor with id: %d. %s Body part is disabled.", (id, body_part));
 
@@ -371,7 +371,7 @@ public:
 
                         }
                             
-                    //}
+                    }
 
                 }
             }
@@ -441,15 +441,15 @@ public:
                     auto setpoint = -l_next[motor_ids[i]] + l_offset[motor_ids[i]];
                     msg.setpoint.push_back(setpoint);
 
-                    if(set_point.find(motor_ids[i]) != set_point.end()) {
-                        double err = abs(set_point[motor_ids[i]] - setpoint);
-                        if (abs(set_point[motor_ids[i]] - setpoint) > 0.001)
-                            str << motor_ids[i] << ":" << err << ", ";
-                    }else{
-                        str << motor_ids[i] << "*:*" << setpoint << ", ";
-                    }
-
-                    set_point[motor_ids[i]] = setpoint;
+//                    if(set_point.find(motor_ids[i]) != set_point.end()) {
+//                        double err = abs(set_point[motor_ids[i]] - setpoint);
+//                        if (abs(set_point[motor_ids[i]] - setpoint) > 0.001)
+//                            str << motor_ids[i] << ":" << err << ", ";
+//                    }else{
+//                        str << motor_ids[i] << "*:*" << setpoint << ", ";
+//                    }
+//
+//                    set_point[motor_ids[i]] = setpoint;
                 }
                 motor_command.publish(msg);
                 if(!str.str().empty())

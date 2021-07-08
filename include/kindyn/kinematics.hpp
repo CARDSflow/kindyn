@@ -61,6 +61,8 @@ namespace cardsflow {
              */
             vector<VectorXd> oneStepForward(double dt, VectorXd& q_in, VectorXd& qd_in, vector<VectorXd> Ld);
 
+            vector<VectorXd> oneTendonStepForward(double dt, VectorXd& l_in, VectorXd& ld_in);
+
             int GetJointIdByName(string joint);
 
 
@@ -128,7 +130,7 @@ namespace cardsflow {
             } robotstate;
 
             typedef boost::array< double , 2 > state_type; /// second order dynamics integration
-            vector<state_type> joint_state;
+            vector<state_type> joint_state, motor_state;
 
             Matrix4d world_H_base; /// floating base 6-DoF pose
             vector<Matrix4d> world_to_link_transform, link_to_world_transform, frame_transform;
@@ -142,7 +144,7 @@ namespace cardsflow {
              */
             VectorXd q, qd, qdd; /// joint positon, velocity, acceleration
             VectorXd q_next, qd_next, qdd_next; /// previous joint positon, velocity, acceleration
-//            VectorXd l, ld;
+            VectorXd l_next, ld_next;
 
             MatrixXd S, P, V, W; /// matrices of cable model
             vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments

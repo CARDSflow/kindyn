@@ -29,7 +29,7 @@ namespace BFL {
         /** update the extended Kalman filter
         * \param odom_active specifies if the odometry sensor is active or not
         * \param imu_active specifies if the imu sensor is active or not
-        * \param gps_active specifies if the gps sensor is active or not
+        * \param magnetic_active specifies if the magnetic sensor is active or not
         * \param vo_active specifies if the vo sensor is active or not
         * \param filter_time update the ekf up to this time
         * \param diagnostics_res returns false if the diagnostics found that the sensor measurements are inconsistent
@@ -61,18 +61,18 @@ namespace BFL {
         // pdf / model / filter
         BFL::AnalyticSystemModelGaussianUncertainty *sys_model_;
         BFL::NonLinearAnalyticConditionalGaussianJointAngles *sys_pdf_;
-        BFL::LinearAnalyticConditionalGaussian *gps_meas_pdf_;
-        BFL::LinearAnalyticMeasurementModelGaussianUncertainty *gps_meas_model_;
+        BFL::LinearAnalyticConditionalGaussian *magnetic_meas_pdf_;
+        BFL::LinearAnalyticMeasurementModelGaussianUncertainty *magnetic_meas_model_;
         BFL::Gaussian *prior_;
         BFL::ExtendedKalmanFilter *filter_;
-        MatrixWrapper::SymmetricMatrix gps_covariance_;
+        MatrixWrapper::SymmetricMatrix magnetic_covariance_;
         // vars
         MatrixWrapper::ColumnVector vel_desi_, filter_estimate_old_vec_;
         Eigen::VectorXd filter_estimate_old_;
-        Eigen::VectorXd gps_meas_, gps_meas_old_;
-        int number_of_joints_;
+        Eigen::VectorXd magnetic_meas_, magnetic_meas_old_;
+        int number_of_states_;
         double filter_time_old_;
-        bool filter_initialized_, odom_initialized_, imu_initialized_, vo_initialized_, gps_initialized_;
+        bool filter_initialized_, magnetic_initialized_;
 
         /// correct for angle overflow
         void angleOverflowCorrect(double &a, double ref);

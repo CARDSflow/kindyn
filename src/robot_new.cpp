@@ -114,6 +114,10 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
 
         kinematics.setRobotState(q, qd);
         kinematics.updateJacobians();
+    }else{
+        ros::Duration(1.0).sleep();
+        // Initialize Filter
+        ekf_->initialize(q, k_dt);
     }
 
     try {
@@ -161,7 +165,15 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
 }
 
 void Robot::update(){
-    ros::Time t0 = ros::Time::now();
+
+    if (nh->hasParam("k_dt"))
+        nh->getParam("k_dt", k_dt);
+    if (nh->hasParam("Kp_dl"))
+        nh->getParam("Kp_dl", *Kp_dl);
+    if (nh->hasParam("Kd_dl"))
+        nh->getParam("Kd_dl", *Kd_dl);
+
+    ROS_WARN_STREAM_THROTTLE(3, "k_dt=" << k_dt);
 
     // TODO: Run the below code in critical section to avoid Mutex with the JointState and PROBABLY the controller
 
@@ -181,11 +193,6 @@ void Robot::update(){
      * Update Jacobians matrix L with current joint state
      */
     kinematics.setRobotState(q_ekf, qd_ekf);
-
-    VectorXd l;
-    l.resize(kinematics.number_of_cables);
-    kinematics.getRobotCableFromJoints(l);
-
     kinematics.updateJacobians();
 
     /**
@@ -208,25 +215,12 @@ void Robot::update(){
         }
     }
 
-    if (nh->hasParam("k_dt"))
-        nh->getParam("k_dt", k_dt);
-    if (nh->hasParam("Kp_dl"))
-        nh->getParam("Kp_dl", *Kp_dl);
-    if (nh->hasParam("Kd_dl"))
-        nh->getParam("Kd_dl", *Kd_dl);
+    // ----------------------------------------------------------------------------
 
     ROS_WARN_STREAM_THROTTLE(3, "k_dt=" << k_dt);
     // Do one step forward Kinematics with current tendon velocity Ld and current state
     vector<VectorXd> state_next = kinematics.oneStepForward(k_dt, q, qd, Ld);
-
-    // ----------------------------------------------------------------------------
-
-    VectorXd q_next;
-    q_next.resize(kinematics.number_of_joints);
-    for(int i=0;i<kinematics.number_of_joints;i++){
-        q_next[i] = state_next[0][i];
-    }
-    ekf_->model_update(k_dt, q_next);
+    ekf_->model_update(k_dt, qd);
 
     if(simulated){
         for(int i=0;i<kinematics.number_of_joints;i++){
@@ -236,18 +230,6 @@ void Robot::update(){
     }else{
         kinematics.setRobotState(state_next[0], state_next[1]);
         kinematics.getRobotCableFromJoints(l_next);
-
-//        stringstream ss;
-//        for(int i=8; i<11; i++){
-//            ss << i << ": " << abs(state_next[0][i] - q[i]) << ", ";
-//        }
-//        ROS_WARN_STREAM_THROTTLE(1, "q_next_error " << ss.str());
-//
-//        stringstream ss2;
-//        for(int i=20; i<26; i++){
-//            ss2 << i << ": " << abs(l_next[i] - l[i]) << ", ";
-//        }
-//        ROS_WARN_STREAM_THROTTLE(1, "l_next_error " << ss2.str());
     }
     ROS_INFO_STREAM_THROTTLE(5, "q_target " << q_target.transpose().format(fmt));
 }
