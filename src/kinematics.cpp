@@ -100,11 +100,8 @@ void Kinematics::init(string urdf_file_path, string viapoints_file_path, vector 
     q_next.resize(number_of_dofs);
     qd_next.resize(number_of_dofs);
     qdd_next.resize(number_of_dofs);
-    l_next.resize(number_of_cables);
-    ld_next.resize(number_of_cables);
 
     joint_state.resize(number_of_dofs);
-    motor_state.resize(number_of_cables);
     q_min.resize(number_of_dofs);
     q_max.resize(number_of_dofs);
 
@@ -130,8 +127,6 @@ void Kinematics::init(string urdf_file_path, string viapoints_file_path, vector 
     q_next.setZero();
     qd_next.setZero();
     qdd_next.setZero();
-    l_next.setZero();
-    ld_next.setZero();
 
     /**
      * Init joint info
@@ -383,30 +378,6 @@ vector<VectorXd> Kinematics::oneStepForward(double dt, VectorXd& q_in, VectorXd&
     ROS_INFO_THROTTLE(10, "forward kinematics calculated for %lf s", integration_time);
 
     vector<VectorXd> result = {q_next, qd_next};
-    return result;
-}
-
-vector<VectorXd> Kinematics::oneTendonStepForward(double dt, VectorXd& l_in, VectorXd& ld_in){
-
-    for(int i=0;i<number_of_cables;i++){
-        motor_state[i][0] = l_in[i];
-        motor_state[i][1] = ld_in[i];
-    }
-
-    for (int l = 0; l < number_of_cables; l++) {
-        boost::numeric::odeint::integrate(
-                [this, ld_in, l](const state_type &x, state_type &dxdt, double t) {
-                    dxdt[1] = 0;
-                    dxdt[0] = ld_in[l];
-                }, motor_state[l], integration_time, integration_time + dt, dt);
-        l_next[l] = motor_state[l][0];
-        ld_next[l] = ld_in[l];
-    }
-
-    integration_time += dt;
-    ROS_INFO_THROTTLE(10, "forward kinematics calculated for %lf s", integration_time);
-
-    vector<VectorXd> result = {l_next, ld_next};
     return result;
 }
 

@@ -217,7 +217,6 @@ void Robot::update(){
 
     // ----------------------------------------------------------------------------
 
-    ROS_WARN_STREAM_THROTTLE(3, "k_dt=" << k_dt);
     // Do one step forward Kinematics with current tendon velocity Ld and current state
     vector<VectorXd> state_next = kinematics.oneStepForward(k_dt, q, qd, Ld);
     ekf_->model_update(k_dt, qd);

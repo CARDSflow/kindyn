@@ -61,11 +61,7 @@ namespace cardsflow {
              */
             vector<VectorXd> oneStepForward(double dt, VectorXd& q_in, VectorXd& qd_in, vector<VectorXd> Ld);
 
-            vector<VectorXd> oneTendonStepForward(double dt, VectorXd& l_in, VectorXd& ld_in);
-
             int GetJointIdByName(string joint);
-
-
 
             size_t number_of_dofs = 0; /// number of degrees of freedom of the whole robot
             vector<string> endeffectors; /// names of the endeffectors
@@ -144,7 +140,6 @@ namespace cardsflow {
              */
             VectorXd q, qd, qdd; /// joint positon, velocity, acceleration
             VectorXd q_next, qd_next, qdd_next; /// previous joint positon, velocity, acceleration
-            VectorXd l_next, ld_next;
 
             MatrixXd S, P, V, W; /// matrices of cable model
             vector <vector<pair < ViaPointPtr, ViaPointPtr>>> segments; /// cable segments

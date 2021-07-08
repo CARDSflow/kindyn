@@ -124,8 +124,6 @@ public:
         double q_target = joint.getJointPositionCommand();
         MatrixXd L = joint.getL();
         double p_error = wrap_pos_neg_pi(q - q_target);
-        ROS_WARN_STREAM_THROTTLE(3, "Kp_dl=" << *joint.Kp_dl_ << ", Kd_dl=" << *joint.Kd_dl_);
-//        p_error = std::max(-0.15, std::min(p_error, 0.15));
         // we use the joint_index column of the L matrix to calculate the result for this joint only
         VectorXd ld = L.col(joint_index) * ((*joint.Kd_dl_) * (p_error - p_error_last)/period.toSec() + (*joint.Kp_dl_) * p_error);
         joint.setMotorCommand(ld);

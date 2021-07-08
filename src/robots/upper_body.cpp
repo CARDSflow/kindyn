@@ -32,7 +32,7 @@ private:
     map<string, ros::ServiceClient> motor_config, motor_control_mode, control_mode;
     map<string, bool> motor_status_received;
     map<int, bool> communication_established; // keeps track of communication quality for each motor
-    map<int,float> l_offset, position, tendon_length, set_point;
+    map<int,float> l_offset, position, tendon_length;
     VectorXd l_current;
     map<string, vector<float>> integral, error_last;
     boost::shared_ptr<tf::TransformListener> listener;
@@ -440,16 +440,6 @@ public:
                     msg.global_id.push_back(motor_ids[i]);
                     auto setpoint = -l_next[motor_ids[i]] + l_offset[motor_ids[i]];
                     msg.setpoint.push_back(setpoint);
-
-//                    if(set_point.find(motor_ids[i]) != set_point.end()) {
-//                        double err = abs(set_point[motor_ids[i]] - setpoint);
-//                        if (abs(set_point[motor_ids[i]] - setpoint) > 0.001)
-//                            str << motor_ids[i] << ":" << err << ", ";
-//                    }else{
-//                        str << motor_ids[i] << "*:*" << setpoint << ", ";
-//                    }
-//
-//                    set_point[motor_ids[i]] = setpoint;
                 }
                 motor_command.publish(msg);
                 if(!str.str().empty())
