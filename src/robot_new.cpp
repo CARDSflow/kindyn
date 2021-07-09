@@ -179,11 +179,12 @@ void Robot::update(){
     /**
      * Update Current robot state
      */
-    if(!simulated) {
-        VectorXd q_ekf, qd_ekf;
-        q_ekf.resize(kinematics.number_of_dofs);
-        qd_ekf.resize(kinematics.number_of_dofs);
 
+    VectorXd q_ekf, qd_ekf;
+    q_ekf.resize(kinematics.number_of_dofs);
+    qd_ekf.resize(kinematics.number_of_dofs);
+
+    if(!simulated) {
         if (ekf_->isInitialized()) {
             ekf_->sensor_update(q);
             ekf_->getEstimate(q_ekf, qd_ekf);
@@ -216,7 +217,7 @@ void Robot::update(){
      * Update current tendon length from controller
      */
 
-    // Update tendon velocity from Controller
+    // Doing the reduce_sum, the latter step of doing dot product in the controller
     for(int i = 0; i< kinematics.endeffectors.size();i++) {
         Ld[i].setZero();
         int dof_offset = kinematics.endeffector_dof_offset[i];
@@ -227,15 +228,18 @@ void Robot::update(){
 
     // ----------------------------------------------------------------------------
 
-    // Do one step forward Kinematics with current tendon velocity Ld and current state
-    vector<VectorXd> state_next = kinematics.oneStepForward(k_dt, q, qd, Ld);
-
     if(simulated){
+        // Do one step forward Kinematics with current tendon velocity Ld and current state
+        vector<VectorXd> state_next = kinematics.oneStepForward(k_dt, q, qd, Ld);
         for(int i=0;i<kinematics.number_of_joints;i++){
             q[i] = state_next[0][i];
             qd[i] = state_next[1][i];
         }
     }else{
+        vector<VectorXd> state_next = kinematics.oneStepForward(k_dt, q_ekf, qd_ekf, Ld);
+        // Currently qd is zero, so the filter is basically more try to use the most recent q
+        // The correct way should be state_next[1]. However, when it's not moving,
+        // state_next[1] try to capture the target, but q_external holds it back again !!!
         ekf_->model_update(k_dt, qd);
 
         kinematics.setRobotState(state_next[0], state_next[1]);

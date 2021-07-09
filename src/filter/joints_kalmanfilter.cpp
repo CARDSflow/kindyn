@@ -21,7 +21,7 @@ namespace BFL {
         SymmetricMatrix
         sysNoise_Cov(number_of_states_ * 2);
         sysNoise_Cov = 0;
-        for (unsigned int i = 1; i <= number_of_states_ * 2; i++) sysNoise_Cov(i, i) = pow(1.0, 2);
+        for (unsigned int i = 1; i <= number_of_states_ * 2; i++) sysNoise_Cov(i, i) = pow(30.0, 2);
         Gaussian system_Uncertainty(sysNoise_Mu, sysNoise_Cov);
         sys_pdf_ = new NonLinearAnalyticConditionalGaussianJointAngles(system_Uncertainty);
         sys_pdf_->initialize(number_of_states_);
@@ -32,7 +32,7 @@ namespace BFL {
         measNoiseGps_Mu = 0;
         SymmetricMatrix measNoiseGps_Cov(number_of_states_);
         measNoiseGps_Cov = 0;
-        for (unsigned int i = 1; i <= number_of_states_; i++) measNoiseGps_Cov(i, i) = pow(2.0, 2);
+        for (unsigned int i = 1; i <= number_of_states_; i++) measNoiseGps_Cov(i, i) = pow(1.0, 2);
         Gaussian measurement_Uncertainty_GPS(measNoiseGps_Mu, measNoiseGps_Cov);
         MatrixWrapper::Matrix Hmagnetic(number_of_states_, number_of_states_ * 2);
         Hmagnetic = 0;
