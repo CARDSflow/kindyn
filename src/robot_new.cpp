@@ -176,11 +176,14 @@ void Robot::update(){
 
     // TODO: Run the below code in critical section to avoid Mutex with the JointState and PROBABLY the controller
 
-    VectorXd q_ekf, qd_ekf;
-    q_ekf.resize(kinematics.number_of_dofs);
-    qd_ekf.resize(kinematics.number_of_dofs);
-
+    /**
+     * Update Current robot state
+     */
     if(!simulated) {
+        VectorXd q_ekf, qd_ekf;
+        q_ekf.resize(kinematics.number_of_dofs);
+        qd_ekf.resize(kinematics.number_of_dofs);
+
         if (ekf_->isInitialized()) {
             ekf_->sensor_update(q);
             ekf_->getEstimate(q_ekf, qd_ekf);
@@ -191,12 +194,15 @@ void Robot::update(){
             q_ekf = q;
             qd_ekf = qd;
         }
+
+        kinematics.setRobotState(q_ekf, qd_ekf);
+    }else{
+        kinematics.setRobotState(q, qd);
     }
 
     /**
      * Update Jacobians matrix L with current joint state
      */
-    kinematics.setRobotState(q_ekf, qd_ekf);
     kinematics.updateJacobians();
 
     /**
