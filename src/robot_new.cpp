@@ -20,7 +20,7 @@ Robot::Robot() {
 Robot::~Robot() {
 }
 
-void Robot::updateSubscriptions() {
+void Robot::updatePublishers() {
     ROS_INFO_STREAM("advertising " << topic_root+"/robot_state");
     robot_state_pub = nh->advertise<geometry_msgs::PoseStamped>(topic_root+"control/robot_state", 1);
     tendon_state_pub = nh->advertise<roboy_simulation_msgs::Tendon>(topic_root+"control/tendon_state", 1);
@@ -33,19 +33,33 @@ void Robot::updateSubscriptions() {
     robot_state_target_pub = nh->advertise<geometry_msgs::PoseStamped>(topic_root+"control/robot_state_target", 1);
     tendon_state_target_pub = nh->advertise<roboy_simulation_msgs::Tendon>(topic_root+"control/tendon_state_target", 1);
     joint_state_target_pub = nh->advertise<roboy_simulation_msgs::JointState>(topic_root+"control/joint_state_target", 1);
+}
+
+void Robot::updateSubscribers(){
+    if (external_robot_state) {
+        ROS_WARN("Subscribing to external joint state");
+        joint_state_sub = nh->subscribe(topic_root+"/sensing/external_joint_states", 1, &Robot::JointState, this);
+    }
+    joint_target_sub = nh->subscribe(topic_root+"control/joint_targets", 100, &Robot::JointTarget, this);
+    controller_type_sub = nh->subscribe("/controller_type", 100, &Robot::controllerType, this);
+//     joint_state_sub = nh->subscribe("/joint_states", 100, &Robot::JointState, this);
+//    floating_base_sub = nh->subscribe(topic_root+"control/floating_base", 100, &Robot::FloatingBase, this);
+//    ik_srv = nh->advertiseService(topic_root+"control/ik", &Robot::InverseKinematicsService, this);
+//    ik_two_frames_srv = nh->advertiseService(topic_root+"control/ik_multiple_frames", &Robot::InverseKinematicsMultipleFramesService, this);
+//    fk_srv = nh->advertiseService(topic_root+"control/fk", &Robot::ForwardKinematicsService, this);
+//    freeze_srv = nh->advertiseService(topic_root+"control/freeze", &Robot::FreezeService, this);
+//    interactive_marker_sub = nh->subscribe(topic_root+"control/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
+//    zero_joints_sub = nh->subscribe(topic_root+"control/zero_joints", 1, &Robot::ZeroJoints,this);
+}
+
+void Robot::init(string urdf_file_path, string viapoints_file_path, vector<string> joint_names_ordered) {
+
+    updatePublishers();
     fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
     nh->getParam("external_robot_target", external_robot_target);
     nh->getParam("external_robot_state", external_robot_state);
     nh->setParam("vr_puppet",false);
 
-    if (this->external_robot_state) {
-        ROS_WARN("Subscribing to external joint state");
-        joint_state_sub = nh->subscribe(topic_root+"/sensing/external_joint_states", 100, &Robot::JointState, this);
-    }
-}
-
-void Robot::init(string urdf_file_path, string viapoints_file_path, vector<string> joint_names_ordered) {
-    updateSubscriptions();
     kinematics.init(urdf_file_path, viapoints_file_path, joint_names_ordered);
 
     q.resize(kinematics.number_of_dofs);
@@ -114,10 +128,6 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
 
         kinematics.setRobotState(q, qd);
         kinematics.updateJacobians();
-    }else{
-        ros::Duration(1.0).sleep();
-        // Initialize Filter
-        ekf_->initialize(q, k_dt);
     }
 
     try {
@@ -152,16 +162,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         k++;
     }
 
-    joint_target_sub = nh->subscribe(topic_root+"control/joint_targets", 100, &Robot::JointTarget, this);
-    controller_type_sub = nh->subscribe("/controller_type", 100, &Robot::controllerType, this);
-//     joint_state_sub = nh->subscribe("/joint_states", 100, &Robot::JointState, this);
-//    floating_base_sub = nh->subscribe(topic_root+"control/floating_base", 100, &Robot::FloatingBase, this);
-//    ik_srv = nh->advertiseService(topic_root+"control/ik", &Robot::InverseKinematicsService, this);
-//    ik_two_frames_srv = nh->advertiseService(topic_root+"control/ik_multiple_frames", &Robot::InverseKinematicsMultipleFramesService, this);
-//    fk_srv = nh->advertiseService(topic_root+"control/fk", &Robot::ForwardKinematicsService, this);
-//    freeze_srv = nh->advertiseService(topic_root+"control/freeze", &Robot::FreezeService, this);
-//    interactive_marker_sub = nh->subscribe(topic_root+"control/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
-//    zero_joints_sub = nh->subscribe(topic_root+"control/zero_joints", 1, &Robot::ZeroJoints,this);
+    updateSubscribers();
 }
 
 void Robot::update(){
@@ -173,20 +174,23 @@ void Robot::update(){
     if (nh->hasParam("Kd_dl"))
         nh->getParam("Kd_dl", *Kd_dl);
 
-    ROS_WARN_STREAM_THROTTLE(3, "k_dt=" << k_dt);
-
     // TODO: Run the below code in critical section to avoid Mutex with the JointState and PROBABLY the controller
 
     VectorXd q_ekf, qd_ekf;
     q_ekf.resize(kinematics.number_of_dofs);
     qd_ekf.resize(kinematics.number_of_dofs);
 
-    if(ekf_->isInitialized()) {
-        ekf_->sensor_update(q);
-        ekf_->getEstimate(q_ekf, qd_ekf);
-    }else{
-        q_ekf = q;
-        qd_ekf = qd;
+    if(!simulated) {
+        if (ekf_->isInitialized()) {
+            ekf_->sensor_update(q);
+            ekf_->getEstimate(q_ekf, qd_ekf);
+        } else {
+            ros::Duration(1.0).sleep();
+            ekf_->initialize(q, k_dt);
+
+            q_ekf = q;
+            qd_ekf = qd;
+        }
     }
 
     /**
@@ -219,7 +223,6 @@ void Robot::update(){
 
     // Do one step forward Kinematics with current tendon velocity Ld and current state
     vector<VectorXd> state_next = kinematics.oneStepForward(k_dt, q, qd, Ld);
-    ekf_->model_update(k_dt, qd);
 
     if(simulated){
         for(int i=0;i<kinematics.number_of_joints;i++){
@@ -227,6 +230,8 @@ void Robot::update(){
             qd[i] = state_next[1][i];
         }
     }else{
+        ekf_->model_update(k_dt, qd);
+
         kinematics.setRobotState(state_next[0], state_next[1]);
         kinematics.getRobotCableFromJoints(l_next);
     }

@@ -126,7 +126,7 @@ namespace cardsflow {
             } robotstate;
 
             typedef boost::array< double , 2 > state_type; /// second order dynamics integration
-            vector<state_type> joint_state, motor_state;
+            vector<state_type> joint_state;
 
             Matrix4d world_H_base; /// floating base 6-DoF pose
             vector<Matrix4d> world_to_link_transform, link_to_world_transform, frame_transform;

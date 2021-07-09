@@ -101,7 +101,8 @@ namespace cardsflow {
             bool simulated = false;
         protected:
 
-            void updateSubscriptions();
+            void updatePublishers();
+            void updateSubscribers();
             void publishViz();
 
             /**

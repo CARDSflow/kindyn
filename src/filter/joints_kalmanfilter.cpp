@@ -119,6 +119,7 @@ namespace BFL {
                     magnetic_vec(i) = meas_state(i-1);
                 }else{
                     magnetic_vec(i) = magnetic_meas_old_(i-1);
+                    ROS_WARN_STREAM("Reject measurement for joint " << i-1 << " with value " << meas_state(i-1));
                 }
             }
 

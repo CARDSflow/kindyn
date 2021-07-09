@@ -166,8 +166,6 @@ void Kinematics::init(string urdf_file_path, string viapoints_file_path, vector 
             pair<ViaPointPtr, ViaPointPtr> segment(muscle.viaPoints[i - 1], muscle.viaPoints[i]);
             segments[muscle_index].push_back(segment);
         }
-        motor_state[muscle_index][0] = 0;
-        motor_state[muscle_index][1] = 0;
         muscle_index++;
     }
 
@@ -206,13 +204,13 @@ void Kinematics::setRobotState(VectorXd q_in, VectorXd qd_in){
 
 void Kinematics::updateJacobians(){
 
-    // Update V - Cable length jacobian
+    // Update V - Cable-link jacobian
     update_V();
 
-    // Update P orientation
+    // Update P - Link-Position jacobian
     update_P();
 
-    // Compute L matrix
+    // Compute L matrix - Cable-Joint jacobian
     W = P * S;
     L = V * W;
     L_t = -L.transpose();
