@@ -383,8 +383,8 @@ public:
                     //            communication_established[id] = false;
                     ROS_WARN_THROTTLE(10,"Did not receive motor status for motor with id: %d. %s Body part is disabled.", (id, body_part));
 
-                    // TODO fix triceps
-                    //if (id != 18 && body_part != "shoulder_right") {
+                        // TODO fix triceps
+                        //if (id != 18 && body_part != "shoulder_right") {
                         if(init_called[body_part]) {
                             init_called[body_part] = false;
                             nh->setParam("initialized", init_called);
@@ -413,10 +413,8 @@ public:
                                 }
                             }
 
-                        }
-                            
+                        }                            
                     }
-
                 }
             }
 
