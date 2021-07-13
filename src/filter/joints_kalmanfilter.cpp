@@ -21,7 +21,7 @@ namespace BFL {
         SymmetricMatrix
         sysNoise_Cov(number_of_states_ * 2);
         sysNoise_Cov = 0;
-        for (unsigned int i = 1; i <= number_of_states_ * 2; i++) sysNoise_Cov(i, i) = pow(30.0, 2);
+        for (unsigned int i = 1; i <= number_of_states_ * 2; i++) sysNoise_Cov(i, i) = pow(20.0, 2);
         Gaussian system_Uncertainty(sysNoise_Mu, sysNoise_Cov);
         sys_pdf_ = new NonLinearAnalyticConditionalGaussianJointAngles(system_Uncertainty);
         sys_pdf_->initialize(number_of_states_);
@@ -115,11 +115,15 @@ namespace BFL {
         if (magnetic_initialized_){
             ColumnVector magnetic_vec(number_of_states_);
             for(unsigned int i=1; i<=number_of_states_; i++){
-                if(abs(magnetic_meas_old_(i-1) - meas_state(i-1)) < 0.25){
+                double meas_error = abs(magnetic_meas_old_(i-1) - meas_state(i-1));
+                if(meas_error < 0.05){
                     magnetic_vec(i) = meas_state(i-1);
+
+                    // remember last estimate
+                    magnetic_meas_old_ = meas_state;
                 }else{
                     magnetic_vec(i) = magnetic_meas_old_(i-1);
-                    ROS_WARN_STREAM("Reject measurement for joint " << i-1 << " with value " << meas_state(i-1));
+                    ROS_WARN_STREAM("Reject measurement for joint " << i-1 << " with difference=" << meas_error);
                 }
             }
 
@@ -128,10 +132,11 @@ namespace BFL {
         }
         else {
             magnetic_initialized_ = true;
+
+            // remember last estimate
+            magnetic_meas_old_ = meas_state;
         }
 
-        // remember last estimate
-        magnetic_meas_old_ = meas_state;
         return true;
     };
 

@@ -21,7 +21,7 @@ using namespace std;
 class UpperBody: public cardsflow::kindyn::Robot{
 private:
     ros::NodeHandlePtr nh; /// ROS nodehandle
-    ros::Publisher motor_command, system_status_pub, tendon_motor_pub; /// motor command publisher
+    ros::Publisher motor_command, system_status_pub, tendon_motor_pub, joint_target_pub; /// motor command publisher
     ros::Subscriber motor_state_sub, motor_info_sub, roboy_state_sub;
     // vector<ros::ServiceServer> init_poses;
     ros::ServiceServer init_pose;
@@ -85,6 +85,7 @@ public:
 
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>(topic_root + "middleware/MotorCommand",1);
         init_pose = nh->advertiseService(topic_root + "init_pose", &UpperBody::initPose,this);
+        joint_target_pub = nh->advertise<sensor_msgs::JointState>(topic_root + "simulation/joint_targets",1);
 
         system_status_pub = nh->advertise<roboy_middleware_msgs::SystemStatus>(topic_root + "control/SystemStatus",1);
         system_status_thread = boost::shared_ptr<std::thread>(new std::thread(&UpperBody::SystemStatusPublisher, this));
@@ -234,11 +235,6 @@ public:
         kinematics.setRobotState(q, qd);
         kinematics.getRobotCableFromJoints(l_current);
 
-//        for(int i=0;i<kinematics.number_of_joints;i++){
-//            q_target[i] = q[i];
-//            qd_target[i] = qd[i];
-//        }
-
         for(int i=0;i<motor_ids.size();i++) {
             int motor_id = motor_ids[i];
             ROS_WARN_STREAM(name << " info print");
@@ -268,10 +264,20 @@ public:
         integral[name] = _integral;
         error_last[name] = _error;
 
-
-//        }
-
         update();
+
+        // Set current state to bullet
+        publishTarget(name, false);
+
+        t0= ros::Time::now();
+        seconds = 3;
+        while ((ros::Time::now() - t0).toSec() < 3) {
+            ROS_INFO_THROTTLE(1, "waiting %d for setting bullet", seconds--);
+        }
+
+        // Move back to zero position
+        publishTarget(name, true);
+
         ROS_INFO_STREAM("%s pose init done" << name);
         init_called[name] = true;
         nh->setParam("initialized", init_called);
@@ -279,6 +285,44 @@ public:
         return true;
 
 
+    }
+
+    void publishTarget(string body_part, bool zeroes){
+
+        sensor_msgs::JointState target_msg;
+
+        // set respecitve body part joint targets to 0
+        string endeffector;
+        nh->getParam(body_part+"/endeffector", endeffector);
+        if ( !endeffector.empty() ) {
+            vector<string> ik_joints;
+            nh->getParam((endeffector + "/joints"), ik_joints);
+            if (ik_joints.empty()) {
+                ROS_ERROR(
+                        "endeffector %s has no joints defined, check your endeffector.yaml or parameter server.  skipping...",
+                        body_part.c_str());
+            }
+            else {
+
+                for (auto joint: ik_joints) {
+                    int joint_index = kinematics.GetJointIdByName(joint);
+                    if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
+                        target_msg.name.push_back(joint);
+
+                        if(zeroes) {
+                            target_msg.position.push_back(0);
+                            ROS_WARN_STREAM("Set target 0 for " << joint);
+                        }else{
+                            target_msg.position.push_back(q[joint_index]);
+                            ROS_WARN_STREAM("Set target " << q[joint_index] << " for " << joint);
+                        }
+                    }
+                }
+
+            }
+        }
+
+        joint_target_pub.publish(target_msg);
     }
 
 
