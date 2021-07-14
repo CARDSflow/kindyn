@@ -165,12 +165,14 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
 
 void Robot::update(){
 
-    if (nh->hasParam("k_dt"))
-        nh->getParam("k_dt", k_dt);
-    if (nh->hasParam("Kp"))
-        nh->getParam("Kp", *Kp_);
-    if (nh->hasParam("Kd"))
-        nh->getParam("Kd", *Kd_);
+    if (debug_) {
+        if (nh->hasParam("k_dt"))
+            nh->getParam("k_dt", k_dt);
+        if (nh->hasParam("Kp"))
+            nh->getParam("Kp", *Kp_);
+        if (nh->hasParam("Kd"))
+            nh->getParam("Kd", *Kd_);
+    }
 
     // TODO: Run the below code in critical section to avoid Mutex with the JointState and PROBABLY the controller
 
