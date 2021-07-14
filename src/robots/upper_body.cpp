@@ -1,5 +1,5 @@
 // #include "kindyn/vrpuppet.hpp"
-#include "kindyn/robot_new.hpp"
+#include "kindyn/robot.hpp"
 #include <thread>
 #include <roboy_middleware_msgs/MotorState.h>
 #include <roboy_middleware_msgs/RoboyState.h>
@@ -47,13 +47,15 @@ public:
      * @param urdf path to urdf
      * @param cardsflow_xml path to cardsflow xml
      */
-    UpperBody(string urdf, string cardsflow_xml, string robot_model){
+    UpperBody(string urdf, string cardsflow_xml, string robot_model, bool debug){
 
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
             ros::init(argc, argv, robot_model + "upper_body");
         }
+
+        debug_ = debug;
 
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         spinner = new ros::AsyncSpinner(0);
@@ -267,7 +269,7 @@ public:
         update();
 
         // Set current state to bullet
-        publishTarget(name, false);
+        publishBulletTarget(name, "current");
 
         t0= ros::Time::now();
         seconds = 3;
@@ -276,7 +278,7 @@ public:
         }
 
         // Move back to zero position
-        publishTarget(name, true);
+        publishBulletTarget(name, "zeroes");
 
         ROS_INFO_STREAM("%s pose init done" << name);
         init_called[name] = true;
@@ -287,7 +289,12 @@ public:
 
     }
 
-    void publishTarget(string body_part, bool zeroes){
+    /**
+     * Publish Target point to bullet
+     * @param body_part
+     * @param zeroes_or_current will publish either "zeroes" or "current" as targets to Bullet
+     */
+    void publishBulletTarget(string body_part, string zeroes_or_current){
 
         sensor_msgs::JointState target_msg;
 
@@ -309,10 +316,10 @@ public:
                     if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
                         target_msg.name.push_back(joint);
 
-                        if(zeroes) {
+                        if(zeroes_or_current == "zeroes") {
                             target_msg.position.push_back(0);
                             ROS_WARN_STREAM("Set target 0 for " << joint);
-                        }else{
+                        }else if(zeroes_or_current == "current"){
                             target_msg.position.push_back(q[joint_index]);
                             ROS_WARN_STREAM("Set target " << q[joint_index] << " for " << joint);
                         }
@@ -442,7 +449,6 @@ public:
      */
     void read(){
         update();
-//        forwardKinematics(0.005);
     };
     /**
      * Sends motor commands to the real robot
@@ -511,6 +517,7 @@ void update(controller_manager::ControllerManager *cm) {
 int main(int argc, char *argv[]) {
 
     string robot_model(argv[1]);
+    bool debug(argv[2]);
     ROS_INFO_STREAM("launching " << robot_model);
     if (!ros::isInitialized()) {
         int argc = 0;
@@ -529,7 +536,7 @@ int main(int argc, char *argv[]) {
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
 
-    UpperBody robot(urdf, cardsflow_xml,robot_model);
+    UpperBody robot(urdf, cardsflow_xml,robot_model, debug);
     controller_manager::ControllerManager cm(&robot);
 
     if (nh.hasParam("simulated")) {
