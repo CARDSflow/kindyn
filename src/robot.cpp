@@ -119,7 +119,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     /**
      * Initialize at zero for simulation
      */
-    if(simulated){
+    if(!this->external_robot_state){
         q.setZero();
         qd.setZero();
         qdd.setZero();
@@ -211,12 +211,14 @@ void Robot::update(){
     // Do one step forward Kinematics with current tendon velocity Ld and current state
     vector<VectorXd> state_next = kinematics.oneStepForward(k_dt, q, qd, Ld);
 
-    if(simulated){
+    if(!this->external_robot_state){
         for(int i=0;i<kinematics.number_of_joints;i++){
             q[i] = state_next[0][i];
             qd[i] = state_next[1][i];
         }
-    }else{
+    }
+
+    if(!simulated){
         kinematics.setRobotState(state_next[0], state_next[1]);
         kinematics.getRobotCableFromJoints(l_next);
     }

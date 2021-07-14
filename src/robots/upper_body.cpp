@@ -233,17 +233,18 @@ public:
             ROS_INFO_THROTTLE(1, "waiting %d for external joint state", seconds--);
         }
 
+
         // Get current tendon length
         kinematics.setRobotState(q, qd);
         kinematics.getRobotCableFromJoints(l_current);
 
-        for(int i=0;i<motor_ids.size();i++) {
+        for (int i = 0; i < motor_ids.size(); i++) {
             int motor_id = motor_ids[i];
             ROS_WARN_STREAM(name << " info print");
             l_offset[motor_id] = l_current[motor_id] + position[motor_id];
-            str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l_current[motor_id] << "\t|\t" << l_offset[motor_id] << endl;
+            str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l_current[motor_id] << "\t|\t"
+                << l_offset[motor_id] << endl;
         }
-
 
         ROS_INFO_STREAM(str.str());
 
@@ -268,17 +269,20 @@ public:
 
         update();
 
-        // Set current state to bullet
-        publishBulletTarget(name, "current");
 
-        t0= ros::Time::now();
-        seconds = 3;
-        while ((ros::Time::now() - t0).toSec() < 3) {
-            ROS_INFO_THROTTLE(1, "waiting %d for setting bullet", seconds--);
+        if(this->external_robot_state) {
+            // Set current state to bullet
+            publishBulletTarget(name, "current");
+
+            t0 = ros::Time::now();
+            int seconds = 3;
+            while ((ros::Time::now() - t0).toSec() < 3) {
+                ROS_INFO_THROTTLE(1, "waiting %d for setting bullet", seconds--);
+            }
+
+            // Move back to zero position
+            publishBulletTarget(name, "zeroes");
         }
-
-        // Move back to zero position
-        publishBulletTarget(name, "zeroes");
 
         ROS_INFO_STREAM("%s pose init done" << name);
         init_called[name] = true;
@@ -355,7 +359,6 @@ public:
     }
 
     void MotorState(const roboy_middleware_msgs::MotorState::ConstPtr &msg){
-
         int i=0;
         for (auto id:msg->global_id) {
             position[id] = msg->encoder0_pos[i];
