@@ -369,7 +369,7 @@ public:
     void read(){
         update();
         if (!external_robot_state)
-            forwardKinematics(0.005);
+            forwardKinematics(0.001);
     };
     /**
      * Sends motor commands to the real robot
@@ -390,9 +390,9 @@ public:
         }
 
         float Kp_dl = 0, Ki_dl = 0, Kp_disp = 0, integral_limit = 0;
-        nh->getParam("Kp_dl",Kp_dl);
-        nh->getParam("Ki_dl",Ki_dl);
-        nh->getParam("integral_limit",integral_limit);
+//        nh->getParam("Kp_dl",Kp_dl);
+//        nh->getParam("Ki_dl",Ki_dl);
+//        nh->getParam("integral_limit",integral_limit);
 
         for (auto body_part: body_parts) {
             if (!init_called[body_part]) {

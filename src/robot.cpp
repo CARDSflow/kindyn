@@ -703,14 +703,14 @@ void Robot::forwardKinematics(double dt) {
             }
             ROS_INFO_THROTTLE(10,"%s control type %d", joint_names[j].c_str(), controller_type[j]);
         }
-        for (int l = 0; l < number_of_cables; l++) {
-            boost::numeric::odeint::integrate(
-                    [this, i, l](const state_type &x, state_type &dxdt, double t) {
-                        dxdt[1] = 0;
-                        dxdt[0] = Ld[i][l];
-                    }, motor_state[l], integration_time, integration_time + dt, dt);
-            l_int[l] = motor_state[l][0];
-        }
+//        for (int l = 0; l < number_of_cables; l++) {
+//            boost::numeric::odeint::integrate(
+//                    [this, i, l](const state_type &x, state_type &dxdt, double t) {
+//                        dxdt[1] = 0;
+//                        dxdt[0] = Ld[i][l];
+//                    }, motor_state[l], integration_time, integration_time + dt, dt);
+//            l_int[l] = motor_state[l][0];
+//        }
     }
 
     // respect joint limits
