@@ -41,14 +41,8 @@ void Robot::updateSubscribers(){
     }
     joint_target_sub = nh->subscribe(topic_root+"control/joint_targets", 100, &Robot::JointTarget, this);
     controller_type_sub = nh->subscribe("/controller_type", 100, &Robot::controllerType, this);
-//     joint_state_sub = nh->subscribe("/joint_states", 100, &Robot::JointState, this);
-//    floating_base_sub = nh->subscribe(topic_root+"control/floating_base", 100, &Robot::FloatingBase, this);
-//    ik_srv = nh->advertiseService(topic_root+"control/ik", &Robot::InverseKinematicsService, this);
-//    ik_two_frames_srv = nh->advertiseService(topic_root+"control/ik_multiple_frames", &Robot::InverseKinematicsMultipleFramesService, this);
-//    fk_srv = nh->advertiseService(topic_root+"control/fk", &Robot::ForwardKinematicsService, this);
-//    freeze_srv = nh->advertiseService(topic_root+"control/freeze", &Robot::FreezeService, this);
-//    interactive_marker_sub = nh->subscribe(topic_root+"control/interactive_markers/feedback",1,&Robot::InteractiveMarkerFeedback, this);
-//    zero_joints_sub = nh->subscribe(topic_root+"control/zero_joints", 1, &Robot::ZeroJoints,this);
+    freeze_srv = nh->advertiseService(topic_root+"control/freeze", &Robot::FreezeService, this);
+    zero_joints_sub = nh->subscribe(topic_root+"control/zero_joints", 1, &Robot::ZeroJoints,this);
 }
 
 void Robot::init(string urdf_file_path, string viapoints_file_path, vector<string> joint_names_ordered) {
@@ -99,6 +93,13 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     // PD gains for cable length controller
     Kp_ = new double(100.0);
     Kd_ = new double(0.0);
+    if (nh->hasParam("k_dt"))
+        nh->getParam("k_dt", k_dt);
+    if (nh->hasParam("Kp"))
+        nh->getParam("Kp", *Kp_);
+    if (nh->hasParam("Kd"))
+        nh->getParam("Kd", *Kd_);
+
     for (int joint = 0; joint < kinematics.number_of_dofs; joint++) {
         ROS_INFO("initializing controllers for joint %d %s", joint, kinematics.joint_names[joint].c_str());
         // connect and register the cardsflow state interface
@@ -368,6 +369,37 @@ void Robot::controllerType(const roboy_simulation_msgs::ControllerTypeConstPtr &
                   msg->type==CARDSflow::ControllerType::torque_position_controller?"torque_position_controller":
                   msg->type==CARDSflow::ControllerType::force_position_controller?"force_position_controller":"UNKNOWN"));
         controller_type[distance(kinematics.joint_names.begin(), it)] = msg->type;
+    }
+}
+
+bool Robot::FreezeService(std_srvs::Trigger::Request &req,
+                          std_srvs::Trigger::Response &res) {
+    for (int i = 1; i < kinematics.number_of_links; i++) {
+        q_target = q;
+    }
+    res.message = "Robot stopped until the next joint target message";
+    res.success = true;
+    return true;
+
+}
+
+void Robot::ZeroJoints(const roboy_control_msgs::StringsPtr &msg) {
+    //ROS_WARN(msg->names);
+    if (msg->names.empty()) {
+        ROS_WARN_STREAM("Setting all joint targets to zero");
+        //for (int i = 1; i < number_of_links; i++) {
+        q_target.setZero();
+        //}
+    }
+    else {
+        for (string joint: msg->names) {
+            ROS_INFO_STREAM("zero " << joint);
+            int joint_index = kinematics.GetJointIdByName(joint);
+            if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
+                q_target(joint_index) = 0;
+                //ROS_INFO_STREAM("done");
+            }
+        };
     }
 }
 

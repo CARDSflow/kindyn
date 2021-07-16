@@ -118,6 +118,8 @@ namespace cardsflow {
              * @param msg message containing the joint_name/type pair
              */
             void controllerType(const roboy_simulation_msgs::ControllerTypeConstPtr &msg);
+            void ZeroJoints(const roboy_control_msgs::StringsPtr &msg);
+            bool FreezeService(std_srvs::Trigger::Request &req,std_srvs::Trigger::Response &res);
 
             cardsflow::kindyn::Kinematics kinematics;
             ros::NodeHandlePtr nh; /// ROS node handle

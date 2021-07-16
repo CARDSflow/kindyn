@@ -78,7 +78,6 @@ public:
         joint_index = joint.getJointIndex();
         last_update = ros::Time::now();
 //        joint_command = nh.subscribe((joint_name+"/target").c_str(),1,&CableLengthController::JointPositionCommand, this);
-        controller_parameter_srv = nh.advertiseService((joint_name+"/params").c_str(),& CableLengthController::setControllerParameters, this);
         return true;
     }
 
@@ -125,21 +124,7 @@ public:
         joint.setJointPositionCommand(msg->data);
     }
 
-    /**
-     * Controller Parameters service
-     * @param req requested gains
-     * @param res success
-     * @return success
-     */
-    bool setControllerParameters( roboy_control_msgs::SetControllerParameters::Request &req,
-                                  roboy_control_msgs::SetControllerParameters::Response &res){
-        Kp = req.kp;
-        Kd = req.kd;
-        res.success = true;
-        return true;
-    }
 private:
-    double Kp = 100, Kd = 0.0; /// PD gains
     double p_error_last = 0; /// last error
     ros::NodeHandle nh; /// ROS nodehandle
     ros::Publisher controller_state; /// publisher for controller state
