@@ -51,7 +51,14 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
     nh->getParam("external_robot_target", external_robot_target);
     nh->getParam("external_robot_state", external_robot_state);
-    nh->setParam("vr_puppet",false);
+
+    nh->getParam("link_relation_names", kinematics.link_relation_name);
+    for (string lr:kinematics.link_relation_name) {
+        ROS_INFO_STREAM(lr);
+        vector<string> joint_names;
+        nh->getParam(("link_relation/" + lr + "/joint_names"), joint_names);
+        kinematics.joint_relation_name.push_back(joint_names);
+    }
 
     kinematics.init(urdf_file_path, viapoints_file_path, joint_names_ordered);
 

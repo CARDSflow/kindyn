@@ -40,7 +40,7 @@ private:
     map<string, bool> init_called;
     boost::shared_ptr<std::thread> system_status_thread;
     ros::Time prev_roboy_state_time;
-
+    enum BulletPublish {zeroes, current};
 public:
     /**
      * Constructor
@@ -272,7 +272,7 @@ public:
 
         if(this->external_robot_state) {
             // Set current state to bullet
-            publishBulletTarget(name, "current");
+            publishBulletTarget(name, BulletPublish::current);
 
             t0 = ros::Time::now();
             int seconds = 3;
@@ -281,7 +281,7 @@ public:
             }
 
             // Move back to zero position
-            publishBulletTarget(name, "zeroes");
+            publishBulletTarget(name, BulletPublish::zeroes);
         }
 
         ROS_INFO_STREAM("%s pose init done" << name);
@@ -298,7 +298,7 @@ public:
      * @param body_part
      * @param zeroes_or_current will publish either "zeroes" or "current" as targets to Bullet
      */
-    void publishBulletTarget(string body_part, string zeroes_or_current){
+    void publishBulletTarget(string body_part, BulletPublish zeroes_or_current){
 
         sensor_msgs::JointState target_msg;
 
@@ -320,10 +320,10 @@ public:
                     if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
                         target_msg.name.push_back(joint);
 
-                        if(zeroes_or_current == "zeroes") {
+                        if(zeroes_or_current == BulletPublish::zeroes) {
                             target_msg.position.push_back(0);
                             ROS_WARN_STREAM("Set target 0 for " << joint);
-                        }else if(zeroes_or_current == "current"){
+                        }else if(zeroes_or_current == BulletPublish::current){
                             target_msg.position.push_back(q[joint_index]);
                             ROS_WARN_STREAM("Set target " << q[joint_index] << " for " << joint);
                         }

@@ -228,19 +228,6 @@ void Kinematics::update_V() {
                 segmentVector = segment.second->global_coordinates - segment.first->global_coordinates;
                 segmentVector.normalize();
 
-//                int k = segment.first->link_index;
-//                if (k > 0) {
-//                    // Total V term in translations
-//                    Vector3d V_ijk_T = -world_to_link_transform[k].block(0, 0, 3, 3) * segmentVector;
-//
-//                    Vector3d temp_vec2 = segment.first->local_coordinates;
-//
-//                    Vector3d V_itk_T = temp_vec2.cross(V_ijk_T);
-//
-//                    V.block(muscle_index, 6 * k, 1, 3) = V_ijk_T.transpose();
-//                    V.block(muscle_index, 6 * k + 3, 1, 3) = V_itk_T.transpose();
-//                }
-
                 int k = segment.second->link_index;
                 if (k > 0) {
                     // Total V term in translations
@@ -263,39 +250,22 @@ void Kinematics::update_V() {
 void Kinematics::update_S() {
     S.setZero(6 * number_of_links, number_of_dofs);
 
-    vector<string> link_names_local = {"upperarm_left", "lowerarm_left", "hand_left",
-                                       "head",
-                                       "upperarm_right", "lowerarm_right", "hand_right",
-                                       };
-    vector<vector<string>> joint_names_local = {
-            {"shoulder_left_axis0", "shoulder_left_axis1", "shoulder_left_axis2"},{"elbow_left_axis0","elbow_left_axis1"},{"wrist_left_axis0", "wrist_left_axis1", "wrist_left_axis2"},
-            {"head_axis0", "head_axis1", "head_axis2"},
-            {"shoulder_right_axis0", "shoulder_right_axis1", "shoulder_right_axis2"},{"elbow_right_axis0","elbow_right_axis1"},{"wrist_right_axis0", "wrist_right_axis1", "wrist_right_axis2"},
-    };
-
     int k = 0;
-    for (int i=0; i < link_names_local.size(); i++){
+    for (int i=0; i < link_relation_name.size(); i++){
 
         int link_idx = -1;
         for (int l=0; l < link_names.size(); l++){
-            if(link_names[l] == link_names_local[i]){
+            if(link_names[l] == link_relation_name[i]){
                 link_idx = l;
                 break;
             }
         }
 
-        for (int j=0; j < joint_names_local[i].size(); j++){
+        for (int j=0; j < joint_relation_name[i].size(); j++){
             S.block(6 * link_idx, k, 6, 1) = joint_axis[k];
             k++;
         }
     }
-
-//    int k = 1;
-//    for (auto &axis:joint_axis) {
-//        S.block(6 * k, k - 1, 6, 1) = axis;
-//        k++;
-//    }
-//    ROS_INFO_STREAM("S_t = " << S.transpose().format(fmt));
 }
 
 void Kinematics::update_P() {
@@ -310,9 +280,7 @@ void Kinematics::update_P() {
     static int counter = 0;
 //    #pragma omp parallel for
     for (int k = 1; k < number_of_links; k++) {
-        if(link_names[k] == "head" ||
-            link_names[k] == "upperarm_right" || link_names[k] == "lowerarm_right" || link_names[k] == "hand_right" ||
-            link_names[k] == "upperarm_left" || link_names[k] == "lowerarm_left" || link_names[k] == "hand_left") {
+        if(std::find(link_relation_name.begin(), link_relation_name.end(), link_names[k]) != link_relation_name.end()) {
 
             Matrix4d transformMatrix_k = world_to_link_transform[k];
             Matrix3d R_k0 = transformMatrix_k.block(0, 0, 3, 3);
