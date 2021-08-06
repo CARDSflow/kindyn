@@ -150,7 +150,8 @@ namespace cardsflow {
             bool external_robot_target = false;
             bool debug_ = false;
             double k_dt = 0.005;
-            double *Kp_, *Kd_;
+            VectorXd Kp_, Kd_;
+            vector<double> param_kp, param_kd;
         };
     };
 }

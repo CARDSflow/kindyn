@@ -13,7 +13,7 @@ namespace hardware_interface
      * @param Kd A pointer to D gain
      */
     CardsflowHandle::CardsflowHandle(const CardsflowStateHandle& js, double* joint_position_cmd,
-                                     double* joint_velocity_cmd, double* joint_torque_cmd, VectorXd *motor_cmd, double* Kp, double* Kd)
+                                     double* joint_velocity_cmd, double* joint_torque_cmd, VectorXd *motor_cmd, VectorXd *Kp, VectorXd *Kd)
             : CardsflowStateHandle(js), joint_position_cmd_(joint_position_cmd), joint_velocity_cmd_(joint_velocity_cmd),
               joint_torque_cmd_(joint_torque_cmd), motor_cmd_(motor_cmd), Kp_(Kp), Kd_(Kd)
     {

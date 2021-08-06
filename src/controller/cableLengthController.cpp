@@ -91,9 +91,12 @@ public:
         double q = joint.getPosition();
         double q_target = joint.getJointPositionCommand();
         MatrixXd L = joint.getL();
+        VectorXd Kp = *joint.Kp_;
+        VectorXd Kd = *joint.Kd_;
+
         double p_error = wrap_pos_neg_pi(q - q_target);
         // we use the joint_index column of the L matrix to calculate the result for this joint only
-        VectorXd ld = L.col(joint_index) * ((*joint.Kd_) * (p_error - p_error_last)/period.toSec() + (*joint.Kp_) * p_error);
+        VectorXd ld = L.col(joint_index) * (Kd[joint_index] * (p_error - p_error_last)/period.toSec() + Kp[joint_index] * p_error);
         joint.setMotorCommand(ld);
         p_error_last = p_error;
         last_update = time;

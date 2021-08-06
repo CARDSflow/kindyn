@@ -59,7 +59,7 @@ namespace cardsflow {
             /**
              * Do forward kinematics
              */
-            vector<VectorXd> oneStepForward(double dt, VectorXd& q_in, VectorXd& qd_in, vector<VectorXd> Ld);
+            vector<VectorXd> oneStepForward(VectorXd& q_in, VectorXd& qd_in, vector<VectorXd> Ld);
 
             int GetJointIdByName(string joint);
 
@@ -73,6 +73,7 @@ namespace cardsflow {
 
             vector<string> link_relation_name;
             vector<vector<string>> joint_relation_name;
+            vector<double> joint_dt;
 
             vector<Cable> cables; /// all cables of the robot
             vector <VectorXd> joint_axis; /// joint axis of each joint

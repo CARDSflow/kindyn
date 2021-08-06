@@ -59,7 +59,7 @@ namespace hardware_interface {
          * @param motor_cmd cable command
          */
         CardsflowHandle(const CardsflowStateHandle &js, double *joint_position_cmd, double *joint_velocity_cmd,
-                        double* joint_torque_cmd, VectorXd *motor_cmd, double* Kp, double* Kd);
+                        double* joint_torque_cmd, VectorXd *motor_cmd, VectorXd *Kp, VectorXd *Kd);
 
         /**
          * Cable length command
@@ -103,7 +103,7 @@ namespace hardware_interface {
          */
         void setJointTorqueCommand(double cmd);
 
-        double *Kp_, *Kd_;
+        VectorXd *Kp_, *Kd_;
 
     private:
         double *joint_position_cmd_, *joint_velocity_cmd_, *joint_torque_cmd_; /// joint position/velocity/torque command

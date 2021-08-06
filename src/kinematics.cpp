@@ -317,7 +317,9 @@ void Kinematics::update_P() {
 }
 
 
-vector<VectorXd> Kinematics::oneStepForward(double dt, VectorXd& q_in, VectorXd& qd_in, vector<VectorXd> Ld) {
+vector<VectorXd> Kinematics::oneStepForward(VectorXd& q_in, VectorXd& qd_in, vector<VectorXd> Ld) {
+
+    integration_time = ros::Time::now().toSec();
 
     for(int i=0;i<number_of_joints;i++){
         joint_state[i][0] = q_in[i];
@@ -336,7 +338,7 @@ vector<VectorXd> Kinematics::oneStepForward(double dt, VectorXd& q_in, VectorXd&
                     [this, j, qd_temp, dof_offset](const state_type &x, state_type &dxdt, double t) {
                         dxdt[1] = 0;
                         dxdt[0] = qd_temp[j-dof_offset];
-                    }, joint_state[j], integration_time, integration_time + dt, dt);
+                    }, joint_state[j], integration_time, integration_time + joint_dt[j], joint_dt[j]);
             qd_next[j] = qd_temp[j-dof_offset];
             q_next[j] = joint_state[j][0];
         }
@@ -354,7 +356,6 @@ vector<VectorXd> Kinematics::oneStepForward(double dt, VectorXd& q_in, VectorXd&
         }
     }
 
-    integration_time += dt;
     ROS_INFO_THROTTLE(10, "forward kinematics calculated for %lf s", integration_time);
 
     vector<VectorXd> result = {q_next, qd_next};
