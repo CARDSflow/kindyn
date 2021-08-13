@@ -359,6 +359,8 @@ public:
     }
 
     void MotorState(const roboy_middleware_msgs::MotorState::ConstPtr &msg){
+        prev_roboy_state_time = ros::Time::now();
+
         int i=0;
         for (auto id:msg->global_id) {
             position[id] = msg->encoder0_pos[i];
@@ -374,7 +376,7 @@ public:
     }
 
     void RoboyState(const roboy_middleware_msgs::RoboyState::ConstPtr &msg) {
-        prev_roboy_state_time = msg->header.stamp;
+//        prev_roboy_state_time = ros::Time::now();
     }
 
     void MotorInfo(const roboy_middleware_msgs::MotorInfo::ConstPtr &msg){
