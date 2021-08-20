@@ -9,6 +9,7 @@
 #include <roboy_middleware_msgs/SetStrings.h>
 #include <roboy_middleware_msgs/SystemStatus.h>
 #include <roboy_middleware_msgs/BodyPart.h>
+#include <roboy_simulation_msgs/Tendon.h>
 #include <common_utilities/CommonDefinitions.h>
 #include <roboy_control_msgs/SetControllerParameters.h>
 #include <std_srvs/Empty.h>
@@ -20,7 +21,7 @@ using namespace std;
 class UpperBody: public cardsflow::kindyn::Robot{
 private:
     ros::NodeHandlePtr nh; /// ROS nodehandle
-    ros::Publisher motor_command, system_status_pub; /// motor command publisher
+    ros::Publisher motor_command, system_status_pub, tendon_motor_pub, joint_target_pub; /// motor command publisher
     ros::Subscriber motor_state_sub, motor_info_sub, roboy_state_sub;
     // vector<ros::ServiceServer> init_poses;
     ros::ServiceServer init_pose;
@@ -31,10 +32,11 @@ private:
     map<string, ros::ServiceClient> motor_config, motor_control_mode, control_mode;
     map<string, bool> motor_status_received;
     map<int, bool> communication_established; // keeps track of communication quality for each motor
-    map<int,float> l_offset, position;
-    map<string, vector<float>> integral;
+    map<int,float> l_offset, position, tendon_length;
+    VectorXd l_current;
+    map<string, vector<float>> integral, error_last;
     boost::shared_ptr<tf::TransformListener> listener;
-    std::vector<string> body_parts = { "shoulder_right", "shoulder_left","head", "wrist_right","wrist_left"};//, "shoulder_left"};//}, "elbow_left"};
+    std::vector<string> body_parts = {"shoulder_right", "shoulder_left","head", "wrist_right","wrist_left"};//, "shoulder_left"};//}, "elbow_left"};
     map<string, bool> init_called;
     boost::shared_ptr<std::thread> system_status_thread;
     ros::Time prev_roboy_state_time;
@@ -45,13 +47,15 @@ public:
      * @param urdf path to urdf
      * @param cardsflow_xml path to cardsflow xml
      */
-    UpperBody(string urdf, string cardsflow_xml, string robot_model){
+    UpperBody(string urdf, string cardsflow_xml, string robot_model, bool debug){
 
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
             ros::init(argc, argv, robot_model + "upper_body");
         }
+
+        debug_ = debug;
 
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         spinner = new ros::AsyncSpinner(0);
@@ -65,6 +69,9 @@ public:
 
         init(urdf,cardsflow_xml,joint_names);
 //        listener.reset(new tf::TransformListener);
+        l_current.resize(kinematics.number_of_cables);
+        l_current.setZero();
+
         update();
 
 
@@ -80,10 +87,14 @@ public:
 
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>(topic_root + "middleware/MotorCommand",1);
         init_pose = nh->advertiseService(topic_root + "init_pose", &UpperBody::initPose,this);
+        joint_target_pub = nh->advertise<sensor_msgs::JointState>(topic_root + "simulation/joint_targets",1);
 
         system_status_pub = nh->advertise<roboy_middleware_msgs::SystemStatus>(topic_root + "control/SystemStatus",1);
         system_status_thread = boost::shared_ptr<std::thread>(new std::thread(&UpperBody::SystemStatusPublisher, this));
         system_status_thread->detach();
+
+        tendon_motor_pub = nh->advertise<roboy_simulation_msgs::Tendon>(topic_root + "control/tendon_state_motor", 1);
+
         nh->setParam("initialized", init_called);
 
         ROS_INFO_STREAM("Finished setup");
@@ -214,13 +225,26 @@ public:
         // for (int i = 0; i<motor_ids.size();i++) str << motor_ids[i] << ": " << position[motor_ids[i]] << ", ";
         // str << endl;
 
-        for(int i=0;i<motor_ids.size();i++) {
-            int motor_id = motor_ids[i];
-            ROS_WARN_STREAM(name << " info print");
-            l_offset[motor_id] = l[motor_id] + position[motor_id];
-            str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l[motor_id] << "\t|\t" << l_offset[motor_id] << endl;
+
+        // Make sure we get current actual joint state
+        t0= ros::Time::now();
+        int seconds = 1;
+        while ((ros::Time::now() - t0).toSec() < 1) {
+            ROS_INFO_THROTTLE(1, "waiting %d for external joint state", seconds--);
         }
 
+
+        // Get current tendon length
+        kinematics.setRobotState(q, qd);
+        kinematics.getRobotCableFromJoints(l_current);
+
+        for (int i = 0; i < motor_ids.size(); i++) {
+            int motor_id = motor_ids[i];
+            ROS_WARN_STREAM(name << " info print");
+            l_offset[motor_id] = l_current[motor_id] + position[motor_id];
+            str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l_current[motor_id] << "\t|\t"
+                << l_offset[motor_id] << endl;
+        }
 
         ROS_INFO_STREAM(str.str());
 
@@ -239,12 +263,27 @@ public:
         }
 
         vector<float> _integral(motor_ids.size(), 0);
+        vector<float> _error(motor_ids.size(), 0);
         integral[name] = _integral;
-
-
-//        }
+        error_last[name] = _error;
 
         update();
+
+
+        if(this->external_robot_state) {
+            // Set current state to bullet
+            publishBulletTarget(name, "current");
+
+            t0 = ros::Time::now();
+            int seconds = 3;
+            while ((ros::Time::now() - t0).toSec() < 3) {
+                ROS_INFO_THROTTLE(1, "waiting %d for setting bullet", seconds--);
+            }
+
+            // Move back to zero position
+            publishBulletTarget(name, "zeroes");
+        }
+
         ROS_INFO_STREAM("%s pose init done" << name);
         init_called[name] = true;
         nh->setParam("initialized", init_called);
@@ -252,6 +291,49 @@ public:
         return true;
 
 
+    }
+
+    /**
+     * Publish Target point to bullet
+     * @param body_part
+     * @param zeroes_or_current will publish either "zeroes" or "current" as targets to Bullet
+     */
+    void publishBulletTarget(string body_part, string zeroes_or_current){
+
+        sensor_msgs::JointState target_msg;
+
+        // set respecitve body part joint targets to 0
+        string endeffector;
+        nh->getParam(body_part+"/endeffector", endeffector);
+        if ( !endeffector.empty() ) {
+            vector<string> ik_joints;
+            nh->getParam((endeffector + "/joints"), ik_joints);
+            if (ik_joints.empty()) {
+                ROS_ERROR(
+                        "endeffector %s has no joints defined, check your endeffector.yaml or parameter server.  skipping...",
+                        body_part.c_str());
+            }
+            else {
+
+                for (auto joint: ik_joints) {
+                    int joint_index = kinematics.GetJointIdByName(joint);
+                    if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
+                        target_msg.name.push_back(joint);
+
+                        if(zeroes_or_current == "zeroes") {
+                            target_msg.position.push_back(0);
+                            ROS_WARN_STREAM("Set target 0 for " << joint);
+                        }else if(zeroes_or_current == "current"){
+                            target_msg.position.push_back(q[joint_index]);
+                            ROS_WARN_STREAM("Set target " << q[joint_index] << " for " << joint);
+                        }
+                    }
+                }
+
+            }
+        }
+
+        joint_target_pub.publish(target_msg);
     }
 
 
@@ -279,10 +361,16 @@ public:
     void MotorState(const roboy_middleware_msgs::MotorState::ConstPtr &msg){
         int i=0;
         for (auto id:msg->global_id) {
-            // ROS_INFO_STREAM("ID: " << id);
             position[id] = msg->encoder0_pos[i];
+            tendon_length[id] = l_offset[id] - position[id];
             i++;
         }
+
+//        roboy_simulation_msgs::Tendon tendon_msg;
+//        for (int j=0; j < tendon_length.size(); j++){
+//            tendon_msg.l.push_back(tendon_length[j]);
+//        }
+//        tendon_motor_pub.publish(tendon_msg);
     }
 
     void RoboyState(const roboy_middleware_msgs::RoboyState::ConstPtr &msg) {
@@ -302,8 +390,8 @@ public:
                 else {
                     if (body_part != "wrist_left" && body_part != "wrist_right")
                     {
-                        //            communication_established[id] = false;
-                        ROS_WARN_THROTTLE(10,"Did not receive motor status for motor with id: %d. %s Body part is disabled.", (id, body_part));
+                    //            communication_established[id] = false;
+                    ROS_WARN_THROTTLE(10,"Did not receive motor status for motor with id: %d. %s Body part is disabled.", (id, body_part));
 
                         // TODO fix triceps
                         //if (id != 18 && body_part != "shoulder_right") {
@@ -325,7 +413,7 @@ public:
                                 else {
 
                                     for (auto joint: ik_joints) {
-                                        int joint_index = GetJointIdByName(joint);
+                                        int joint_index = kinematics.GetJointIdByName(joint);
                                         if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
                                             q_target(joint_index) = 0;
                                             ROS_WARN_STREAM("Set target 0 for " << joint);
@@ -335,12 +423,8 @@ public:
                                 }
                             }
 
-                        }
+                        }                            
                     }
-
-
-                    //}
-
                 }
             }
 
@@ -368,14 +452,11 @@ public:
      */
     void read(){
         update();
-        if (!external_robot_state)
-            forwardKinematics(0.001);
     };
     /**
      * Sends motor commands to the real robot
      */
     void write(){
-
         // check if plexus is alive
         auto diff = ros::Time::now() - prev_roboy_state_time;
         if (diff.toSec() > 1) {
@@ -389,15 +470,11 @@ public:
             return;
         }
 
-        float Kp_dl = 0, Ki_dl = 0, Kp_disp = 0, integral_limit = 0;
-//        nh->getParam("Kp_dl",Kp_dl);
-//        nh->getParam("Ki_dl",Ki_dl);
-//        nh->getParam("integral_limit",integral_limit);
-
         for (auto body_part: body_parts) {
             if (!init_called[body_part]) {
-                ROS_WARN_STREAM_THROTTLE(1, body_part << " was not initialized. skipping");
+                ROS_WARN_STREAM_THROTTLE(10, body_part << " was not initialized. skipping");
             } else {
+//             if(body_part == "shoulder_right"){
                 std::vector<int> motor_ids;
                 try {
                     nh->getParam(body_part+"/motor_ids", motor_ids); }
@@ -406,31 +483,20 @@ public:
                 }
 
                 stringstream str;
-                map<int,float> l_meter;
-
-                // l_meter.resize(sim_motor_ids.size());
-
-
-                str << endl << "motor_id | l_meter | ticks | error | integral" << endl;
-                char s[200];
-                str << endl;
-                ROS_INFO_STREAM_THROTTLE(2,str.str());
-
                 roboy_middleware_msgs::MotorCommand msg;
                 msg.global_id = {};
                 msg.setpoint = {};
+
                 for (int i = 0; i < motor_ids.size(); i++) {
                     msg.global_id.push_back(motor_ids[i]);
-//                    ROS_INFO_STREAM("motor id: " << motor_ids[i] << " l: " << l[motor_ids[i]] << " l_target: " << l_target[motor_ids[i]]);
-                    auto setpoint = -l[motor_ids[i]] + l_offset[motor_ids[i]];
+                    auto setpoint = -l_next[motor_ids[i]] + l_offset[motor_ids[i]];
                     msg.setpoint.push_back(setpoint);
-//                    msg.setpoint.push_back(l_meter[motor_ids[i]]);
                 }
-                // ROS_WARN_STREAM_THROTTLE(1, msg);
                 motor_command.publish(msg);
-
+                if(!str.str().empty())
+                    ROS_WARN_STREAM(str.str());
+            }
         }
-     }
     };
 
 };
@@ -454,6 +520,7 @@ void update(controller_manager::ControllerManager *cm) {
 int main(int argc, char *argv[]) {
 
     string robot_model(argv[1]);
+    bool debug(argv[2]);
     ROS_INFO_STREAM("launching " << robot_model);
     if (!ros::isInitialized()) {
         int argc = 0;
@@ -472,7 +539,7 @@ int main(int argc, char *argv[]) {
     ROS_INFO("\nurdf file path: %s\ncardsflow_xml %s", urdf.c_str(), cardsflow_xml.c_str());
 
 
-    UpperBody robot(urdf, cardsflow_xml,robot_model);
+    UpperBody robot(urdf, cardsflow_xml,robot_model, debug);
     controller_manager::ControllerManager cm(&robot);
 
     if (nh.hasParam("simulated")) {

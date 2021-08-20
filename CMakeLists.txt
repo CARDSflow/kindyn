@@ -69,6 +69,7 @@ include_directories(
 		include/
         ${catkin_INCLUDE_DIRS}
 )
+
 #==============================================================================
 # Application
 #==============================================================================
@@ -101,14 +102,16 @@ target_link_libraries(ForcePositionController ${catkin_LIBRARIES} CardsflowHardw
 
 # kindyn library
 add_library(kindyn SHARED
-		src/robot.cpp
+        src/robot.cpp
+		src/kinematics.cpp
 		src/EigenExtension.cpp
 		include/kindyn/EigenExtension.hpp
 		include/kindyn/robot.hpp
+		include/kindyn/kinematics.hpp
 		include/kindyn/cable.hpp)
 add_dependencies(kindyn roboy_simulation_msgs_generate_messages_cpp roboy_simulation_msgs_msgs_generate_messages_cpp)
 target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CardsflowHardwareInterface
-		CableLengthController TorquePositionController ForcePositionController ${OpenMP_CXX_libraries})
+		CableLengthController TorquePositionController ForcePositionController ${OpenMP_CXX_libraries} ${BFL_LIBRARIES})
 
 # vrpuppet library
 add_library(vrpuppet SHARED
