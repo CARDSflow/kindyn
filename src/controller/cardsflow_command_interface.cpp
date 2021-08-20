@@ -9,13 +9,11 @@ namespace hardware_interface
     /**
      * @param js This joint's state handle
      * @param cmd A pointer to the storage for this joint's output command
-     * @param Kp A pointer to P gain
-     * @param Kd A pointer to D gain
      */
     CardsflowHandle::CardsflowHandle(const CardsflowStateHandle& js, double* joint_position_cmd,
-                                     double* joint_velocity_cmd, double* joint_torque_cmd, VectorXd *motor_cmd, double* Kp, double* Kd)
+                                     double* joint_velocity_cmd, double* joint_torque_cmd, VectorXd *motor_cmd)
             : CardsflowStateHandle(js), joint_position_cmd_(joint_position_cmd), joint_velocity_cmd_(joint_velocity_cmd),
-              joint_torque_cmd_(joint_torque_cmd), motor_cmd_(motor_cmd), Kp_(Kp), Kd_(Kd)
+              joint_torque_cmd_(joint_torque_cmd), motor_cmd_(motor_cmd)
     {
     }
 

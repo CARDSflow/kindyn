@@ -26,7 +26,6 @@
     description: A Cable length controller for joint position targets using PD control
 */
 
-
 #include <type_traits>
 #include <controller_interface/controller.h>
 #include <hardware_interface/joint_command_interface.h>
@@ -34,19 +33,10 @@
 #include "kindyn/robot.hpp"
 #include "kindyn/controller/cardsflow_state_interface.hpp"
 #include <roboy_simulation_msgs/ControllerType.h>
-#include <math.h>
-#include <cmath>
 #include <std_msgs/Float32.h>
 #include <roboy_control_msgs/SetControllerParameters.h>
 
-# define M_2PI 2*M_PI
-
 using namespace std;
-
-double wrap_pos_neg_pi(double angle)
-{
-    return fmod(angle + M_PI, M_2PI) - M_PI;
-}
 
 class CableLengthController : public controller_interface::Controller<hardware_interface::CardsflowCommandInterface> {
 public:
@@ -78,6 +68,7 @@ public:
         joint_index = joint.getJointIndex();
         last_update = ros::Time::now();
 //        joint_command = nh.subscribe((joint_name+"/target").c_str(),1,&CableLengthController::JointPositionCommand, this);
+        controller_parameter_srv = nh.advertiseService((joint_name+"/params").c_str(),& CableLengthController::setControllerParameters, this);
         return true;
     }
 
@@ -91,9 +82,10 @@ public:
         double q = joint.getPosition();
         double q_target = joint.getJointPositionCommand();
         MatrixXd L = joint.getL();
-        double p_error = wrap_pos_neg_pi(q - q_target);
+        double p_error = q - q_target;
         // we use the joint_index column of the L matrix to calculate the result for this joint only
-        VectorXd ld = L.col(joint_index) * ((*joint.Kd_) * (p_error - p_error_last)/period.toSec() + (*joint.Kp_) * p_error);
+        VectorXd ld = L.col(joint_index) * (Kd * (p_error - p_error_last)/period.toSec() + Kp * p_error);
+//        ROS_INFO_STREAM_THROTTLE(1, ld.transpose());
         joint.setMotorCommand(ld);
         p_error_last = p_error;
         last_update = time;
@@ -124,7 +116,21 @@ public:
         joint.setJointPositionCommand(msg->data);
     }
 
+    /**
+     * Controller Parameters service
+     * @param req requested gains
+     * @param res success
+     * @return success
+     */
+    bool setControllerParameters( roboy_control_msgs::SetControllerParameters::Request &req,
+                                  roboy_control_msgs::SetControllerParameters::Response &res){
+        Kp = req.kp;
+        Kd = req.kd;
+        res.success = true;
+        return true;
+    }
 private:
+    double Kp = 100, Kd = 0; /// PD gains
     double p_error_last = 0; /// last error
     ros::NodeHandle nh; /// ROS nodehandle
     ros::Publisher controller_state; /// publisher for controller state
