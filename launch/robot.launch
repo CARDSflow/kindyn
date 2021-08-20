@@ -44,9 +44,6 @@
     <param name="max_force" type="double" value="100000"  />
     <param name="controller" type="int" value="2"  />
     <param name="external_robot_state" type="bool" value="$(arg external_robot_state)"/>
-    <param name="k_dt" type="double" value="0.005"  />
-    <param name="Kp" type="double" value="100"  />
-    <param name="Kd" type="double" value="0"  />
 
     <node name="$(arg robot_model)_controller_manager"
           pkg="controller_manager"
@@ -58,9 +55,11 @@
     <node name="$(arg robot_model)_robot_controller"
          pkg="kindyn"
          type="$(arg robot_name)"
-         args="$(arg robot_model) $(arg debug)"
+         args="$(arg robot_model)"
          respawn="false"
          output="screen"
+
+
    />
 
 
