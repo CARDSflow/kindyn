@@ -99,20 +99,22 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
      */
     // PD gains for cable length controller
 
+    double param_kp, param_kd, param_dt;
     kinematics.joint_dt.resize(kinematics.number_of_dofs);
     Kp_.resize(kinematics.number_of_dofs);
     Kd_.resize(kinematics.number_of_dofs);
-    param_kp.resize(kinematics.number_of_dofs);
-    param_kd.resize(kinematics.number_of_dofs);
 
-    nh->getParam("joint_dt", kinematics.joint_dt);
-    nh->getParam("joint_kp", param_kp);
-    nh->getParam("joint_kd", param_kd);
     for (int joint = 0; joint < kinematics.number_of_dofs; joint++) {
-        Kp_[joint] = param_kp[joint];
-        Kd_[joint] = param_kd[joint];
-        ROS_INFO_STREAM(kinematics.joint_names[joint] << "\tdt=" << kinematics.joint_dt[joint] <<
-                        "\tkp=" << param_kp[joint] << "\tkd=" << param_kd[joint]);
+        std::string control_param = robot_model_ + "_" + kinematics.joint_names[joint];
+        nh->getParam(control_param + "/Kp", param_kp);
+        nh->getParam(control_param + "/Kd", param_kd);
+        nh->getParam(control_param + "/dt", param_dt);
+
+        Kp_[joint] = param_kp;
+        Kd_[joint] = param_kd;
+        kinematics.joint_dt[joint] = param_dt;
+        ROS_INFO_STREAM(control_param << "\tdt=" << kinematics.joint_dt[joint] <<
+                        "\tkp=" << Kp_[joint] << "\tkd=" << Kd_[joint]);
     }
 
     for (int joint = 0; joint < kinematics.number_of_dofs; joint++) {
@@ -182,20 +184,21 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
 void Robot::update(){
 
     if (debug_) {
-        if (nh->hasParam("joint_dt"))
-            nh->getParam("joint_dt", kinematics.joint_dt);
-        if (nh->hasParam("joint_kp")){
-            nh->getParam("joint_kp", param_kp);
-            for (int joint = 0; joint < kinematics.number_of_dofs; joint++) {
-                Kp_[joint] = param_kp[joint];
-            }
+        double param_kp, param_kd, param_dt;
+        stringstream update_str;
+        update_str << "Updated controller params" << endl;
+        for (int joint = 0; joint < kinematics.number_of_dofs; joint++) {
+            std::string control_param = robot_model_ + "_" + kinematics.joint_names[joint];
+            nh->getParam(control_param + "/Kp", param_kp);
+            nh->getParam(control_param + "/Kd", param_kd);
+            nh->getParam(control_param + "/dt", param_dt);
+            Kp_[joint] = param_kp;
+            Kd_[joint] = param_kd;
+            kinematics.joint_dt[joint] = param_dt;
+            update_str << control_param << "\tdt=" << kinematics.joint_dt[joint]
+                                        << "\tkp=" << Kp_[joint] << "\tkd=" << Kd_[joint] << endl;
         }
-        if (nh->hasParam("joint_kd")) {
-            nh->getParam("joint_kd", param_kd);
-            for (int joint = 0; joint < kinematics.number_of_dofs; joint++) {
-                Kd_[joint] = param_kd[joint];
-            }
-        }
+        ROS_INFO_STREAM_THROTTLE(1, update_str.str());
     }
 
     // TODO: Run the below code in critical section to avoid Mutex with the JointState and PROBABLY the controller

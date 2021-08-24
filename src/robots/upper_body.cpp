@@ -1,6 +1,7 @@
 // #include "kindyn/vrpuppet.hpp"
 #include "kindyn/robot.hpp"
 #include <thread>
+#include <string>
 #include <roboy_middleware_msgs/MotorState.h>
 #include <roboy_middleware_msgs/RoboyState.h>
 #include <roboy_middleware_msgs/MotorInfo.h>
@@ -56,6 +57,7 @@ public:
         }
 
         debug_ = debug;
+        robot_model_ = robot_model;
 
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         spinner = new ros::AsyncSpinner(0);
@@ -522,7 +524,14 @@ void update(controller_manager::ControllerManager *cm) {
 int main(int argc, char *argv[]) {
 
     string robot_model(argv[1]);
-    bool debug(argv[2]);
+    bool debug;
+
+    if(strcmp(argv[2], "true") == 0){
+        debug = true;
+    }else{
+        debug = false;
+    }
+
     ROS_INFO_STREAM("launching " << robot_model);
     if (!ros::isInitialized()) {
         int argc = 0;
