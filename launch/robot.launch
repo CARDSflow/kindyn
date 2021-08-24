@@ -38,7 +38,6 @@
     <rosparam file="$(find robots)/$(arg model_name)/config/endeffectors.yaml" command="load"/>
     <rosparam file="$(find robots)/$(arg model_name)/config/motor_config.yaml" command="load"/>
     <rosparam file="$(find robots)/$(arg model_name)/config/link_joint_relation.yaml" command="load"/>
-    <rosparam file="$(find robots)/$(arg model_name)/config/control_parameters.yaml" command="load"/>
     <rosparam param="q_target">[0.0, 0.0, 0.0]</rosparam>
     <rosparam param="pwm">5.0</rosparam>
     <rosparam param="m3_pwm">5.0</rosparam>
