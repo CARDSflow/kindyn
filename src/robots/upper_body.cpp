@@ -528,7 +528,7 @@ int main(int argc, char *argv[]) {
 
     if(strcmp(argv[2], "true") == 0){
         debug = true;
-        ROS_INFO_WARN_STREAM("DEBUG mode enabled");
+        ROS_WARN_STREAM("DEBUG mode enabled");
     }else{
         debug = false;
     }
