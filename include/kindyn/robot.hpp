@@ -135,6 +135,7 @@ namespace cardsflow {
             ros::Subscriber controller_type_sub, joint_state_sub, floating_base_sub, interactive_marker_sub, joint_target_sub, zero_joints_sub; /// ROS subscribers
             ros::ServiceServer ik_srv, ik_two_frames_srv, fk_srv, freeze_srv;
             string topic_root;
+            string robot_model_;
 
             VectorXd q, qd, qdd; /// joint positon, velocity, acceleration
             VectorXd q_target, qd_target, qdd_target; /// joint positon, velocity, acceleration targets
@@ -149,8 +150,7 @@ namespace cardsflow {
             bool external_robot_state; /// indicates if we get the robot state externally
             bool external_robot_target = false;
             bool debug_ = false;
-            double k_dt = 0.005;
-            double *Kp_, *Kd_;
+            VectorXd Kp_, Kd_;
         };
     };
 }

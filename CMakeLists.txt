@@ -111,7 +111,7 @@ add_library(kindyn SHARED
 		include/kindyn/cable.hpp)
 add_dependencies(kindyn roboy_simulation_msgs_generate_messages_cpp roboy_simulation_msgs_msgs_generate_messages_cpp)
 target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CardsflowHardwareInterface
-		CableLengthController TorquePositionController ForcePositionController ${OpenMP_CXX_libraries} ${BFL_LIBRARIES})
+		CableLengthController TorquePositionController ForcePositionController ${OpenMP_CXX_libraries})
 
 # vrpuppet library
 add_library(vrpuppet SHARED

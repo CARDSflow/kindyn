@@ -1,6 +1,7 @@
 // #include "kindyn/vrpuppet.hpp"
 #include "kindyn/robot.hpp"
 #include <thread>
+#include <string>
 #include <roboy_middleware_msgs/MotorState.h>
 #include <roboy_middleware_msgs/RoboyState.h>
 #include <roboy_middleware_msgs/MotorInfo.h>
@@ -40,7 +41,7 @@ private:
     map<string, bool> init_called;
     boost::shared_ptr<std::thread> system_status_thread;
     ros::Time prev_roboy_state_time;
-
+    enum BulletPublish {zeroes, current};
 public:
     /**
      * Constructor
@@ -56,6 +57,7 @@ public:
         }
 
         debug_ = debug;
+        robot_model_ = robot_model;
 
         nh = ros::NodeHandlePtr(new ros::NodeHandle);
         spinner = new ros::AsyncSpinner(0);
@@ -272,7 +274,7 @@ public:
 
         if(this->external_robot_state) {
             // Set current state to bullet
-            publishBulletTarget(name, "current");
+            publishBulletTarget(name, BulletPublish::current);
 
             t0 = ros::Time::now();
             int seconds = 3;
@@ -281,7 +283,7 @@ public:
             }
 
             // Move back to zero position
-            publishBulletTarget(name, "zeroes");
+            publishBulletTarget(name, BulletPublish::zeroes);
         }
 
         ROS_INFO_STREAM("%s pose init done" << name);
@@ -298,7 +300,7 @@ public:
      * @param body_part
      * @param zeroes_or_current will publish either "zeroes" or "current" as targets to Bullet
      */
-    void publishBulletTarget(string body_part, string zeroes_or_current){
+    void publishBulletTarget(string body_part, BulletPublish zeroes_or_current){
 
         sensor_msgs::JointState target_msg;
 
@@ -320,10 +322,10 @@ public:
                     if (joint_index != iDynTree::JOINT_INVALID_INDEX) {
                         target_msg.name.push_back(joint);
 
-                        if(zeroes_or_current == "zeroes") {
+                        if(zeroes_or_current == BulletPublish::zeroes) {
                             target_msg.position.push_back(0);
                             ROS_WARN_STREAM("Set target 0 for " << joint);
-                        }else if(zeroes_or_current == "current"){
+                        }else if(zeroes_or_current == BulletPublish::current){
                             target_msg.position.push_back(q[joint_index]);
                             ROS_WARN_STREAM("Set target " << q[joint_index] << " for " << joint);
                         }
@@ -359,6 +361,8 @@ public:
     }
 
     void MotorState(const roboy_middleware_msgs::MotorState::ConstPtr &msg){
+        prev_roboy_state_time = ros::Time::now();
+
         int i=0;
         for (auto id:msg->global_id) {
             position[id] = msg->encoder0_pos[i];
@@ -374,7 +378,7 @@ public:
     }
 
     void RoboyState(const roboy_middleware_msgs::RoboyState::ConstPtr &msg) {
-        prev_roboy_state_time = msg->header.stamp;
+//        prev_roboy_state_time = ros::Time::now();
     }
 
     void MotorInfo(const roboy_middleware_msgs::MotorInfo::ConstPtr &msg){
@@ -520,7 +524,15 @@ void update(controller_manager::ControllerManager *cm) {
 int main(int argc, char *argv[]) {
 
     string robot_model(argv[1]);
-    bool debug(argv[2]);
+    bool debug;
+
+    if(strcmp(argv[2], "true") == 0){
+        debug = true;
+        ROS_WARN_STREAM("DEBUG mode enabled");
+    }else{
+        debug = false;
+    }
+
     ROS_INFO_STREAM("launching " << robot_model);
     if (!ros::isInitialized()) {
         int argc = 0;

@@ -228,20 +228,7 @@ void Kinematics::update_V() {
                 segmentVector = segment.second->global_coordinates - segment.first->global_coordinates;
                 segmentVector.normalize();
 
-                int k = segment.first->link_index;
-                if (k > 0) {
-                    // Total V term in translations
-                    Vector3d V_ijk_T = -world_to_link_transform[k].block(0, 0, 3, 3) * segmentVector;
-
-                    Vector3d temp_vec2 = segment.first->local_coordinates;
-
-                    Vector3d V_itk_T = temp_vec2.cross(V_ijk_T);
-
-                    V.block(muscle_index, 6 * k, 1, 3) = V_ijk_T.transpose();
-                    V.block(muscle_index, 6 * k + 3, 1, 3) = V_itk_T.transpose();
-                }
-
-                k = segment.second->link_index;
+                int k = segment.second->link_index;
                 if (k > 0) {
                     // Total V term in translations
                     Vector3d V_ijk_T = world_to_link_transform[k].block(0, 0, 3, 3) * segmentVector;
@@ -262,12 +249,23 @@ void Kinematics::update_V() {
 
 void Kinematics::update_S() {
     S.setZero(6 * number_of_links, number_of_dofs);
-    int k = 1;
-    for (auto &axis:joint_axis) {
-        S.block(6 * k, k - 1, 6, 1) = axis;
-        k++;
+
+    int k = 0;
+    for (int i=0; i < link_relation_name.size(); i++){
+
+        int link_idx = -1;
+        for (int l=0; l < link_names.size(); l++){
+            if(link_names[l] == link_relation_name[i]){
+                link_idx = l;
+                break;
+            }
+        }
+
+        for (int j=0; j < joint_relation_name[i].size(); j++){
+            S.block(6 * link_idx, k, 6, 1) = joint_axis[k];
+            k++;
+        }
     }
-//    ROS_INFO_STREAM("S_t = " << S.transpose().format(fmt));
 }
 
 void Kinematics::update_P() {
@@ -282,9 +280,12 @@ void Kinematics::update_P() {
     static int counter = 0;
 //    #pragma omp parallel for
     for (int k = 1; k < number_of_links; k++) {
-        Matrix4d transformMatrix_k = world_to_link_transform[k];
-        Matrix3d R_k0 = transformMatrix_k.block(0, 0, 3, 3);
-        for (int a = 1; a <= k; a++) {
+        if(std::find(link_relation_name.begin(), link_relation_name.end(), link_names[k]) != link_relation_name.end()) {
+
+            Matrix4d transformMatrix_k = world_to_link_transform[k];
+            Matrix3d R_k0 = transformMatrix_k.block(0, 0, 3, 3);
+
+            int a = k;
             Matrix4d transformMatrix_a = world_to_link_transform[a];
             Matrix3d R_0a = transformMatrix_a.block(0, 0, 3, 3).transpose();
             R_ka = R_k0 * R_0a;
@@ -297,10 +298,10 @@ void Kinematics::update_P() {
 
             // absolute joint location
             Matrix4d pose = iDynTree::toEigen(kinDynComp.getWorldTransform(a).asHomogeneousTransform());
-            r_OP = pose.topRightCorner(3,1);
+            r_OP = pose.topRightCorner(3, 1);
 
             // absolute com location
-            r_OG = link_to_world_transform[k].topRightCorner(3,1);
+            r_OG = link_to_world_transform[k].topRightCorner(3, 1);
 
             Matrix3d PaK_2_1 = EigenExtension::SkewSymmetric2(-r_OP + R_ka.transpose() * r_OG);
             Matrix3d PaK_2 = -R_ka * PaK_2_1;
@@ -316,7 +317,9 @@ void Kinematics::update_P() {
 }
 
 
-vector<VectorXd> Kinematics::oneStepForward(double dt, VectorXd& q_in, VectorXd& qd_in, vector<VectorXd> Ld) {
+vector<VectorXd> Kinematics::oneStepForward(VectorXd& q_in, VectorXd& qd_in, vector<VectorXd> Ld) {
+
+    integration_time = ros::Time::now().toSec();
 
     for(int i=0;i<number_of_joints;i++){
         joint_state[i][0] = q_in[i];
@@ -335,7 +338,7 @@ vector<VectorXd> Kinematics::oneStepForward(double dt, VectorXd& q_in, VectorXd&
                     [this, j, qd_temp, dof_offset](const state_type &x, state_type &dxdt, double t) {
                         dxdt[1] = 0;
                         dxdt[0] = qd_temp[j-dof_offset];
-                    }, joint_state[j], integration_time, integration_time + dt, dt);
+                    }, joint_state[j], integration_time, integration_time + joint_dt[j], joint_dt[j]);
             qd_next[j] = qd_temp[j-dof_offset];
             q_next[j] = joint_state[j][0];
         }
@@ -353,7 +356,6 @@ vector<VectorXd> Kinematics::oneStepForward(double dt, VectorXd& q_in, VectorXd&
         }
     }
 
-    integration_time += dt;
     ROS_INFO_THROTTLE(10, "forward kinematics calculated for %lf s", integration_time);
 
     vector<VectorXd> result = {q_next, qd_next};

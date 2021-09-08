@@ -51,7 +51,14 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
     fmt = Eigen::IOFormat(4, 0, " ", ";\n", "", "", "[", "]");
     nh->getParam("external_robot_target", external_robot_target);
     nh->getParam("external_robot_state", external_robot_state);
-    nh->setParam("vr_puppet",false);
+
+    nh->getParam("link_relation_names", kinematics.link_relation_name);
+    for (string lr:kinematics.link_relation_name) {
+        ROS_INFO_STREAM(lr);
+        vector<string> joint_names;
+        nh->getParam(("link_relation/" + lr + "/joint_names"), joint_names);
+        kinematics.joint_relation_name.push_back(joint_names);
+    }
 
     kinematics.init(urdf_file_path, viapoints_file_path, joint_names_ordered);
 
@@ -91,14 +98,24 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
      * Register ROS control
      */
     // PD gains for cable length controller
-    Kp_ = new double(100.0);
-    Kd_ = new double(0.0);
-    if (nh->hasParam("k_dt"))
-        nh->getParam("k_dt", k_dt);
-    if (nh->hasParam("Kp"))
-        nh->getParam("Kp", *Kp_);
-    if (nh->hasParam("Kd"))
-        nh->getParam("Kd", *Kd_);
+
+    double param_kp, param_kd, param_dt;
+    kinematics.joint_dt.resize(kinematics.number_of_dofs);
+    Kp_.resize(kinematics.number_of_dofs);
+    Kd_.resize(kinematics.number_of_dofs);
+
+    for (int joint = 0; joint < kinematics.number_of_dofs; joint++) {
+        std::string control_param = robot_model_ + "_" + kinematics.joint_names[joint];
+        nh->getParam(control_param + "/Kp", param_kp);
+        nh->getParam(control_param + "/Kd", param_kd);
+        nh->getParam(control_param + "/dt", param_dt);
+
+        Kp_[joint] = param_kp;
+        Kd_[joint] = param_kd;
+        kinematics.joint_dt[joint] = param_dt;
+        ROS_INFO_STREAM(control_param << "\tdt=" << kinematics.joint_dt[joint] <<
+                        "\tkp=" << Kp_[joint] << "\tkd=" << Kd_[joint]);
+    }
 
     for (int joint = 0; joint < kinematics.number_of_dofs; joint++) {
         ROS_INFO("initializing controllers for joint %d %s", joint, kinematics.joint_names[joint].c_str());
@@ -112,7 +129,7 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
         // connect and register the cardsflow command interface
         hardware_interface::CardsflowHandle pos_handle(cardsflow_state_interface.getHandle(kinematics.joint_names[joint]),
                                                        &q_target[joint], &qd_target[joint], &kinematics.torques[joint], &ld[joint],
-                                                       Kp_, Kd_);
+                                                       &Kp_, &Kd_);
         cardsflow_command_interface.registerHandle(pos_handle);
     }
     registerInterface(&cardsflow_command_interface);
@@ -167,12 +184,21 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
 void Robot::update(){
 
     if (debug_) {
-        if (nh->hasParam("k_dt"))
-            nh->getParam("k_dt", k_dt);
-        if (nh->hasParam("Kp"))
-            nh->getParam("Kp", *Kp_);
-        if (nh->hasParam("Kd"))
-            nh->getParam("Kd", *Kd_);
+        double param_kp, param_kd, param_dt;
+        stringstream update_str;
+        update_str << "Updated controller params" << endl;
+        for (int joint = 0; joint < kinematics.number_of_dofs; joint++) {
+            std::string control_param = robot_model_ + "_" + kinematics.joint_names[joint];
+            nh->getParam(control_param + "/Kp", param_kp);
+            nh->getParam(control_param + "/Kd", param_kd);
+            nh->getParam(control_param + "/dt", param_dt);
+            Kp_[joint] = param_kp;
+            Kd_[joint] = param_kd;
+            kinematics.joint_dt[joint] = param_dt;
+            update_str << control_param << "\tdt=" << kinematics.joint_dt[joint]
+                                        << "\tkp=" << Kp_[joint] << "\tkd=" << Kd_[joint] << endl;
+        }
+        ROS_INFO_STREAM_THROTTLE(1, update_str.str());
     }
 
     // TODO: Run the below code in critical section to avoid Mutex with the JointState and PROBABLY the controller
@@ -210,7 +236,7 @@ void Robot::update(){
 
     // ----------------------------------------------------------------------------
     // Do one step forward Kinematics with current tendon velocity Ld and current state
-    vector<VectorXd> state_next = kinematics.oneStepForward(k_dt, q, qd, Ld);
+    vector<VectorXd> state_next = kinematics.oneStepForward(q, qd, Ld);
 
     if(!this->external_robot_state){
         for(int i=0;i<kinematics.number_of_joints;i++){

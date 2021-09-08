@@ -37,6 +37,7 @@
     <rosparam file="$(find robots)/$(arg model_name)/config/controller.yaml" command="load"/>
     <rosparam file="$(find robots)/$(arg model_name)/config/endeffectors.yaml" command="load"/>
     <rosparam file="$(find robots)/$(arg model_name)/config/motor_config.yaml" command="load"/>
+    <rosparam file="$(find robots)/$(arg model_name)/config/link_joint_relation.yaml" command="load"/>
     <rosparam param="q_target">[0.0, 0.0, 0.0]</rosparam>
     <rosparam param="pwm">5.0</rosparam>
     <rosparam param="m3_pwm">5.0</rosparam>
@@ -44,9 +45,6 @@
     <param name="max_force" type="double" value="100000"  />
     <param name="controller" type="int" value="2"  />
     <param name="external_robot_state" type="bool" value="$(arg external_robot_state)"/>
-    <param name="k_dt" type="double" value="0.005"  />
-    <param name="Kp" type="double" value="100"  />
-    <param name="Kd" type="double" value="0"  />
 
     <node name="$(arg robot_model)_controller_manager"
           pkg="controller_manager"
