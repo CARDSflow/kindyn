@@ -36,7 +36,7 @@ private:
     VectorXd l_current;
     map<string, vector<float>> integral, error_last;
     boost::shared_ptr<tf::TransformListener> listener;
-    std::vector<string> body_parts = {"shoulder_right", "shoulder_left","head", "wrist_right","wrist_left"};//, "shoulder_left"};//}, "elbow_left"};
+    std::vector<string> body_parts = {"shoulder"};//, "shoulder_left"};//}, "elbow_left"};
     map<string, bool> init_called;
     boost::shared_ptr<std::thread> system_status_thread;
     ros::Time prev_roboy_state_time;
@@ -52,7 +52,7 @@ public:
         if (!ros::isInitialized()) {
             int argc = 0;
             char **argv = NULL;
-            ros::init(argc, argv, robot_model + "upper_body");
+            ros::init(argc, argv, robot_model + "musc_shoulder");
         }
 
         debug_ = debug;
@@ -155,11 +155,8 @@ public:
         }
         int pwm;
         try {
-            if (name == "wrist_left" || name == "wrist_right") {
-                nh->getParam("m3_pwm", pwm);
-            } else {
-                nh->getParam("pwm",pwm);
-            }
+            nh->getParam("pwm",pwm);
+
         }
         catch (const std::exception&) {
             ROS_ERROR_STREAM("rosparam pwm or init_m3_displacement is not set. will not init.");
@@ -425,7 +422,7 @@ public:
                                 }
                             }
 
-                        }                            
+                        }
                     }
                 }
             }
@@ -527,7 +524,7 @@ int main(int argc, char *argv[]) {
     if (!ros::isInitialized()) {
         int argc = 0;
         char **argv = NULL;
-        ros::init(argc, argv, robot_model + "_upper_body");
+        ros::init(argc, argv, robot_model + "_musc_shoulder");
     }
     ros::NodeHandle nh;
     string urdf, cardsflow_xml;

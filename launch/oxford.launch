@@ -1,16 +1,12 @@
 <launch>
-    <arg name="robot_name" default="msj_platform"/>
-    <arg name="robot_model" default="pinky"/>
+    <arg name="robot_name" default="musc_shoulder"/>
+    <arg name="robot_model" default="oxford"/>
     <arg name="model_name" default="$(arg robot_name)"/>
     <arg name="urdf_file_name" default="model.urdf"/>
     <!--<arg name="cardsflow_file_name" default="cardsflow.xml"/>-->
     <!--<arg name="start_controllers" default="head_axis0 head_axis1 head_axis2"/>-->
      <!-- <arg name="start_controllers" default="$(arg robot_model)_head_axis0 $(arg robot_model)_head_axis1 $(arg robot_model)_head_axis2 $(arg robot_model)_shoulder_left_axis0 $(arg robot_model)_shoulder_left_axis1 $(arg robot_model)_shoulder_left_axis2 $(arg robot_model)_elbow_left_axis0 $(arg robot_model)_elbow_left_axis1"/> -->
-    <arg name="start_controllers" default="$(arg robot_model)_shoulder_left_axis0 $(arg robot_model)_shoulder_left_axis1 $(arg robot_model)_shoulder_left_axis2
-                                            $(arg robot_model)_elbow_left_axis0 $(arg robot_model)_elbow_left_axis1
-                                            $(arg robot_model)_head_axis0 $(arg robot_model)_head_axis1 $(arg robot_model)_head_axis2
-                                            $(arg robot_model)_shoulder_right_axis0 $(arg robot_model)_shoulder_right_axis1 $(arg robot_model)_shoulder_right_axis2
-                                            $(arg robot_model)_elbow_right_axis0 $(arg robot_model)_elbow_right_axis1"/>
+    <arg name="start_controllers" default="$(arg robot_model)_$(arg robot_name)_axis0 $(arg robot_model)_$(arg robot_name)_axis1 $(arg robot_model)_$(arg robot_name)_axis2"/>
     <arg name="simulated" default="false"/>
     <arg name="gazebo" default="false"/>
     <arg name="paused" default="false"/>
@@ -38,7 +34,7 @@
     <rosparam file="$(find robots)/$(arg model_name)/config/link_joint_relation.yaml" command="load"/>
     <rosparam file="$(find robots)/$(arg model_name)/config/control_parameters.yaml" command="load"/>
     <rosparam param="q_target">[0.0, 0.0, 0.0]</rosparam>
-    <rosparam param="pwm">5.0</rosparam>
+    <rosparam param="pwm">3.0</rosparam>
     <rosparam param="m3_pwm">5.0</rosparam>
     <param name="min_force" type="double" value="0"  />
     <param name="max_force" type="double" value="100000"  />

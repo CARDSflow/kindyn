@@ -69,6 +69,7 @@ include_directories(
 		include/
         ${catkin_INCLUDE_DIRS}
 )
+
 #==============================================================================
 # Application
 #==============================================================================
@@ -101,10 +102,12 @@ target_link_libraries(ForcePositionController ${catkin_LIBRARIES} CardsflowHardw
 
 # kindyn library
 add_library(kindyn SHARED
-		src/robot.cpp
+        src/robot.cpp
+		src/kinematics.cpp
 		src/EigenExtension.cpp
 		include/kindyn/EigenExtension.hpp
 		include/kindyn/robot.hpp
+		include/kindyn/kinematics.hpp
 		include/kindyn/cable.hpp)
 add_dependencies(kindyn roboy_simulation_msgs_generate_messages_cpp roboy_simulation_msgs_msgs_generate_messages_cpp)
 target_link_libraries(kindyn ${catkin_LIBRARIES} ${iDynTree_LIBRARIES} ${qpOASES_LIBRARIES} CardsflowHardwareInterface
@@ -128,6 +131,10 @@ target_link_libraries(test_idyntree ${iDynTree_LIBRARIES} ${catkin_LIBRARIES})
 # upper_body
 add_executable( upper_body src/robots/upper_body.cpp)
 target_link_libraries(upper_body ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
+
+# musc_shoulder
+add_executable( musc_shoulder src/robots/musc_shoulder.cpp)
+target_link_libraries(musc_shoulder ${iDynTree_LIBRARIES} ${catkin_LIBRARIES} vrpuppet kindyn)
 
 #==============================================================================
 # Installation
