@@ -32,7 +32,7 @@ private:
     map<string, ros::ServiceClient> motor_config, motor_control_mode, control_mode;
     map<string, bool> motor_status_received;
     map<int, bool> communication_established; // keeps track of communication quality for each motor
-    map<int,float> l_offset, position, tendon_length;
+    map<int,float> l_offset, position, tendon_length, muscle_length_offset_correction;
     VectorXd l_current;
     map<string, vector<float>> integral, error_last;
     boost::shared_ptr<tf::TransformListener> listener;
@@ -220,7 +220,7 @@ public:
         }
 
         stringstream str;
-        str << "saving position offsets:" << endl << "motor id  |   position offset [ticks]  | length_sim[m] | length offset[m]" << endl;
+        str << "saving position offsets:" << endl << "motor id  |   position offset [ticks]  | length_sim[m] | length offset[m] | manual offset correction [m]" << endl;
 
         // for (int i = 0; i<motor_ids.size();i++) str << motor_ids[i] << ": " << position[motor_ids[i]] << ", ";
         // str << endl;
@@ -238,12 +238,45 @@ public:
         kinematics.setRobotState(q, qd);
         kinematics.getRobotCableFromJoints(l_current);
 
+        // Get manual offset correction (feature requested by Oxford to change muscles' carrying load)
+
+
+        // Get the parameter from the ROS parameter server
+        // nh.getParam("muscle_length_offset_correction", muscle_length_offset_correction);
+
+        for (int id: motor_ids) {
+            if (!nh->getParam("muscle_length_offset_correction/motor"+to_string(id), muscle_length_offset_correction[id])) {
+                ROS_WARN_STREAM("Failed to get muscle_length_offset_correction parameter for motor " << id <<". Ignoring it.");
+                muscle_length_offset_correction[id] = 0.0;
+            } 
+
+        }
+        
+        // if (!nh->getParam("muscle_length_offset_correction", muscle_length_offset_correction))
+        // {
+        //     ROS_ERROR("Failed to get muscle_length_offset_correction parameter. Ignoring it.");
+        //     // for (int i = 0; i < motor_ids.size(); i++) {
+        //     //     muscle_length_offset_correction[motor_ids[i]] = 0;
+        //     // }
+        // }
+
+         // Check if each motor ID is in the dictionary, and if not, add it with a value of 0
+        // for (int id : motor_ids)
+        // {
+        //     if (muscle_length_offset_correction.find(id) == muscle_length_offset_correction.end())
+        //     {
+        //         muscle_length_offset_correction[id] = 0.0;
+        //     }
+        // }
+
+
         for (int i = 0; i < motor_ids.size(); i++) {
             int motor_id = motor_ids[i];
             ROS_WARN_STREAM(name << " info print");
-            l_offset[motor_id] = l_current[motor_id] + position[motor_id];
+            l_offset[motor_id] = l_current[motor_id] + position[motor_id] + muscle_length_offset_correction[motor_id];
             str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l_current[motor_id] << "\t|\t"
-                << l_offset[motor_id] << endl;
+                << l_offset[motor_id] << "\t|\t"
+                << muscle_length_offset_correction[motor_id] << endl;
         }
 
         ROS_INFO_STREAM(str.str());
