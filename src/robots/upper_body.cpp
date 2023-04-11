@@ -16,6 +16,7 @@
 #include <tf/tf.h>
 #include <tf/transform_listener.h>
 
+
 using namespace std;
 
 class UpperBody: public cardsflow::kindyn::Robot{
@@ -36,8 +37,9 @@ private:
     VectorXd l_current;
     map<string, vector<float>> integral, error_last;
     boost::shared_ptr<tf::TransformListener> listener;
-    std::vector<string> body_parts = {"shoulder_right", "shoulder_left","head", "wrist_right","wrist_left"};//, "shoulder_left"};//}, "elbow_left"};
+    std::vector<string> body_parts = {"shoulder_right", "shoulder_left","head", "wrist_right", "wrist_left"};//, "shoulder_left"};//}, "elbow_left"};
     map<string, bool> init_called;
+    std::map<std::string, ros::Time> last_communication_time;
     boost::shared_ptr<std::thread> system_status_thread;
     ros::Time prev_roboy_state_time;
     enum BulletPublish {zeroes, current};
@@ -143,7 +145,10 @@ public:
 
 
     bool initBodyPart(string name) {
-        ROS_WARN_STREAM("initBodyPart: " << name);
+        ROS_WARN_STREAM("init Body Part: " << name);
+
+        // always set simulation to 0 for initialization
+        publishBulletTarget(name, BulletPublish::zeroes);
 
         std::vector<int> motor_ids;
         try {
@@ -300,6 +305,7 @@ public:
      */
     void publishBulletTarget(string body_part, BulletPublish zeroes_or_current){
 
+        ROS_INFO_STREAM("Publishing target to bullet");
         sensor_msgs::JointState target_msg;
 
         // set respecitve body part joint targets to 0
@@ -334,6 +340,7 @@ public:
         }
 
         joint_target_pub.publish(target_msg);
+        ROS_INFO_STREAM("Bullet targets set.");
     }
 
 
@@ -384,16 +391,30 @@ public:
             auto id = int(msg->global_id[i]);
             auto body_part = findBodyPartByMotorId(id);
 //            ROS_INFO_STREAM(body_part);
-            if (body_part != "unknown") {
+            // if (body_part != "unknown") {
+            if (body_part == "shoulder_left" || body_part == "shoulder_right" || body_part == "head") {
                 if (msg->communication_quality[i] > 0 ) {
                     motor_status_received[body_part] = true;
+                    last_communication_time[body_part] = ros::Time::now();
                     //            communication_established[id] = true;
                 }
                 else {
-                    if (body_part != "wrist_left" && body_part != "wrist_right")
+                    if (init_called[body_part] == true) {
+                        ROS_WARN_THROTTLE(1,"Did not receive motor status for motor with id: %d.", id);
+                    }
+                    
+                    auto last_time = last_communication_time[body_part];
+                    auto diff = ros::Time::now() - last_time;
+                    // if ((now - last_time).toSec() > 1.0) {
+
+                    if (diff.toSec() > 0.2 && body_part != "wrist_left" && body_part != "wrist_right")
                     {
-                    //            communication_established[id] = false;
-                    ROS_WARN_THROTTLE(10,"Did not receive motor status for motor with id: %d. %s Body part is disabled.", (id, body_part));
+                        //            communication_established[id] = false;
+                        if (init_called[body_part] == true)
+                        {
+                            ROS_WARN_THROTTLE(5,"Motor comms down for >200ms. %s is disabled.", (body_part.c_str()));
+                        }
+                            
 
                         // TODO fix triceps
                         //if (id != 18 && body_part != "shoulder_right") {
