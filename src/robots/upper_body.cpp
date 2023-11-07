@@ -42,6 +42,7 @@ private:
     std::map<std::string, ros::Time> last_communication_time;
     boost::shared_ptr<std::thread> system_status_thread;
     ros::Time prev_roboy_state_time;
+    roboy_middleware_msgs::MotorState::ConstPtr last_motor_state;
     enum BulletPublish {zeroes, current};
 public:
     /**
@@ -367,6 +368,7 @@ public:
 
     void MotorState(const roboy_middleware_msgs::MotorState::ConstPtr &msg){
         prev_roboy_state_time = ros::Time::now();
+        last_motor_state = msg;
 
         int i=0;
         for (auto id:msg->global_id) {
@@ -419,6 +421,7 @@ public:
                         // TODO fix triceps
                         //if (id != 18 && body_part != "shoulder_right") {
                         if(init_called[body_part]) {
+                            ROS_ERROR_STREAM("Lost communication with " << body_part);
                             init_called[body_part] = false;
                             nh->setParam("initialized", init_called);
 
@@ -482,14 +485,18 @@ public:
     void write(){
         // check if plexus is alive
         auto diff = ros::Time::now() - prev_roboy_state_time;
+
         if (diff.toSec() > 1) {
+            ROS_WARN_STREAM("Last update: " << ros::Time::now().toSec()-prev_roboy_state_time.toSec() << " seconds ago");
+            ROS_WARN_STREAM("Last MotorState : " << last_motor_state);
             for (auto body_part: body_parts) {
                 init_called[body_part] = false;
                 nh->setParam("initialized", init_called);
                 // reset the joint targets
                 q_target.setZero();
             }
-            ROS_ERROR_STREAM_THROTTLE(5, "No messages from roboy_plexus. Will not be sending MotorCommand...");
+            ROS_ERROR_STREAM("prev_roboy_state_time received longer than a second ago!");
+            ROS_ERROR_STREAM("No messages from roboy_plexus. Will not be sending MotorCommand...");
             return;
         }
 
