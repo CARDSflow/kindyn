@@ -181,6 +181,27 @@ void Robot::init(string urdf_file_path, string viapoints_file_path, vector<strin
 
 void Robot::update(){
 
+    // TODO: remove gains setting, for debug only
+    nh->getParam("joint_dt", kinematics.joint_dt);
+    nh->getParam("joint_kp", param_kp);
+    nh->getParam("joint_kd", param_kd);
+    for (int joint = 0; joint < kinematics.number_of_dofs; joint++) {
+        if (Kp_[joint] != param_kp[joint]) {
+            Kp_[joint] = param_kp[joint];   
+            ROS_INFO_STREAM(kinematics.joint_names[joint]  <<
+                        "\tkp=" << param_kp[joint] );
+        }
+
+        if (Kd_[joint] != param_kd[joint]) {
+            Kd_[joint] = param_kd[joint];
+            ROS_INFO_STREAM(kinematics.joint_names[joint] << "\tkd=" << param_kd[joint]);
+        }
+        
+        
+        // ROS_INFO_STREAM(kinematics.joint_names[joint] << "\tdt=" << kinematics.joint_dt[joint] <<
+        //                 "\tkp=" << param_kp[joint] << "\tkd=" << param_kd[joint]);
+    }
+
 
     // TODO: Run the below code in critical section to avoid Mutex with the JointState and PROBABLY the controller
 

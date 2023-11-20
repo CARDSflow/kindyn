@@ -213,7 +213,27 @@ void Kinematics::updateJacobians(){
     // Compute L matrix - Cable-Joint jacobian
     W = P * S;
     L = V * W;
-    L_t = -L.transpose();
+    
+    // std::stringstream ss_P;
+    // ss_P << P;
+    // // ROS_INFO_THROTTLE(1, "\nMatrix P:%s",ss_P.str().c_str());
+
+    // std::stringstream ss_S;
+    // ss_S << S;
+    // ROS_INFO_THROTTLE(1, "\nMatrix S:%s",ss_S.str().c_str());
+
+    // std::stringstream ss_V;
+    // ss_V << V;
+    // ROS_INFO_THROTTLE(1, "\nMatrix V:%s",ss_V.str().c_str());
+
+    // std::stringstream ss_W;
+    // ss_W << W;
+    // ROS_INFO_THROTTLE(1, "\nMatrix W:%s",ss_W.str().c_str());
+
+    // L_t = -L.transpose();
+    // std::stringstream ss;
+    // ss << L_t;
+    // ROS_INFO_THROTTLE(1, "\nMatrix L:%s",ss.str().c_str());
 }
 
 void Kinematics::update_V() {
