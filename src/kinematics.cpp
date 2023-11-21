@@ -407,6 +407,7 @@ void Kinematics::getRobotCableFromJoints(VectorXd &l_out){
             }
             j++;
         }
+        //if (i==0) ROS_INFO_STREAM(l_out[i]);
         i++;
     }
 }

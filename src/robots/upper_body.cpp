@@ -520,6 +520,7 @@ public:
                 for (int i = 0; i < motor_ids.size(); i++) {
                     msg.global_id.push_back(motor_ids[i]);
                     auto setpoint = -l_next[motor_ids[i]] + l_offset[motor_ids[i]];
+                    //if (i==0) ROS_INFO_STREAM("s:" << setpoint);
                     msg.setpoint.push_back(setpoint);
                 }
                 motor_command.publish(msg);

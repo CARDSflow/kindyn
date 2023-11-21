@@ -99,10 +99,10 @@ public:
         VectorXd ld = L.col(joint_index) * (Kd[joint_index] * (p_error - p_error_last)/period.toSec() + Kp[joint_index] * p_error);
         joint.setMotorCommand(ld);
         p_error_last = p_error;
-        if (joint_name == "shoulder_left_axis0") {
-            auto diff = time-last_update;
-            ROS_INFO_STREAM_THROTTLE(1, "joint update took: " << diff.toSec());
-        }
+        // if (joint_name == "shoulder_left_axis0") {
+        //     auto diff = time-last_update;
+        //     ROS_INFO_STREAM_THROTTLE(1, "joint update took: " << diff.toSec());
+        // }
         last_update = time;
 
     }
