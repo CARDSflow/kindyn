@@ -12,6 +12,7 @@
 #include <roboy_simulation_msgs/Tendon.h>
 #include <common_utilities/CommonDefinitions.h>
 #include <roboy_control_msgs/SetControllerParameters.h>
+#include <std_msgs/Bool.h>
 #include <std_srvs/Empty.h>
 #include <tf/tf.h>
 #include <tf/transform_listener.h>
@@ -23,7 +24,7 @@ class UpperBody: public cardsflow::kindyn::Robot{
 private:
     ros::NodeHandlePtr nh; /// ROS nodehandle
     ros::Publisher motor_command, system_status_pub, tendon_motor_pub, joint_target_pub; /// motor command publisher
-    ros::Subscriber motor_state_sub, motor_info_sub, roboy_state_sub;
+    ros::Subscriber motor_state_sub, motor_info_sub, roboy_state_sub, estop_sub, recover_sub;
     // vector<ros::ServiceServer> init_poses;
     ros::ServiceServer init_pose, e_stop, recover;
     ros::ServiceClient control_mode;
@@ -93,9 +94,13 @@ public:
         }
 
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>(topic_root + "middleware/MotorCommand",1);
+        
         init_pose = nh->advertiseService(topic_root + "init_pose", &UpperBody::initPose,this);
-        e_stop = nh->advertiseService(topic_root + "estop", &UpperBody::eStop,this);
-        recover = nh->advertiseService(topic_root + "recover", &UpperBody::Recover,this);
+        e_stop = nh->advertiseService(topic_root + "control/estop", &UpperBody::eStop,this);
+        recover = nh->advertiseService(topic_root + "control/recover", &UpperBody::Recover,this);
+        estop_sub = nh->subscribe(topic_root + "control/estop",1, &UpperBody::eStopCallback, this);
+        recover_sub = nh->subscribe(topic_root + "control/recover", 1, &UpperBody::RecoverCallback, this);
+        
         joint_target_pub = nh->advertise<sensor_msgs::JointState>(topic_root + "simulation/joint_targets",1);
 
         system_status_pub = nh->advertise<roboy_middleware_msgs::SystemStatus>(topic_root + "control/SystemStatus",1);
@@ -153,7 +158,6 @@ public:
     bool eStop(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res) {
 
         ROS_WARN_STREAM("ACTIVATING E-STOP");
-        estop_active = true;
         for (auto part: body_parts) {
             if (init_called[part]) {
                 init_called[part] = false;
@@ -163,6 +167,14 @@ public:
             publishBulletTarget(part, BulletPublish::zeroes);
         }
         
+        if (estopped_bodyparts.empty())
+        {
+            ROS_WARN_STREAM("Nothing to e-stop. No body parts were intialized yet.");
+            return false;
+        }
+        
+        estop_active = true;
+
 
         // set PWM to 0, so that the muscles are "relaxed"
         ROS_INFO("changing control mode of motors to PWM 0");
@@ -199,6 +211,61 @@ public:
         return true;
     
     }
+
+    void eStopCallback(const std_msgs::Bool::ConstPtr &msg0){
+        // TODO remove copy-paste
+        ROS_WARN_STREAM("ACTIVATING E-STOP");
+        
+        for (auto part: body_parts) {
+            if (init_called[part]) {
+                init_called[part] = false;
+                estopped_bodyparts.push_back(part);
+            }
+            
+            publishBulletTarget(part, BulletPublish::zeroes);
+        }
+
+        if (estopped_bodyparts.empty())
+        {
+            ROS_WARN_STREAM("Nothing to e-stop. No body parts were intialized yet.");
+            return;
+        }
+        
+        estop_active = true;
+
+        // set PWM to 0, so that the muscles are "relaxed"
+        ROS_INFO("changing control mode of motors to PWM 0");
+        
+        std::vector<int> motor_ids;
+        try {
+            nh->getParam("myobricks/motor_ids", motor_ids); 
+        }
+        catch (const std::exception&) {
+            ROS_ERROR("motor ids for myobricks are not on the parameter server. check motor_config.yaml in robots. Using hard-coded values");
+            motor_ids = {20, 21, 22, 23, 24, 25, 0, 1, 2, 3, 4, 5, 6, 7, 16, 17, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19};
+        }
+
+        roboy_middleware_msgs::ControlMode msg;
+
+        msg.request.control_mode = DIRECT_PWM;
+
+        std::vector<float> set_points(motor_ids.size(), 0);
+        for (auto m: motor_ids) msg.request.global_id.push_back(m);
+        msg.request.set_points = set_points;
+        
+        if (!control_mode.call(msg)) {
+            ROS_ERROR("Changing control mode for e-stop didnt work. Defaulting to killing the FPGA node");
+
+            std::string command = "rosnode kill /roboy_fpga_00_00_f3_be_ef_02";
+            char *cmd = const_cast<char*>(command.c_str());
+            system(cmd);
+
+            nh->setParam("initialized", init_called);
+        }
+        nh->setParam("initialized", init_called);
+
+    }
+
 
     bool Recover(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res) {
 
@@ -256,6 +323,63 @@ public:
         ROS_INFO_STREAM("DEACTIVATED E-STOP");
         return true;
         
+    }
+
+    void RecoverCallback(const std_msgs::Bool::ConstPtr &msg){
+
+        // TODO get rid of copy-paste
+        if (estopped_bodyparts.empty()) {
+            ROS_ERROR_STREAM("E-STOP WAS NOT CALLED. WILL NOT RECOVER");
+            return;
+        }
+
+        ROS_WARN_STREAM("DE-ACTIVATING E-STOP");
+
+        // switch back to position mode
+        ROS_INFO_STREAM("changing control mode to POSITION");
+
+        std::vector<int> motor_ids;
+        try {
+            nh->getParam("myobricks/motor_ids", motor_ids); 
+        }
+        catch (const std::exception&) {
+            ROS_ERROR("motor ids for myobricks are not on the parameter server. check motor_config.yaml in robots. Using hard-coded values");
+            motor_ids = {20, 21, 22, 23, 24, 25, 0, 1, 2, 3, 4, 5, 6, 7, 16, 17, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19};
+        }
+
+        roboy_middleware_msgs::ControlMode msg1;
+        msg1.request.control_mode = ENCODER0_POSITION;
+
+        int steps = 20;
+        for (int step = 0; step < steps; ++step) {
+
+            msg1.request.set_points = {};
+            msg1.request.global_id = {};
+
+            // TODO optimize
+            for (int id: motor_ids) 
+            {
+                
+                // ss << position_at_init[id] << "\t" << position[id] << "\n";
+                auto stepSize = (position_at_init[id]-position[id])/steps;
+                float intermediateSetpoint = position[id] + stepSize * (step + 1);
+            
+                msg1.request.global_id.push_back(id);
+                msg1.request.set_points.push_back(intermediateSetpoint);
+
+            }
+            control_mode.call(msg1);
+            ros::Duration(0.1).sleep();
+        }
+
+        estop_active = false;
+
+        for (auto part: estopped_bodyparts) {
+            init_called[part] = true;
+        }
+        nh->setParam("initialized", init_called);     
+        estopped_bodyparts = {};
+        ROS_INFO_STREAM("DEACTIVATED E-STOP");
     }
 
 
