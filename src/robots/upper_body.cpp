@@ -25,24 +25,27 @@ private:
     ros::Publisher motor_command, system_status_pub, tendon_motor_pub, joint_target_pub; /// motor command publisher
     ros::Subscriber motor_state_sub, motor_info_sub, roboy_state_sub;
     // vector<ros::ServiceServer> init_poses;
-    ros::ServiceServer init_pose;
+    ros::ServiceServer init_pose, e_stop, recover;
+    ros::ServiceClient control_mode;
     ros::AsyncSpinner *spinner;
     // ros::ServiceClient motor_control_mode, motor_config, control_mode;
 
     map<int,int> pos, initial_pos;
-    map<string, ros::ServiceClient> motor_config, motor_control_mode, control_mode;
+    map<string, ros::ServiceClient> motor_config, motor_control_mode;//, control_mode;
     map<string, bool> motor_status_received;
     map<int, bool> communication_established; // keeps track of communication quality for each motor
-    map<int,float> l_offset, position, tendon_length;
+    map<int,float> l_offset, position, position_at_init, tendon_length;
     VectorXd l_current;
     map<string, vector<float>> integral, error_last;
     boost::shared_ptr<tf::TransformListener> listener;
     std::vector<string> body_parts = {"shoulder_right", "shoulder_left","head", "wrist_right", "wrist_left"};//, "shoulder_left"};//}, "elbow_left"};
+    std::vector<string> estopped_bodyparts = {};
     map<string, bool> init_called;
     std::map<std::string, ros::Time> last_communication_time;
     boost::shared_ptr<std::thread> system_status_thread;
     ros::Time prev_roboy_state_time;
     roboy_middleware_msgs::MotorState::ConstPtr last_motor_state;
+    bool estop_active = false;
     enum BulletPublish {zeroes, current};
 public:
     /**
@@ -85,11 +88,14 @@ public:
         for (auto body_part: body_parts) {
             init_called[body_part] = false;
             motor_config[body_part] = nh->serviceClient<roboy_middleware_msgs::MotorConfigService>(topic_root + "middleware/"+body_part+"/MotorConfig");
-            control_mode[body_part] = nh->serviceClient<roboy_middleware_msgs::ControlMode>( topic_root + "middleware/ControlMode");//+body_part+"ControlMode");
+            //control_mode[body_part] = nh->serviceClient<roboy_middleware_msgs::ControlMode>( topic_root + "middleware/ControlMode");//+body_part+"ControlMode");
+            control_mode = nh->serviceClient<roboy_middleware_msgs::ControlMode>( topic_root + "middleware/ControlMode");//+body_part+"ControlMode");
         }
 
         motor_command = nh->advertise<roboy_middleware_msgs::MotorCommand>(topic_root + "middleware/MotorCommand",1);
         init_pose = nh->advertiseService(topic_root + "init_pose", &UpperBody::initPose,this);
+        e_stop = nh->advertiseService(topic_root + "estop", &UpperBody::eStop,this);
+        recover = nh->advertiseService(topic_root + "recover", &UpperBody::Recover,this);
         joint_target_pub = nh->advertise<sensor_msgs::JointState>(topic_root + "simulation/joint_targets",1);
 
         system_status_pub = nh->advertise<roboy_middleware_msgs::SystemStatus>(topic_root + "control/SystemStatus",1);
@@ -142,6 +148,114 @@ public:
         }
 
         return res.result;
+    }
+
+    bool eStop(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res) {
+
+        ROS_WARN_STREAM("ACTIVATING E-STOP");
+        estop_active = true;
+        for (auto part: body_parts) {
+            if (init_called[part]) {
+                init_called[part] = false;
+                estopped_bodyparts.push_back(part);
+            }
+            
+            publishBulletTarget(part, BulletPublish::zeroes);
+        }
+        
+
+        // set PWM to 0, so that the muscles are "relaxed"
+        ROS_INFO("changing control mode of motors to PWM 0");
+        
+        std::vector<int> motor_ids;
+        try {
+            nh->getParam("myobricks/motor_ids", motor_ids); 
+        }
+        catch (const std::exception&) {
+            ROS_ERROR("motor ids for myobricks are not on the parameter server. check motor_config.yaml in robots. Using hard-coded values");
+            motor_ids = {20, 21, 22, 23, 24, 25, 0, 1, 2, 3, 4, 5, 6, 7, 16, 17, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19};
+        }
+
+        roboy_middleware_msgs::ControlMode msg;
+
+        msg.request.control_mode = DIRECT_PWM;
+
+        std::vector<float> set_points(motor_ids.size(), 0);
+        for (auto m: motor_ids) msg.request.global_id.push_back(m);
+        msg.request.set_points = set_points;
+        
+        if (!control_mode.call(msg)) {
+            ROS_ERROR("Changing control mode for e-stop didnt work. Defaulting to killing the FPGA node");
+
+            std::string command = "rosnode kill /roboy_fpga_00_00_f3_be_ef_02";
+            char *cmd = const_cast<char*>(command.c_str());
+            system(cmd);
+
+            nh->setParam("initialized", init_called);
+            return true;
+        }
+        nh->setParam("initialized", init_called);
+
+        return true;
+    
+    }
+
+    bool Recover(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res) {
+
+        if (estopped_bodyparts.empty()) {
+            ROS_ERROR_STREAM("E-STOP WAS NOT CALLED. WILL NOT RECOVER");
+            return false;
+        }
+
+        ROS_WARN_STREAM("DE-ACTIVATING E-STOP");
+
+        // switch back to position mode
+        ROS_INFO_STREAM("changing control mode to POSITION");
+
+        std::vector<int> motor_ids;
+        try {
+            nh->getParam("myobricks/motor_ids", motor_ids); 
+        }
+        catch (const std::exception&) {
+            ROS_ERROR("motor ids for myobricks are not on the parameter server. check motor_config.yaml in robots. Using hard-coded values");
+            motor_ids = {20, 21, 22, 23, 24, 25, 0, 1, 2, 3, 4, 5, 6, 7, 16, 17, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19};
+        }
+
+        roboy_middleware_msgs::ControlMode msg1;
+        msg1.request.control_mode = ENCODER0_POSITION;
+
+        int steps = 20;
+        for (int step = 0; step < steps; ++step) {
+
+            msg1.request.set_points = {};
+            msg1.request.global_id = {};
+
+            // TODO optimize
+            for (int id: motor_ids) 
+            {
+                
+                // ss << position_at_init[id] << "\t" << position[id] << "\n";
+                auto stepSize = (position_at_init[id]-position[id])/steps;
+                float intermediateSetpoint = position[id] + stepSize * (step + 1);
+            
+                msg1.request.global_id.push_back(id);
+                msg1.request.set_points.push_back(intermediateSetpoint);
+
+            }
+            control_mode.call(msg1);
+            ros::Duration(0.1).sleep();
+        }
+
+        estop_active = false;
+
+        for (auto part: estopped_bodyparts) {
+            init_called[part] = true;
+        }
+        nh->setParam("initialized", init_called);     
+        estopped_bodyparts = {};
+        ROS_INFO_STREAM("DEACTIVATED E-STOP");
+        return true;
+        
     }
 
 
@@ -198,7 +312,7 @@ public:
         ROS_INFO_STREAM(str1.str());
 
 
-        if (!control_mode[name].call(msg)) {
+        if (!control_mode.call(msg)) {
             ROS_ERROR("Changing control mode for %s didnt work", name);
             return false;
         }
@@ -247,6 +361,7 @@ public:
         for (int i = 0; i < motor_ids.size(); i++) {
             int motor_id = motor_ids[i];
             ROS_WARN_STREAM(name << " info print");
+            
             l_offset[motor_id] = l_current[motor_id] + position[motor_id];
             str << motor_id << "\t|\t" << position[motor_id] << "\t|\t" << l_current[motor_id] << "\t|\t"
                 << l_offset[motor_id] << endl;
@@ -261,9 +376,10 @@ public:
         for (int id: motor_ids) {
             msg1.request.global_id.push_back(id);
             msg1.request.set_points.push_back(position[id]);
+            position_at_init[id] = position[id];
         }
 
-        if (!control_mode[name].call(msg1)) {
+        if (!control_mode.call(msg1)) {
             ROS_ERROR_STREAM("Changing control mode for %s didnt work" << name);
             return false;
         }
@@ -500,7 +616,13 @@ public:
             return;
         }
 
+        if (estop_active) {
+            ROS_WARN_STREAM_THROTTLE(1, "E-STOP ACTIVE");
+            return;
+        }
+
         for (auto body_part: body_parts) {
+            
             if (!init_called[body_part]) {
                 ROS_WARN_STREAM_THROTTLE(10, body_part << " was not initialized. skipping");
             } else {
